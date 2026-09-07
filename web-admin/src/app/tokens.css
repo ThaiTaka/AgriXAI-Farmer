@@ -1,0 +1,352 @@
+/**
+ * GENERATED FILE - DO NOT EDIT BY HAND.
+ * Source: shared/design/tokens.json (extracted from "AgriXAI Farmer v4 - Standalone (1).html")
+ * Regenerate with: node shared/design/build-tokens.js
+ */
+
+:root {
+  /* ---- colour ---- */
+  --color-green-100: #DCE9DD;
+  --color-green-150: #C9DCC0;
+  --color-green-200: #B0CBA4;
+  --color-green-300: #96BC87;
+  --color-green-400: #5A8B44;
+  --color-green-500: #54A96A;
+  --color-green-700: #2E6F40;
+  --color-green-750: #1F4E2C;
+  --color-green-800: #1B4429;
+  --color-green-850: #122E1D;
+  --color-green-900: #12301D;
+  --color-green-075: #F1F6EF;
+  --color-green-050: #EEF2EC;
+  --color-lime-200: #E6EBD3;
+  --color-lime-500: #C3D24A;
+  --color-lime-800: #4A5810;
+  --color-lime-900: #12240F;
+  --color-amber-100: #FBEDD2;
+  --color-amber-300: #E5AC3D;
+  --color-amber-500: #F2A104;
+  --color-amber-700: #7A4F00;
+  --color-amber-800: #5C4405;
+  --color-amber-900: #3D2400;
+  --color-danger-bg: #C24A12;
+  --color-danger-fg: #FFF3E8;
+  --color-danger-dot: #E4661F;
+  --color-neutral-white: #FFFFFF;
+  --color-neutral-photobackdrop: #081711;
+  --color-neutral-icondeep: #0C2418;
+  --color-text-primary: #12301D;
+  --color-text-secondary: #4B5F51;
+  --color-text-webbody: #42564A;
+  --color-text-muted: #6E8175;
+  --color-text-eyebrow: #7B8C7F;
+  --color-text-onprimary: #FFFFFF;
+  --color-text-alpha-55: rgba(18,48,29,0.55);
+  --color-text-alpha-60: rgba(18,48,29,0.60);
+  --color-text-alpha-62: rgba(18,48,29,0.62);
+  --color-text-alpha-68: rgba(18,48,29,0.68);
+  --color-text-alpha-70: rgba(18,48,29,0.70);
+  --color-text-alpha-72: rgba(18,48,29,0.72);
+  --color-text-alpha-74: rgba(18,48,29,0.74);
+  --color-text-alpha-88: rgba(18,48,29,0.88);
+  --color-text-alpha-deep86: rgba(23,58,36,0.86);
+  --color-text-alpha-deep78: rgba(23,58,36,0.78);
+  --color-text-alpha-deep70: rgba(23,58,36,0.70);
+  --color-border-soft: #E2E8E2;
+  --color-border-webcard: #D3DBD4;
+  --color-border-webchip: #CFD8CF;
+  --color-border-glass: rgba(255,255,255,0.62);
+  --color-border-glassstrong: rgba(255,255,255,0.72);
+  --color-border-glassdashed: rgba(255,255,255,0.94);
+  --color-border-ambersoft: rgba(242,161,4,0.34);
+  --color-border-limesoft: rgba(195,210,74,0.22);
+  --color-border-greensoft: rgba(46,111,64,0.34);
+  --color-track: rgba(23,58,36,0.10);
+
+  /* ---- gradients ---- */
+  --gradient-appbackground: linear-gradient(168deg,#C9DCC0 0%,#B0CBA4 52%,#96BC87 100%);
+  --gradient-primaryaction: linear-gradient(135deg,#54A96A,#2E6F40);
+  --gradient-primaryactiontranslucent: linear-gradient(135deg,rgba(84,169,106,.9),rgba(46,111,64,.86));
+  --gradient-progress: linear-gradient(90deg,#C3D24A,#54A96A);
+  --gradient-resulthighlight: linear-gradient(165deg,rgba(216,236,208,0.86) 0%,rgba(178,213,164,0.5) 100%);
+  --gradient-loginscrim: linear-gradient(180deg,rgba(190,212,178,.92) 0%,rgba(190,212,178,.86) 30%,rgba(190,212,178,.5) 56%,rgba(190,212,178,.94) 100%);
+  --gradient-homescrim: linear-gradient(180deg,rgba(190,212,178,.9) 0%,rgba(190,212,178,.72) 26%,rgba(190,212,178,.44) 52%,rgba(190,212,178,.84) 100%);
+
+  /* ---- halos (blurred glows behind the glass layer) ---- */
+  --halo-green: radial-gradient(circle,rgba(84,169,106,.34) 0%,rgba(84,169,106,0) 70%);
+  --halo-green-size: 300px;
+  --halo-green-blur: 26px;
+  --halo-lime: radial-gradient(circle,rgba(195,210,74,.3) 0%,rgba(195,210,74,0) 70%);
+  --halo-lime-size: 290px;
+  --halo-lime-blur: 30px;
+  --halo-amber: radial-gradient(circle,rgba(242,161,4,.22) 0%,rgba(242,161,4,0) 70%);
+  --halo-amber-size: 280px;
+  --halo-amber-blur: 34px;
+
+  /* ---- liquid glass ---- */
+  --glass-strong-bg: linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.43) 100%);
+  --glass-strong-border: rgba(255,255,255,0.62);
+  --glass-strong-filter: blur(32px) saturate(200%);
+  --glass-strong-shadow: 0 20px 46px rgba(26,60,38,.15);
+  --glass-strong-solid: #E1ECDD;
+  --glass-card-bg: linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);
+  --glass-card-border: rgba(255,255,255,0.62);
+  --glass-card-filter: blur(28px) saturate(200%);
+  --glass-card-shadow: 0 12px 30px rgba(26,60,38,.12);
+  --glass-card-solid: #DFEADA;
+  --glass-soft-bg: linear-gradient(165deg,rgba(255,255,255,0.76) 0%,rgba(255,255,255,0.35) 100%);
+  --glass-soft-border: rgba(255,255,255,0.72);
+  --glass-soft-filter: blur(26px) saturate(200%);
+  --glass-soft-shadow: 0 10px 26px rgba(26,60,38,.11);
+  --glass-soft-solid: #DCE8D7;
+  --glass-control-bg: linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);
+  --glass-control-border: rgba(255,255,255,0.62);
+  --glass-control-filter: blur(22px) saturate(200%);
+  --glass-control-shadow: none;
+  --glass-control-solid: #E0EBDC;
+  --glass-pill-bg: linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.47) 100%);
+  --glass-pill-border: rgba(255,255,255,0.62);
+  --glass-pill-filter: blur(24px) saturate(200%);
+  --glass-pill-shadow: none;
+  --glass-pill-solid: #E3EDDF;
+  --glass-tabbar-bg: linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.41) 100%);
+  --glass-tabbar-border: rgba(255,255,255,0.62);
+  --glass-tabbar-filter: blur(34px) saturate(200%);
+  --glass-tabbar-shadow: 0 -6px 30px rgba(26,60,38,.14);
+  --glass-tabbar-solid: #E1EBDC;
+
+  /* ---- shadows ---- */
+  --shadow-primarybutton: 0 14px 30px rgba(24,86,45,.5);
+  --shadow-primarybuttonsm: 0 10px 22px rgba(24,86,45,.32);
+  --shadow-fab: 0 12px 28px rgba(16,70,36,.6);
+  --shadow-herocard: 0 16px 34px rgba(12,58,29,.46);
+  --shadow-cardxl: 0 20px 46px rgba(26,60,38,.15);
+  --shadow-cardlg: 0 18px 40px rgba(26,60,38,.14);
+  --shadow-cardmd: 0 12px 30px rgba(26,60,38,.12);
+  --shadow-cardsm: 0 10px 26px rgba(26,60,38,.11);
+  --shadow-tabbar: 0 -6px 30px rgba(26,60,38,.14);
+  --shadow-amberbutton: 0 8px 18px rgba(122,79,0,.38);
+  --shadow-logo: 0 10px 22px rgba(24,86,45,.3);
+
+  /* ---- radius ---- */
+  --radius-xs: 8px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+  --radius-2xl: 20px;
+  --radius-3xl: 22px;
+  --radius-4xl: 24px;
+  --radius-5xl: 26px;
+  --radius-6xl: 28px;
+  --radius-7xl: 30px;
+  --radius-8xl: 32px;
+  --radius-sheet: 34px;
+  --radius-pill: 999px;
+
+  /* ---- spacing ---- */
+  --space-0: 0px;
+  --space-1: 3px;
+  --space-2: 6px;
+  --space-3: 7px;
+  --space-4: 8px;
+  --space-5: 9px;
+  --space-6: 10px;
+  --space-7: 11px;
+  --space-8: 12px;
+  --space-9: 13px;
+  --space-10: 14px;
+  --space-11: 16px;
+  --space-12: 18px;
+  --space-13: 20px;
+  --space-14: 22px;
+  --space-15: 24px;
+  --space-16: 26px;
+  --space-17: 28px;
+  --space-18: 34px;
+  --space-19: 40px;
+  --space-20: 62px;
+
+  /* ---- typography ---- */
+  --font-sans: "Open Sans", system-ui, -apple-system, sans-serif;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+  --text-screen-title-size: 34px;
+  --text-screen-title-weight: 800;
+  --text-screen-title-line: 1.16;
+  --text-screen-title-tracking: -0.02em;
+  --text-display-lg-size: 32px;
+  --text-display-lg-weight: 800;
+  --text-display-lg-line: 1;
+  --text-display-lg-tracking: -0.02em;
+  --text-result-title-size: 26px;
+  --text-result-title-weight: 800;
+  --text-result-title-line: 1.12;
+  --text-result-title-tracking: -0.02em;
+  --text-page-title-size: 25px;
+  --text-page-title-weight: 800;
+  --text-page-title-line: 1.12;
+  --text-page-title-tracking: -0.02em;
+  --text-section-title-lg-size: 24px;
+  --text-section-title-lg-weight: 700;
+  --text-section-title-lg-line: 1.2;
+  --text-section-title-lg-tracking: -0.02em;
+  --text-section-title-size: 23px;
+  --text-section-title-weight: 700;
+  --text-section-title-line: 1.25;
+  --text-section-title-tracking: -0.02em;
+  --text-screen-heading-size: 21px;
+  --text-screen-heading-weight: 700;
+  --text-screen-heading-line: 1.3;
+  --text-screen-heading-tracking: -0.01em;
+  --text-group-title-size: 19px;
+  --text-group-title-weight: 700;
+  --text-group-title-line: 1.3;
+  --text-group-title-tracking: -0.01em;
+  --text-card-title-lg-size: 18.5px;
+  --text-card-title-lg-weight: 700;
+  --text-card-title-lg-line: 1.35;
+  --text-card-title-lg-tracking: -0.01em;
+  --text-card-title-size: 16.5px;
+  --text-card-title-weight: 700;
+  --text-card-title-line: 1.4;
+  --text-card-title-tracking: -0.01em;
+  --text-list-title-size: 16px;
+  --text-list-title-weight: 700;
+  --text-list-title-line: 1.4;
+  --text-list-title-tracking: -0.01em;
+  --text-input-size: 16px;
+  --text-input-weight: 600;
+  --text-input-line: 1.4;
+  --text-input-tracking: 0em;
+  --text-body-strong-size: 15.5px;
+  --text-body-strong-weight: 600;
+  --text-body-strong-line: 1.5;
+  --text-body-strong-tracking: 0em;
+  --text-body-size: 15px;
+  --text-body-weight: 400;
+  --text-body-line: 1.55;
+  --text-body-tracking: 0em;
+  --text-body-sm-size: 14.5px;
+  --text-body-sm-weight: 600;
+  --text-body-sm-line: 1.5;
+  --text-body-sm-tracking: 0em;
+  --text-meta-size: 13.5px;
+  --text-meta-weight: 600;
+  --text-meta-line: 1.45;
+  --text-meta-tracking: 0em;
+  --text-meta-sm-size: 12.5px;
+  --text-meta-sm-weight: 600;
+  --text-meta-sm-line: 1.45;
+  --text-meta-sm-tracking: 0em;
+  --text-caption-size: 12px;
+  --text-caption-weight: 600;
+  --text-caption-line: 1.5;
+  --text-caption-tracking: 0em;
+  --text-badge-size: 11.5px;
+  --text-badge-weight: 700;
+  --text-badge-line: 1.3;
+  --text-badge-tracking: 0em;
+  --text-eyebrow-size: 11.5px;
+  --text-eyebrow-weight: 700;
+  --text-eyebrow-line: 1.3;
+  --text-eyebrow-tracking: 0.08em;
+  --text-tab-label-size: 10.5px;
+  --text-tab-label-weight: 600;
+  --text-tab-label-line: 1.2;
+  --text-tab-label-tracking: 0em;
+  --text-overline-size: 11px;
+  --text-overline-weight: 700;
+  --text-overline-line: 1.2;
+  --text-overline-tracking: 0.11em;
+
+  /* ---- severity ---- */
+  --severity-none-bg: rgba(84,169,106,0.20);
+  --severity-none-fg: #2E6F40;
+  --severity-none-dot: #2E6F40;
+  --severity-none-solid: #C3DDC4;
+  --severity-mild-bg: rgba(195,210,74,0.18);
+  --severity-mild-fg: #4A5810;
+  --severity-mild-dot: #4A5810;
+  --severity-mild-solid: #DAE6C0;
+  --severity-moderate-bg: rgba(242,161,4,0.20);
+  --severity-moderate-fg: #7A4F00;
+  --severity-moderate-dot: #7A4F00;
+  --severity-moderate-solid: #E3DBAF;
+  --severity-severe-bg: #C24A12;
+  --severity-severe-fg: #FFF3E8;
+  --severity-severe-dot: #E4661F;
+  --severity-severe-solid: #C24A12;
+
+  /* ---- disease type tags ---- */
+  --type-fungus-bg: rgba(195,210,74,0.16);
+  --type-fungus-fg: #4A5810;
+  --type-fungus-dot: #4A5810;
+  --type-bacteria-bg: rgba(84,169,106,0.18);
+  --type-bacteria-fg: #2E6F40;
+  --type-bacteria-dot: #2E6F40;
+  --type-virus-bg: rgba(242,161,4,0.18);
+  --type-virus-fg: #7A4F00;
+  --type-virus-dot: #7A4F00;
+  --type-pest-bg: rgba(255,255,255,0.78);
+  --type-pest-fg: rgba(18,48,29,0.85);
+  --type-pest-dot: rgba(23,58,36,0.70);
+  --type-healthy-bg: rgba(84,169,106,0.20);
+  --type-healthy-fg: #2E6F40;
+  --type-healthy-dot: #2E6F40;
+
+  /* ---- sizes (field constraints: these are hard minimums) ---- */
+  --size-min-touch-target: 48px;
+  --size-input-min-height: 50px;
+  --size-button-min-height: 54px;
+  --size-button-min-height-sm: 46px;
+  --size-chip-min-height: 44px;
+  --size-tab-item-min-height: 52px;
+  --size-fab: 62px;
+  --size-icon-button: 44px;
+  --size-avatar: 46px;
+  --size-device-width: 402px;
+  --size-device-height: 874px;
+  --size-screen-padding-x: 16px;
+  --size-screen-padding-top: 62px;
+}
+
+/* Opaque fallback: no backdrop-filter support, or the user picked "Che do ngoai nang". */
+@supports not (backdrop-filter: blur(1px)) {
+  :root {
+    --glass-strong-bg: #E1ECDD;
+    --glass-strong-filter: none;
+    --glass-card-bg: #DFEADA;
+    --glass-card-filter: none;
+    --glass-soft-bg: #DCE8D7;
+    --glass-soft-filter: none;
+    --glass-control-bg: #E0EBDC;
+    --glass-control-filter: none;
+    --glass-pill-bg: #E3EDDF;
+    --glass-pill-filter: none;
+    --glass-tabbar-bg: #E1EBDC;
+    --glass-tabbar-filter: none;
+  }
+}
+
+[data-sunlight-mode="on"] {
+  --glass-strong-bg: #E1ECDD;
+  --glass-strong-filter: none;
+  --glass-card-bg: #DFEADA;
+  --glass-card-filter: none;
+  --glass-soft-bg: #DCE8D7;
+  --glass-soft-filter: none;
+  --glass-control-bg: #E0EBDC;
+  --glass-control-filter: none;
+  --glass-pill-bg: #E3EDDF;
+  --glass-pill-filter: none;
+  --glass-tabbar-bg: #E1EBDC;
+  --glass-tabbar-filter: none;
+  --severity-none-bg: #C3DDC4;
+  --severity-mild-bg: #DAE6C0;
+  --severity-moderate-bg: #E3DBAF;
+  --severity-severe-bg: #C24A12;
+}

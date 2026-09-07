@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/* Design tokens — GENERATED from shared/design/tokens.json.
+   Regenerate with: node shared/design/build-tokens.js */
+@import "./tokens.css";
+
+/* Open Sans — bundled woff2 subsets extracted from the design file.
+   Never loaded from Google Fonts (design rule 3.3). */
+@import "./fonts.css";
+
+/* Expose the design tokens to Tailwind utilities (bg-green-700, text-amber-500, ...) */
+@theme inline {
+  --font-sans: var(--font-sans);
+
+  --color-green-900: var(--color-green-900);
+  --color-green-850: var(--color-green-850);
+  --color-green-700: var(--color-green-700);
+  --color-green-500: var(--color-green-500);
+  --color-green-100: var(--color-green-100);
+  --color-green-050: var(--color-green-050);
+  --color-lime-500: var(--color-lime-500);
+  --color-lime-800: var(--color-lime-800);
+  --color-amber-500: var(--color-amber-500);
+  --color-amber-700: var(--color-amber-700);
+  --color-amber-100: var(--color-amber-100);
+  --color-danger: var(--color-danger-bg);
+  --color-danger-fg: var(--color-danger-fg);
+
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-body: var(--color-text-webbody);
+  --color-border-soft: var(--color-border-soft);
+
+  --radius-card: var(--radius-6xl);
+  --radius-pill: var(--radius-pill);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-green-050);
+  color: var(--color-green-850);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: inherit;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-green-700);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-green-850);
+  text-decoration: underline;
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-alpha-55);
+}
+
+/* Field constraint §3.4 — inputs never below 16px (iOS auto-zooms) or 50px tall. */
+input,
+select,
+textarea {
+  font-size: max(16px, 1rem);
+  min-height: var(--size-input-min-height);
+}
+
+@keyframes agriPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.07);
+    opacity: 1;
+  }
+}
+
+@keyframes agriRise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

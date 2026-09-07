@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="85d8d186-c154-45ed-81d9-5698f8be7676"></script>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("3fd1746b-ceb0-43c9-a669-f78195214827") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("76f8177f-32aa-4c60-9afc-0296c83bd674") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("a09de210-a49c-457f-af7c-67c5bde56c19") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("854c153a-8796-4d32-978c-2d05d18802b4") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* hebrew */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("ed984af7-255a-42f0-b8ff-da2a900e7da9") format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+/* math */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("dd265ed2-6397-421b-934d-8a36e040afb4") format('woff2');
+  unicode-range: U+0302-0303, U+0305, U+0307-0308, U+0310, U+0312, U+0315, U+031A, U+0326-0327, U+032C, U+032F-0330, U+0332-0333, U+0338, U+033A, U+0346, U+034D, U+0391-03A1, U+03A3-03A9, U+03B1-03C9, U+03D1, U+03D5-03D6, U+03F0-03F1, U+03F4-03F5, U+2016-2017, U+2034-2038, U+203C, U+2040, U+2043, U+2047, U+2050, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20D0-20DC, U+20E1, U+20E5-20EF, U+2100-2112, U+2114-2115, U+2117-2121, U+2123-214F, U+2190, U+2192, U+2194-21AE, U+21B0-21E5, U+21F1-21F2, U+21F4-2211, U+2213-2214, U+2216-22FF, U+2308-230B, U+2310, U+2319, U+231C-2321, U+2336-237A, U+237C, U+2395, U+239B-23B7, U+23D0, U+23DC-23E1, U+2474-2475, U+25AF, U+25B3, U+25B7, U+25BD, U+25C1, U+25CA, U+25CC, U+25FB, U+266D-266F, U+27C0-27FF, U+2900-2AFF, U+2B0E-2B11, U+2B30-2B4C, U+2BFE, U+3030, U+FF5B, U+FF5D, U+1D400-1D7FF, U+1EE00-1EEFF;
+}
+/* symbols */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("5dce0481-9b3c-428b-8dbf-e7aeebd6f16f") format('woff2');
+  unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AD, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F7FF, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FA89, U+1FA8F-1FAC6, U+1FACE-1FADC, U+1FADF-1FAE9, U+1FAF0-1FAF8, U+1FB00-1FBFF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("81aa41ae-c07e-4d18-b028-ef0e54a847dd") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("13c42b2f-4e97-403b-a8f9-935c9d7c18f1") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("c5612574-47e7-4496-9af3-4dc756e25dd8") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("956cf442-bf61-4b97-8b0f-32e1b055585c") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("dfa78d48-6007-4356-b4e3-323fd903db5f") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("1123a3bd-6ecb-42b7-8a31-a7d3b0256d17") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("6d1a4ca6-2817-400e-ad4a-74ee959c0729") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* hebrew */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("7b2b5ea9-2ae7-46a4-84dd-1de9056248b5") format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+/* math */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("a8c028bb-3ef2-4137-8978-927ebab2e49d") format('woff2');
+  unicode-range: U+0302-0303, U+0305, U+0307-0308, U+0310, U+0312, U+0315, U+031A, U+0326-0327, U+032C, U+032F-0330, U+0332-0333, U+0338, U+033A, U+0346, U+034D, U+0391-03A1, U+03A3-03A9, U+03B1-03C9, U+03D1, U+03D5-03D6, U+03F0-03F1, U+03F4-03F5, U+2016-2017, U+2034-2038, U+203C, U+2040, U+2043, U+2047, U+2050, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20D0-20DC, U+20E1, U+20E5-20EF, U+2100-2112, U+2114-2115, U+2117-2121, U+2123-214F, U+2190, U+2192, U+2194-21AE, U+21B0-21E5, U+21F1-21F2, U+21F4-2211, U+2213-2214, U+2216-22FF, U+2308-230B, U+2310, U+2319, U+231C-2321, U+2336-237A, U+237C, U+2395, U+239B-23B7, U+23D0, U+23DC-23E1, U+2474-2475, U+25AF, U+25B3, U+25B7, U+25BD, U+25C1, U+25CA, U+25CC, U+25FB, U+266D-266F, U+27C0-27FF, U+2900-2AFF, U+2B0E-2B11, U+2B30-2B4C, U+2BFE, U+3030, U+FF5B, U+FF5D, U+1D400-1D7FF, U+1EE00-1EEFF;
+}
+/* symbols */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("9f2d646c-5956-42bb-a14d-f31d15e91734") format('woff2');
+  unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AD, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F7FF, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FA89, U+1FA8F-1FAC6, U+1FACE-1FADC, U+1FADF-1FAE9, U+1FAF0-1FAF8, U+1FB00-1FBFF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("dce369b1-105e-471e-9cb2-d17d54e2ec90") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("a1b920b2-afac-4dab-8d77-20f8995af7a8") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("d0665b01-2e8b-41c2-8ed2-ab8836a1228b") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("a1615ca4-2c7e-459e-8bb4-0d2f1bdaa038") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("66c92eb3-547c-496e-bd50-f43fd4f73e4f") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("8a31d17c-d519-48fc-a446-fb61379ba8ea") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("b04c25fa-b929-48a9-9527-7f042d4af61d") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* hebrew */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("39fbc7ce-93cb-44b1-adec-acff9ccb7027") format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+/* math */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("203ed254-9af6-4967-b92a-c1e9bd3996a7") format('woff2');
+  unicode-range: U+0302-0303, U+0305, U+0307-0308, U+0310, U+0312, U+0315, U+031A, U+0326-0327, U+032C, U+032F-0330, U+0332-0333, U+0338, U+033A, U+0346, U+034D, U+0391-03A1, U+03A3-03A9, U+03B1-03C9, U+03D1, U+03D5-03D6, U+03F0-03F1, U+03F4-03F5, U+2016-2017, U+2034-2038, U+203C, U+2040, U+2043, U+2047, U+2050, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20D0-20DC, U+20E1, U+20E5-20EF, U+2100-2112, U+2114-2115, U+2117-2121, U+2123-214F, U+2190, U+2192, U+2194-21AE, U+21B0-21E5, U+21F1-21F2, U+21F4-2211, U+2213-2214, U+2216-22FF, U+2308-230B, U+2310, U+2319, U+231C-2321, U+2336-237A, U+237C, U+2395, U+239B-23B7, U+23D0, U+23DC-23E1, U+2474-2475, U+25AF, U+25B3, U+25B7, U+25BD, U+25C1, U+25CA, U+25CC, U+25FB, U+266D-266F, U+27C0-27FF, U+2900-2AFF, U+2B0E-2B11, U+2B30-2B4C, U+2BFE, U+3030, U+FF5B, U+FF5D, U+1D400-1D7FF, U+1EE00-1EEFF;
+}
+/* symbols */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("80288025-73ef-4d0a-b47c-a8b23c21a36e") format('woff2');
+  unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AD, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F7FF, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FA89, U+1FA8F-1FAC6, U+1FACE-1FADC, U+1FADF-1FAE9, U+1FAF0-1FAF8, U+1FB00-1FBFF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("b5510f90-668f-407d-8c99-a331aa0b13da") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("f9af6fa3-77ff-49a3-8f0b-e0d906b34c90") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("89dae9b4-fc65-4dc1-9767-2a099dd3cc78") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("e81cac1b-9b10-47ad-adc7-a4d9d3b95f2d") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("6e2ecda8-afce-4c7c-830b-1cdec73782fb") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("ec38fdc3-b3a5-44bc-bdca-abbc32e4e3b3") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("7ada6be6-eeb3-4ac9-8eda-b654e25166ff") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* hebrew */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("9cf51fdc-a1b6-4676-8aed-c554f694f636") format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+/* math */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("9569b26e-682c-4e0b-8c0d-f8a1718fe949") format('woff2');
+  unicode-range: U+0302-0303, U+0305, U+0307-0308, U+0310, U+0312, U+0315, U+031A, U+0326-0327, U+032C, U+032F-0330, U+0332-0333, U+0338, U+033A, U+0346, U+034D, U+0391-03A1, U+03A3-03A9, U+03B1-03C9, U+03D1, U+03D5-03D6, U+03F0-03F1, U+03F4-03F5, U+2016-2017, U+2034-2038, U+203C, U+2040, U+2043, U+2047, U+2050, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20D0-20DC, U+20E1, U+20E5-20EF, U+2100-2112, U+2114-2115, U+2117-2121, U+2123-214F, U+2190, U+2192, U+2194-21AE, U+21B0-21E5, U+21F1-21F2, U+21F4-2211, U+2213-2214, U+2216-22FF, U+2308-230B, U+2310, U+2319, U+231C-2321, U+2336-237A, U+237C, U+2395, U+239B-23B7, U+23D0, U+23DC-23E1, U+2474-2475, U+25AF, U+25B3, U+25B7, U+25BD, U+25C1, U+25CA, U+25CC, U+25FB, U+266D-266F, U+27C0-27FF, U+2900-2AFF, U+2B0E-2B11, U+2B30-2B4C, U+2BFE, U+3030, U+FF5B, U+FF5D, U+1D400-1D7FF, U+1EE00-1EEFF;
+}
+/* symbols */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("b820a01b-a321-41b7-af02-841926965dcd") format('woff2');
+  unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AD, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F7FF, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FA89, U+1FA8F-1FAC6, U+1FACE-1FADC, U+1FADF-1FAE9, U+1FAF0-1FAF8, U+1FB00-1FBFF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("38e9e4b2-a04a-405d-9621-fd5dd21f32e1") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("bef2af6e-966e-45c0-9cca-e4a07c54f8c5") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("c8a5b32d-ee8e-4e59-b5c4-9361b4064d3b") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("a3bab586-96db-4d08-ab22-d1521f344d18") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("b3db726a-8f8a-43c3-903a-28b2bcdf9aa9") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("8f9cc8d2-215d-4a43-b3b6-f4969f3dff8b") format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("9ba2db01-3c61-4944-ab1d-c0c32f86be61") format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* hebrew */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("1877a5e4-7256-4c92-a88c-9529d22f07da") format('woff2');
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+/* math */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("d8a2a703-892f-45c9-b752-6988469c122f") format('woff2');
+  unicode-range: U+0302-0303, U+0305, U+0307-0308, U+0310, U+0312, U+0315, U+031A, U+0326-0327, U+032C, U+032F-0330, U+0332-0333, U+0338, U+033A, U+0346, U+034D, U+0391-03A1, U+03A3-03A9, U+03B1-03C9, U+03D1, U+03D5-03D6, U+03F0-03F1, U+03F4-03F5, U+2016-2017, U+2034-2038, U+203C, U+2040, U+2043, U+2047, U+2050, U+2057, U+205F, U+2070-2071, U+2074-208E, U+2090-209C, U+20D0-20DC, U+20E1, U+20E5-20EF, U+2100-2112, U+2114-2115, U+2117-2121, U+2123-214F, U+2190, U+2192, U+2194-21AE, U+21B0-21E5, U+21F1-21F2, U+21F4-2211, U+2213-2214, U+2216-22FF, U+2308-230B, U+2310, U+2319, U+231C-2321, U+2336-237A, U+237C, U+2395, U+239B-23B7, U+23D0, U+23DC-23E1, U+2474-2475, U+25AF, U+25B3, U+25B7, U+25BD, U+25C1, U+25CA, U+25CC, U+25FB, U+266D-266F, U+27C0-27FF, U+2900-2AFF, U+2B0E-2B11, U+2B30-2B4C, U+2BFE, U+3030, U+FF5B, U+FF5D, U+1D400-1D7FF, U+1EE00-1EEFF;
+}
+/* symbols */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("4ef9c4d5-1c2b-49c9-bfba-b2603e1d1a77") format('woff2');
+  unicode-range: U+0001-000C, U+000E-001F, U+007F-009F, U+20DD-20E0, U+20E2-20E4, U+2150-218F, U+2190, U+2192, U+2194-2199, U+21AF, U+21E6-21F0, U+21F3, U+2218-2219, U+2299, U+22C4-22C6, U+2300-243F, U+2440-244A, U+2460-24FF, U+25A0-27BF, U+2800-28FF, U+2921-2922, U+2981, U+29BF, U+29EB, U+2B00-2BFF, U+4DC0-4DFF, U+FFF9-FFFB, U+10140-1018E, U+10190-1019C, U+101A0, U+101D0-101FD, U+102E0-102FB, U+10E60-10E7E, U+1D2C0-1D2D3, U+1D2E0-1D37F, U+1F000-1F0FF, U+1F100-1F1AD, U+1F1E6-1F1FF, U+1F30D-1F30F, U+1F315, U+1F31C, U+1F31E, U+1F320-1F32C, U+1F336, U+1F378, U+1F37D, U+1F382, U+1F393-1F39F, U+1F3A7-1F3A8, U+1F3AC-1F3AF, U+1F3C2, U+1F3C4-1F3C6, U+1F3CA-1F3CE, U+1F3D4-1F3E0, U+1F3ED, U+1F3F1-1F3F3, U+1F3F5-1F3F7, U+1F408, U+1F415, U+1F41F, U+1F426, U+1F43F, U+1F441-1F442, U+1F444, U+1F446-1F449, U+1F44C-1F44E, U+1F453, U+1F46A, U+1F47D, U+1F4A3, U+1F4B0, U+1F4B3, U+1F4B9, U+1F4BB, U+1F4BF, U+1F4C8-1F4CB, U+1F4D6, U+1F4DA, U+1F4DF, U+1F4E3-1F4E6, U+1F4EA-1F4ED, U+1F4F7, U+1F4F9-1F4FB, U+1F4FD-1F4FE, U+1F503, U+1F507-1F50B, U+1F50D, U+1F512-1F513, U+1F53E-1F54A, U+1F54F-1F5FA, U+1F610, U+1F650-1F67F, U+1F687, U+1F68D, U+1F691, U+1F694, U+1F698, U+1F6AD, U+1F6B2, U+1F6B9-1F6BA, U+1F6BC, U+1F6C6-1F6CF, U+1F6D3-1F6D7, U+1F6E0-1F6EA, U+1F6F0-1F6F3, U+1F6F7-1F6FC, U+1F700-1F7FF, U+1F800-1F80B, U+1F810-1F847, U+1F850-1F859, U+1F860-1F887, U+1F890-1F8AD, U+1F8B0-1F8BB, U+1F8C0-1F8C1, U+1F900-1F90B, U+1F93B, U+1F946, U+1F984, U+1F996, U+1F9E9, U+1FA00-1FA6F, U+1FA70-1FA7C, U+1FA80-1FA89, U+1FA8F-1FAC6, U+1FACE-1FADC, U+1FADF-1FAE9, U+1FAF0-1FAF8, U+1FB00-1FBFF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("92f4dcd2-841f-4480-9712-c170d8bb3c49") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("5a4be52b-2e60-4e4b-91e7-94c47e1a7c95") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 800;
+  font-stretch: normal;
+  font-display: swap;
+  src: url("caf84144-2dcc-4415-8898-4464927d45aa") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<script src="fba2fe92-69af-45a6-bcbe-91e37334ef8b"></script>
+<style>
+body{margin:0;background:#EEF2EC;color:#122E1D;font-family:'Open Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*,*::before,*::after{box-sizing:border-box}
+h1,h2,h3,h4,h5,h6{font-family:inherit;margin:0}
+p{margin:0}
+a{color:#2E6F40;text-decoration:none}
+a:hover{color:#122E1D;text-decoration:underline}
+input,textarea,button{font-family:inherit}
+input::placeholder,textarea::placeholder{color:rgba(18,48,29,.55)}
+@keyframes agriPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.07);opacity:1}}
+@keyframes agriRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:34px 26px 60px;background:#EEF2EC">
+
+  <div style="max-width:1520px;margin:0 auto 26px">
+    <div style="display:flex;align-items:center;gap:13px;margin-bottom:11px">
+      <div style="width:46px;height:46px;border-radius:16px;background:linear-gradient(135deg,#54A96A,#2E6F40);display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 10px 22px rgba(24,86,45,.3)">
+        <svg width="26" height="26" sc-camel-view-box="0 0 24 24"><path d="M12 22C12 13 16 4 22 2c0 10-4 18-10 20Z" fill="#C3D24A"></path><path d="M12 22C12 14 8 6 2 5c0 9 4 16 10 17Z" fill="#F1F6EF"></path></svg>
+      </div>
+      <div>
+        <h1 style="font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1.1">AgriXAI — Ứng dụng nông dân</h1>
+        <div style="font-size:13px;font-weight:600;color:#5A8B44;letter-spacing:.06em;text-transform:uppercase;margin-top:3px">Bản v4 · nền xanh đậm hơn · hiệu ứng liquid glass · Open Sans</div>
+      </div>
+    </div>
+    <p style="max-width:800px;font-size:15px;line-height:1.6;color:#4B5F51;text-wrap:pretty">Giữ nguyên 12 màn hình và toàn bộ use case. Nền gradient xanh được tối lại một chút để các thẻ kính nổi rõ hơn, và toàn bộ thẻ/nút chuyển sang hiệu ứng liquid glass thật: nền trong mờ dạng gradient, viền sáng mảnh và blur/saturate mạnh hơn để có chiều sâu. Mục <strong style="color:#122E1D">Thuốc gợi ý</strong> ở trang xử lý đã dựng sẵn dạng thẻ bấm được để sau này gắn link sản phẩm.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+      <span style="font-size:12px;font-weight:600;padding:6px 13px;border-radius:999px;background:#DCE9DD;color:#2E6F40">12 màn hình · 13 use case</span>
+      <span style="font-size:12px;font-weight:600;padding:6px 13px;border-radius:999px;background:#E6EBD3;color:#4A5810">Glassmorphism toàn hệ thống</span>
+      <span style="font-size:12px;font-weight:600;padding:6px 13px;border-radius:999px;background:#FBEDD2;color:#7A4F00">Thuốc gợi ý sẵn chỗ gắn link</span>
+      <span style="font-size:12px;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid #CFD8CF;color:#4B5F51">402 × 874</span>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start;justify-content:center;max-width:1520px;margin:0 auto">
+
+    <aside style="flex:0 0 226px;width:226px;position:sticky;top:20px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#7B8C7F;margin-bottom:11px">Màn hình</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <sc-for list="{{ rail }}" as="s" hint-placeholder-count="12">
+          <button sc-camel-on-click="{{ s.onClick }}" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;padding:9px 13px;border-radius:16px;border:1px solid {{ s.border }};background:{{ s.bg }};color:{{ s.fg }};min-height:46px">
+            <span style="flex:none;width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;background:{{ s.numBg }};color:{{ s.numFg }}">{{ s.num }}</span>
+            <span style="flex:1">{{ s.label }}</span>
+            <span style="font-size:9.5px;font-weight:600;opacity:.6">{{ s.uc }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </aside>
+
+    <main style="flex:none">
+      <x-import component-from-global-scope="IOSDevice" from="c1a69ffd-6d9c-4cef-a516-555fae260a3b#/ios-frame.jsx" hint-size="402px,874px">
+
+        <div style="position:relative;height:100%;display:flex;flex-direction:column;overflow:hidden;color:#12301D;font-family:'Open Sans',system-ui,sans-serif;font-size:15px;line-height:1.5;background:linear-gradient(168deg,#C9DCC0 0%,#B0CBA4 52%,#96BC87 100%)">
+
+          <div style="position:absolute;top:-90px;left:-70px;width:300px;height:300px;border-radius:999px;pointer-events:none;background:radial-gradient(circle,rgba(84,169,106,.34) 0%,rgba(84,169,106,0) 70%);filter:blur(26px)"></div>
+          <div style="position:absolute;top:210px;right:-110px;width:290px;height:290px;border-radius:999px;pointer-events:none;background:radial-gradient(circle,rgba(195,210,74,.3) 0%,rgba(195,210,74,0) 70%);filter:blur(30px)"></div>
+          <div style="position:absolute;bottom:-70px;left:20px;width:280px;height:280px;border-radius:999px;pointer-events:none;background:radial-gradient(circle,rgba(242,161,4,.22) 0%,rgba(242,161,4,0) 70%);filter:blur(34px)"></div>
+
+          <div style="position:relative;flex:1;overflow-y:auto;overflow-x:hidden">
+
+            <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+              <div data-screen-label="01 Đăng nhập" style="position:relative;min-height:100%;display:flex;flex-direction:column">
+                <div style="position:absolute;inset:0">
+                  <image-slot id="agrixai3-login-field" shape="rect" placeholder="Ảnh ruộng cà chua" style="width:100%;height:100%" src="8a0ff763-1089-4160-bba1-27a0e1f1b345"></image-slot>
+                </div>
+                <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(190,212,178,.92) 0%,rgba(190,212,178,.86) 30%,rgba(190,212,178,.5) 56%,rgba(190,212,178,.94) 100%)"></div>
+
+                <div style="position:relative;padding:74px 26px 0">
+                  <div style="display:flex;align-items:center;gap:11px;margin-bottom:24px">
+                    <div style="width:42px;height:42px;border-radius:14px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.47) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);border:1px solid rgba(255,255,255,0.62);display:flex;align-items:center;justify-content:center">
+                      <svg width="24" height="24" sc-camel-view-box="0 0 24 24"><path d="M12 22C12 13 16 4 22 2c0 10-4 18-10 20Z" fill="#C3D24A"></path><path d="M12 22C12 14 8 6 2 5c0 9 4 16 10 17Z" fill="#F1F6EF"></path></svg>
+                    </div>
+                    <div style="font-size:21px;font-weight:800;letter-spacing:-.01em">AgriXAI</div>
+                  </div>
+                  <h2 style="font-size:34px;font-weight:800;line-height:1.16;letter-spacing:-.02em;margin-bottom:10px">Chẩn đoán bệnh<br>cây trồng bằng ảnh</h2>
+                  <p style="font-size:15px;line-height:1.55;color:#12301D;max-width:300px">Nâng cao giá trị và phát triển bền vững từ sản xuất đến tiêu thụ.</p>
+                </div>
+
+                <div style="position:relative;margin-top:auto;padding:0 20px 34px">
+                  <div style="padding:20px;border-radius:30px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.43) 100%);backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);border:1px solid rgba(255,255,255,0.62);box-shadow:0 20px 46px rgba(26,60,38,.15)">
+                    <div style="margin-bottom:13px">
+                      <div style="font-size:12px;font-weight:600;color:rgba(23,58,36,.7);margin-bottom:6px">Tài khoản</div>
+                      <input value="quanghoc" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;font-weight:600;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.43) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                    </div>
+                    <div style="margin-bottom:20px">
+                      <div style="font-size:12px;font-weight:600;color:rgba(23,58,36,.7);margin-bottom:6px">Mật khẩu</div>
+                      <input type="password" value="matkhau123" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;font-weight:600;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.43) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                    </div>
+
+                    <button sc-camel-on-click="{{ doLogin }}" style="display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;padding:6px 6px 6px 22px;border:0;border-radius:999px;background:linear-gradient(135deg,#54A96A,#2E6F40);box-shadow:0 14px 30px rgba(24,86,45,.5)">
+                      <span style="flex:1;text-align:left;font-size:16.5px;font-weight:700;color:#fff">Đăng nhập</span>
+                      <span style="flex:none;width:48px;height:48px;border-radius:999px;background:#F1F6EF;display:flex;align-items:center;justify-content:center">
+                        <svg width="22" height="22" sc-camel-view-box="0 0 24 24" fill="none" stroke="#2E6F40" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15"></path><path d="m13 6 6 6-6 6"></path></svg>
+                      </span>
+                    </button>
+                  </div>
+                  <button sc-camel-on-click="{{ goCatalog }}" style="width:100%;margin-top:14px;min-height:46px;cursor:pointer;border:0;background:transparent;font-size:14.5px;font-weight:600;color:rgba(18,48,29,.88)">Tra cứu bệnh mà không cần đăng nhập</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isHome }}">
+              <div data-screen-label="02 Trang chủ · lô đất" style="animation:agriRise .32s ease-out">
+
+                <div style="position:relative;border-radius:0 0 34px 34px;overflow:hidden">
+                  <div style="position:absolute;inset:0">
+                    <image-slot id="agrixai3-home-field" shape="rect" placeholder="Ảnh vườn cà chua" style="width:100%;height:100%"></image-slot>
+                  </div>
+                  <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(190,212,178,.9) 0%,rgba(190,212,178,.72) 26%,rgba(190,212,178,.44) 52%,rgba(190,212,178,.84) 100%)"></div>
+
+                  <div style="position:relative;display:flex;align-items:center;gap:12px;padding:62px 20px 4px">
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:19px;font-weight:700;letter-spacing:-.01em">Chào anh Học</div>
+                      <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.88);margin-top:2px">Thứ Năm, 21/08 · Cam Ly, Đà Lạt</div>
+                    </div>
+                    <button sc-camel-on-click="{{ goProfile }}" style="flex:none;width:46px;height:46px;border-radius:999px;cursor:pointer;border:1.5px solid rgba(255,255,255,0.75);background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.48) 100%);backdrop-filter:blur(20px) saturate(200%);-webkit-backdrop-filter:blur(20px) saturate(200%);color:#12301D;font-size:16px;font-weight:700">H</button>
+                  </div>
+
+                  <div style="position:relative;margin:16px 14px;padding:16px;border-radius:28px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.43) 100%);backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);border:1px solid rgba(255,255,255,0.62);box-shadow:0 18px 40px rgba(26,60,38,.13)">
+                    <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">
+                      <div style="flex:none">
+                        <svg width="46" height="46" sc-camel-view-box="0 0 24 24"><circle cx="12" cy="12" r="5.2" fill="#F2A104"></circle><g stroke="#F2A104" stroke-width="2.1" stroke-linecap="round"><path d="M12 2.4v2.2"></path><path d="M12 19.4v2.2"></path><path d="M2.4 12h2.2"></path><path d="M19.4 12h2.2"></path><path d="m5.4 5.4 1.5 1.5"></path><path d="m17.1 17.1 1.5 1.5"></path><path d="m18.6 5.4-1.5 1.5"></path><path d="m6.9 17.1-1.5 1.5"></path></g></svg>
+                      </div>
+                      <div style="flex:1;min-width:0">
+                        <div style="display:flex;align-items:baseline;gap:8px">
+                          <span style="font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1">24°C</span>
+                          <span style="font-size:13px;font-weight:600;color:rgba(23,58,36,.78)">Mát, nhiều mây</span>
+                        </div>
+                        <div style="font-size:12.5px;font-weight:500;color:rgba(23,58,36,.7);margin-top:3px">Độ ẩm 60% · gió nhẹ · mưa phùn về đêm</div>
+                      </div>
+                    </div>
+
+                    <div style="display:flex;gap:7px;margin-bottom:13px">
+                      <sc-for list="{{ forecast }}" as="w" hint-placeholder-count="5">
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 9px 4px; border-radius: 18px; background: {{ w.bg }}; border: 1px solid {{ w.border }}; border-color: #E5AC3D">
+                          <span style="font-size:10.5px;font-weight:600;color:{{ w.dim }}">{{ w.day }}</span>
+                          <span style="width:9px;height:9px;border-radius:999px;background:{{ w.dot }}"></span>
+                          <span style="font-size:12.5px;font-weight:700;color:{{ w.fg }}">{{ w.temp }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 9px; padding: 11px 13px; border-radius: 20px; background-color: #F2A10472">
+                      <svg width="19" height="19" sc-camel-view-box="0 0 24 24" style="flex:none;margin-top:1px"><path d="M12 2.6 22.4 21H1.6L12 2.6Z" fill="#122E1D"></path><path d="M12 9.4v5.1" stroke="#F2A104" stroke-width="2.1" stroke-linecap="round"></path><circle cx="12" cy="17.6" r="1.15" fill="#F2A104"></circle></svg>
+                      <span style="flex:1;font-size:12.5px;font-weight:600;line-height:1.45;color:#122E1D">Ẩm cao kéo dài — điều kiện thuận lợi cho mốc sương muộn. Nên kiểm tra vườn hôm nay.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="padding:18px 16px 22px">
+
+                  <div style="display: flex; gap: 12px; padding: 16px; border-radius: 28px; backdrop-filter: blur(26px) saturate(200%); -webkit-backdrop-filter: blur(26px) saturate(200%); border: 1px solid rgba(242,161,4,.34); margin-bottom: 14px; border-color: #F2A10456; background-color: #DBEDBE">
+                    <svg width="22" height="22" sc-camel-view-box="0 0 24 24" style="flex:none;margin-top:2px"><path d="M12 2.6 22.4 21H1.6L12 2.6Z" fill="#F2A104"></path><path d="M12 9.4v5.1" stroke="#12240F" stroke-width="2.1" stroke-linecap="round"></path><circle cx="12" cy="17.6" r="1.15" fill="#12240F"></circle></svg>
+                    <div style="flex:1">
+                      <div style="font-size:15.5px;font-weight:700;margin-bottom:3px">Cần xử lý trong 24 giờ</div>
+                      <div style="font-size:13.5px;line-height:1.45;color:rgba(23,58,36,.76)">Lô <strong style="color:#7A4F00">Vườn nhà trên</strong> có dấu hiệu Mốc sương muộn ở mức Nặng.</div>
+                      <button sc-camel-on-click="{{ goResult }}" style="margin-top: 11px; min-height: 40px; padding: 0 17px; border-radius: 999px; border: 1px solid rgba(255,255,255,.6); cursor: pointer; font-size: 13.5px; font-weight: 700; color: #3D2400; box-shadow: 0 8px 18px rgba(122,79,0,.38); background-color: #FFB925CF">Xem kết quả</button>
+                    </div>
+                  </div>
+
+                  <button sc-camel-on-click="{{ goCapture }}" style="width:100%;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;padding:16px;border:1px solid rgba(255,255,255,0.62);border-radius:30px;background:linear-gradient(135deg,rgba(84,169,106,.9),rgba(46,111,64,.86));backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);margin-bottom:24px;box-shadow:0 16px 34px rgba(12,58,29,.46)">
+                    <span style="flex:none;width:54px;height:54px;border-radius:20px;background:rgba(255,255,255,0.24);display:flex;align-items:center;justify-content:center">
+                      <svg width="28" height="28" sc-camel-view-box="0 0 24 24"><path d="M9.4 3h5.2l2.1 2.6H20a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7.6a2 2 0 0 1 2-2h3.3L9.4 3Z" fill="#F1F6EF"></path><circle cx="12" cy="12.8" r="4.2" fill="#2E6F40"></circle><circle cx="12" cy="12.8" r="2.1" fill="#C3D24A"></circle></svg>
+                    </span>
+                    <span style="flex:1">
+                      <span style="display:block;font-size:20px;font-weight:700;color:#fff;letter-spacing:-.01em">Chẩn đoán bệnh</span>
+                      <span style="display:block;font-size:13.5px;color:rgba(255,255,255,.82);margin-top:2px">Chụp ảnh hoặc tải ảnh lá lên</span>
+                    </span>
+                  </button>
+
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                    <h4 style="font-size:19px;font-weight:700;letter-spacing:-.01em">Lô đất của bạn</h4>
+                    <button sc-camel-on-click="{{ goPlotForm }}" style="min-height:40px;padding:0 14px;border-radius:999px;cursor:pointer;border:1px solid rgba(255,255,255,0.62);background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);font-size:13.5px;font-weight:600;color:#2E6F40">+ Thêm lô</button>
+                  </div>
+
+                  <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:26px">
+                    <sc-for list="{{ plotCards }}" as="p" hint-placeholder-count="3">
+                      <button sc-camel-on-click="{{ p.onClick }}" style="display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;font:inherit;color:#12301D;padding:15px;border:1px solid rgba(255,255,255,0.72);border-radius:26px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);box-shadow:0 10px 26px rgba(26,60,38,.11)">
+                        <span style="flex:none;width:46px;height:46px;border-radius:16px;background:{{ p.iconBg }};display:flex;align-items:center;justify-content:center">
+                          <svg width="24" height="24" sc-camel-view-box="0 0 24 24"><path d="M12 22C12 13 16 4 22 2c0 10-4 18-10 20Z" fill="{{ p.leafA }}"></path><path d="M12 22C12 14 8 6 2 5c0 9 4 16 10 17Z" fill="{{ p.leafB }}"></path></svg>
+                        </span>
+                        <span style="flex:1;min-width:0">
+                          <span style="display:block;font-size:16px;font-weight:700;letter-spacing:-.01em">{{ p.name }}</span>
+                          <span style="display:block;font-size:12.5px;color:rgba(18,48,29,.72);margin:2px 0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.region }} · {{ p.area }}</span>
+                          <span style="display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:{{ p.sevBg }};color:{{ p.sevFg }}">{{ p.lastDisease }} · {{ p.last }}</span>
+                        </span>
+                        <span style="flex:none;color:rgba(18,48,29,.55)">
+                          <svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                        </span>
+                      </button>
+                    </sc-for>
+                  </div>
+
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                    <h4 style="font-size:19px;font-weight:700;letter-spacing:-.01em">Chẩn đoán gần đây</h4>
+                    <button sc-camel-on-click="{{ goHistory }}" style="min-height:40px;padding:0 12px;border-radius:999px;cursor:pointer;border:0;background:transparent;font-size:13.5px;font-weight:600;color:#2E6F40">Tất cả</button>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <sc-for list="{{ recent }}" as="h" hint-placeholder-count="3">
+                      <button sc-camel-on-click="{{ h.onClick }}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;font:inherit;color:#12301D;padding:12px 14px;border:1px solid rgba(255,255,255,0.72);border-radius:22px;background:linear-gradient(165deg,rgba(255,255,255,0.72) 0%,rgba(255,255,255,0.34) 100%)">
+                        <span style="flex:none;width:9px;height:9px;border-radius:999px;background:{{ h.dot }}"></span>
+                        <span style="flex:1;min-width:0">
+                          <span style="display:block;font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.disease }}</span>
+                          <span style="display:block;font-size:12px;color:rgba(18,48,29,.68)">{{ h.meta }}</span>
+                        </span>
+                        <span style="flex:none;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:{{ h.sevBg }};color:{{ h.sevFg }}">{{ h.sevName }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isCapture }}">
+              <div data-screen-label="03 Chụp ảnh" style="padding:62px 16px 22px;animation:agriRise .32s ease-out">
+                <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+                  <button sc-camel-on-click="{{ goBack }}" style="flex:none;width:44px;height:44px;border-radius:16px;border:1px solid rgba(255,255,255,0.62);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);color:#12301D;display:flex;align-items:center;justify-content:center">
+                    <svg width="21" height="21" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                  </button>
+                  <h4 style="font-size:21px;font-weight:700;letter-spacing:-.01em">Chụp ảnh chẩn đoán</h4>
+                </div>
+
+                <div style="position:relative;width:100%;height:312px;border-radius:32px;overflow:hidden;background:#081711;border:1px solid rgba(255,255,255,0.62);margin-bottom:16px;box-shadow:0 18px 40px rgba(26,60,38,.14)">
+                  <image-slot id="agrixai3-capture-leaf" shape="rect" placeholder="Kéo ảnh lá cà chua vào đây" style="width:100%;height:100%" src="a9c9787b-6c62-4d0a-8c3e-c2f285472adb"></image-slot>
+                  <svg sc-camel-view-box="0 0 370 312" sc-camel-preserve-aspect-ratio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+                    <path d="M96 84h-24v-24" fill="none" stroke="#F1F6EF" stroke-width="4" stroke-linecap="round" opacity=".9"></path>
+                    <path d="M274 84h24v-24" fill="none" stroke="#F1F6EF" stroke-width="4" stroke-linecap="round" opacity=".9"></path>
+                    <path d="M96 228h-24v24" fill="none" stroke="#F1F6EF" stroke-width="4" stroke-linecap="round" opacity=".9"></path>
+                    <path d="M274 228h24v24" fill="none" stroke="#F1F6EF" stroke-width="4" stroke-linecap="round" opacity=".9"></path>
+                  </svg>
+                  <div style="position:absolute;left:0;right:0;bottom:16px;display:flex;justify-content:center;pointer-events:none">
+                    <span style="font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.47) 100%);backdrop-filter:blur(24px) saturate(200%);-webkit-backdrop-filter:blur(24px) saturate(200%);border:1px solid rgba(255,255,255,0.62);color:#12301D">Đưa một lá vào giữa khung</span>
+                  </div>
+                </div>
+
+                <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px">
+                  <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;background:rgba(195,210,74,.14);border:1px solid rgba(195,210,74,.22);color:#4A5810">Chụp gần 20–30 cm</span>
+                  <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;background:rgba(195,210,74,.14);border:1px solid rgba(195,210,74,.22);color:#4A5810">Đủ sáng, không ngược nắng</span>
+                  <span style="font-size:12px;font-weight:600;padding:7px 13px;border-radius:999px;background:rgba(195,210,74,.14);border:1px solid rgba(195,210,74,.22);color:#4A5810">Lấy nét vào vết bệnh</span>
+                </div>
+
+                <div style="font-size:13px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:10px">Gán vào lô đất</div>
+                <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:16px;margin-bottom:8px">
+                  <sc-for list="{{ plotChips }}" as="c" hint-placeholder-count="3">
+                    <button sc-camel-on-click="{{ c.onClick }}" style="flex:none;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;min-height:46px;padding:0 18px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+
+                <button sc-camel-on-click="{{ doAnalyze }}" style="display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;padding:6px 6px 6px 22px;border:0;border-radius:999px;background:linear-gradient(135deg,#54A96A,#2E6F40);box-shadow:0 14px 30px rgba(24,86,45,.5)">
+                  <span style="flex:1;text-align:left;font-size:16.5px;font-weight:700;color:#fff">Chụp ảnh</span>
+                  <span style="flex:none;width:48px;height:48px;border-radius:999px;background:#F1F6EF;display:flex;align-items:center;justify-content:center">
+                    <svg width="24" height="24" sc-camel-view-box="0 0 24 24"><path d="M9.4 3h5.2l2.1 2.6H20a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7.6a2 2 0 0 1 2-2h3.3L9.4 3Z" fill="#2E6F40"></path><circle cx="12" cy="12.8" r="4.2" fill="#F1F6EF"></circle><circle cx="12" cy="12.8" r="2.1" fill="#C3D24A"></circle></svg>
+                  </span>
+                </button>
+                <button sc-camel-on-click="{{ doAnalyze }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:10px;min-height:52px;cursor:pointer;border:1px solid rgba(255,255,255,0.62);border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);backdrop-filter:blur(24px) saturate(200%);-webkit-backdrop-filter:blur(24px) saturate(200%);font-size:15.5px;font-weight:600;color:#12301D">
+                  <svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="#2E6F40" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path></svg>
+                  Tải ảnh từ thư viện
+                </button>
+                <p style="margin-top:15px;font-size:12px;line-height:1.5;color:rgba(18,48,29,.62);text-wrap:pretty">Ảnh được nén trước khi gửi để tiết kiệm dữ liệu — giới hạn 10 MB mỗi ảnh.</p>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isAnalyzing }}">
+              <div data-screen-label="04 Đang phân tích" style="min-height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:62px 28px 40px">
+                <div style="width:136px;height:136px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.41) 100%);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.62);display:flex;align-items:center;justify-content:center;margin-bottom:28px;animation:agriPulse 1.6s ease-in-out infinite">
+                  <svg width="64" height="64" sc-camel-view-box="0 0 24 24"><path d="M12 22C12 13 16 4 22 2c0 10-4 18-10 20Z" fill="#C3D24A"></path><path d="M12 22C12 14 8 6 2 5c0 9 4 16 10 17Z" fill="#2E6F40"></path></svg>
+                </div>
+                <h4 style="font-size:24px;font-weight:700;letter-spacing:-.02em;text-align:center;margin-bottom:8px">Đang phân tích ảnh…</h4>
+                <p style="font-size:14px;color:rgba(18,48,29,.72);text-align:center;margin-bottom:28px">Thường mất 2–4 giây tuỳ đường mạng.</p>
+
+                <div style="width:100%;display:flex;flex-direction:column;gap:11px">
+                  <sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
+                    <div style="display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:22px;background:{{ st.bg }};backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);border:1px solid {{ st.border }}">
+                      <span style="flex:none;width:26px;height:26px;border-radius:999px;background:{{ st.ring }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">{{ st.mark }}</span>
+                      <span style="flex:1;font-size:14.5px;font-weight:600;color:{{ st.fg }}">{{ st.label }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <div style="width:100%;height:8px;border-radius:999px;background:rgba(23,58,36,.1);margin-top:26px;overflow:hidden">
+                  <div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#C3D24A,#54A96A);width:{{ progressPct }};transition:width .5s ease"></div>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isResult }}">
+              <div data-screen-label="05 Kết quả chẩn đoán" style="padding:62px 16px 22px;animation:agriRise .32s ease-out">
+                <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+                  <button sc-camel-on-click="{{ goHome }}" style="flex:none;width:44px;height:44px;border-radius:16px;border:1px solid rgba(255,255,255,0.62);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);color:#12301D;display:flex;align-items:center;justify-content:center">
+                    <svg width="21" height="21" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                  </button>
+                  <h4 style="flex:1;font-size:21px;font-weight:700;letter-spacing:-.01em">Kết quả chẩn đoán</h4>
+                  <button style="flex:none;width:44px;height:44px;border-radius:16px;border:1px solid rgba(255,255,255,0.62);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);color:#2E6F40;display:flex;align-items:center;justify-content:center">
+                    <svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m8 8 4-4 4 4"></path><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"></path></svg>
+                  </button>
+                </div>
+
+                <div style="position:relative;width:100%;height:272px;border-radius:32px;overflow:hidden;background:#081711;border:1px solid rgba(255,255,255,0.62);margin-bottom:16px;box-shadow:0 18px 40px rgba(26,60,38,.14)">
+                  <image-slot id="agrixai3-result-leaf" shape="rect" placeholder="Kéo ảnh lá bệnh vào đây" style="width:100%;height:100%" src="a9c9787b-6c62-4d0a-8c3e-c2f285472adb"></image-slot>
+                  <sc-if value="{{ xaiOn }}">
+                    <svg sc-camel-view-box="0 0 370 272" sc-camel-preserve-aspect-ratio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+                      <defs>
+                        <radialGradient id="agri3Glow">
+                          <stop offset="0%" stop-color="#F2A104" stop-opacity=".6"></stop>
+                          <stop offset="62%" stop-color="#F2A104" stop-opacity=".2"></stop>
+                          <stop offset="100%" stop-color="#F2A104" stop-opacity="0"></stop>
+                        </radialGradient>
+                      </defs>
+                      <ellipse cx="152" cy="122" rx="100" ry="74" fill="url(#agri3Glow)"></ellipse>
+                      <ellipse cx="152" cy="122" rx="100" ry="74" fill="none" stroke="#F2A104" stroke-width="3" stroke-dasharray="11 8"></ellipse>
+                      <ellipse cx="276" cy="198" rx="48" ry="34" fill="url(#agri3Glow)"></ellipse>
+                      <ellipse cx="276" cy="198" rx="48" ry="34" fill="none" stroke="#F2A104" stroke-width="2.4" stroke-dasharray="8 7" opacity=".85"></ellipse>
+                    </svg>
+                  </sc-if>
+                  <div style="position:absolute;top:14px;right:14px;display:flex;gap:4px;padding:4px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.47) 100%);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);border:1px solid rgba(255,255,255,0.62)">
+                    <button sc-camel-on-click="{{ setXaiOn }}" style="cursor:pointer;font:inherit;font-size:12px;font-weight:600;min-height:34px;padding:0 14px;border-radius:999px;border:0;background:{{ xaiOnBg }};color:{{ xaiOnFg }}">Vùng nghi ngờ</button>
+                    <button sc-camel-on-click="{{ setXaiOff }}" style="cursor:pointer;font:inherit;font-size:12px;font-weight:600;min-height:34px;padding:0 14px;border-radius:999px;border:0;background:{{ xaiOffBg }};color:{{ xaiOffFg }}">Ảnh gốc</button>
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:flex-start;gap:11px;margin-bottom:16px">
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4A5810;margin-bottom:5px">{{ resultPathogen }}</div>
+                    <h3 style="font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.12">{{ resultName }}</h3>
+                  </div>
+                  <span style="flex:none;font-size:13px;font-weight:700;padding:8px 15px;border-radius:999px;background:{{ resultSevBg }};color:{{ resultSevFg }}">{{ resultSevName }}</span>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:14px;padding:18px;border-radius:28px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.62);box-shadow:0 12px 30px rgba(26,60,38,.12);margin-bottom:14px">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:7px">
+                      <span style="color:rgba(18,48,29,.74)">Độ tin cậy</span><span>{{ resultConfidence }}</span>
+                    </div>
+                    <div style="height:9px;border-radius:999px;background:rgba(23,58,36,.1);overflow:hidden">
+                      <div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#C3D24A,#54A96A);width:{{ resultConfidence }}"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:7px">
+                      <span style="color:rgba(18,48,29,.74)">Vùng nghi ngờ trên ảnh</span><span>{{ resultAffected }}</span>
+                    </div>
+                    <div style="height:9px;border-radius:999px;background:rgba(23,58,36,.1);overflow:hidden">
+                      <div style="height:100%;border-radius:999px;background:#F2A104;width:{{ resultAffected }}"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="padding:18px;border-radius:28px;background:linear-gradient(165deg,rgba(216,236,208,0.86) 0%,rgba(178,213,164,0.5) 100%);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.6);box-shadow:0 12px 28px rgba(26,60,38,.14);margin-bottom:14px">
+                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                    <svg width="18" height="18" sc-camel-view-box="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#2E6F40"></circle><path d="M12 7.4v.2" stroke="#0C2418" stroke-width="2.4" stroke-linecap="round"></path><path d="M12 11v5.6" stroke="#0C2418" stroke-width="2.4" stroke-linecap="round"></path></svg>
+                    <span style="flex:1;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2E6F40">Vì sao hệ thống kết luận vậy?</span>
+                    <button sc-camel-on-click="{{ toggleSpeak }}" style="flex:none;display:flex;align-items:center;gap:6px;cursor:pointer;font:inherit;font-size:12px;font-weight:700;min-height:34px;padding:0 13px;border-radius:999px;border:1px solid rgba(46,111,64,.34);background:{{ speakBg }};color:{{ speakFg }}">
+                      <sc-if value="{{ speaking }}">
+                        <svg width="15" height="15" sc-camel-view-box="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg>
+                      </sc-if>
+                      <sc-if value="{{ notSpeaking }}">
+                        <svg width="15" height="15" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 6a9 9 0 0 1 0 12"></path></svg>
+                      </sc-if>
+                      {{ speakLabel }}
+                    </button>
+                  </div>
+                  <p style="font-size:15px;line-height:1.58;text-wrap:pretty">{{ resultExplanation }}</p>
+                </div>
+
+                <div style="margin-bottom:16px;padding:16px 18px;border-radius:26px;background:linear-gradient(165deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.4) 100%);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);border:1px solid rgba(255,255,255,0.6);box-shadow:0 10px 24px rgba(26,60,38,.12)">
+                  <div style="font-size:13px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:11px">Ba khả năng cao nhất</div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <sc-for list="{{ top3 }}" as="t" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:center;gap:11px">
+                        <span style="flex: 1; font-size: 14px; font-weight: {{ t.weight }}; color: #2e2b25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ t.name }}</span>
+                        <span style="flex:none;width:86px;height:7px;border-radius:999px;background:rgba(23,58,36,.1);overflow:hidden">
+                          <span style="display:block;height:100%;border-radius:999px;background:{{ t.bar }};width:{{ t.pct }}"></span>
+                        </span>
+                        <span style="flex:none;width:40px;text-align:right;font-size:13px;font-weight:700">{{ t.pct }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px">
+                  <span style="font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);border:1px solid rgba(255,255,255,0.72);color:rgba(23,58,36,.7)">{{ resultPlot }}</span>
+                  <span style="font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);border:1px solid rgba(255,255,255,0.72);color:rgba(23,58,36,.7)">{{ resultTime }}</span>
+                  <span style="font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);border:1px solid rgba(255,255,255,0.72);color:rgba(23,58,36,.7)">{{ resultModel }}</span>
+                </div>
+
+                <p style="font-size:12px;line-height:1.55;color:rgba(18,48,29,.62);margin-bottom:18px;text-wrap:pretty">Gợi ý xử lý mang tính tham khảo. Cần đối chiếu với cán bộ khuyến nông địa phương và nhãn thuốc trước khi sử dụng.</p>
+
+                <button sc-camel-on-click="{{ goTreatment }}" style="display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;padding:6px 6px 6px 22px;border:0;border-radius:999px;background:linear-gradient(135deg,#54A96A,#2E6F40);box-shadow:0 14px 30px rgba(24,86,45,.5)">
+                  <span style="flex:1;text-align:left;font-size:16.5px;font-weight:700;color:#fff">Xem gợi ý xử lý</span>
+                  <span style="flex:none;width:48px;height:48px;border-radius:999px;background:#F1F6EF;display:flex;align-items:center;justify-content:center">
+                    <svg width="22" height="22" sc-camel-view-box="0 0 24 24" fill="none" stroke="#2E6F40" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15"></path><path d="m13 6 6 6-6 6"></path></svg>
+                  </span>
+                </button>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                  <button style="flex:1;min-height:48px;cursor:pointer;border:1px solid rgba(255,255,255,0.62);border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);font-size:14.5px;font-weight:600;color:#12301D">Thêm ghi chú</button>
+                  <button sc-camel-on-click="{{ goCapture }}" style="flex:1;min-height:48px;cursor:pointer;border:1px solid rgba(255,255,255,0.62);border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);font-size:14.5px;font-weight:600;color:#12301D">Chụp lại</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isTreatment }}">
+              <div data-screen-label="06 Gợi ý xử lý" style="padding:62px 16px 22px;animation:agriRise .32s ease-out">
+                <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+                  <button sc-camel-on-click="{{ goResult }}" style="flex:none;width:44px;height:44px;border-radius:16px;border:1px solid rgba(255,255,255,0.62);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);color:#12301D;display:flex;align-items:center;justify-content:center">
+                    <svg width="21" height="21" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                  </button>
+                  <h4 style="font-size:21px;font-weight:700;letter-spacing:-.01em">Gợi ý xử lý</h4>
+                </div>
+
+                <h3 style="font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1.12;margin-bottom:10px">{{ resultName }}</h3>
+                <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px">
+                  <span style="font-size:12px;font-weight:600;padding:6px 13px;border-radius:999px;background:rgba(195,210,74,.14);border:1px solid rgba(195,210,74,.22);color:#4A5810">{{ resultPathogen }}</span>
+                  <span style="font-size:12px;font-weight:700;padding:6px 13px;border-radius:999px;background:{{ resultSevBg }};color:{{ resultSevFg }}">Mức độ: {{ resultSevName }}</span>
+                </div>
+
+                <sc-if value="{{ hasUrgent }}">
+                  <div style="display:flex;gap:12px;padding:16px;border-radius:26px;background:rgba(242,161,4,.16);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);border:1px solid rgba(242,161,4,.34);margin-bottom:22px">
+                    <svg width="21" height="21" sc-camel-view-box="0 0 24 24" style="flex:none;margin-top:1px"><path d="M12 2.6 22.4 21H1.6L12 2.6Z" fill="#F2A104"></path><path d="M12 9.4v5.1" stroke="#12240F" stroke-width="2.1" stroke-linecap="round"></path><circle cx="12" cy="17.6" r="1.15" fill="#12240F"></circle></svg>
+                    <div style="flex:1;font-size:14px;line-height:1.5;color:rgba(23,58,36,.86)">{{ urgentText }}</div>
+                  </div>
+                </sc-if>
+
+                <h4 style="font-size:18.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:12px">Cần làm ngay</h4>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px">
+                  <sc-for list="{{ treatments }}" as="tr" hint-placeholder-count="4">
+                    <div style="display:flex;gap:13px;padding:15px;border-radius:24px;background:linear-gradient(165deg,rgba(255,255,255,0.76) 0%,rgba(255,255,255,0.35) 100%);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);border:1px solid rgba(255,255,255,0.72)">
+                      <span style="flex:none;width:28px;height:28px;border-radius:10px;background:linear-gradient(135deg,#54A96A,#2E6F40);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700">{{ tr.n }}</span>
+                      <span style="flex:1;font-size:14.5px;line-height:1.5">{{ tr.text }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <h4 style="font-size:18.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:12px">Video hướng dẫn xử lý</h4>
+                <div style="position:relative;width:100%;aspect-ratio:16/9;border-radius:24px;overflow:hidden;background:linear-gradient(165deg,rgba(255,255,255,0.76) 0%,rgba(255,255,255,0.35) 100%);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);border:1px solid rgba(255,255,255,0.72);margin-bottom:26px">
+                  <sc-if value="{{ hasVideo }}">
+                    <iframe src="{{ videoEmbedUrl }}" title="Video hướng dẫn xử lý" style="width:100%;height:100%;border:0;display:block" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true"></iframe>
+                  </sc-if>
+                  <sc-if value="{{ noVideo }}" hint-placeholder-val="{{ true }}">
+                    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:0 24px">
+                      <span style="width:52px;height:52px;border-radius:999px;background:linear-gradient(135deg,#54A96A,#2E6F40);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(24,86,45,.32)">
+                        <svg width="22" height="22" sc-camel-view-box="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"></path></svg>
+                      </span>
+                      <span style="font-size:13.5px;font-weight:600;color:rgba(18,48,29,.68)">Video hướng dẫn sẽ được cập nhật sớm</span>
+                    </div>
+                  </sc-if>
+                </div>
+
+                <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:6px">
+                  <h4 style="flex:1;font-size:18.5px;font-weight:700;letter-spacing:-.01em">Thuốc gợi ý</h4>
+                  <span style="flex:none;font-size:10.5px;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(242,161,4,.16);border:1px solid rgba(242,161,4,.3);color:#7A4F00">Có thể mua</span>
+                </div>
+                <p style="font-size:12.5px;line-height:1.5;color:rgba(18,48,29,.68);margin-bottom:13px">Nhấn vào một loại thuốc để mở trang sản phẩm của nhà phân phối.</p>
+
+                <sc-if value="{{ hasProducts }}">
+                  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+                    <sc-for list="{{ products }}" as="pr" hint-placeholder-count="3">
+                      <button style="display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;font:inherit;color:#12301D;padding:15px;border-radius:24px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.62);box-shadow:0 10px 26px rgba(26,60,38,.11)">
+                        <span style="flex:none;width:44px;height:44px;border-radius:15px;background:rgba(242,161,4,.16);border:1px solid rgba(242,161,4,.26);display:flex;align-items:center;justify-content:center">
+                          <svg width="22" height="22" sc-camel-view-box="0 0 24 24"><path d="M6.6 13.4 13.4 6.6a4.8 4.8 0 0 1 6.8 6.8l-6.8 6.8a4.8 4.8 0 0 1-6.8-6.8Z" fill="#F2A104"></path><path d="M9.6 10.4l4 4" stroke="#12240F" stroke-width="2.2" stroke-linecap="round"></path></svg>
+                        </span>
+                        <span style="flex:1;min-width:0">
+                          <span style="display:block;font-size:15.5px;font-weight:700;letter-spacing:-.01em">{{ pr.name }}</span>
+                          <span style="display:block;font-size:12.5px;color:rgba(18,48,29,.7);margin-top:2px">{{ pr.group }}</span>
+                        </span>
+                        <span style="flex:none;display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#7A4F00">
+                          Xem
+                          <svg width="15" height="15" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6"></path><path d="M20 4 10 14"></path><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"></path></svg>
+                        </span>
+                      </button>
+                    </sc-for>
+                  </div>
+                  <p style="font-size:11.5px;line-height:1.5;color:rgba(18,48,29,.6);margin-bottom:26px;text-wrap:pretty">Luân phiên hoạt chất giữa các lần phun để tránh kháng thuốc. Đọc kỹ nhãn và thời gian cách ly trước khi dùng.</p>
+                </sc-if>
+
+                <sc-if value="{{ noProducts }}">
+                  <div style="padding:16px;border-radius:24px;background:linear-gradient(165deg,rgba(255,255,255,0.76) 0%,rgba(255,255,255,0.35) 100%);border:1px dashed rgba(255,255,255,.94);margin-bottom:26px">
+                    <div style="font-size:14px;line-height:1.55;color:rgba(23,58,36,.78)">{{ noProductsText }}</div>
+                  </div>
+                </sc-if>
+
+                <h4 style="font-size:18.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:12px">Phòng ngừa lâu dài</h4>
+                <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:24px">
+                  <sc-for list="{{ prevention }}" as="pv" hint-placeholder-count="3">
+                    <div style="display:flex;gap:11px;align-items:flex-start">
+                      <span style="flex:none;margin-top:1px">
+                        <svg width="19" height="19" sc-camel-view-box="0 0 24 24"><circle cx="12" cy="12" r="10" fill="rgba(195,210,74,.2)"></circle><path d="m7.5 12.4 3 3 6-6.4" fill="none" stroke="#4A5810" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </span>
+                      <span style="flex:1;font-size:14.5px;line-height:1.5">{{ pv.text }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <button sc-camel-on-click="{{ goHome }}" style="width:100%;min-height:54px;cursor:pointer;border:0;border-radius:999px;background:linear-gradient(135deg,#54A96A,#2E6F40);font-size:16.5px;font-weight:700;color:#fff;box-shadow:0 14px 30px rgba(24,86,45,.5)">Đã hiểu, về trang chủ</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isHistory }}">
+              <div data-screen-label="07 Lịch sử" style="padding:62px 16px 22px;animation:agriRise .32s ease-out">
+                <div style="margin-bottom:16px">
+                  <h4 style="font-size:23px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px">Lịch sử chẩn đoán</h4>
+                  <div style="font-size:13px;color:rgba(18,48,29,.7)">{{ historyCount }}</div>
+                </div>
+
+                <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:16px;margin-bottom:8px">
+                  <sc-for list="{{ sevChips }}" as="c" hint-placeholder-count="5">
+                    <button sc-camel-on-click="{{ c.onClick }}" style="flex:none;cursor:pointer;font:inherit;font-size:13px;font-weight:600;min-height:44px;padding:0 17px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+                  </sc-for>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ historyRows }}" as="h" hint-placeholder-count="6">
+                    <button sc-camel-on-click="{{ h.onClick }}" style="display:flex;align-items:center;gap:13px;width:100%;text-align:left;cursor:pointer;font:inherit;color:#12301D;padding:13px;border:1px solid rgba(255,255,255,0.72);border-radius:24px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);box-shadow:0 10px 26px rgba(26,60,38,.1)">
+                      <span style="flex:none;width:50px;height:50px;border-radius:18px;background:{{ h.iconBg }};display:flex;align-items:center;justify-content:center">
+                        <svg width="26" height="26" sc-camel-view-box="0 0 24 24"><path d="M12 22C12 13 16 4 22 2c0 10-4 18-10 20Z" fill="{{ h.leafA }}"></path><path d="M12 22C12 14 8 6 2 5c0 9 4 16 10 17Z" fill="{{ h.leafB }}"></path></svg>
+                      </span>
+                      <span style="flex:1;min-width:0">
+                        <span style="display:block;font-size:15.5px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.disease }}</span>
+                        <span style="display:block;font-size:12.5px;color:rgba(18,48,29,.68);margin-top:2px">{{ h.meta }}</span>
+                      </span>
+                      <span style="flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                        <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:{{ h.sevBg }};color:{{ h.sevFg }}">{{ h.sevName }}</span>
+                        <span style="font-size:11.5px;font-weight:600;color:rgba(18,48,29,.62)">{{ h.conf }}</span>
+                      </span>
+                    </button>
+                  </sc-for>
+                </div>
+
+                <sc-if value="{{ historyEmpty }}">
+                  <div style="text-align:center;padding:46px 20px">
+                    <div style="font-size:18px;font-weight:700;margin-bottom:6px">Không có kết quả</div>
+                    <p style="font-size:14px;color:rgba(18,48,29,.68)">Chưa có lần chẩn đoán nào ở mức độ này.</p>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isPlotDetail }}">
+              <div data-screen-label="08 Chi tiết lô đất" style="animation:agriRise .32s ease-out">
+                <div style="position:relative;height:206px;border-radius:0 0 32px 32px;overflow:hidden">
+                  <div style="position:absolute;inset:0">
+                    <image-slot id="agrixai3-plot-field" shape="rect" placeholder="Ảnh lô đất" style="width:100%;height:100%" src="a4aeffdc-db2d-4c98-8628-7f022e5ec770"></image-slot>
+                  </div>
+                  <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(190,212,178,.92) 0%,rgba(190,212,178,.8) 46%,rgba(190,212,178,.86) 100%)"></div>
+                  <div style="position:relative;display:flex;align-items:center;gap:11px;padding:62px 16px 0">
+                    <button sc-camel-on-click="{{ goHome }}" style="flex:none;width:44px;height:44px;border-radius:16px;border:1px solid rgba(255,255,255,0.62);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.47) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);color:#12301D;display:flex;align-items:center;justify-content:center">
+                      <svg width="21" height="21" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                    </button>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:20px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ plotName }}</div>
+                      <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.88)">{{ plotPuc }}</div>
+                    </div>
+                    <button sc-camel-on-click="{{ goPlotForm }}" style="flex:none;width:44px;height:44px;border-radius:16px;border:1px solid rgba(255,255,255,0.62);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.47) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);color:#12301D;display:flex;align-items:center;justify-content:center">
+                      <svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L20 8l-4-4L4 16v4Z"></path></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div style="padding:16px 16px 22px">
+                  <div style="display:flex;flex-direction:column;border-radius:26px;overflow:hidden;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.62);margin-bottom:16px;box-shadow:0 12px 30px rgba(26,60,38,.11)">
+                    <sc-for list="{{ plotFacts }}" as="f" hint-placeholder-count="6">
+                      <div style="display:flex;align-items:center;gap:10px;padding:14px 17px;border-bottom:1px solid rgba(255,255,255,.72)">
+                        <span style="flex:1;font-size:13.5px;color:rgba(18,48,29,.72)">{{ f.label }}</span>
+                        <span style="flex:none;font-size:14.5px;font-weight:700">{{ f.value }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+
+                  <h4 style="font-size:18.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:12px">Lịch sử trên lô này</h4>
+                  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px">
+                    <sc-for list="{{ plotHistory }}" as="h" hint-placeholder-count="3">
+                      <button sc-camel-on-click="{{ h.onClick }}" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;font:inherit;color:#12301D;padding:14px;border:1px solid rgba(255,255,255,0.72);border-radius:22px;background:linear-gradient(165deg,rgba(255,255,255,0.76) 0%,rgba(255,255,255,0.35) 100%)">
+                        <span style="flex:none;width:9px;height:9px;border-radius:999px;background:{{ h.dot }}"></span>
+                        <span style="flex:1;min-width:0">
+                          <span style="display:block;font-size:14.5px;font-weight:600">{{ h.disease }}</span>
+                          <span style="display:block;font-size:12px;color:rgba(18,48,29,.68)">{{ h.meta }}</span>
+                        </span>
+                        <span style="flex:none;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:{{ h.sevBg }};color:{{ h.sevFg }}">{{ h.sevName }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+
+                  <button sc-camel-on-click="{{ goCapture }}" style="width:100%;min-height:54px;cursor:pointer;border:0;border-radius:999px;background:linear-gradient(135deg,#54A96A,#2E6F40);font-size:16.5px;font-weight:700;color:#fff;box-shadow:0 14px 30px rgba(24,86,45,.5)">Chẩn đoán cho lô này</button>
+                  <button style="width:100%;margin-top:10px;min-height:48px;cursor:pointer;border:1px solid rgba(242,161,4,.55);border-radius:999px;background:linear-gradient(165deg,rgba(250,204,128,0.62) 0%,rgba(242,161,4,0.34) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);font-size:14.5px;font-weight:700;color:#5C3A00">Xoá lô đất</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isPlotForm }}">
+              <div data-screen-label="09 Thêm / sửa lô đất" style="padding:62px 16px 22px;animation:agriRise .32s ease-out">
+                <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px">
+                  <button sc-camel-on-click="{{ goBack }}" style="flex:none;width:44px;height:44px;border-radius:16px;border:1px solid rgba(255,255,255,0.62);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);color:#12301D;display:flex;align-items:center;justify-content:center">
+                    <svg width="21" height="21" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                  </button>
+                  <h4 style="font-size:21px;font-weight:700;letter-spacing:-.01em">Thêm lô đất</h4>
+                </div>
+
+                <div style="padding:18px;border-radius:28px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.62);box-shadow:0 12px 30px rgba(26,60,38,.11);display:flex;flex-direction:column;gap:15px;margin-bottom:20px">
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:6px">Tên lô đất</div>
+                    <input placeholder="Ví dụ: Vườn nhà trên" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                  </div>
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:6px">Mã vùng trồng (PUC)</div>
+                    <input placeholder="Để trống — hệ thống tự sinh" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                    <div style="font-size:12px;color:rgba(18,48,29,.6);margin-top:7px;padding-left:6px">Định dạng PUC-YYMM-XXXX.</div>
+                  </div>
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:6px">Khu vực</div>
+                    <input placeholder="Xã / phường, tỉnh" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                  </div>
+                  <div style="display:flex;gap:11px">
+                    <div style="flex:1">
+                      <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:6px">Diện tích (m²)</div>
+                      <input placeholder="1200" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                    </div>
+                    <div style="flex:1">
+                      <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:6px">Cây trồng</div>
+                      <input value="Cà chua" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:8px">Trạng thái</div>
+                    <div style="display:flex;gap:7px">
+                      <sc-for list="{{ statusChips }}" as="c" hint-placeholder-count="3">
+                        <button sc-camel-on-click="{{ c.onClick }}" style="flex:1;cursor:pointer;font:inherit;font-size:13.5px;font-weight:600;min-height:46px;border-radius:999px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:6px">Ghi chú</div>
+                    <textarea placeholder="Giống, ngày xuống giống, đặc điểm cần lưu ý…" style="width:100%;min-height:96px;padding:14px 18px;font-size:15px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:24px;outline:none;resize:vertical"></textarea>
+                  </div>
+                </div>
+
+                <button sc-camel-on-click="{{ goHome }}" style="width:100%;min-height:54px;cursor:pointer;border:0;border-radius:999px;background:linear-gradient(135deg,#54A96A,#2E6F40);font-size:16.5px;font-weight:700;color:#fff;box-shadow:0 14px 30px rgba(24,86,45,.5)">Lưu lô đất</button>
+                <button sc-camel-on-click="{{ goBack }}" style="width:100%;margin-top:10px;min-height:48px;cursor:pointer;border:1px solid rgba(255,255,255,0.62);border-radius:999px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);font-size:15px;font-weight:600;color:#12301D">Huỷ</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isCatalog }}">
+              <div data-screen-label="10 Danh mục bệnh" style="padding:62px 16px 22px;animation:agriRise .32s ease-out">
+                <div style="margin-bottom:16px">
+                  <h4 style="font-size:23px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px">Danh mục bệnh cây trồng</h4>
+                  <div style="font-size:13px;color:rgba(18,48,29,.7)">10 loại — tra cứu được khi chưa đăng nhập</div>
+                </div>
+
+                <div style="position:relative;margin-bottom:18px">
+                  <span style="position:absolute;left:17px;top:50%;transform:translateY(-50%);pointer-events:none">
+                    <svg width="19" height="19" sc-camel-view-box="0 0 24 24" fill="none" stroke="rgba(18,48,29,.62)" stroke-width="2.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.5-4.5"></path></svg>
+                  </span>
+                  <input placeholder="Tìm theo tên bệnh hoặc dấu hiệu" value="{{ query }}" sc-camel-on-change="{{ onQuery }}" style="width:100%;min-height:50px;padding:0 18px 0 46px;font-size:15px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ catalogRows }}" as="d" hint-placeholder-count="10">
+                    <button sc-camel-on-click="{{ d.onClick }}" style="display:flex;align-items:flex-start;gap:13px;width:100%;text-align:left;cursor:pointer;font:inherit;color:#12301D;padding:15px;border:1px solid rgba(255,255,255,0.72);border-radius:24px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(26px) saturate(200%);-webkit-backdrop-filter:blur(26px) saturate(200%);box-shadow:0 10px 26px rgba(26,60,38,.1)">
+                      <span style="flex:none;width:42px;height:42px;border-radius:15px;background:{{ d.tagBg }};display:flex;align-items:center;justify-content:center">
+                        <svg width="22" height="22" sc-camel-view-box="0 0 24 24"><path d="M12 22C12 13 16 4 22 2c0 10-4 18-10 20Z" fill="{{ d.dot }}"></path><path d="M12 22C12 14 8 6 2 5c0 9 4 16 10 17Z" fill="{{ d.leafB }}"></path></svg>
+                      </span>
+                      <span style="flex:1;min-width:0">
+                        <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+                          <span style="font-size:16px;font-weight:700;letter-spacing:-.01em">{{ d.name }}</span>
+                          <span style="font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:{{ d.tagBg }};color:{{ d.tagFg }}">{{ d.type }}</span>
+                        </span>
+                        <span style="display:block;font-size:13px;line-height:1.45;color:rgba(18,48,29,.7)">{{ d.cue }}</span>
+                      </span>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isDiseaseDetail }}">
+              <div data-screen-label="11 Chi tiết bệnh" style="padding:62px 16px 22px;animation:agriRise .32s ease-out">
+                <div style="display:flex;align-items:center;gap:11px;margin-bottom:18px">
+                  <button sc-camel-on-click="{{ goCatalog }}" style="flex:none;width:44px;height:44px;border-radius:16px;border:1px solid rgba(255,255,255,0.62);cursor:pointer;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);backdrop-filter:blur(22px) saturate(200%);-webkit-backdrop-filter:blur(22px) saturate(200%);color:#12301D;display:flex;align-items:center;justify-content:center">
+                    <svg width="21" height="21" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+                  </button>
+                  <h4 style="font-size:19px;font-weight:700;letter-spacing:-.01em">Chi tiết bệnh</h4>
+                </div>
+
+                <h3 style="font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.12;margin-bottom:5px">{{ diseaseName }}</h3>
+                <div style="font-size:13.5px;color:rgba(18,48,29,.68);margin-bottom:14px">{{ diseaseEn }}</div>
+                <div style="margin-bottom:20px">
+                  <span style="font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 999px; background: {{ diseaseTagBg }}; color: {{ diseaseTagFg }}; border-width: 1px; border-style: solid; border-color: #D67F4881">{{ diseasePathogen }}</span>
+                </div>
+
+                <div style="padding: 18px; border-radius: 28px; background: rgba(84,169,106,.16); backdrop-filter: blur(28px) saturate(200%); -webkit-backdrop-filter: blur(28px) saturate(200%); border: 1px solid rgba(143,220,163,.24); margin-bottom: 22px; border-color: #f0fae1">
+                  <div style="font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2E6F40;margin-bottom:8px">Nhận biết nhanh</div>
+                  <p style="font-size:15.5px;line-height:1.52;text-wrap:pretty">{{ diseaseCue }}</p>
+                </div>
+
+                <h4 style="font-size:18px;font-weight:700;margin-bottom:8px">Triệu chứng</h4>
+                <p style="font-size:14.5px;line-height:1.6;margin-bottom:20px;color:rgba(23,58,36,.86);text-wrap:pretty">{{ diseaseSymptoms }}</p>
+
+                <h4 style="font-size:18px;font-weight:700;margin-bottom:8px">Điều kiện phát sinh</h4>
+                <p style="font-size:14.5px;line-height:1.6;margin-bottom:22px;color:rgba(23,58,36,.86);text-wrap:pretty">{{ diseaseConditions }}</p>
+
+                <h4 style="font-size:18px;font-weight:700;margin-bottom:12px">Xử lý</h4>
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px">
+                  <sc-for list="{{ diseaseTreatments }}" as="tr" hint-placeholder-count="4">
+                    <div style="display:flex;gap:12px;padding:14px;border-radius:22px;background:linear-gradient(165deg,rgba(255,255,255,0.76) 0%,rgba(255,255,255,0.35) 100%);border:1px solid rgba(255,255,255,0.72)">
+                      <span style="flex:none;width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,#54A96A,#2E6F40);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">{{ tr.n }}</span>
+                      <span style="flex:1;font-size:14px;line-height:1.5">{{ tr.text }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <h4 style="font-size:18px;font-weight:700;margin-bottom:12px">Phòng ngừa</h4>
+                <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:24px">
+                  <sc-for list="{{ diseasePrevention }}" as="pv" hint-placeholder-count="3">
+                    <div style="display:flex;gap:11px;align-items:flex-start">
+                      <span style="flex:none;margin-top:1px">
+                        <svg width="18" height="18" sc-camel-view-box="0 0 24 24"><circle cx="12" cy="12" r="10" fill="rgba(195,210,74,.2)"></circle><path d="m7.5 12.4 3 3 6-6.4" fill="none" stroke="#4A5810" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      </span>
+                      <span style="flex:1;font-size:14px;line-height:1.5">{{ pv.text }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <button sc-camel-on-click="{{ goCapture }}" style="width:100%;min-height:54px;cursor:pointer;border:0;border-radius:999px;background:linear-gradient(135deg,#54A96A,#2E6F40);font-size:16.5px;font-weight:700;color:#fff;box-shadow:0 14px 30px rgba(24,86,45,.5)">Chụp ảnh để so sánh</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isProfile }}">
+              <div data-screen-label="12 Hồ sơ cá nhân" style="padding:62px 16px 22px;animation:agriRise .32s ease-out">
+                <h4 style="font-size:23px;font-weight:700;letter-spacing:-.02em;margin-bottom:18px">Hồ sơ</h4>
+
+                <div style="display:flex;align-items:center;gap:15px;padding:18px;border-radius:28px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.62);box-shadow:0 12px 30px rgba(26,60,38,.11);margin-bottom:14px">
+                  <div style="flex:none;width:62px;height:62px;border-radius:22px;background:linear-gradient(135deg,#54A96A,#2E6F40);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700">H</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:19px;font-weight:700;letter-spacing:-.01em">Triệu Quang Học</div>
+                    <div style="font-size:13px;color:rgba(18,48,29,.68);margin:2px 0 7px">quanghoc · Cam Ly, Đà Lạt</div>
+                    <span style="font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;background:rgba(84,169,106,.2);border:1px solid rgba(143,220,163,.28);color:#2E6F40">Nông dân</span>
+                  </div>
+                </div>
+
+                <div style="display:flex;gap:11px;margin-bottom:20px">
+                  <div style="flex: 1; padding: 17px; border-radius: 24px; background: rgba(84,169,106,.16); border: 1px solid rgba(143,220,163,.22); border-color: #f0fae1">
+                    <div style="font-size:27px;font-weight:800;color:#2E6F40;line-height:1">3</div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(23,58,36,.7);margin-top:4px">lô đất</div>
+                  </div>
+                  <div style="flex: 1; padding: 17px; border-radius: 24px; background: rgba(242,161,4,.16); border: 1px solid rgba(242,161,4,.26); border-color: #f0fae1">
+                    <div style="font-size:27px;font-weight:800;color:#7A4F00;line-height:1">28</div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(23,58,36,.7);margin-top:4px">lượt chẩn đoán</div>
+                  </div>
+                </div>
+
+                <div style="padding:18px;border-radius:28px;background:linear-gradient(165deg,rgba(255,255,255,0.81) 0%,rgba(255,255,255,0.38) 100%);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.62);display:flex;flex-direction:column;gap:15px;margin-bottom:20px">
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:6px">Họ và tên</div>
+                    <input value="Triệu Quang Học" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                  </div>
+                  <div>
+                    <div style="font-size:12.5px;font-weight:600;color:rgba(18,48,29,.74);margin-bottom:6px">Số điện thoại</div>
+                    <input value="0912 345 678" style="width:100%;min-height:50px;padding:0 18px;font-size:16px;color:#12301D;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.40) 100%);border:1px solid rgba(255,255,255,0.62);border-radius:999px;outline:none">
+                  </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;border-radius:26px;overflow:hidden;background:linear-gradient(165deg,rgba(255,255,255,0.76) 0%,rgba(255,255,255,0.35) 100%);border:1px solid rgba(255,255,255,0.72);margin-bottom:20px">
+                  <button style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;font:inherit;font-size:15px;font-weight:600;min-height:54px;padding:0 17px;border:0;border-bottom:1px solid rgba(255,255,255,.72);background:transparent;color:#12301D">
+                    <span style="flex:1">Đổi mật khẩu</span>
+                    <svg width="19" height="19" sc-camel-view-box="0 0 24 24" fill="none" stroke="rgba(18,48,29,.55)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                  </button>
+                  <button style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;font:inherit;font-size:15px;font-weight:600;min-height:54px;padding:0 17px;border:0;border-bottom:1px solid rgba(255,255,255,.72);background:transparent;color:#12301D">
+                    <span style="flex:1">Ngôn ngữ</span>
+                    <span style="font-size:14px;font-weight:500;color:rgba(18,48,29,.68)">Tiếng Việt</span>
+                    <svg width="19" height="19" sc-camel-view-box="0 0 24 24" fill="none" stroke="rgba(18,48,29,.55)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                  </button>
+                  <button style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;cursor:pointer;font:inherit;font-size:15px;font-weight:600;min-height:54px;padding:0 17px;border:0;background:transparent;color:#12301D">
+                    <span style="flex:1">Về ứng dụng</span>
+                    <span style="font-size:14px;font-weight:500;color:rgba(18,48,29,.68)">v0.1.0</span>
+                    <svg width="19" height="19" sc-camel-view-box="0 0 24 24" fill="none" stroke="rgba(18,48,29,.55)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                  </button>
+                </div>
+
+                <button sc-camel-on-click="{{ doLogout }}" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;cursor:pointer;border:1px solid rgba(242,161,4,.3);border-radius:999px;background:rgba(242,161,4,.14);font-size:15.5px;font-weight:600;color:#7A4F00">
+                  <svg width="20" height="20" sc-camel-view-box="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12H4"></path><path d="m8 8-4 4 4 4"></path><path d="M10 4h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-8"></path></svg>
+                  Đăng xuất
+                </button>
+              </div>
+            </sc-if>
+
+          </div>
+
+          <sc-if value="{{ showTabs }}">
+            <div style="position:relative;flex:none;display:flex;align-items:flex-end;margin:0 12px 6px;padding:7px 6px 6px;border-radius:28px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.41) 100%);backdrop-filter:blur(34px) saturate(200%);-webkit-backdrop-filter:blur(34px) saturate(200%);border:1px solid rgba(255,255,255,0.62);box-shadow:0 -6px 30px rgba(26,60,38,.14)">
+              <button sc-camel-on-click="{{ goHome }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:0;background:transparent;font:inherit;font-size:10.5px;font-weight:600;min-height:52px;padding-top:7px;color:{{ tabPlotsColor }}">
+                <svg width="23" height="23" sc-camel-view-box="0 0 24 24"><path d="M12 21.5V10" stroke="{{ tabPlotsColor }}" stroke-width="2.2" stroke-linecap="round"></path><path d="M12 10C12 6 9.4 3.4 5 2.8c-.4 4.6 2.6 7.4 7 7.2Z" fill="{{ tabPlotsColor }}"></path><path d="M12 10.4c0-3.2 2.1-5.4 6-5.8.4 3.9-2.2 6-6 5.8Z" fill="{{ tabPlotsFill }}"></path></svg>
+                Lô đất
+              </button>
+              <button sc-camel-on-click="{{ goHistory }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:0;background:transparent;font:inherit;font-size:10.5px;font-weight:600;min-height:52px;padding-top:7px;color:{{ tabHistoryColor }}">
+                <svg width="23" height="23" sc-camel-view-box="0 0 24 24"><circle cx="12" cy="12" r="9.4" fill="none" stroke="{{ tabHistoryColor }}" stroke-width="2.2"></circle><path d="M12 7v5.2l3.4 2" fill="none" stroke="{{ tabHistoryColor }}" stroke-width="2.2" stroke-linecap="round"></path></svg>
+                Lịch sử
+              </button>
+              <div style="flex:1;display:flex;justify-content:center">
+                <button sc-camel-on-click="{{ goCapture }}" style="width:62px;height:62px;border-radius:999px;border:3px solid rgba(255,255,255,0.5);cursor:pointer;background:linear-gradient(135deg,#54A96A,#2E6F40);display:flex;align-items:center;justify-content:center;margin-top:-28px;box-shadow:0 12px 28px rgba(16,70,36,.6)">
+                  <svg width="29" height="29" sc-camel-view-box="0 0 24 24"><path d="M9.4 3h5.2l2.1 2.6H20a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7.6a2 2 0 0 1 2-2h3.3L9.4 3Z" fill="#F1F6EF"></path><circle cx="12" cy="12.8" r="4.2" fill="#2E6F40"></circle><circle cx="12" cy="12.8" r="2.1" fill="#C3D24A"></circle></svg>
+                </button>
+              </div>
+              <button sc-camel-on-click="{{ goCatalog }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:0;background:transparent;font:inherit;font-size:10.5px;font-weight:600;min-height:52px;padding-top:7px;color:{{ tabCatalogColor }}">
+                <svg width="23" height="23" sc-camel-view-box="0 0 24 24"><path d="M4 19.4V4.6A1.6 1.6 0 0 1 5.6 3H19v18H5.6A1.6 1.6 0 0 1 4 19.4Z" fill="none" stroke="{{ tabCatalogColor }}" stroke-width="2.2" stroke-linejoin="round"></path><path d="M9 3v18" stroke="{{ tabCatalogColor }}" stroke-width="2.2"></path></svg>
+                Danh mục
+              </button>
+              <button sc-camel-on-click="{{ goProfile }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:0;background:transparent;font:inherit;font-size:10.5px;font-weight:600;min-height:52px;padding-top:7px;color:{{ tabProfileColor }}">
+                <svg width="23" height="23" sc-camel-view-box="0 0 24 24"><circle cx="12" cy="8" r="3.9" fill="none" stroke="{{ tabProfileColor }}" stroke-width="2.2"></circle><path d="M4.4 20.6a7.6 7.6 0 0 1 15.2 0" fill="none" stroke="{{ tabProfileColor }}" stroke-width="2.2" stroke-linecap="round"></path></svg>
+                Tôi
+              </button>
+            </div>
+          </sc-if>
+
+          <div style="position:relative;height:26px;flex:none"></div>
+        </div>
+
+      </x-import>
+    </main>
+
+    <sc-if value="{{ notesOn }}" hint-placeholder-val="{{ true }}">
+      <aside style="flex:1 1 320px;min-width:296px;max-width:400px;position:sticky;top:20px">
+
+        <div style="padding:20px;border-radius:28px;background:#fff;border:1px solid #E2E8E2;margin-bottom:14px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#2E6F40;margin-bottom:12px">Hệ thống thị giác v3</div>
+          <div style="display:flex;flex-direction:column;gap:11px;font-size:13.5px;line-height:1.5;color:#42564A">
+            <div><strong style="color:#122E1D">Nền.</strong> Gradient chéo <code>#E7F0E4 → #D8E6D5 → #C9DCC6</code> — xanh nhạt thiên trắng — cộng ba quầng sáng mờ (xanh lá, ô liu, vàng) đặt cố định phía sau, để lớp kính có gì để làm mờ.</div>
+            <div><strong style="color:#122E1D">Kính mờ.</strong> Một công thức duy nhất dùng lại khắp hệ thống: <code>rgba(255,255,255,.72)</code> + <code>blur(20px) saturate(150%)</code> + viền <code>rgba(255,255,255,.88)</code> + bóng mềm, bo góc 22–32px.</div>
+            <div><strong style="color:#122E1D">Hành động chính.</strong> Gradient <code>#54A96A → #2E6F40</code> dạng viên thuốc, kèm nút tròn mũi tên — nổi rõ trên nền tối mà không cần đổ bóng nặng.</div>
+            <div><strong style="color:#122E1D">Chữ.</strong> Open Sans, <code>#12301D</code> cho chữ chính, mờ dần theo cấp (62% / 55% / 45%). Vàng <code>#F2A104</code> chỉ dùng cho cảnh báo, thời tiết và thuốc.</div>
+          </div>
+        </div>
+
+        <div style="padding:20px;border-radius:28px;background:#FBEDD2;margin-bottom:14px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#7A4F00;margin-bottom:10px">Thuốc gợi ý — chỗ gắn link</div>
+          <div style="font-size:13.5px;line-height:1.55;color:#5C4405">
+            Mỗi thuốc là một thẻ bấm được, có nhãn <strong style="color:#122E1D">Xem ↗</strong> báo hiệu sẽ mở trang ngoài. Chưa nối link — chỉ dựng sẵn chỗ.
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(138,91,0,.2)">Dữ liệu cần thêm vào <code>shared/data/tomato_diseases.json</code>, mỗi bệnh một mảng:
+              <div style="margin-top:7px;padding:10px 12px;border-radius:14px;background:linear-gradient(165deg,rgba(255,255,255,0.82) 0%,rgba(255,255,255,0.41) 100%);font-size:12px;line-height:1.6"><code>"products": [{ "name": "Metalaxyl + Mancozeb", "group": "Trừ nấm lưu dẫn + tiếp xúc", "product_url": null }]</code></div>
+              <div style="margin-top:8px">Backend trả kèm trong <code>DiseaseInfo</code>; app mở <code>product_url</code> bằng <code>url_launcher</code>. Thuốc nào chưa có link thì ẩn nhãn “Xem”.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:20px;border-radius:28px;background:#DCE9DD;margin-bottom:14px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#2E6F40;margin-bottom:12px">Màn hình → API</div>
+          <div style="display:flex;flex-direction:column;gap:9px;font-size:12.5px;color:#1B4429">
+            <div style="display:flex;gap:8px"><span style="flex:1">01 Đăng nhập</span><code style="flex:none;opacity:.75">POST /auth/login</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">02 Trang chủ</span><code style="flex:none;opacity:.75">GET /plots</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">03 Chụp ảnh</span><code style="flex:none;opacity:.75">GET /plots</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">04 Phân tích</span><code style="flex:none;opacity:.75">POST /diagnoses</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">05 Kết quả</span><code style="flex:none;opacity:.75">GET /diagnoses/{id}</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">06 Gợi ý xử lý</span><code style="flex:none;opacity:.75">GET /diseases/{key}</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">07 Lịch sử</span><code style="flex:none;opacity:.75">GET /diagnoses</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">08 Chi tiết lô</span><code style="flex:none;opacity:.75">GET /plots/{id}</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">09 Thêm/sửa lô</span><code style="flex:none;opacity:.75">POST · PATCH /plots</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">10 Danh mục bệnh</span><code style="flex:none;opacity:.75">GET /diseases</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">11 Chi tiết bệnh</span><code style="flex:none;opacity:.75">GET /diseases/{key}</code></div>
+            <div style="display:flex;gap:8px"><span style="flex:1">12 Hồ sơ</span><code style="flex:none;opacity:.75">GET · PATCH /auth/me</code></div>
+          </div>
+        </div>
+
+        <div style="padding:20px;border-radius:28px;border:1px solid #D3DBD4">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#6E8175;margin-bottom:10px">Dựng bằng Flutter</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.5;color:#42564A">
+            <div>Bộ tài liệu bàn giao nằm ở <code>design_handoff_farmer_mobile/</code> — mở thư mục đó rồi chạy Claude CLI ngay trong repo.</div>
+            <div><strong style="color:#122E1D">Kính mờ trong Flutter:</strong> <code>BackdropFilter(filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18))</code> bọc trong <code>ClipRRect</code>, phủ <code>Colors.white.withOpacity(.07)</code> và viền <code>.12</code>.</div>
+            <div><strong style="color:#122E1D">Quầng sáng:</strong> ba <code>Positioned</code> chứa <code>Container</code> bo tròn với <code>RadialGradient</code>, bọc <code>ImageFiltered</code> blur 26–34.</div>
+          </div>
+        </div>
+
+      </aside>
+    </sc-if>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;demoCase&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Nặng — Mốc sương muộn&quot;,&quot;Nhẹ — Nhện đỏ hai chấm&quot;,&quot;Khoẻ mạnh — không có bệnh&quot;],&quot;default&quot;:&quot;Nặng — Mốc sương muộn&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Nội dung demo&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Đăng nhập&quot;,&quot;Trang chủ&quot;,&quot;Chụp ảnh&quot;,&quot;Đang phân tích&quot;,&quot;Kết quả chẩn đoán&quot;,&quot;Gợi ý xử lý&quot;,&quot;Lịch sử&quot;,&quot;Chi tiết lô đất&quot;,&quot;Thêm lô đất&quot;,&quot;Danh mục bệnh&quot;,&quot;Chi tiết bệnh&quot;,&quot;Hồ sơ&quot;],&quot;default&quot;:&quot;Trang chủ&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Nội dung demo&quot;},&quot;xaiMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Vùng nghi ngờ&quot;,&quot;Ảnh gốc&quot;],&quot;default&quot;:&quot;Vùng nghi ngờ&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Nội dung demo&quot;},&quot;showNotes&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Trình bày&quot;}}">
+class Component extends DCLogic {
+  sev = {
+    none: { name: 'Khoẻ mạnh', bg: 'rgba(84,169,106,.2)', fg: '#2E6F40', dot: '#2E6F40' },
+    mild: { name: 'Nhẹ', bg: 'rgba(195,210,74,.18)', fg: '#4A5810', dot: '#4A5810' },
+    moderate: { name: 'Trung bình', bg: 'rgba(242,161,4,.2)', fg: '#7A4F00', dot: '#7A4F00' },
+    severe: { name: 'Nặng', bg: '#C24A12', fg: '#FFF3E8', dot: '#E4661F' },
+  };
+
+  typeTag = {
+    fungus: { label: 'Nấm', bg: 'rgba(195,210,74,.16)', fg: '#4A5810', dot: '#4A5810' },
+    bacteria: { label: 'Vi khuẩn', bg: 'rgba(84,169,106,.18)', fg: '#2E6F40', dot: '#2E6F40' },
+    virus: { label: 'Virus', bg: 'rgba(242,161,4,.18)', fg: '#7A4F00', dot: '#7A4F00' },
+    pest: { label: 'Nhện hại', bg: 'rgba(255,255,255,.78)', fg: 'rgba(18,48,29,.85)', dot: 'rgba(23,58,36,.7)' },
+    healthy: { label: 'Khoẻ', bg: 'rgba(84,169,106,.2)', fg: '#2E6F40', dot: '#2E6F40' },
+  };
+
+  diseases = [
+    { key: 'late_blight', name: 'Mốc sương muộn', en: 'Late blight', type: 'fungus', pathogen: 'Nấm trứng Phytophthora infestans',
+      cue: 'Mảng cháy lớn màu nâu xám loang lổ, viền nhợt như bị nước sôi dội qua.',
+      symptoms: 'Mảng bệnh lớn, không có hình dạng rõ ràng, màu xanh xám rồi chuyển nâu đen, lan rất nhanh. Mặt dưới lá có lớp mốc trắng mịn khi trời ẩm. Thân và quả cũng bị thối nâu cứng.',
+      conditions: 'Trời mát ẩm, nhiệt độ 15–22°C kèm mưa phùn hoặc sương mù kéo dài — điều kiện rất phổ biến ở Đà Lạt.',
+      treatments: ['Bệnh lan rất nhanh — xử lý ngay trong vòng 24 giờ khi phát hiện.', 'Nhổ bỏ và tiêu huỷ toàn bộ cây bệnh nặng, đưa ra khỏi ruộng.', 'Phun thuốc đặc hiệu, luân phiên hoạt chất giữa các lần phun.', 'Phun phòng cho các cây xung quanh ngay cả khi chưa có triệu chứng.'],
+      products: [
+        { name: 'Metalaxyl + Mancozeb', group: 'Trừ nấm lưu dẫn kết hợp tiếp xúc' },
+        { name: 'Cymoxanil', group: 'Trừ nấm lưu dẫn — đặc hiệu nấm trứng' },
+        { name: 'Dimethomorph', group: 'Trừ nấm lưu dẫn' },
+      ],
+      prevention: ['Theo dõi dự báo thời tiết, phun phòng trước các đợt mưa ẩm kéo dài.', 'Trồng giống có khả năng kháng bệnh.', 'Tuyệt đối không trồng cà chua cạnh ruộng khoai tây.'] },
+    { key: 'early_blight', name: 'Đốm vòng (đốm nâu)', en: 'Early blight', type: 'fungus', pathogen: 'Nấm Alternaria solani',
+      cue: 'Đốm nâu sẫm có vòng đồng tâm như hình bia bắn, xung quanh ngả vàng.',
+      symptoms: 'Đốm nâu sẫm với các vòng đồng tâm đặc trưng, đường kính tới 10 mm, xuất hiện ở lá gốc trước rồi lan dần lên. Mô quanh vết bệnh ngả vàng, lá khô và rụng từ dưới lên.',
+      conditions: 'Ẩm độ cao xen kẽ khô hạn, nhiệt độ 24–29°C; cây thiếu dinh dưỡng hoặc đang mang nhiều quả dễ nhiễm nặng.',
+      treatments: ['Cắt bỏ lá gốc bị bệnh, dọn sạch tàn dư trên mặt luống.', 'Phun luân phiên các nhóm hoạt chất khác nhau để tránh kháng thuốc.', 'Bón cân đối đạm – lân – kali, tránh để cây suy kiệt trong giai đoạn nuôi quả.'],
+      products: [
+        { name: 'Mancozeb', group: 'Trừ nấm tiếp xúc phổ rộng' },
+        { name: 'Chlorothalonil', group: 'Trừ nấm tiếp xúc' },
+        { name: 'Azoxystrobin', group: 'Trừ nấm lưu dẫn nhóm strobilurin' },
+        { name: 'Difenoconazole', group: 'Trừ nấm lưu dẫn nhóm triazole' },
+      ],
+      prevention: ['Phủ gốc bằng rơm hoặc màng phủ để hạn chế bào tử từ đất bắn lên lá.', 'Luân canh, cày vùi tàn dư sau vụ.', 'Tỉa bớt lá gốc để tán thông thoáng.'] },
+    { key: 'bacterial_spot', name: 'Đốm lá vi khuẩn', en: 'Bacterial spot', type: 'bacteria', pathogen: 'Vi khuẩn Xanthomonas spp.',
+      cue: 'Nhiều đốm nhỏ sũng nước, sau chuyển nâu đen và có quầng vàng bao quanh.',
+      symptoms: 'Trên lá xuất hiện các đốm nhỏ đường kính 1–3 mm, ban đầu sũng nước rồi chuyển nâu sẫm, thường có quầng vàng. Đốm dày lên làm lá vàng và rụng sớm. Trên quả có đốm sần sùi màu nâu.',
+      conditions: 'Ẩm độ cao, mưa nhiều, nhiệt độ 24–30°C; lây lan mạnh khi tưới phun mưa hoặc thao tác trên ruộng lúc lá còn ướt.',
+      treatments: ['Ngắt bỏ và tiêu huỷ lá bệnh, không vứt tại ruộng.', 'Phun thuốc gốc đồng, có thể phối hợp thuốc trừ nấm tiếp xúc.', 'Ngừng tưới phun mưa lên tán lá, chuyển sang tưới gốc hoặc nhỏ giọt.', 'Không thao tác chăm sóc khi lá còn ướt để hạn chế lây lan.'],
+      products: [
+        { name: 'Copper hydroxide', group: 'Thuốc gốc đồng — kháng khuẩn' },
+        { name: 'Copper oxychloride', group: 'Thuốc gốc đồng — kháng khuẩn' },
+        { name: 'Mancozeb', group: 'Phối hợp để tăng hiệu quả' },
+      ],
+      prevention: ['Dùng hạt giống và cây con sạch bệnh.', 'Luân canh với cây khác họ cà tối thiểu 2 năm.', 'Trồng thưa hợp lý để tán lá thông thoáng, mau khô.'] },
+    { key: 'septoria_leaf_spot', name: 'Đốm lá Septoria', en: 'Septoria leaf spot', type: 'fungus', pathogen: 'Nấm Septoria lycopersici',
+      cue: 'Rất nhiều đốm tròn nhỏ, tâm xám trắng viền nâu sẫm, phân bố dày đặc.',
+      symptoms: 'Đốm tròn nhỏ 1–3 mm, tâm màu xám trắng với viền nâu sẫm rõ nét, số lượng rất nhiều trên một lá. Xuất hiện ở lá gốc trước, làm lá vàng và rụng từ dưới lên.',
+      conditions: 'Ẩm ướt kéo dài, nhiệt độ 20–25°C; bào tử lây lan qua nước mưa và nước tưới bắn từ đất.',
+      treatments: ['Ngắt bỏ lá bệnh ngay khi mới xuất hiện ở tầng gốc.', 'Phun luân phiên hoạt chất để tránh kháng thuốc.', 'Chuyển sang tưới gốc, tránh nước bắn từ mặt đất lên lá.'],
+      products: [
+        { name: 'Chlorothalonil', group: 'Trừ nấm tiếp xúc' },
+        { name: 'Mancozeb', group: 'Trừ nấm tiếp xúc phổ rộng' },
+        { name: 'Azoxystrobin', group: 'Trừ nấm lưu dẫn' },
+      ],
+      prevention: ['Phủ gốc bằng rơm hoặc màng phủ nông nghiệp.', 'Dọn sạch và tiêu huỷ tàn dư cây sau thu hoạch.', 'Luân canh tối thiểu 2 năm với cây khác họ cà.'] },
+    { key: 'leaf_mold', name: 'Mốc lá', en: 'Leaf mold', type: 'fungus', pathogen: 'Nấm Passalora fulva',
+      cue: 'Mảng vàng nhạt mờ ở mặt trên lá, mặt dưới phủ lớp mốc màu ô liu.',
+      symptoms: 'Mặt trên lá có mảng vàng nhạt ranh giới không rõ; mặt dưới đúng vị trí đó phủ lớp nấm mượt màu ô liu đến nâu. Lá bệnh khô, quăn lại và rụng. Phổ biến trong nhà kính, nhà lưới.',
+      conditions: 'Ẩm độ trên 85% và thông gió kém — đặc biệt hay gặp trong nhà kính, nhà màng.',
+      treatments: ['Tăng thông gió, giảm ẩm độ trong nhà kính — đây là biện pháp quan trọng nhất.', 'Ngắt bỏ lá bệnh ở tầng dưới.', 'Chỉ phun thuốc khi bệnh đã xuất hiện, không phun phòng tràn lan.'],
+      products: [
+        { name: 'Chlorothalonil', group: 'Trừ nấm tiếp xúc' },
+        { name: 'Mancozeb', group: 'Trừ nấm tiếp xúc phổ rộng' },
+        { name: 'Difenoconazole', group: 'Trừ nấm lưu dẫn' },
+      ],
+      prevention: ['Trồng mật độ vừa phải, tỉa lá tạo độ thông thoáng.', 'Tưới vào buổi sáng để lá kịp khô trước đêm.', 'Vệ sinh, khử trùng nhà kính giữa các vụ.'] },
+    { key: 'target_spot', name: 'Đốm mắt cua', en: 'Target spot', type: 'fungus', pathogen: 'Nấm Corynespora cassiicola',
+      cue: 'Đốm nâu có vòng tròn đồng tâm mờ, tâm vết bệnh sáng màu và khô nứt.',
+      symptoms: 'Đốm nâu nhạt đến nâu sẫm với vòng đồng tâm mờ, tâm vết bệnh thường sáng màu, khô và có thể nứt rách. Xuất hiện trên cả lá, thân và quả; dễ nhầm với đốm vòng.',
+      conditions: 'Ẩm độ cao và nhiệt độ ấm 20–30°C, tán lá rậm rạp ít thông thoáng.',
+      treatments: ['Loại bỏ lá bệnh, tỉa thưa tán lá cho thông thoáng.', 'Phun thuốc trừ nấm, luân phiên nhóm hoạt chất giữa các lần phun.', 'Tránh tưới phun mưa vào chiều tối.'],
+      products: [
+        { name: 'Azoxystrobin', group: 'Trừ nấm lưu dẫn' },
+        { name: 'Difenoconazole', group: 'Trừ nấm lưu dẫn' },
+        { name: 'Mancozeb', group: 'Trừ nấm tiếp xúc phổ rộng' },
+      ],
+      prevention: ['Trồng thưa, làm giàn giúp tán lá khô nhanh sau mưa.', 'Dọn sạch tàn dư, luân canh cây trồng.', 'Tránh tưới phun mưa vào chiều tối.'] },
+    { key: 'spider_mites', name: 'Nhện đỏ hai chấm', en: 'Two-spotted spider mite', type: 'pest', pathogen: 'Nhện hại Tetranychus urticae — không phải nấm hay vi khuẩn',
+      cue: 'Vô số chấm li ti màu vàng bạc rải đều trên phiến lá, lá mất màu như bị phủ bụi.',
+      symptoms: 'Lá lấm tấm chấm vàng nhạt li ti do nhện chích hút, dần bạc màu và khô giòn. Khi mật độ cao thấy tơ mỏng ở mặt dưới lá và kẽ lá.',
+      conditions: 'Thời tiết nóng khô, ít mưa; bùng phát mạnh khi lạm dụng thuốc trừ sâu phổ rộng làm chết thiên địch.',
+      treatments: ['Phun mạnh nước lên mặt dưới lá để rửa trôi nhện — hiệu quả khi mật độ còn thấp.', 'Dùng thuốc trừ nhện chuyên biệt, không dùng thuốc trừ nấm.', 'Luân phiên hoạt chất vì nhện đỏ kháng thuốc rất nhanh.'],
+      products: [
+        { name: 'Abamectin', group: 'Trừ nhện — nguồn gốc sinh học' },
+        { name: 'Spiromesifen', group: 'Trừ nhện, diệt cả trứng' },
+        { name: 'Dầu khoáng', group: 'Bịt lỗ thở — an toàn cho thiên địch' },
+      ],
+      prevention: ['Giữ ẩm độ vườn hợp lý, tránh để khô hạn kéo dài.', 'Hạn chế thuốc trừ sâu phổ rộng để bảo vệ thiên địch.', 'Kiểm tra mặt dưới lá định kỳ để phát hiện sớm.'] },
+    { key: 'yellow_leaf_curl_virus', name: 'Virus xoăn vàng lá', en: 'Tomato Yellow Leaf Curl Virus', type: 'virus', pathogen: 'Virus TYLCV, lan truyền qua bọ phấn trắng',
+      cue: 'Lá nhỏ lại, mép lá cuốn ngược lên trên và vàng rõ ở phần rìa.',
+      symptoms: 'Lá non nhỏ hẹp bất thường, mép lá cuốn ngược lên trên và vàng từ rìa vào trong. Cây lùn, đốt ngắn, rụng hoa, hầu như không đậu quả. Nhiễm sớm có thể mất trắng.',
+      conditions: 'Mật độ bọ phấn trắng (Bemisia tabaci) cao; thời tiết nóng khô.',
+      treatments: ['Không có thuốc chữa virus — phải nhổ bỏ và tiêu huỷ cây bệnh ngay để cắt nguồn lây.', 'Tập trung diệt môi giới truyền bệnh là bọ phấn trắng.', 'Đặt bẫy dính màu vàng để theo dõi và giảm mật độ bọ phấn.'],
+      products: [
+        { name: 'Pymetrozine', group: 'Trừ bọ phấn — chặn môi giới truyền virus' },
+        { name: 'Dinotefuran', group: 'Trừ bọ phấn lưu dẫn' },
+        { name: 'Dầu khoáng', group: 'Xua và bịt lỗ thở bọ phấn' },
+      ],
+      productNote: 'Các thuốc dưới đây trị bọ phấn trắng — môi giới truyền bệnh, không phải trị virus.',
+      prevention: ['Trồng giống kháng TYLCV — biện pháp hiệu quả nhất.', 'Che lưới chắn côn trùng cho vườn ươm và nhà màng.', 'Nhổ sạch cỏ dại quanh ruộng vì đó là nơi trú của bọ phấn.'] },
+    { key: 'mosaic_virus', name: 'Virus khảm', en: 'Tomato mosaic virus', type: 'virus', pathogen: 'Virus ToMV/TMV, lan truyền qua tiếp xúc cơ học',
+      cue: 'Phiến lá loang lổ xanh đậm xen xanh nhạt như bức tranh khảm, bề mặt gồ ghề.',
+      symptoms: 'Phiến lá loang lổ các mảng xanh đậm xen xanh nhạt hoặc vàng, bề mặt lá nhăn gồ ghề, lá có thể hẹp lại hình sợi. Cây sinh trưởng chậm, quả nhỏ và chín không đều.',
+      conditions: 'Lây qua tay người, dụng cụ, quần áo khi chăm sóc; virus tồn tại rất lâu trong tàn dư và hạt giống.',
+      treatments: ['Không có thuốc chữa virus — nhổ bỏ và tiêu huỷ cây bệnh.', 'Rửa tay và khử trùng dụng cụ bằng cồn hoặc dung dịch javel sau khi chạm cây bệnh.', 'Không hút thuốc lá khi làm việc trong ruộng cà chua.'],
+      products: [],
+      noProductText: 'Không có thuốc trị virus khảm. Chỉ xử lý bằng cách nhổ bỏ cây bệnh và khử trùng tay, dụng cụ — mua thuốc trong trường hợp này là vô ích.',
+      prevention: ['Dùng hạt giống sạch bệnh, đã qua xử lý.', 'Khử trùng dụng cụ trước và sau mỗi lần sử dụng.', 'Thao tác với cây khoẻ trước, cây nghi bệnh sau cùng.'] },
+    { key: 'healthy', name: 'Lá khoẻ mạnh', en: 'Healthy', type: 'healthy', pathogen: 'Không có tác nhân gây bệnh',
+      cue: 'Phiến lá xanh đều, không có đốm, không biến dạng.',
+      symptoms: 'Lá xanh đều, phiến lá phẳng, không có đốm bệnh, không biến màu hay biến dạng.',
+      conditions: 'Không áp dụng.',
+      treatments: ['Không cần xử lý. Tiếp tục duy trì chế độ chăm sóc hiện tại.', 'Kiểm tra vườn định kỳ 3–5 ngày một lần để phát hiện sớm bất thường.'],
+      products: [],
+      noProductText: 'Lá đang khoẻ — không cần dùng thuốc. Giữ nguyên chế độ chăm sóc và kiểm tra vườn định kỳ.',
+      prevention: ['Bón phân cân đối, tưới nước đều đặn.', 'Giữ vườn thông thoáng, sạch cỏ dại.'] },
+  ];
+
+  plots = [
+    { id: 1, puc: 'PUC-2608-0142', name: 'Vườn nhà trên', region: 'Tổ 12, Cam Ly', area: '1.200 m²', status: 'Đang canh tác', count: 14, last: 'hôm nay', lastDisease: 'Mốc sương muộn', lastSev: 'severe' },
+    { id: 2, puc: 'PUC-2607-0088', name: 'Nhà màng số 2', region: 'Cam Ly, Đà Lạt', area: '800 m²', status: 'Đang canh tác', count: 9, last: '3 ngày trước', lastDisease: 'Mốc lá', lastSev: 'moderate' },
+    { id: 3, puc: 'PUC-2605-0031', name: 'Ruộng ven suối', region: 'Ven suối Cam Ly', area: '2.400 m²', status: 'Bỏ hoá', count: 5, last: '2 tuần trước', lastDisease: 'Lá khoẻ mạnh', lastSev: 'none' },
+  ];
+
+  history = [
+    { id: 101, disease: 'Mốc sương muộn', sev: 'severe', conf: '94%', plotId: 1, plot: 'Vườn nhà trên', time: 'Hôm nay 07:12' },
+    { id: 102, disease: 'Đốm lá Septoria', sev: 'mild', conf: '81%', plotId: 1, plot: 'Vườn nhà trên', time: 'Hôm qua 16:40' },
+    { id: 103, disease: 'Mốc lá', sev: 'moderate', conf: '88%', plotId: 2, plot: 'Nhà màng số 2', time: '18/08 08:05' },
+    { id: 104, disease: 'Nhện đỏ hai chấm', sev: 'mild', conf: '87%', plotId: 2, plot: 'Nhà màng số 2', time: '16/08 15:22' },
+    { id: 105, disease: 'Lá khoẻ mạnh', sev: 'none', conf: '97%', plotId: 3, plot: 'Ruộng ven suối', time: '07/08 09:30' },
+    { id: 106, disease: 'Đốm vòng (đốm nâu)', sev: 'moderate', conf: '90%', plotId: 1, plot: 'Vườn nhà trên', time: '02/08 17:10' },
+  ];
+
+  weather = [
+    { day: 'T5', temp: '24°', now: true }, { day: 'T6', temp: '22°', now: false },
+    { day: 'T7', temp: '25°', now: false }, { day: 'CN', temp: '26°', now: false },
+    { day: 'T2', temp: '23°', now: false },
+  ];
+
+  cases = {
+    severe: { key: 'late_blight', conf: '94%', affected: '42%', sev: 'severe', plot: 'Vườn nhà trên · PUC-2608-0142', time: 'Hôm nay 07:12',
+      text: 'Hệ thống tập trung vào phần giữa của lá — nơi xuất hiện mảng cháy lớn màu nâu xám loang lổ, viền nhợt như bị nước sôi dội qua. Đây là dấu hiệu đặc trưng của Mốc sương muộn (độ tin cậy 94%, vùng nghi ngờ chiếm khoảng 42% diện tích ảnh).',
+      urgent: 'Mốc sương muộn lan rất nhanh trong thời tiết mát ẩm. Xử lý trong vòng 24 giờ, đồng thời phun phòng cho các cây xung quanh.',
+      top: [['Mốc sương muộn', '94%'], ['Đốm vòng (đốm nâu)', '4%'], ['Đốm mắt cua', '1%']],
+      signs: ['Giữa phiến lá', 'Mảng nâu xám, viền nhợt', 'Rất nhanh'] },
+    mild: { key: 'spider_mites', conf: '87%', affected: '11%', sev: 'mild', plot: 'Nhà màng số 2 · PUC-2607-0088', time: 'Hôm nay 06:48',
+      text: 'Hệ thống tập trung vào phía trên bên phải của lá — nơi xuất hiện vô số chấm li ti màu vàng bạc rải đều trên phiến lá, lá mất màu như bị phủ bụi. Đây là dấu hiệu đặc trưng của Nhện đỏ hai chấm (độ tin cậy 87%, vùng nghi ngờ chiếm khoảng 11% diện tích ảnh).',
+      urgent: 'Tác nhân là nhện hại, không phải nấm — phun thuốc trừ nấm sẽ không có tác dụng.',
+      top: [['Nhện đỏ hai chấm', '87%'], ['Mốc lá', '7%'], ['Đốm lá Septoria', '3%']],
+      signs: ['Phía trên bên phải lá', 'Chấm vàng bạc li ti', 'Trung bình'] },
+    healthy: { key: 'healthy', conf: '97%', affected: '0%', sev: 'none', plot: 'Ruộng ven suối · PUC-2605-0031', time: 'Hôm nay 06:20',
+      text: 'Hệ thống không tìm thấy dấu hiệu bệnh nào rõ rệt trên lá (độ tin cậy 97%). Lá có màu đều, không có đốm hay biến dạng.',
+      urgent: null,
+      top: [['Lá khoẻ mạnh', '97%'], ['Mốc lá', '2%'], ['Đốm vòng (đốm nâu)', '1%']],
+      signs: ['Toàn bộ lá', 'Không có đốm bất thường', 'Không có bệnh'] },
+  };
+
+  screenDefs = [
+    ['login', 'Đăng nhập', 'M1'], ['home', 'Trang chủ', 'M3'], ['capture', 'Chụp ảnh', 'M7'],
+    ['analyzing', 'Đang phân tích', 'M7'], ['result', 'Kết quả chẩn đoán', 'M8'], ['treatment', 'Gợi ý xử lý', 'M9'],
+    ['history', 'Lịch sử', 'M10'], ['plotDetail', 'Chi tiết lô đất', 'M3'], ['plotForm', 'Thêm lô đất', 'M4'],
+    ['catalog', 'Danh mục bệnh', 'M13'], ['diseaseDetail', 'Chi tiết bệnh', 'M13'], ['profile', 'Hồ sơ', 'M2'],
+  ];
+
+  caseFor(label) {
+    if (label === 'Nhẹ — Nhện đỏ hai chấm') return 'mild';
+    if (label === 'Khoẻ mạnh — không có bệnh') return 'healthy';
+    return 'severe';
+  }
+
+  state = {
+    screen: 'home', prev: 'home', plotId: 1, diseaseKey: 'late_blight',
+    xai: true, sevFilter: 'all', step: 3, capturePlot: 1, status: 'Đang canh tác', query: '', speaking: false,
+  };
+
+  componentDidMount() {
+    const found = this.screenDefs.find(d => d[1] === this.props.startScreen);
+    if (found) this.setState({ screen: found[0] });
+    if (this.props.xaiMode === 'Ảnh gốc') this.setState({ xai: false });
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.startScreen !== this.props.startScreen) {
+      const found = this.screenDefs.find(d => d[1] === this.props.startScreen);
+      if (found) this.go(found[0]);
+    }
+  }
+
+  componentWillUnmount() { (this.timers || []).forEach(clearTimeout); if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }
+
+  go = (screen) => this.setState(s => ({ screen, prev: s.screen }));
+
+  toggleSpeak = () => {
+    if (!('speechSynthesis' in window)) return;
+    if (this.state.speaking) {
+      window.speechSynthesis.cancel();
+      this.setState({ speaking: false });
+      return;
+    }
+    const kase = this.cases[this.caseFor(this.props.demoCase)];
+    const disease = this.diseases.find(d => d.key === kase.key) || this.diseases[0];
+    const text = disease.name + '. ' + kase.text + (kase.urgent ? ' ' + kase.urgent : '');
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'vi-VN';
+    utter.onend = () => this.setState({ speaking: false });
+    utter.onerror = () => this.setState({ speaking: false });
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+    this.setState({ speaking: true });
+  };
+
+  analyze = () => {
+    (this.timers || []).forEach(clearTimeout);
+    this.setState({ screen: 'analyzing', prev: 'capture', step: 0 });
+    this.timers = [
+      setTimeout(() => this.setState({ step: 1 }), 600),
+      setTimeout(() => this.setState({ step: 2 }), 1400),
+      setTimeout(() => this.setState({ step: 3 }), 2100),
+      setTimeout(() => this.setState({ screen: 'result', prev: 'capture' }), 2600),
+    ];
+  };
+
+  renderVals() {
+    const st = this.state;
+    const S = this.sev;
+    const kase = this.cases[this.caseFor(this.props.demoCase)];
+    const disease = this.diseases.find(d => d.key === kase.key) || this.diseases[0];
+    const detail = this.diseases.find(d => d.key === st.diseaseKey) || this.diseases[0];
+    const plot = this.plots.find(p => p.id === st.plotId) || this.plots[0];
+    const sevOf = k => S[k] || S.mild;
+    const on = v => v
+      ? { bg: 'linear-gradient(135deg,#54A96A,#2E6F40)', fg: '#FFFFFF', border: 'rgba(255,255,255,.96)' }
+      : { bg: 'rgba(255,255,255,.72)', fg: 'rgba(18,48,29,.9)', border: 'rgba(255,255,255,.88)' };
+    const leafPair = k => k === 'severe' ? { a: '#F2A104', b: '#E4661F' }
+      : k === 'moderate' ? { a: '#7A4F00', b: '#4A5810' }
+      : k === 'mild' ? { a: '#4A5810', b: '#2E6F40' } : { a: '#C3D24A', b: '#2E6F40' };
+
+    const rows = st.sevFilter === 'all' ? this.history : this.history.filter(h => h.sev === st.sevFilter);
+    const mapRow = h => {
+      const lp = leafPair(h.sev);
+      return {
+        ...h, sevName: sevOf(h.sev).name, sevBg: sevOf(h.sev).bg, sevFg: sevOf(h.sev).fg, dot: sevOf(h.sev).dot,
+        iconBg: h.sev === 'severe' ? 'rgba(228,102,31,.22)' : sevOf(h.sev).bg,
+        leafA: lp.a, leafB: lp.b,
+        meta: h.plot + ' · ' + h.time, onClick: () => this.go('result'),
+      };
+    };
+
+    const products = disease.products || [];
+
+    return {
+      isLogin: st.screen === 'login', isHome: st.screen === 'home', isCapture: st.screen === 'capture',
+      isAnalyzing: st.screen === 'analyzing', isResult: st.screen === 'result', isTreatment: st.screen === 'treatment',
+      isHistory: st.screen === 'history', isPlotDetail: st.screen === 'plotDetail', isPlotForm: st.screen === 'plotForm',
+      isCatalog: st.screen === 'catalog', isDiseaseDetail: st.screen === 'diseaseDetail', isProfile: st.screen === 'profile',
+      showTabs: ['home', 'history', 'catalog', 'profile'].includes(st.screen),
+      notesOn: this.props.showNotes !== false,
+
+      tabPlotsColor: st.screen === 'home' ? '#2E6F40' : 'rgba(18,48,29,.62)',
+      tabPlotsFill: st.screen === 'home' ? '#C3D24A' : 'rgba(18,48,29,.45)',
+      tabHistoryColor: st.screen === 'history' ? '#2E6F40' : 'rgba(18,48,29,.62)',
+      tabCatalogColor: st.screen === 'catalog' ? '#2E6F40' : 'rgba(18,48,29,.62)',
+      tabProfileColor: st.screen === 'profile' ? '#2E6F40' : 'rgba(18,48,29,.62)',
+
+      doLogin: () => this.go('home'),
+      doLogout: () => this.go('login'),
+      doAnalyze: this.analyze,
+      goHome: () => this.go('home'), goCapture: () => this.go('capture'), goResult: () => this.go('result'),
+      goTreatment: () => this.go('treatment'), goHistory: () => this.go('history'), goCatalog: () => this.go('catalog'),
+      goProfile: () => this.go('profile'), goPlotForm: () => this.go('plotForm'),
+      goBack: () => this.go(st.prev === st.screen ? 'home' : st.prev),
+      setXaiOn: () => this.setState({ xai: true }), setXaiOff: () => this.setState({ xai: false }),
+      onQuery: e => this.setState({ query: e.target.value }),
+      query: st.query,
+
+      forecast: this.weather.map(w => ({
+        day: w.day, temp: w.temp,
+        bg: w.now ? '#F2A104' : 'rgba(255,255,255,.86)',
+        border: w.now ? '#F2A104' : 'rgba(255,255,255,.94)',
+        fg: w.now ? '#12240F' : '#12301D',
+        dim: w.now ? 'rgba(18,36,15,.7)' : 'rgba(18,48,29,.8)',
+        dot: w.now ? '#12240F' : 'rgba(18,48,29,.68)',
+      })),
+
+      rail: this.screenDefs.map((d, i) => {
+        const active = st.screen === d[0];
+        return {
+          num: i + 1, label: d[1], uc: 'UC-' + d[2],
+          bg: active ? '#2E6F40' : '#FFFFFF',
+          fg: active ? '#FFFFFF' : '#122E1D',
+          border: active ? '#2E6F40' : '#E2E8E2',
+          numBg: active ? '#1F4E2C' : '#EDF1EE',
+          numFg: active ? '#FFFFFF' : '#4B5F51',
+          onClick: () => this.go(d[0]),
+        };
+      }),
+
+      plotCards: this.plots.map(p => {
+        const lp = leafPair(p.lastSev);
+        return {
+          name: p.name, region: p.region, area: p.area, lastDisease: p.lastDisease, last: p.last,
+          sevBg: sevOf(p.lastSev).bg, sevFg: sevOf(p.lastSev).fg,
+          iconBg: p.lastSev === 'severe' ? 'rgba(228,102,31,.22)' : sevOf(p.lastSev).bg,
+          leafA: lp.a, leafB: lp.b,
+          onClick: () => this.setState({ plotId: p.id, screen: 'plotDetail', prev: 'home' }),
+        };
+      }),
+      recent: this.history.slice(0, 3).map(mapRow),
+      historyRows: rows.map(mapRow),
+      historyEmpty: rows.length === 0,
+      historyCount: rows.length + ' lần chẩn đoán' + (st.sevFilter === 'all' ? '' : ' ở mức ' + sevOf(st.sevFilter).name.toLowerCase()),
+
+      plotChips: this.plots.map(p => {
+        const c = on(st.capturePlot === p.id);
+        return { label: p.name, bg: c.bg, fg: c.fg, border: c.border, onClick: () => this.setState({ capturePlot: p.id }) };
+      }),
+      sevChips: [['all', 'Tất cả'], ['severe', 'Nặng'], ['moderate', 'Trung bình'], ['mild', 'Nhẹ'], ['none', 'Khoẻ mạnh']].map(([k, label]) => {
+        const c = on(st.sevFilter === k);
+        return { label, bg: c.bg, fg: c.fg, border: c.border, onClick: () => this.setState({ sevFilter: k }) };
+      }),
+      statusChips: ['Đang canh tác', 'Bỏ hoá', 'Lưu trữ'].map(label => {
+        const c = on(st.status === label);
+        return { label, bg: c.bg, fg: c.fg, border: c.border, onClick: () => this.setState({ status: label }) };
+      }),
+
+      steps: [['Tải ảnh lên máy chủ', 0], ['Nhận diện bệnh (ResNet-50)', 1], ['Khoanh vùng nghi ngờ (Grad-CAM)', 2]].map(([label, i]) => {
+        const done = st.step > i;
+        return {
+          label, mark: done ? '✓' : String(i + 1),
+          bg: done ? 'linear-gradient(165deg,rgba(216,236,208,0.86) 0%,rgba(178,213,164,0.5) 100%)' : 'linear-gradient(165deg,rgba(255,255,255,0.8) 0%,rgba(255,255,255,0.4) 100%)',
+          border: 'rgba(255,255,255,.6)',
+          fg: done ? '#12301D' : 'rgba(18,48,29,.68)',
+          ring: done ? '#2E6F40' : 'rgba(23,58,36,.2)',
+        };
+      }),
+      progressPct: Math.min(100, st.step * 33.4) + '%',
+
+      resultName: disease.name, resultPathogen: disease.pathogen, resultConfidence: kase.conf,
+      resultAffected: kase.affected, resultExplanation: kase.text,
+      toggleSpeak: this.toggleSpeak, speaking: st.speaking, notSpeaking: !st.speaking,
+      speakLabel: st.speaking ? 'Dừng đọc' : 'Nghe đọc',
+      speakBg: st.speaking ? 'linear-gradient(135deg,#54A96A,#2E6F40)' : 'rgba(255,255,255,.55)',
+      speakFg: st.speaking ? '#FFFFFF' : '#2E6F40',
+      resultSevName: sevOf(kase.sev).name, resultSevBg: sevOf(kase.sev).bg, resultSevFg: sevOf(kase.sev).fg,
+      resultPlot: kase.plot, resultTime: kase.time, resultModel: 'DummyPredictor · 240 ms',
+      xaiOn: st.xai,
+      xaiOnBg: st.xai ? 'linear-gradient(135deg,#54A96A,#2E6F40)' : 'transparent', xaiOnFg: st.xai ? '#FFFFFF' : '#12301D',
+      xaiOffBg: st.xai ? 'transparent' : 'linear-gradient(135deg,#54A96A,#2E6F40)', xaiOffFg: st.xai ? '#12301D' : '#FFFFFF',
+      top3: kase.top.map(([name, pct], i) => ({
+        name, pct, bar: i === 0 ? 'linear-gradient(90deg,#C3D24A,#54A96A)' : 'rgba(23,58,36,.18)',
+        fg: i === 0 ? '#F1F6EF' : 'rgba(18,48,29,.72)', weight: i === 0 ? '700' : '500',
+      })),
+
+      hasUrgent: !!kase.urgent, urgentText: kase.urgent || '',
+      hasVideo: !!disease.videoId, noVideo: !disease.videoId,
+      videoEmbedUrl: disease.videoId ? ('https://www.youtube.com/embed/' + disease.videoId) : '',
+      treatments: disease.treatments.map((text, i) => ({ n: i + 1, text })),
+      prevention: disease.prevention.map(text => ({ text })),
+      products: products.map(p => ({ name: p.name, group: p.group })),
+      hasProducts: products.length > 0,
+      noProducts: products.length === 0,
+      noProductsText: disease.noProductText || '',
+
+      plotName: plot.name, plotPuc: plot.puc,
+      plotFacts: [
+        { label: 'Mã vùng trồng', value: plot.puc }, { label: 'Khu vực', value: plot.region },
+        { label: 'Diện tích', value: plot.area }, { label: 'Cây trồng', value: 'Cà chua' },
+        { label: 'Trạng thái', value: plot.status }, { label: 'Số lần chẩn đoán', value: String(plot.count) },
+      ],
+      plotHistory: this.history.filter(h => h.plotId === plot.id).map(mapRow),
+
+      catalogRows: this.diseases.filter(d => {
+        const q = st.query.trim().toLowerCase();
+        return !q || (d.name + ' ' + d.en + ' ' + d.cue).toLowerCase().includes(q);
+      }).map(d => ({
+        name: d.name, cue: d.cue, type: this.typeTag[d.type].label,
+        tagBg: this.typeTag[d.type].bg, tagFg: this.typeTag[d.type].fg, dot: this.typeTag[d.type].dot,
+        leafB: this.typeTag[d.type].fg,
+        onClick: () => this.setState({ diseaseKey: d.key, screen: 'diseaseDetail', prev: 'catalog' }),
+      })),
+
+      diseaseName: detail.name, diseaseEn: detail.en, diseasePathogen: detail.pathogen,
+      diseaseTagBg: this.typeTag[detail.type].bg, diseaseTagFg: this.typeTag[detail.type].fg,
+      diseaseCue: detail.cue, diseaseSymptoms: detail.symptoms, diseaseConditions: detail.conditions,
+      diseaseTreatments: detail.treatments.map((text, i) => ({ n: i + 1, text })),
+      diseasePrevention: detail.prevention.map(text => ({ text })),
+    };
+  }
+}
+</script>
+
+
+</body></html>

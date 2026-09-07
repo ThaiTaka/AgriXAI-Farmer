@@ -1,0 +1,58 @@
+# ---- Node ----
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+
+# ---- Next.js (web-admin) ----
+web-admin/.next/
+web-admin/out/
+web-admin/build/
+web-admin/next-env.d.ts
+.vercel/
+
+# ---- React Native (mobile) ----
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/build/
+mobile/android/local.properties
+mobile/android/.cxx/
+mobile/ios/Pods/
+mobile/ios/build/
+mobile/ios/.xcode.env.local
+mobile/*.jsbundle
+mobile/.metro-health-check*
+.expo/
+
+# ---- Python (backend) ----
+backend/.venv/
+backend/venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+backend/*.db
+backend/*.db-journal
+backend/uploads/
+
+# ---- Env & secrets ----
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# ---- Build artefacts / logs ----
+*.log
+coverage/
+dist/

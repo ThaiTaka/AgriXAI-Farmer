@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "crop": "ca_chua",
+    "description": "Lịch bón phân THẬT cho cây cà chua, dùng làm baseline cho shared/data/care_protocols.json và tính năng 'Xem 1ha cần bón phân gì' (F1/F6). Nguồn: hướng dẫn kỹ thuật nông nghiệp phổ biến tại Việt Nam.",
+    "source": "https://giongcaytrong.org/kt-trong-cay/ki-thuat-trong-rau-sach/huong-dan-cach-bon-phan-cho-ca-chua-181.html",
+    "collected_at": "2026-09-07",
+    "disclaimer": "Đây là liều lượng tham khảo phổ biến, KHÔNG thay thế khuyến cáo của trung tâm khuyến nông địa phương hoặc kết quả phân tích đất thực tế. Hiển thị rõ nguồn và dòng disclaimer này trong UI, không trình bày như số liệu tuyệt đối."
+  },
+  "base_application_bon_lot": {
+    "timing": "Khi làm đất, trước khi trồng",
+    "organic_fertilizer_pct": 100,
+    "superphosphate_pct": 100,
+    "note": "Bón lót toàn bộ lượng phân hữu cơ (phân chuồng hoai mục) và toàn bộ lượng phân lân (super lân) đã tính cho cả vụ."
+  },
+  "top_dressing_scenarios_per_hectare": [
+    {
+      "id": "scenario_25_huu_co",
+      "name": "Phương án 1 — 25% hữu cơ + 75% vô cơ",
+      "npk_5_10_3_kg": { "min": 400, "max": 600 },
+      "ure_kg": { "min": 140, "max": 150 },
+      "super_lan_kg": { "min": 185, "max": 220 },
+      "kali_clorua_kg": { "min": 140, "max": 150 }
+    },
+    {
+      "id": "scenario_50_phan_chuong",
+      "name": "Phương án 2 — 50% phân chuồng hoai + 50% vô cơ",
+      "phan_chuong_hoai_tan": { "min": 6, "max": 8 },
+      "npk_5_10_3_kg": { "min": 400, "max": 600 },
+      "ure_kg": { "min": 75, "max": 85 },
+      "super_lan_kg": { "min": 160, "max": 190 },
+      "kali_clorua_kg": { "min": 150, "max": 165 }
+    }
+  ],
+  "top_dressing_stages": [
+    {
+      "stage_code": "seedling_recovery",
+      "stage_name_vi": "Hồi xanh (sau trồng, cây bén rễ)",
+      "pct_of_total_topdress": 20
+    },
+    {
+      "stage_code": "vegetative_early_flower",
+      "stage_name_vi": "Ra hoa đợt đầu",
+      "pct_of_total_topdress": 20
+    },
+    {
+      "stage_code": "flowering_fruiting",
+      "stage_name_vi": "Rộ hoa và đậu quả",
+      "pct_of_total_topdress": 30
+    },
+    {
+      "stage_code": "harvesting",
+      "stage_name_vi": "Thu hoạch đợt đầu",
+      "pct_of_total_topdress": 30
+    }
+  ],
+  "stage_mapping_note": "Ánh xạ sang 5 giai đoạn chuẩn của app (seedling → vegetative → flowering → fruiting → harvesting): coi 'Hồi xanh' = seedling/vegetative sớm, 'Ra hoa đợt đầu' = flowering sớm, 'Rộ hoa và đậu quả' = flowering/fruiting, 'Thu hoạch đợt đầu' = harvesting. Cần tinh chỉnh thêm khi có dữ liệu chi tiết hơn theo giống."
+}

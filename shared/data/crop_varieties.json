@@ -1,0 +1,123 @@
+{
+  "$meta": {
+    "description": "Danh sách giống cây trồng THẬT dùng làm seed ban đầu cho bảng crop_varieties. Đây là danh sách khởi tạo — ứng dụng PHẢI cho phép người dùng bấm '+ Thêm giống mới' để nhập giống chưa có trong danh sách, lưu cục bộ (SQLite) và đồng bộ lên server để mọi người dùng chung.",
+    "collected_at": "2026-09-07",
+    "primary_crop_scope": "Đồ án tập trung chẩn đoán bệnh + tư vấn phân bón cho CÀ CHUA (theo phạm vi đã chốt trong tài liệu gốc). Danh sách giống cà chua dưới đây là dữ liệu chính, chi tiết nhất.",
+    "sources": [
+      "https://sfarm.vn/ca-chua-bi-cac-loai-pho-bien-cong-dung-va-cach-trong-sai-qua/",
+      "https://www.nguonsinhthai.com/blogs/news/6-giong-ca-chua-pho-bien-lua-chon-phu-hop-cho-nha-vuon"
+    ],
+    "derived_from": "crop_varieties_seed.json",
+    "generated_at": "2026-09-07",
+    "extensibility": "Bảng crop_varieties là dữ liệu MỞ RỘNG ĐƯỢC qua UI/API. File này chỉ là seed ban đầu — người dùng thêm giống mới qua nút '+ Thêm giống mới', lưu SQLite cục bộ rồi đồng bộ lên server. Tuyệt đối không hard-code danh sách giống trong mã nguồn."
+  },
+  "varieties": [
+    {
+      "id": "ca_chua_bi_do",
+      "name": "Cà chua bi đỏ",
+      "fruit": "Quả tròn nhỏ, đỏ tươi đến đỏ đậm khi chín",
+      "usage": "Ăn tươi, salad, trang trí món ăn, làm sốt",
+      "note": "Giống được trồng phổ biến nhất trong nhóm cà chua bi tại Việt Nam",
+      "crop_type": "ca_chua",
+      "crop_name": "Cà chua",
+      "is_seed": true,
+      "source": "seed",
+      "approved": true
+    },
+    {
+      "id": "ca_chua_bi_vang",
+      "name": "Cà chua bi vàng",
+      "fruit": "Quả vàng/cam vàng khi chín",
+      "usage": "Salad, trang trí món ăn",
+      "note": "Vị ngọt hơn, ít chua hơn cà chua bi đỏ; giàu beta-carotene",
+      "crop_type": "ca_chua",
+      "crop_name": "Cà chua",
+      "is_seed": true,
+      "source": "seed",
+      "approved": true
+    },
+    {
+      "id": "ca_chua_bi_lun",
+      "name": "Cà chua bi lùn",
+      "fruit": "Quả nhỏ, mọc thành chùm",
+      "usage": "Trồng chậu, ban công, sân thượng",
+      "note": "Cây thấp 30–50cm, phù hợp diện tích nhỏ",
+      "crop_type": "ca_chua",
+      "crop_name": "Cà chua",
+      "is_seed": true,
+      "source": "seed",
+      "approved": true
+    },
+    {
+      "id": "ca_chua_bi_socola",
+      "name": "Cà chua bi sô-cô-la",
+      "fruit": "Màu nâu đỏ đến tím nâu",
+      "usage": "Salad cao cấp, trang trí",
+      "note": "Vị ngọt đậm, ít chua; giá bán thường cao hơn giống thường",
+      "crop_type": "ca_chua",
+      "crop_name": "Cà chua",
+      "is_seed": true,
+      "source": "seed",
+      "approved": true
+    },
+    {
+      "id": "ca_chua_tim",
+      "name": "Cà chua tím",
+      "fruit": "Màu tím đậm (chứa anthocyanin)",
+      "usage": "Ăn tươi, giá trị dinh dưỡng cao",
+      "note": "Chống oxy hoá cao, giá trị thương phẩm cao",
+      "crop_type": "ca_chua",
+      "crop_name": "Cà chua",
+      "is_seed": true,
+      "source": "seed",
+      "approved": true
+    },
+    {
+      "id": "ca_chua_bach_tuoc_leo_gian",
+      "name": "Cà chua bạch tuộc leo giàn",
+      "fruit": "Quả 100–150g, mọc thành chùm 5–6 quả",
+      "usage": "Trồng giàn quy mô, thu hoạch dài ngày",
+      "note": "Giống lai nguồn gốc Trung Quốc, một cây có thể leo phủ tới 10m² trong khoảng 5 tháng",
+      "crop_type": "ca_chua",
+      "crop_name": "Cà chua",
+      "is_seed": true,
+      "source": "seed",
+      "approved": true
+    },
+    {
+      "id": "ca_chua_trai_cay_nova",
+      "name": "Cà chua trái cây NOVA",
+      "fruit": "Quả vàng, thon dài hình trụ",
+      "usage": "Ăn tươi như trái cây, thị trường cao cấp",
+      "note": "Nguồn gốc Đài Loan; vị ngọt gần như không chua (8–9 độ brix); chịu nhiệt tốt; khoảng 75 ngày cho thu hoạch",
+      "crop_type": "ca_chua",
+      "crop_name": "Cà chua",
+      "is_seed": true,
+      "source": "seed",
+      "approved": true
+    },
+    {
+      "id": "ca_chua_mv1",
+      "name": "Cà chua MV1",
+      "fruit": "Quả nhỏ, đỏ khi chín, thơm",
+      "usage": "Canh tác đại trà, chế biến",
+      "note": "Giống Việt Nam, cây thân đứng thấp (~65cm), sinh trưởng hữu hạn, khá kháng bệnh, chu kỳ 90–100 ngày; năng suất tham khảo 52–60 tấn/ha chính vụ, 33–46 tấn/ha trái vụ",
+      "crop_type": "ca_chua",
+      "crop_name": "Cà chua",
+      "is_seed": true,
+      "source": "seed",
+      "approved": true
+    }
+  ],
+  "other_common_crops_reference_only": {
+    "note": "Đây CHỈ là danh mục nhóm cây trồng phổ biến ở Việt Nam để tham khảo khi mở rộng module Kho/Thu-chi sang nông sản khác ngoài cà chua — KHÔNG có dữ liệu giống chi tiết đã xác thực kèm theo. Khi người dùng cần giống cụ thể cho các cây này, dùng chức năng '+ Thêm giống mới' để họ tự nhập, không tự tạo danh sách giống chi tiết giả.",
+    "groups": [
+      "Cây lương thực: lúa, ngô (bắp), khoai lang, khoai tây, sắn (khoai mì)",
+      "Rau ăn lá: rau muống, cải xanh, cải ngọt, xà lách, rau dền",
+      "Rau ăn quả: dưa leo, bí xanh, bí đỏ, mướp, khổ qua, đậu cove, ớt, cà tím",
+      "Rau ăn củ: cà rốt, củ cải trắng, hành tây, khoai môn",
+      "Cây công nghiệp: cà phê, hồ tiêu, điều, cao su, mía",
+      "Cây ăn trái: sầu riêng, xoài, thanh long, bơ, cam/quýt, chuối"
+    ]
+  }
+}
