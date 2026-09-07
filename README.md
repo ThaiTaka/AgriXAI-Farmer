@@ -4,10 +4,12 @@
 lô đất, chẩn đoán bệnh cây qua ảnh, tư vấn phân bón, lịch chăm sóc, quản lý kho vật tư và
 ghi thu chi — kèm trang quản trị web cho cán bộ quản lý.
 
-> **Trạng thái: Giai đoạn 0 — đã dựng xong nền tảng.**
+> **Trạng thái: Giai đoạn 1 — 4 màn hình lõi mobile đã chạy được.**
 > README này sẽ được viết đầy đủ ở Giai đoạn 6. Bản hiện tại chỉ đủ để chạy dự án.
 
-![Màn hình kiểm tra nền tảng](docs/screenshot-mobile-phase0.png)
+| Đăng nhập | Trang chủ (offline) | Chi tiết lô đất | Thêm lô đất |
+|---|---|---|---|
+| ![Đăng nhập](docs/screenshots/01-dang-nhap.png) | ![Trang chủ](docs/screenshots/02-trang-chu-offline.png) | ![Chi tiết](docs/screenshots/03-chi-tiet-thong-tin.png) | ![Thêm lô](docs/screenshots/04-them-lo-dat.png) |
 
 ## Mục lục
 
@@ -18,6 +20,7 @@ ghi thu chi — kèm trang quản trị web cho cán bộ quản lý.
 - [Chạy mobile](#chạy-mobile)
 - [Design token và font](#design-token-và-font)
 - [Dữ liệu tĩnh offline](#dữ-liệu-tĩnh-offline)
+- [Đồng bộ dữ liệu](#đồng-bộ-dữ-liệu)
 - [Giới hạn hiện tại](#giới-hạn-hiện-tại)
 
 ## Kiến trúc thư mục
@@ -97,6 +100,9 @@ adb reverse tcp:8000 tcp:8000
 
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint App.tsx src`
 
+Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **cả tên đăng nhập lẫn email**
+(`quanghoc` hoặc `quanghoc@agrilog.local`).
+
 ## Design token và font
 
 `shared/design/tokens.json` là **nguồn sự thật duy nhất** cho màu, font, bo góc, spacing,
@@ -127,12 +133,31 @@ Font Open Sans được **nhúng kèm** cả hai nền tảng, không tải từ
 nên nguồn sự thật khi chạy là bảng `fertilizer_prices` trong backend, sửa được ở màn hình
 Admin và có lưu lịch sử giá (Giai đoạn 4). Không hard-code giá ở bất kỳ đâu trong mã nguồn.
 
+## Đồng bộ dữ liệu
+
+Đồng bộ **hai chiều** theo giao thức WatermelonDB (Mục 9), chạy nền khi đăng nhập, khi app
+quay lại foreground, và mỗi 60 giây.
+
+- `GET /sync?last_pulled_at=` — lấy thay đổi từ server
+- `POST /sync?last_pulled_at=` — đẩy thay đổi từ máy lên
+
+Xung đột giải quyết bằng **last-write-wins theo `updated_at`**; xoá luôn thắng update. Lý do
+và các test bắt buộc ghi ở [ADR 0002](docs/adr/0002-giai-doan-1.md).
+
+Mọi thao tác của nông dân ghi vào SQLite trước rồi mới đồng bộ — tắt mạng vẫn dùng được
+toàn bộ 4 màn hình.
+
 ## Giới hạn hiện tại
 
-- **Giai đoạn 0** mới chỉ dựng nền tảng: chưa có màn hình nghiệp vụ nào. `App.tsx` và trang
-  chủ web-admin hiện là màn hình kiểm tra design token, sẽ bị thay ở Giai đoạn 1 và 4.
-- Backend mới có `GET /health`, `POST /auth/login`, `GET/PATCH /auth/me`. Các endpoint còn
-  lại theo Mục 7 sẽ bổ sung dần.
+- **Giai đoạn 1** mới có 4 màn hình lõi. Luồng chẩn đoán ảnh (Giai đoạn 2), nhật ký, kho,
+  thu-chi (Giai đoạn 3) và toàn bộ web-admin (Giai đoạn 4) chưa làm. Trang chủ web-admin
+  hiện vẫn là màn hình kiểm tra design token.
+- Backend có `GET /health`, `POST /auth/login`, `GET/PATCH /auth/me`, CRUD `/plots`,
+  `/crop-varieties`, và `/sync`. Các endpoint còn lại theo Mục 7 sẽ bổ sung dần.
+- Tab "Chu kỳ canh tác" và "Lịch sử chẩn đoán" đã dựng xong nhưng chưa có dữ liệu vì hai
+  tính năng sinh ra chúng thuộc giai đoạn sau.
+- Giai đoạn cây ở tab "Lịch chăm sóc" hiện **ước tính từ ngày trồng**; khi có bản ghi chu
+  kỳ canh tác thật thì bản ghi đó được ưu tiên.
 - Mô hình chẩn đoán ảnh chưa có — sẽ dùng `DummyPredictor`, thay bằng model thật qua biến
   môi trường `MODEL_CHECKPOINT`.
 - Nhận dạng giọng nói chưa có — sẽ dùng `DummyAsrEngine` trước, chọn Vosk hay whisper.cpp

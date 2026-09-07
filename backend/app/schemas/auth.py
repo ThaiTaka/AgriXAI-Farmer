@@ -15,6 +15,7 @@ class UserOut(BaseModel):
 
     id: str
     username: str
+    email: str | None = None
     full_name: str
     phone: str | None = None
     region: str | None = None

@@ -201,7 +201,16 @@ export const glass = {
     "blurAmount": 32,
     "saturate": 200,
     "solidBackground": "#E1ECDD",
-    "shadow": null
+    "shadow": {
+      "shadowColor": "#1A3C26",
+      "shadowOffset": {
+        "width": 0,
+        "height": 20
+      },
+      "shadowRadius": 23,
+      "shadowOpacity": 0.15,
+      "elevation": 12
+    }
   },
   "card": {
     "gradientColors": [
@@ -221,7 +230,16 @@ export const glass = {
     "blurAmount": 28,
     "saturate": 200,
     "solidBackground": "#DFEADA",
-    "shadow": null
+    "shadow": {
+      "shadowColor": "#1A3C26",
+      "shadowOffset": {
+        "width": 0,
+        "height": 12
+      },
+      "shadowRadius": 15,
+      "shadowOpacity": 0.12,
+      "elevation": 7
+    }
   },
   "soft": {
     "gradientColors": [
@@ -241,7 +259,16 @@ export const glass = {
     "blurAmount": 26,
     "saturate": 200,
     "solidBackground": "#DCE8D7",
-    "shadow": null
+    "shadow": {
+      "shadowColor": "#1A3C26",
+      "shadowOffset": {
+        "width": 0,
+        "height": 10
+      },
+      "shadowRadius": 13,
+      "shadowOpacity": 0.11,
+      "elevation": 6
+    }
   },
   "control": {
     "gradientColors": [
@@ -301,11 +328,131 @@ export const glass = {
     "blurAmount": 34,
     "saturate": 200,
     "solidBackground": "#E1EBDC",
-    "shadow": null
+    "shadow": {
+      "shadowColor": "#1A3C26",
+      "shadowOffset": {
+        "width": 0,
+        "height": -6
+      },
+      "shadowRadius": 15,
+      "shadowOpacity": 0.14,
+      "elevation": 4
+    }
   }
 } as const;
 
-export const shadows = {} as const;
+export const shadows = {
+  "primaryButton": {
+    "shadowColor": "#18562D",
+    "shadowOffset": {
+      "width": 0,
+      "height": 14
+    },
+    "shadowRadius": 15,
+    "shadowOpacity": 0.5,
+    "elevation": 8
+  },
+  "primaryButtonSm": {
+    "shadowColor": "#18562D",
+    "shadowOffset": {
+      "width": 0,
+      "height": 10
+    },
+    "shadowRadius": 11,
+    "shadowOpacity": 0.32,
+    "elevation": 6
+  },
+  "fab": {
+    "shadowColor": "#104624",
+    "shadowOffset": {
+      "width": 0,
+      "height": 12
+    },
+    "shadowRadius": 14,
+    "shadowOpacity": 0.6,
+    "elevation": 7
+  },
+  "heroCard": {
+    "shadowColor": "#0C3A1D",
+    "shadowOffset": {
+      "width": 0,
+      "height": 16
+    },
+    "shadowRadius": 17,
+    "shadowOpacity": 0.46,
+    "elevation": 10
+  },
+  "cardXl": {
+    "shadowColor": "#1A3C26",
+    "shadowOffset": {
+      "width": 0,
+      "height": 20
+    },
+    "shadowRadius": 23,
+    "shadowOpacity": 0.15,
+    "elevation": 12
+  },
+  "cardLg": {
+    "shadowColor": "#1A3C26",
+    "shadowOffset": {
+      "width": 0,
+      "height": 18
+    },
+    "shadowRadius": 20,
+    "shadowOpacity": 0.14,
+    "elevation": 11
+  },
+  "cardMd": {
+    "shadowColor": "#1A3C26",
+    "shadowOffset": {
+      "width": 0,
+      "height": 12
+    },
+    "shadowRadius": 15,
+    "shadowOpacity": 0.12,
+    "elevation": 7
+  },
+  "cardSm": {
+    "shadowColor": "#1A3C26",
+    "shadowOffset": {
+      "width": 0,
+      "height": 10
+    },
+    "shadowRadius": 13,
+    "shadowOpacity": 0.11,
+    "elevation": 6
+  },
+  "tabBar": {
+    "shadowColor": "#1A3C26",
+    "shadowOffset": {
+      "width": 0,
+      "height": -6
+    },
+    "shadowRadius": 15,
+    "shadowOpacity": 0.14,
+    "elevation": 4
+  },
+  "amberButton": {
+    "shadowColor": "#7A4F00",
+    "shadowOffset": {
+      "width": 0,
+      "height": 8
+    },
+    "shadowRadius": 9,
+    "shadowOpacity": 0.38,
+    "elevation": 5
+  },
+  "logo": {
+    "shadowColor": "#18562D",
+    "shadowOffset": {
+      "width": 0,
+      "height": 10
+    },
+    "shadowRadius": 11,
+    "shadowOpacity": 0.3,
+    "elevation": 6
+  }
+} as const;
 
 export const radius = {
   "xs": 8,

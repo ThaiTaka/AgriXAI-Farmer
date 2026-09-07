@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.database import Base, engine
-from app.routers import auth, health
+from app.routers import auth, health, plots, sync
 
 
 @asynccontextmanager
@@ -36,6 +36,9 @@ app.add_middleware(
 
 app.include_router(health.router)
 app.include_router(auth.router)
+app.include_router(plots.plots_router)
+app.include_router(plots.varieties_router)
+app.include_router(sync.router)
 
 
 @app.get("/", include_in_schema=False)

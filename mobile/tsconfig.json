@@ -1,5 +1,22 @@
 {
   "extends": "@react-native/typescript-config",
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/Pods"]
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": [
+        "../shared/*"
+      ]
+    },
+    "experimentalDecorators": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../shared/data/*.json"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/Pods"
+  ]
 }

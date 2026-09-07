@@ -18,6 +18,9 @@ class User(Base, SyncMixin):
     __tablename__ = "users"
 
     username: Mapped[str] = mapped_column(String(64), unique=True, index=True, nullable=False)
+    # Optional: the login form accepts either the username or the email, so a
+    # farmer can use whichever they remember.
+    email: Mapped[str | None] = mapped_column(String(160), unique=True, index=True, default=None)
     password_hash: Mapped[str] = mapped_column(String(128), nullable=False)
     full_name: Mapped[str] = mapped_column(String(128), nullable=False, default="")
     phone: Mapped[str | None] = mapped_column(String(32), default=None)

@@ -3,7 +3,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWTError
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -19,7 +19,14 @@ INVALID_CREDENTIALS = HTTPException(
 
 
 def authenticate(db: Session, username: str, password: str) -> User:
-    user = db.scalar(select(User).where(User.username == username, User.is_deleted.is_(False)))
+    # The login form has one field: match it against either identifier so a
+    # farmer can type whichever they remember.
+    user = db.scalar(
+        select(User).where(
+            or_(User.username == username, User.email == username),
+            User.is_deleted.is_(False),
+        )
+    )
     if user is None or not verify_password(password, user.password_hash):
         raise INVALID_CREDENTIALS
     if not user.is_active:

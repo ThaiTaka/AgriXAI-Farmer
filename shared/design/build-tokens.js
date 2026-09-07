@@ -73,7 +73,9 @@ function gradientColors(css) {
  */
 function shadowToRN(css) {
   if (!css || css === 'none') return null;
-  const m = /^(-?[\d.]+)px?\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+(rgba?\([^)]+\)|#[0-9A-Fa-f]{3,8})$/.exec(
+  // `(?:px)?` on the offset, not `px?` — the latter only makes the "x" optional
+  // and silently fails to match every real shadow value.
+  const m = /^(-?[\d.]+)(?:px)?\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+(rgba?\([^)]+\)|#[0-9A-Fa-f]{3,8})$/.exec(
     css.trim(),
   );
   if (!m) return null;
