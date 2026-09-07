@@ -25,6 +25,5 @@ def health(db: Session = Depends(get_db)) -> HealthResponse:
         app=settings.app_name,
         version=settings.app_version,
         database=database,
-        model_status=settings.model_status,
         static_data=static_data.availability(),
     )

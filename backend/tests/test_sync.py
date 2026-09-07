@@ -56,7 +56,7 @@ def plot_row(record_id: str, name: str, updated_at: int, **overrides) -> dict:
 def empty_changes() -> dict:
     return {
         table: {"created": [], "updated": [], "deleted": []}
-        for table in ("plots", "crop_varieties", "diagnoses", "crop_cycles", "change_logs")
+        for table in ("plots", "crop_varieties", "crop_cycles", "change_logs")
     }
 
 

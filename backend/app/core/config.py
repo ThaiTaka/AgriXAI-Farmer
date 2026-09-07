@@ -32,11 +32,6 @@ class Settings(BaseSettings):
 
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
 
-    upload_dir: Path = BACKEND_DIR / "uploads"
-
-    # Empty => DummyPredictor. Set to a checkpoint path to use a real model.
-    model_checkpoint: str = ""
-
     seed_admin_username: str = "admin"
     seed_admin_password: str = "admin123"
     seed_farmer_username: str = "thaitaka"
@@ -46,9 +41,6 @@ class Settings(BaseSettings):
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
-    @property
-    def model_status(self) -> str:
-        return "real" if self.model_checkpoint else "dummy"
 
 
 @lru_cache

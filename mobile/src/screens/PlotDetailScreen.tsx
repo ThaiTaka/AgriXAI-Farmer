@@ -2,9 +2,7 @@
  * Màn hình 08 — Chi tiết lô đất.
  *
  * Design reference: screen "08 Chi tiết lô đất" — hero header with a scrim,
- * back + edit icon buttons, then a facts card. The five tabs required by
- * Giai đoạn 1 are added on top using the same chip styling the design uses for
- * its other filter rows (screens 03 and 07), so nothing new is invented.
+ * back + edit icon buttons, then a facts card. Tabs: info, cycles, care, audit.
  *
  * Every tab reads from the local database or from the bundled JSON catalogues,
  * so the whole screen works with the network off.
@@ -26,14 +24,12 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {useChangeAuthor} from '../auth/AuthContext';
-import {DangerButton, IconButton, PrimaryButton} from '../components/buttons';
+import {DangerButton, IconButton} from '../components/buttons';
 import {GlassSurface} from '../components/GlassSurface';
 import {CheckIcon, ChevronLeft, ClockIcon, PencilIcon} from '../components/icons';
 import {ScreenBackground} from '../components/ScreenBackground';
-import {severityDot} from '../components/SeverityBadge';
 import type ChangeLog from '../db/models/ChangeLog';
 import type CropCycle from '../db/models/CropCycle';
-import type Diagnosis from '../db/models/Diagnosis';
 import type Plot from '../db/models/Plot';
 import {observeChangeLogs} from '../db/repositories/changeLogRepository';
 import {
@@ -43,7 +39,7 @@ import {
 } from '../db/repositories/plotRepository';
 import {useObservable} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, radius, severity as severityTokens, spacing, text} from '../theme';
+import {colors, radius, spacing, text} from '../theme';
 import {formatArea, formatDate, formatDateTime, formatRelative} from '../utils/format';
 import {inferGrowthStage} from '../utils/growthStage';
 import {
@@ -58,7 +54,6 @@ type Route = RouteProp<RootStackParamList, 'PlotDetail'>;
 
 const TABS = [
   {key: 'info', label: 'Thông tin'},
-  {key: 'diagnoses', label: 'Chẩn đoán'},
   {key: 'cycles', label: 'Chu kỳ'},
   {key: 'care', label: 'Chăm sóc'},
   {key: 'audit', label: 'Thay đổi'},
@@ -124,7 +119,9 @@ export function PlotDetailScreen() {
             <Text style={text('groupTitle')} numberOfLines={1}>
               {plot.name}
             </Text>
-            <Text style={[text('metaSm', 'rgba(18,48,29,0.88)')]}>{plot.code}</Text>
+            <Text style={[text('metaSm', 'rgba(18,48,29,0.88)')]}>
+              {plot.code}
+            </Text>
           </View>
           <IconButton
             accessibilityLabel="Sửa lô đất"
@@ -136,8 +133,6 @@ export function PlotDetailScreen() {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          // Without flexGrow: 0 this row is a flex child of the column and
-          // stretches to fill the screen, turning the chips into tall ovals.
           style={styles.tabScroll}
           contentContainerStyle={styles.tabRow}>
           {TABS.map(item => (
@@ -157,16 +152,10 @@ export function PlotDetailScreen() {
 
         <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
           {tab === 'info' ? <InfoTab plot={plot} /> : null}
-          {tab === 'diagnoses' ? <DiagnosesTab plot={plot} /> : null}
           {tab === 'cycles' ? <CyclesTab plot={plot} /> : null}
           {tab === 'care' ? <CareTab plot={plot} /> : null}
           {tab === 'audit' ? <AuditTab plot={plot} /> : null}
 
-          <PrimaryButton
-            label="Chẩn đoán cho lô này"
-            onPress={() => navigation.navigate('CaptureImage', {plotId: plot.id})}
-            style={styles.primaryAction}
-          />
           <DangerButton label="Xoá lô đất" onPress={onDelete} style={styles.deleteAction} />
         </ScrollView>
       </SafeAreaView>
@@ -219,59 +208,7 @@ function InfoTab({plot}: {plot: Plot}) {
   );
 }
 
-/* --------------------------- tab 2: diagnoses ----------------------------- */
-
-function DiagnosesTab({plot}: {plot: Plot}) {
-  const navigation = useNavigation<Nav>();
-  const rows = useObservable<Diagnosis[]>(
-    () => plot.diagnosisHistory.observe(),
-    [plot.id],
-    [],
-  );
-
-  if (rows.length === 0) {
-    return (
-      <EmptyTab
-        title="Chưa có lần chẩn đoán nào"
-        body="Chụp ảnh lá để chẩn đoán bệnh cho lô này. Lịch sử sẽ hiện ở đây."
-      />
-    );
-  }
-
-  return (
-    <View style={styles.rowList}>
-      {rows.map(row => {
-        const token = severityTokens[row.severity];
-        return (
-          <Pressable
-            key={row.id}
-            accessibilityRole="button"
-            accessibilityLabel={`Xem chi tiết ${row.diseaseName}`}
-            onPress={() =>
-              navigation.navigate('DiagnosisResult', {mode: 'saved', diagnosisId: row.id})
-            }>
-            <GlassSurface level="soft" style={styles.historyRow}>
-              <View style={[styles.dot, {backgroundColor: severityDot(row.severity)}]} />
-              <View style={styles.historyBody}>
-                <Text style={text('bodySm')} numberOfLines={1}>
-                  {row.diseaseName}
-                </Text>
-                <Text style={text('caption', colors.text.alpha['68'])}>
-                  {formatDateTime(row.diagnosedAt)} · độ tin cậy {Math.round(row.confidence * 100)}%
-                </Text>
-              </View>
-              <View style={[styles.badge, {backgroundColor: token.bg}]}>
-                <Text style={text('badge', token.fg)}>{token.label}</Text>
-              </View>
-            </GlassSurface>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
-
-/* ----------------------------- tab 3: cycles ------------------------------ */
+/* ----------------------------- tab 2: cycles ------------------------------ */
 
 function CyclesTab({plot}: {plot: Plot}) {
   const rows = useObservable<CropCycle[]>(() => plot.cycles.observe(), [plot.id], []);
@@ -314,7 +251,7 @@ function CyclesTab({plot}: {plot: Plot}) {
   );
 }
 
-/* ------------------------------ tab 4: care ------------------------------- */
+/* ------------------------------ tab 3: care ------------------------------- */
 
 function CareTab({plot}: {plot: Plot}) {
   const cycles = useObservable<CropCycle[]>(() => plot.cycles.observe(), [plot.id], []);
@@ -386,7 +323,7 @@ function CareTab({plot}: {plot: Plot}) {
   );
 }
 
-/* ------------------------------ tab 5: audit ------------------------------ */
+/* ------------------------------ tab 4: audit ------------------------------ */
 
 function AuditTab({plot}: {plot: Plot}) {
   const rows = useObservable<ChangeLog[]>(
@@ -527,27 +464,6 @@ const styles = StyleSheet.create({
   rowList: {
     gap: spacing['6'],
   },
-  historyRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing['8'],
-    padding: spacing['10'],
-    borderRadius: radius['3xl'],
-  },
-  historyBody: {
-    flex: 1,
-    minWidth: 0,
-  },
-  dot: {
-    width: 9,
-    height: 9,
-    borderRadius: radius.pill,
-  },
-  badge: {
-    paddingHorizontal: spacing['6'],
-    paddingVertical: 4,
-    borderRadius: radius.pill,
-  },
   cycleCard: {
     padding: spacing['12'],
     borderRadius: radius['4xl'],
@@ -616,11 +532,8 @@ const styles = StyleSheet.create({
   emptyTabBody: {
     marginTop: spacing['3'],
   },
-  primaryAction: {
-    marginTop: spacing['15'],
-  },
   deleteAction: {
-    marginTop: spacing['6'],
+    marginTop: spacing['15'],
   },
   missing: {
     flex: 1,

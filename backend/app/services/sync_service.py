@@ -27,7 +27,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.farm import ChangeLog, CropCycle, CropVariety, Diagnosis, Plot
+from app.models.farm import ChangeLog, CropCycle, CropVariety, Plot
 from app.models.user import User
 
 # Table name -> (model, is_owned). Owned tables are filtered to the caller;
@@ -35,7 +35,6 @@ from app.models.user import User
 SYNC_MODELS: dict[str, tuple[type, bool]] = {
     "plots": (Plot, True),
     "crop_varieties": (CropVariety, False),
-    "diagnoses": (Diagnosis, True),
     "crop_cycles": (CropCycle, True),
     "change_logs": (ChangeLog, False),
 }

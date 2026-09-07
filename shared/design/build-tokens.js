@@ -153,19 +153,12 @@ export const spacing = ${j(t.spacing)} as const;
 
 export const typography = ${j(t.typography)} as const;
 
-/** Disease severity -> colour. \`severe\` is opaque on purpose: it must stay readable in direct sun. */
-export const severity = ${j(t.severity)} as const;
-
-export const diseaseType = ${j(t.diseaseType)} as const;
-
 /** Hard minimums from the field constraints - these outrank aesthetics. */
 export const size = ${j(t.size)} as const;
 
 export const motion = ${j(t.motion)} as const;
 
 export type GlassLevel = keyof typeof glass;
-export type SeverityKey = keyof typeof severity;
-export type DiseaseTypeKey = keyof typeof diseaseType;
 export type TypographyRole = keyof typeof typography.role;
 
 const FONT = typography.fontFamily.sans;
@@ -220,8 +213,6 @@ export const theme = {
   radius,
   spacing,
   typography,
-  severity,
-  diseaseType,
   size,
   motion,
   text,
@@ -310,25 +301,6 @@ for (const [role, r] of Object.entries(t.typography.role)) {
 }
 
 css.push('');
-css.push('  /* ---- severity ---- */');
-for (const [k, v] of Object.entries(t.severity)) {
-  if (k.startsWith('$')) continue;
-  push(`severity-${k}-bg`, v.bg);
-  push(`severity-${k}-fg`, v.fg);
-  push(`severity-${k}-dot`, v.dot);
-  push(`severity-${k}-solid`, v.solidBg);
-}
-
-css.push('');
-css.push('  /* ---- disease type tags ---- */');
-for (const [k, v] of Object.entries(t.diseaseType)) {
-  if (k.startsWith('$')) continue;
-  push(`type-${k}-bg`, v.bg);
-  push(`type-${k}-fg`, v.fg);
-  push(`type-${k}-dot`, v.dot);
-}
-
-css.push('');
 css.push('  /* ---- sizes (field constraints: these are hard minimums) ---- */');
 for (const [k, v] of Object.entries(t.size)) {
   if (k.startsWith('$')) continue;
@@ -353,9 +325,6 @@ for (const [k, g] of Object.entries(t.glass)) {
   if (k.startsWith('$')) continue;
   css.push(`  --glass-${k.toLowerCase()}-bg: ${g.solid};`);
   css.push(`  --glass-${k.toLowerCase()}-filter: none;`);
-}
-for (const [k, v] of Object.entries(t.severity)) {
-  if (!k.startsWith('$')) css.push(`  --severity-${k}-bg: ${v.solidBg};`);
 }
 css.push('}');
 css.push('');

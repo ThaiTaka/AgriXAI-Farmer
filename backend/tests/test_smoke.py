@@ -1,4 +1,4 @@
-"""Giai doan 0 acceptance checks: /health and /auth/login must actually work."""
+"""Smoke checks: /health and /auth/login must actually work."""
 
 from fastapi.testclient import TestClient
 
@@ -16,9 +16,13 @@ def test_health_returns_json():
     body = res.json()
     assert body["status"] == "ok"
     assert body["database"] == "ok"
-    assert body["model_status"] == "dummy"
-    # All four offline catalogues must be present on disk.
+    # All three offline catalogues must be present on disk.
     assert all(body["static_data"].values()), body["static_data"]
+    assert set(body["static_data"]) == {
+        "fertilizer_recommendations",
+        "care_protocols",
+        "crop_varieties",
+    }
 
 
 def test_login_with_seed_farmer():

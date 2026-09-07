@@ -2,7 +2,7 @@
   "$meta": {
     "description": "Danh sách giống cây trồng THẬT dùng làm seed ban đầu cho bảng crop_varieties. Đây là danh sách khởi tạo — ứng dụng PHẢI cho phép người dùng bấm '+ Thêm giống mới' để nhập giống chưa có trong danh sách, lưu cục bộ (SQLite) và đồng bộ lên server để mọi người dùng chung.",
     "collected_at": "2026-09-07",
-    "primary_crop_scope": "Đồ án tập trung chẩn đoán bệnh + tư vấn phân bón cho CÀ CHUA (theo phạm vi đã chốt trong tài liệu gốc). Danh sách giống cà chua dưới đây là dữ liệu chính, chi tiết nhất.",
+    "primary_crop_scope": "Đồ án tập trung tư vấn phân bón, quy trình chăm sóc, kho vật tư và thu-chi cho CÀ CHUA. Danh sách giống cà chua dưới đây là dữ liệu chính, chi tiết nhất.",
     "sources": [
       "https://sfarm.vn/ca-chua-bi-cac-loai-pho-bien-cong-dung-va-cach-trong-sai-qua/",
       "https://www.nguonsinhthai.com/blogs/news/6-giong-ca-chua-pho-bien-lua-chon-phu-hop-cho-nha-vuon"

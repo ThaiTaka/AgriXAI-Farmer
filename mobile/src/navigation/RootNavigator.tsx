@@ -5,15 +5,10 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
 import {useAuth} from '../auth/AuthContext';
 import {ScreenBackground} from '../components/ScreenBackground';
-import {AnalyzingScreen} from '../screens/AnalyzingScreen';
-import {CaptureImageScreen} from '../screens/CaptureImageScreen';
-import {DiagnosisHistoryScreen} from '../screens/DiagnosisHistoryScreen';
-import {DiagnosisResultScreen} from '../screens/DiagnosisResultScreen';
 import {HomeScreen} from '../screens/HomeScreen';
 import {LoginScreen} from '../screens/LoginScreen';
 import {PlotDetailScreen} from '../screens/PlotDetailScreen';
 import {PlotFormScreen} from '../screens/PlotFormScreen';
-import {TreatmentRecommendationScreen} from '../screens/TreatmentRecommendationScreen';
 import {colors} from '../theme';
 import type {RootStackParamList} from './types';
 
@@ -53,17 +48,6 @@ export function RootNavigator() {
               component={PlotFormScreen}
               options={{animation: 'slide_from_bottom'}}
             />
-            <Stack.Screen name="CaptureImage" component={CaptureImageScreen} />
-            <Stack.Screen
-              name="Analyzing"
-              component={AnalyzingScreen}
-              // No swipe-back: the upload is already in flight and the farmer
-              // would land on the camera with a photo that is being analysed.
-              options={{gestureEnabled: false, animation: 'fade'}}
-            />
-            <Stack.Screen name="DiagnosisResult" component={DiagnosisResultScreen} />
-            <Stack.Screen name="Treatment" component={TreatmentRecommendationScreen} />
-            <Stack.Screen name="DiagnosisHistory" component={DiagnosisHistoryScreen} />
           </>
         )}
       </Stack.Navigator>
