@@ -3,22 +3,37 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import type Plot from '../db/models/Plot';
-import {useObservable} from '../db/useObservable';
-import type Diagnosis from '../db/models/Diagnosis';
-import {formatArea, formatDate, formatRelative} from '../utils/format';
-import {colors, glass, radius, severity as severityTokens, spacing, surface, text} from '../theme';
+import type {PlotStatus} from '../db/models/Plot';
+import {PLOT_STATUS_LABELS} from '../db/repositories/plotRepository';
+import {formatArea, formatDate} from '../utils/format';
+import {colors, glass, radius, spacing, surface, text} from '../theme';
 import {ChevronRight, LeafMark} from './icons';
-import {NO_DIAGNOSIS_LABEL} from './SeverityBadge';
 
 const SOFT_COLORS = [...glass.soft.gradientColors] as string[];
 
-/** Leaf mark tint per health level, mirroring `p.iconBg` / `p.leafA` in the design. */
-const ICON_TINT: Record<string, {bg: string; leafA: string; leafB: string}> = {
-  none: {bg: 'rgba(84,169,106,.2)', leafA: colors.lime['500'], leafB: colors.green['700']},
-  mild: {bg: 'rgba(195,210,74,.2)', leafA: colors.lime['500'], leafB: colors.lime['800']},
-  moderate: {bg: 'rgba(242,161,4,.2)', leafA: colors.amber['500'], leafB: colors.amber['700']},
-  severe: {bg: 'rgba(194,74,18,.18)', leafA: colors.danger.dot, leafB: colors.danger.bg},
-  unknown: {bg: 'rgba(255,255,255,.55)', leafA: colors.lime['500'], leafB: colors.green['700']},
+/**
+ * Tint per cultivation status.
+ *
+ * Green while the plot is being worked, muted amber once it is resting or
+ * harvested — a farmer scanning the list should be able to tell which plots
+ * still need attention without reading the labels.
+ */
+const STATUS_TINT: Record<PlotStatus, {badge: string; label: string; leafB: string}> = {
+  active: {
+    badge: 'rgba(84,169,106,0.18)',
+    label: colors.green['700'],
+    leafB: colors.green['700'],
+  },
+  fallow: {
+    badge: 'rgba(242,161,4,0.18)',
+    label: colors.amber['700'],
+    leafB: colors.amber['700'],
+  },
+  harvested: {
+    badge: 'rgba(195,210,74,0.20)',
+    label: colors.lime['800'],
+    leafB: colors.lime['800'],
+  },
 };
 
 interface Props {
@@ -26,24 +41,9 @@ interface Props {
   onPress: (plot: Plot) => void;
 }
 
-/**
- * One row of the home list.
- *
- * The health badge is derived from the most recent diagnosis on this plot, which
- * is why the card subscribes to its own query instead of taking a prop: a new
- * diagnosis has to repaint just this card, not the whole list.
- */
+/** One row of the home list: name, code, area, variety and cultivation status. */
 export function PlotCard({plot, onPress}: Props) {
-  const latest = useObservable<Diagnosis[]>(
-    () => plot.latestDiagnosis.observe(),
-    [plot.id],
-    [],
-  );
-
-  const diagnosis = latest[0] ?? null;
-  const sevKey = diagnosis?.severity ?? 'unknown';
-  const tint = ICON_TINT[sevKey] ?? ICON_TINT.unknown;
-  const token = diagnosis ? severityTokens[diagnosis.severity] : null;
+  const tint = STATUS_TINT[plot.status] ?? STATUS_TINT.active;
 
   const subtitle = [plot.code, formatArea(plot.area, plot.areaUnit), plot.varietyName]
     .filter(Boolean)
@@ -60,8 +60,8 @@ export function PlotCard({plot, onPress}: Props) {
         start={glass.soft.gradientStart}
         end={glass.soft.gradientEnd}
         style={[styles.card, surface('soft')]}>
-        <View style={[styles.iconBox, {backgroundColor: tint.bg}]}>
-          <LeafMark size={24} leafA={tint.leafA} leafB={tint.leafB} />
+        <View style={[styles.iconBox, {backgroundColor: tint.badge}]}>
+          <LeafMark size={24} leafA={colors.lime['500']} leafB={tint.leafB} />
         </View>
 
         <View style={styles.body}>
@@ -73,17 +73,9 @@ export function PlotCard({plot, onPress}: Props) {
           </Text>
 
           <View style={styles.badgeRow}>
-            <View
-              style={[
-                styles.badge,
-                {backgroundColor: token ? token.bg : 'rgba(255,255,255,0.62)'},
-              ]}>
-              <Text
-                style={text('badge', token ? token.fg : colors.text.alpha['62'])}
-                numberOfLines={1}>
-                {diagnosis
-                  ? `${diagnosis.diseaseName} · ${formatRelative(diagnosis.diagnosedAt)}`
-                  : NO_DIAGNOSIS_LABEL}
+            <View style={[styles.badge, {backgroundColor: tint.badge}]}>
+              <Text style={text('badge', tint.label)} numberOfLines={1}>
+                {PLOT_STATUS_LABELS[plot.status] ?? plot.status}
               </Text>
             </View>
           </View>

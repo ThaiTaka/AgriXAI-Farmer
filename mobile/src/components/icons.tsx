@@ -2,10 +2,14 @@
  * The icon set used by the design, transcribed from the reference HTML
  * (docs/design-reference/agrixai-farmer-v4.html). Paths are copied verbatim so
  * the shapes match the mock exactly.
+ *
+ * Only icons the app actually renders live here. The reference HTML still holds
+ * the rest (camera, sun, warning triangle...) — transcribe one back when a
+ * screen needs it rather than keeping unused glyphs around.
  */
 
 import React from 'react';
-import Svg, {Circle, G, Path} from 'react-native-svg';
+import Svg, {Circle, Path} from 'react-native-svg';
 
 import {colors} from '../theme';
 
@@ -79,55 +83,6 @@ export function PencilIcon({size = 20, color = colors.text.primary}: IconProps) 
         strokeWidth={2.6}
         strokeLinejoin="round"
       />
-    </Svg>
-  );
-}
-
-export function CameraIcon({size = 28, body = colors.green['075'], lens = colors.green['700']}: {
-  size?: number;
-  body?: string;
-  lens?: string;
-}) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24">
-      <Path
-        d="M9.4 3h5.2l2.1 2.6H20a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7.6a2 2 0 0 1 2-2h3.3L9.4 3Z"
-        fill={body}
-      />
-      <Circle cx={12} cy={12.8} r={4.2} fill={lens} />
-      <Circle cx={12} cy={12.8} r={2.1} fill={colors.lime['500']} />
-    </Svg>
-  );
-}
-
-export function SunIcon({size = 46, color = colors.amber['500']}: IconProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24">
-      <Circle cx={12} cy={12} r={5.2} fill={color} />
-      <G stroke={color} strokeWidth={2.1} strokeLinecap="round">
-        <Path d="M12 2.4v2.2" />
-        <Path d="M12 19.4v2.2" />
-        <Path d="M2.4 12h2.2" />
-        <Path d="M19.4 12h2.2" />
-        <Path d="m5.4 5.4 1.5 1.5" />
-        <Path d="m17.1 17.1 1.5 1.5" />
-        <Path d="m18.6 5.4-1.5 1.5" />
-        <Path d="m6.9 17.1-1.5 1.5" />
-      </G>
-    </Svg>
-  );
-}
-
-export function WarningIcon({size = 22, fill = colors.amber['500'], mark = colors.lime['900']}: {
-  size?: number;
-  fill?: string;
-  mark?: string;
-}) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24">
-      <Path d="M12 2.6 22.4 21H1.6L12 2.6Z" fill={fill} />
-      <Path d="M12 9.4v5.1" stroke={mark} strokeWidth={2.1} strokeLinecap="round" />
-      <Circle cx={12} cy={17.6} r={1.15} fill={mark} />
     </Svg>
   );
 }

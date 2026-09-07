@@ -19,13 +19,6 @@ class PlotStatus(str, enum.Enum):
     HARVESTED = "harvested"
 
 
-class Severity(str, enum.Enum):
-    NONE = "none"
-    MILD = "mild"
-    MODERATE = "moderate"
-    SEVERE = "severe"
-
-
 class GrowthStage(str, enum.Enum):
     SEEDLING = "seedling"
     VEGETATIVE = "vegetative"
@@ -70,27 +63,6 @@ class CropVariety(Base, SyncMixin):
     approved: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     source: Mapped[str] = mapped_column(String(16), default="user", nullable=False)
     created_by: Mapped[str | None] = mapped_column(String(64), default=None)
-
-
-class Diagnosis(Base, SyncMixin):
-    __tablename__ = "diagnoses"
-
-    plot_id: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
-    disease_key: Mapped[str] = mapped_column(String(64), nullable=False)
-    disease_name: Mapped[str] = mapped_column(String(128), nullable=False)
-    severity: Mapped[str] = mapped_column(String(16), index=True, nullable=False)
-    confidence: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    affected_ratio: Mapped[float | None] = mapped_column(Float, default=None)
-    image_path: Mapped[str | None] = mapped_column(String(255), default=None)
-    model_version: Mapped[str | None] = mapped_column(String(64), default=None)
-    explanation: Mapped[str | None] = mapped_column(Text, default=None)
-    top3_json: Mapped[str | None] = mapped_column(Text, default=None)
-    # Normalised 0..1 ellipses the model flagged; null when it produced none.
-    heatmap_json: Mapped[str | None] = mapped_column(Text, default=None)
-    queued: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    diagnosed_at: Mapped[int] = mapped_column(BigInteger, index=True, nullable=False)
-    owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
-    updated_by: Mapped[str | None] = mapped_column(String(64), default=None)
 
 
 class CropCycle(Base, SyncMixin):

@@ -5,13 +5,6 @@
  * Nó sẽ được thay bằng trang Đăng nhập / Dashboard thật ở Giai đoạn 4.
  */
 
-const SEVERITIES = [
-  { key: "none", label: "Khoẻ mạnh" },
-  { key: "mild", label: "Nhẹ" },
-  { key: "moderate", label: "Trung bình" },
-  { key: "severe", label: "Nặng" },
-] as const;
-
 const WEIGHTS = [
   { weight: 400, label: "Thân văn bản" },
   { weight: 500, label: "Nhấn nhẹ" },
@@ -90,30 +83,6 @@ export default function Page() {
         </p>
 
         <section style={{ marginTop: 30 }}>
-          <h2 style={{ fontSize: 21, fontWeight: 800, marginBottom: 12 }}>Mức độ bệnh</h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {SEVERITIES.map((s) => (
-              <span
-                key={s.key}
-                style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  padding: "8px 15px",
-                  borderRadius: "var(--radius-pill)",
-                  background: `var(--severity-${s.key}-bg)`,
-                  color: `var(--severity-${s.key}-fg)`,
-                }}
-              >
-                {s.label}
-              </span>
-            ))}
-          </div>
-          <p style={{ marginTop: 10, fontSize: 12.5, color: "var(--color-text-alpha-68)" }}>
-            Mức <strong>Nặng</strong> cố ý dùng nền đặc để đọc được khi liếc nhanh ngoài nắng.
-          </p>
-        </section>
-
-        <section style={{ marginTop: 30 }}>
           <h2 style={{ fontSize: 21, fontWeight: 800, marginBottom: 12 }}>Chữ — Open Sans</h2>
           <div
             style={{
@@ -140,7 +109,7 @@ export default function Page() {
                   {w.weight}
                 </span>
                 <span style={{ fontWeight: w.weight, fontSize: 17 }}>
-                  Cà chua bị mốc sương muộn — {w.label}
+                  Bón thúc đợt 2 cho cà chua — {w.label}
                 </span>
               </div>
             ))}

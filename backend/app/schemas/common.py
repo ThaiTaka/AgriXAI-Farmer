@@ -8,5 +8,4 @@ class HealthResponse(BaseModel):
     app: str
     version: str
     database: str
-    model_status: str
     static_data: dict[str, bool]

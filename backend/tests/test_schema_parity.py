@@ -21,7 +21,7 @@ MOBILE_ONLY: set[str] = set()
 
 # Tables that live only on the device and have no server counterpart. Keep this
 # in step with LOCAL_ONLY_TABLES in mobile/src/db/schema.ts.
-LOCAL_ONLY = {"pending_diagnoses"}
+LOCAL_ONLY: set[str] = set()
 
 
 def parse_mobile_schema() -> dict[str, set[str]]:

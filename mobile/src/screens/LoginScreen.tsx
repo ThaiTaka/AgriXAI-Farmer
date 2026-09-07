@@ -88,7 +88,7 @@ export function LoginScreen() {
               </View>
 
               <Text style={[text('screenTitle'), styles.headline]}>
-                Chẩn đoán bệnh{'\n'}cây trồng bằng ảnh
+                Ghi chép vật tư{'\n'}và chi phí nhà nông
               </Text>
               <Text style={[text('body'), styles.tagline]}>
                 Nâng cao giá trị và phát triển bền vững từ sản xuất đến tiêu thụ.

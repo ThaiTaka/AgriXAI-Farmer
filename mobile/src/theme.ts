@@ -646,76 +646,6 @@ export const typography = {
   }
 } as const;
 
-/** Disease severity -> colour. `severe` is opaque on purpose: it must stay readable in direct sun. */
-export const severity = {
-  "$note": "Disease severity → colour. 'severe' deliberately uses an OPAQUE background so it stays legible at a glance in direct sunlight — do not replace it with a translucent tint.",
-  "none": {
-    "key": "none",
-    "label": "Khoẻ mạnh",
-    "bg": "rgba(84,169,106,0.20)",
-    "fg": "#2E6F40",
-    "dot": "#2E6F40",
-    "solidBg": "#C3DDC4"
-  },
-  "mild": {
-    "key": "mild",
-    "label": "Nhẹ",
-    "bg": "rgba(195,210,74,0.18)",
-    "fg": "#4A5810",
-    "dot": "#4A5810",
-    "solidBg": "#DAE6C0"
-  },
-  "moderate": {
-    "key": "moderate",
-    "label": "Trung bình",
-    "bg": "rgba(242,161,4,0.20)",
-    "fg": "#7A4F00",
-    "dot": "#7A4F00",
-    "solidBg": "#E3DBAF"
-  },
-  "severe": {
-    "key": "severe",
-    "label": "Nặng",
-    "bg": "#C24A12",
-    "fg": "#FFF3E8",
-    "dot": "#E4661F",
-    "solidBg": "#C24A12"
-  }
-} as const;
-
-export const diseaseType = {
-  "fungus": {
-    "label": "Nấm",
-    "bg": "rgba(195,210,74,0.16)",
-    "fg": "#4A5810",
-    "dot": "#4A5810"
-  },
-  "bacteria": {
-    "label": "Vi khuẩn",
-    "bg": "rgba(84,169,106,0.18)",
-    "fg": "#2E6F40",
-    "dot": "#2E6F40"
-  },
-  "virus": {
-    "label": "Virus",
-    "bg": "rgba(242,161,4,0.18)",
-    "fg": "#7A4F00",
-    "dot": "#7A4F00"
-  },
-  "pest": {
-    "label": "Nhện hại",
-    "bg": "rgba(255,255,255,0.78)",
-    "fg": "rgba(18,48,29,0.85)",
-    "dot": "rgba(23,58,36,0.70)"
-  },
-  "healthy": {
-    "label": "Khoẻ",
-    "bg": "rgba(84,169,106,0.20)",
-    "fg": "#2E6F40",
-    "dot": "#2E6F40"
-  }
-} as const;
-
 /** Hard minimums from the field constraints - these outrank aesthetics. */
 export const size = {
   "$note": "Field constraints (§3.4) — these are hard minimums, they outrank aesthetics.",
@@ -752,8 +682,6 @@ export const motion = {
 } as const;
 
 export type GlassLevel = keyof typeof glass;
-export type SeverityKey = keyof typeof severity;
-export type DiseaseTypeKey = keyof typeof diseaseType;
 export type TypographyRole = keyof typeof typography.role;
 
 const FONT = typography.fontFamily.sans;
@@ -808,8 +736,6 @@ export const theme = {
   radius,
   spacing,
   typography,
-  severity,
-  diseaseType,
   size,
   motion,
   text,

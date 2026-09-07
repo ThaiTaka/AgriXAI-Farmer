@@ -6,35 +6,23 @@
  * farmer losing work they did offline.
  */
 
-import {addColumns, createTable, schemaMigrations} from '@nozbe/watermelondb/Schema/migrations';
+import {schemaMigrations} from '@nozbe/watermelondb/Schema/migrations';
 
 export const migrations = schemaMigrations({
   migrations: [
     {
-      // v1 -> v2: image diagnosis (Giai đoạn 2).
+      // v2 -> v3: remove diagnosis feature entirely.
+      // WatermelonDB does not support destroyTable in migrations.
+      // The tables are simply no longer declared in the schema, so they will
+      // be ignored. On a fresh install they won't exist; on an upgrade the
+      // old tables remain on disk but are inert (never read, never synced).
+      toVersion: 3,
+      steps: [],
+    },
+    {
+      // v1 -> v2: image diagnosis (Giai đoạn 2) — kept for upgrade path.
       toVersion: 2,
-      steps: [
-        addColumns({
-          table: 'diagnoses',
-          columns: [{name: 'heatmap_json', type: 'string', isOptional: true}],
-        }),
-        createTable({
-          name: 'pending_diagnoses',
-          columns: [
-            {name: 'photo_path', type: 'string'},
-            {name: 'photo_mime', type: 'string'},
-            {name: 'plot_id', type: 'string', isIndexed: true},
-            {name: 'status', type: 'string', isIndexed: true},
-            {name: 'attempts', type: 'number'},
-            {name: 'last_error', type: 'string', isOptional: true},
-            {name: 'diagnosis_id', type: 'string', isOptional: true},
-            {name: 'owner_id', type: 'string', isIndexed: true},
-            {name: 'synced_at', type: 'number', isOptional: true},
-            {name: 'created_at', type: 'number'},
-            {name: 'updated_at', type: 'number'},
-          ],
-        }),
-      ],
+      steps: [],
     },
   ],
 });

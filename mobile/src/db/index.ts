@@ -15,7 +15,7 @@ import {Database} from '@nozbe/watermelondb';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 
 import {migrations} from './migrations';
-import {ChangeLog, CropCycle, CropVariety, Diagnosis, PendingDiagnosis, Plot} from './models';
+import {ChangeLog, CropCycle, CropVariety, Plot} from './models';
 import {schema} from './schema';
 
 const adapter = new SQLiteAdapter({
@@ -32,16 +32,14 @@ const adapter = new SQLiteAdapter({
 
 export const database = new Database({
   adapter,
-  modelClasses: [Plot, CropVariety, Diagnosis, CropCycle, ChangeLog, PendingDiagnosis],
+  modelClasses: [Plot, CropVariety, CropCycle, ChangeLog],
 });
 
 export const collections = {
   plots: database.get<Plot>('plots'),
   cropVarieties: database.get<CropVariety>('crop_varieties'),
-  diagnoses: database.get<Diagnosis>('diagnoses'),
   cropCycles: database.get<CropCycle>('crop_cycles'),
   changeLogs: database.get<ChangeLog>('change_logs'),
-  pendingDiagnoses: database.get<PendingDiagnosis>('pending_diagnoses'),
 };
 
 export {schema, SCHEMA_VERSION, SYNC_TABLES, LOCAL_ONLY_TABLES} from './schema';
