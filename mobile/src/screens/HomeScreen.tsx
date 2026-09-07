@@ -20,7 +20,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useAuth, useCurrentUser} from '../auth/AuthContext';
 import {GhostButton} from '../components/buttons';
 import {GlassSurface} from '../components/GlassSurface';
-import {PlusIcon} from '../components/icons';
+import {CameraIcon, PlusIcon} from '../components/icons';
 import {PlotCard} from '../components/PlotCard';
 import {ScreenBackground} from '../components/ScreenBackground';
 import {SyncStatus} from '../components/SyncStatus';
@@ -28,10 +28,11 @@ import type Plot from '../db/models/Plot';
 import {observePlots} from '../db/repositories/plotRepository';
 import {useObservable} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, glass, radius, spacing, text} from '../theme';
+import {colors, glass, radius, shadows, spacing, text} from '../theme';
 import {formatWeekdayDate} from '../utils/format';
 
 const CONTROL_COLORS = [...glass.control.gradientColors] as string[];
+const DIAGNOSE_COLORS = ['rgba(84,169,106,0.92)', 'rgba(46,111,64,0.9)'];
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -91,6 +92,28 @@ export function HomeScreen() {
               </LinearGradient>
             </Pressable>
           </View>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Chẩn đoán bệnh bằng ảnh"
+            onPress={() => navigation.navigate('CaptureImage')}
+            style={({pressed}) => [styles.diagnoseWrap, pressed && styles.pressed]}>
+            <LinearGradient
+              colors={DIAGNOSE_COLORS}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              style={[styles.diagnose, shadows.heroCard]}>
+              <View style={styles.diagnoseIcon}>
+                <CameraIcon size={28} />
+              </View>
+              <View style={styles.diagnoseBody}>
+                <Text style={text('groupTitle', colors.neutral.white)}>Chẩn đoán bệnh</Text>
+                <Text style={text('meta', 'rgba(255,255,255,0.82)')}>
+                  Chụp ảnh hoặc tải ảnh lá lên
+                </Text>
+              </View>
+            </LinearGradient>
+          </Pressable>
 
           <View style={styles.sectionHead}>
             <Text style={text('groupTitle')}>Lô đất của bạn</Text>
@@ -167,6 +190,30 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.75)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  diagnoseWrap: {
+    marginBottom: spacing['15'],
+  },
+  diagnose: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing['10'],
+    padding: spacing['11'],
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: glass.control.borderColor,
+  },
+  diagnoseIcon: {
+    width: 54,
+    height: 54,
+    borderRadius: radius['2xl'],
+    backgroundColor: 'rgba(255,255,255,0.24)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  diagnoseBody: {
+    flex: 1,
+    gap: 2,
   },
   sectionHead: {
     flexDirection: 'row',

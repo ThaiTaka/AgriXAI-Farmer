@@ -164,12 +164,7 @@ export function PlotDetailScreen() {
 
           <PrimaryButton
             label="Chẩn đoán cho lô này"
-            onPress={() =>
-              Alert.alert(
-                'Sắp có',
-                'Luồng chẩn đoán bệnh qua ảnh được xây ở Giai đoạn 2.',
-              )
-            }
+            onPress={() => navigation.navigate('CaptureImage', {plotId: plot.id})}
             style={styles.primaryAction}
           />
           <DangerButton label="Xoá lô đất" onPress={onDelete} style={styles.deleteAction} />
@@ -227,6 +222,7 @@ function InfoTab({plot}: {plot: Plot}) {
 /* --------------------------- tab 2: diagnoses ----------------------------- */
 
 function DiagnosesTab({plot}: {plot: Plot}) {
+  const navigation = useNavigation<Nav>();
   const rows = useObservable<Diagnosis[]>(
     () => plot.diagnosisHistory.observe(),
     [plot.id],
@@ -247,20 +243,28 @@ function DiagnosesTab({plot}: {plot: Plot}) {
       {rows.map(row => {
         const token = severityTokens[row.severity];
         return (
-          <GlassSurface key={row.id} level="soft" style={styles.historyRow}>
-            <View style={[styles.dot, {backgroundColor: severityDot(row.severity)}]} />
-            <View style={styles.historyBody}>
-              <Text style={text('bodySm')} numberOfLines={1}>
-                {row.diseaseName}
-              </Text>
-              <Text style={text('caption', colors.text.alpha['68'])}>
-                {formatDateTime(row.diagnosedAt)} · độ tin cậy {Math.round(row.confidence * 100)}%
-              </Text>
-            </View>
-            <View style={[styles.badge, {backgroundColor: token.bg}]}>
-              <Text style={text('badge', token.fg)}>{token.label}</Text>
-            </View>
-          </GlassSurface>
+          <Pressable
+            key={row.id}
+            accessibilityRole="button"
+            accessibilityLabel={`Xem chi tiết ${row.diseaseName}`}
+            onPress={() =>
+              navigation.navigate('DiagnosisResult', {mode: 'saved', diagnosisId: row.id})
+            }>
+            <GlassSurface level="soft" style={styles.historyRow}>
+              <View style={[styles.dot, {backgroundColor: severityDot(row.severity)}]} />
+              <View style={styles.historyBody}>
+                <Text style={text('bodySm')} numberOfLines={1}>
+                  {row.diseaseName}
+                </Text>
+                <Text style={text('caption', colors.text.alpha['68'])}>
+                  {formatDateTime(row.diagnosedAt)} · độ tin cậy {Math.round(row.confidence * 100)}%
+                </Text>
+              </View>
+              <View style={[styles.badge, {backgroundColor: token.bg}]}>
+                <Text style={text('badge', token.fg)}>{token.label}</Text>
+              </View>
+            </GlassSurface>
+          </Pressable>
         );
       })}
     </View>

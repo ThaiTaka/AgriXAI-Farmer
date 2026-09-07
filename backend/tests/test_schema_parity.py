@@ -19,6 +19,10 @@ SCHEMA_TS = Path(__file__).resolve().parents[2] / "mobile" / "src" / "db" / "sch
 SERVER_ONLY = {"deleted_at", "is_deleted"}
 MOBILE_ONLY: set[str] = set()
 
+# Tables that live only on the device and have no server counterpart. Keep this
+# in step with LOCAL_ONLY_TABLES in mobile/src/db/schema.ts.
+LOCAL_ONLY = {"pending_diagnoses"}
+
 
 def parse_mobile_schema() -> dict[str, set[str]]:
     source = SCHEMA_TS.read_text(encoding="utf-8")
@@ -41,9 +45,23 @@ MOBILE_TABLES = parse_mobile_schema()
 
 def test_mobile_schema_parsed():
     assert MOBILE_TABLES, f"could not parse {SCHEMA_TS}"
-    assert set(MOBILE_TABLES) == set(SYNC_MODELS), (
-        f"tables differ: mobile={sorted(MOBILE_TABLES)} server={sorted(SYNC_MODELS)}"
+    synced = set(MOBILE_TABLES) - LOCAL_ONLY
+    assert synced == set(SYNC_MODELS), (
+        f"tables differ: mobile={sorted(synced)} server={sorted(SYNC_MODELS)}"
     )
+
+
+def test_local_only_tables_are_declared_on_both_sides():
+    """A local-only table must be listed in the mobile schema AND excluded here.
+
+    Without this, adding a device-side table would quietly start failing the
+    parity check and the natural fix would be to add a pointless server table.
+    """
+    source = SCHEMA_TS.read_text(encoding="utf-8")
+    declared = set(re.findall(r"LOCAL_ONLY_TABLES = \[([^\]]*)\]", source))
+    assert declared, "mobile/src/db/schema.ts must export LOCAL_ONLY_TABLES"
+    names = set(re.findall(r"'([a-z_]+)'", declared.pop()))
+    assert names == LOCAL_ONLY, f"local-only tables differ: mobile={names} test={LOCAL_ONLY}"
 
 
 @pytest.mark.parametrize("table", sorted(SYNC_MODELS))

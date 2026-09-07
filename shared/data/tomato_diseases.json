@@ -5,7 +5,8 @@
     "source": "AgriXAI Farmer v4 - Standalone (1).html (bản thiết kế) + kiến thức nông nghiệp phổ thông",
     "collected_at": "2026-09-07",
     "crop": "ca_chua",
-    "count": 10
+    "count": 10,
+    "severity_note": "Trường `severity` là mức độ mặc định của từng bệnh, dùng để tô màu badge sức khoẻ lô đất khi mô hình trả về bệnh đó. Đây là mức độ ĐIỂN HÌNH của bệnh, không phải mức độ đo được trên từng ảnh cụ thể."
   },
   "diseases": [
     {
@@ -47,8 +48,8 @@
         "Trồng giống có khả năng kháng bệnh.",
         "Tuyệt đối không trồng cà chua cạnh ruộng khoai tây."
       ],
-      "typical_severity_hint": "severe",
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "severe"
     },
     {
       "key": "early_blight",
@@ -93,8 +94,8 @@
         "Luân canh, cày vùi tàn dư sau vụ.",
         "Tỉa bớt lá gốc để tán thông thoáng."
       ],
-      "typical_severity_hint": null,
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "severe"
     },
     {
       "key": "bacterial_spot",
@@ -135,8 +136,8 @@
         "Luân canh với cây khác họ cà tối thiểu 2 năm.",
         "Trồng thưa hợp lý để tán lá thông thoáng, mau khô."
       ],
-      "typical_severity_hint": null,
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "severe"
     },
     {
       "key": "septoria_leaf_spot",
@@ -176,8 +177,8 @@
         "Dọn sạch và tiêu huỷ tàn dư cây sau thu hoạch.",
         "Luân canh tối thiểu 2 năm với cây khác họ cà."
       ],
-      "typical_severity_hint": null,
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "severe"
     },
     {
       "key": "leaf_mold",
@@ -217,8 +218,8 @@
         "Tưới vào buổi sáng để lá kịp khô trước đêm.",
         "Vệ sinh, khử trùng nhà kính giữa các vụ."
       ],
-      "typical_severity_hint": null,
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "moderate"
     },
     {
       "key": "target_spot",
@@ -258,8 +259,8 @@
         "Dọn sạch tàn dư, luân canh cây trồng.",
         "Tránh tưới phun mưa vào chiều tối."
       ],
-      "typical_severity_hint": null,
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "moderate"
     },
     {
       "key": "spider_mites",
@@ -299,8 +300,8 @@
         "Hạn chế thuốc trừ sâu phổ rộng để bảo vệ thiên địch.",
         "Kiểm tra mặt dưới lá định kỳ để phát hiện sớm."
       ],
-      "typical_severity_hint": "mild",
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "moderate"
     },
     {
       "key": "yellow_leaf_curl_virus",
@@ -340,8 +341,8 @@
         "Che lưới chắn côn trùng cho vườn ươm và nhà màng.",
         "Nhổ sạch cỏ dại quanh ruộng vì đó là nơi trú của bọ phấn."
       ],
-      "typical_severity_hint": null,
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "moderate"
     },
     {
       "key": "mosaic_virus",
@@ -365,8 +366,8 @@
         "Khử trùng dụng cụ trước và sau mỗi lần sử dụng.",
         "Thao tác với cây khoẻ trước, cây nghi bệnh sau cùng."
       ],
-      "typical_severity_hint": null,
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "mild"
     },
     {
       "key": "healthy",
@@ -388,8 +389,8 @@
         "Bón phân cân đối, tưới nước đều đặn.",
         "Giữ vườn thông thoáng, sạch cỏ dại."
       ],
-      "typical_severity_hint": "none",
-      "video_embed_url": null
+      "video_embed_url": null,
+      "severity": "none"
     }
   ]
 }

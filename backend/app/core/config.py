@@ -39,7 +39,7 @@ class Settings(BaseSettings):
 
     seed_admin_username: str = "admin"
     seed_admin_password: str = "admin123"
-    seed_farmer_username: str = "quanghoc"
+    seed_farmer_username: str = "thaitaka"
     seed_farmer_password: str = "matkhau123"
 
     @property

@@ -27,9 +27,9 @@ SEED_USERS = [
     },
     {
         "username": settings.seed_farmer_username,
-        "email": "quanghoc@agrilog.local",
+        "email": "thaitaka@agrilog.local",
         "password": settings.seed_farmer_password,
-        "full_name": "Triệu Quang Học",
+        "full_name": "Thái Taka",
         "role": UserRole.FARMER,
         "region": "Cam Ly, Đà Lạt",
         "phone": "0900000001",

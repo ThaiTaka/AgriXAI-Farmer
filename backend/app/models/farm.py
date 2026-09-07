@@ -85,6 +85,8 @@ class Diagnosis(Base, SyncMixin):
     model_version: Mapped[str | None] = mapped_column(String(64), default=None)
     explanation: Mapped[str | None] = mapped_column(Text, default=None)
     top3_json: Mapped[str | None] = mapped_column(Text, default=None)
+    # Normalised 0..1 ellipses the model flagged; null when it produced none.
+    heatmap_json: Mapped[str | None] = mapped_column(Text, default=None)
     queued: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     diagnosed_at: Mapped[int] = mapped_column(BigInteger, index=True, nullable=False)
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)

@@ -1,7 +1,7 @@
 /**
  * Local SQLite schema (WatermelonDB).
  *
- * Every table here is part of the two-way sync (Mục 9), so each one carries:
+ * Every synced table carries:
  *   - `updated_by`  : who last touched the record (drives the change log)
  *   - `created_at` / `updated_at` : epoch milliseconds, matching the backend
  *
@@ -14,13 +14,14 @@
  * sync adapter uses to work out what to push. Deletions are recorded by
  * WatermelonDB in its own `_raw` bookkeeping, so no `deleted_at` column here.
  *
- * These columns must match app/models/farm.py on the server — enforced by
- * backend/tests/test_schema_parity.py.
+ * Synced tables must match app/models/farm.py on the server — enforced by
+ * backend/tests/test_schema_parity.py. `pending_diagnoses` is the exception: it
+ * is a LOCAL-ONLY upload queue with no server counterpart (see LOCAL_ONLY_TABLES).
  */
 
 import {appSchema, tableSchema} from '@nozbe/watermelondb';
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 export const schema = appSchema({
   version: SCHEMA_VERSION,
@@ -78,6 +79,7 @@ export const schema = appSchema({
         {name: 'model_version', type: 'string', isOptional: true},
         {name: 'explanation', type: 'string', isOptional: true},
         {name: 'top3_json', type: 'string', isOptional: true},
+        {name: 'heatmap_json', type: 'string', isOptional: true},
         {name: 'queued', type: 'boolean'},
         {name: 'diagnosed_at', type: 'number', isIndexed: true},
         {name: 'owner_id', type: 'string', isIndexed: true},
@@ -123,10 +125,35 @@ export const schema = appSchema({
         {name: 'updated_at', type: 'number'},
       ],
     }),
+
+    /**
+     * LOCAL ONLY — the photo upload queue (Điều 3).
+     *
+     * A photo taken with no signal lands here instead of failing. The queue
+     * processor drains it once the network is back. Rows never leave the device:
+     * the file path is meaningless anywhere else, and the diagnosis the upload
+     * produces is what actually syncs.
+     */
+    tableSchema({
+      name: 'pending_diagnoses',
+      columns: [
+        {name: 'photo_path', type: 'string'},
+        {name: 'photo_mime', type: 'string'},
+        {name: 'plot_id', type: 'string', isIndexed: true},
+        {name: 'status', type: 'string', isIndexed: true},
+        {name: 'attempts', type: 'number'},
+        {name: 'last_error', type: 'string', isOptional: true},
+        {name: 'diagnosis_id', type: 'string', isOptional: true},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'synced_at', type: 'number', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
   ],
 });
 
-/** Table names shared by the sync adapter and the backend contract. */
+/** Tables the two-way sync covers. */
 export const SYNC_TABLES = [
   'plots',
   'crop_varieties',
@@ -134,5 +161,8 @@ export const SYNC_TABLES = [
   'crop_cycles',
   'change_logs',
 ] as const;
+
+/** Tables that stay on the device and have no server counterpart. */
+export const LOCAL_ONLY_TABLES = ['pending_diagnoses'] as const;
 
 export type SyncTable = (typeof SYNC_TABLES)[number];

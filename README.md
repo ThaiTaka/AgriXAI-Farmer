@@ -4,12 +4,24 @@
 lô đất, chẩn đoán bệnh cây qua ảnh, tư vấn phân bón, lịch chăm sóc, quản lý kho vật tư và
 ghi thu chi — kèm trang quản trị web cho cán bộ quản lý.
 
-> **Trạng thái: Giai đoạn 1 — 4 màn hình lõi mobile đã chạy được.**
+> **Trạng thái: Giai đoạn 2 — luồng chẩn đoán bệnh qua ảnh đã chạy được.**
 > README này sẽ được viết đầy đủ ở Giai đoạn 6. Bản hiện tại chỉ đủ để chạy dự án.
 
-| Đăng nhập | Trang chủ (offline) | Chi tiết lô đất | Thêm lô đất |
+| Chụp ảnh | Kết quả chẩn đoán | Gợi ý xử lý | Lịch sử |
 |---|---|---|---|
-| ![Đăng nhập](docs/screenshots/01-dang-nhap.png) | ![Trang chủ](docs/screenshots/02-trang-chu-offline.png) | ![Chi tiết](docs/screenshots/03-chi-tiet-thong-tin.png) | ![Thêm lô](docs/screenshots/04-them-lo-dat.png) |
+| ![Chụp ảnh](docs/screenshots/g2-01-chup-anh.png) | ![Kết quả](docs/screenshots/g2-02-ket-qua.png) | ![Gợi ý](docs/screenshots/g2-03-goi-y-xu-ly.png) | ![Lịch sử](docs/screenshots/g2-09-lich-su.png) |
+
+**Ba ca đặc biệt bắt buộc** (Mục 5, Giai đoạn 2):
+
+| Nhện hại — thuốc trừ nấm vô dụng | Virus xoăn vàng lá — thuốc trị bọ phấn | Virus khảm — không có thuốc |
+|---|---|---|
+| ![Nhện](docs/screenshots/g2-04-canh-bao-nhen-hai.png) | ![TYLCV](docs/screenshots/g2-05-thuoc-tri-bo-phan.png) | ![Khảm](docs/screenshots/g2-06-khong-co-thuoc.png) |
+
+**Chụp ảnh khi mất mạng** — xếp hàng, không lỗi; có mạng lại thì tự gửi và tự lưu:
+
+| Mất mạng | Có mạng trở lại |
+|---|---|
+| ![Offline](docs/screenshots/g2-07-offline-xep-hang.png) | ![Online](docs/screenshots/g2-08-online-tu-luu.png) |
 
 ## Mục lục
 
@@ -63,7 +75,7 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | Tài khoản | Mật khẩu | Vai trò |
 |---|---|---|
 | `admin` | `admin123` | Quản trị viên |
-| `quanghoc` | `matkhau123` | Nông dân |
+| `thaitaka` | `matkhau123` | Nông dân |
 
 Chạy test: `./.venv/Scripts/python.exe -m pytest`
 
@@ -101,7 +113,7 @@ adb reverse tcp:8000 tcp:8000
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint App.tsx src`
 
 Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **cả tên đăng nhập lẫn email**
-(`quanghoc` hoặc `quanghoc@agrilog.local`).
+(`thaitaka` hoặc `thaitaka@agrilog.local`).
 
 ## Design token và font
 
@@ -147,15 +159,35 @@ và các test bắt buộc ghi ở [ADR 0002](docs/adr/0002-giai-doan-1.md).
 Mọi thao tác của nông dân ghi vào SQLite trước rồi mới đồng bộ — tắt mạng vẫn dùng được
 toàn bộ 4 màn hình.
 
+## Chẩn đoán bệnh qua ảnh
+
+Ảnh được thu nhỏ về 600×600 ngay lúc chọn rồi gửi lên `POST /diagnoses`. Backend chạy mô
+hình và trả top-3 bệnh kèm độ tin cậy; **không tạo bản ghi** — bản ghi `diagnoses` do
+mobile sở hữu và đi lên qua đường đồng bộ.
+
+**Mất mạng thì ảnh xếp hàng, không báo lỗi.** Ảnh vào bảng cục bộ `pending_diagnoses`,
+một tiến trình nền cứ 5 giây gửi một ảnh, có backoff nhân đôi khi thất bại. Khi gửi được,
+kết quả tự lưu vào lô đất — nông dân không phải chụp lại.
+
+Mô hình hiện là `DummyPredictor`: kết quả **tất định theo nội dung ảnh** (cùng một ảnh luôn
+ra cùng đáp án, kể cả khi gửi lại sau khi xếp hàng), độ tin cậy nằm trong khoảng 0,45–0,85
+để không tạo ảo giác về độ chính xác. Thay bằng model thật qua biến `MODEL_CHECKPOINT`.
+Heatmap trả `null` và UI ẩn hẳn lớp phủ — **không bao giờ vẽ vùng nghi ngờ ngẫu nhiên**.
+
+Chi tiết quyết định: [ADR 0003](docs/adr/0003-giai-doan-2.md).
+
 ## Giới hạn hiện tại
 
-- **Giai đoạn 1** mới có 4 màn hình lõi. Luồng chẩn đoán ảnh (Giai đoạn 2), nhật ký, kho,
-  thu-chi (Giai đoạn 3) và toàn bộ web-admin (Giai đoạn 4) chưa làm. Trang chủ web-admin
-  hiện vẫn là màn hình kiểm tra design token.
+- **Giai đoạn 2** đã xong 5 màn hình chẩn đoán. Nhật ký, tư vấn phân bón, kho, thu-chi
+  (Giai đoạn 3) và toàn bộ web-admin (Giai đoạn 4) chưa làm. Trang chủ web-admin hiện vẫn
+  là màn hình kiểm tra design token.
 - Backend có `GET /health`, `POST /auth/login`, `GET/PATCH /auth/me`, CRUD `/plots`,
-  `/crop-varieties`, và `/sync`. Các endpoint còn lại theo Mục 7 sẽ bổ sung dần.
-- Tab "Chu kỳ canh tác" và "Lịch sử chẩn đoán" đã dựng xong nhưng chưa có dữ liệu vì hai
-  tính năng sinh ra chúng thuộc giai đoạn sau.
+  `/crop-varieties`, `/diagnoses`, `/diseases` và `/sync`. Các endpoint còn lại theo Mục 7
+  sẽ bổ sung dần.
+- Nút "Xem chi tiết" của từng bệnh hiện mở màn Gợi ý xử lý; màn **Danh mục bệnh** riêng
+  thuộc Giai đoạn 3.
+- Tab "Chu kỳ canh tác" đã dựng xong nhưng chưa có dữ liệu vì tính năng sinh ra nó thuộc
+  giai đoạn sau.
 - Giai đoạn cây ở tab "Lịch chăm sóc" hiện **ước tính từ ngày trồng**; khi có bản ghi chu
   kỳ canh tác thật thì bản ghi đó được ưu tiên.
 - Mô hình chẩn đoán ảnh chưa có — sẽ dùng `DummyPredictor`, thay bằng model thật qua biến

@@ -22,7 +22,10 @@ export default class Diagnosis extends Model {
   @text('image_path') imagePath!: string | null;
   @text('model_version') modelVersion!: string | null;
   @text('explanation') explanation!: string | null;
+  /** JSON: the three predictions the model returned, best first. */
   @text('top3_json') top3Json!: string | null;
+  /** JSON heatmap, or null when the model produced none — never faked. */
+  @text('heatmap_json') heatmapJson!: string | null;
   /** True while the photo is waiting for a network connection (Điều 3). */
   @field('queued') queued!: boolean;
   @field('diagnosed_at') diagnosedAt!: number;
