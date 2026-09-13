@@ -1,96 +1,157 @@
 import React from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
 import {ActivityIndicator, Pressable, StyleSheet, Text, View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
-import {colors, glass, gradients, radius, shadows, size, spacing, text} from '../theme';
+import {colors, motion, radius, shadows, size, space, text} from '../theme';
 import {ArrowRight} from './icons';
 
-const PRIMARY_COLORS = [...gradients.primaryAction.colors] as string[];
-const CONTROL_COLORS = [...glass.control.gradientColors] as string[];
+/**
+ * Three button weights, told apart by fill rather than colour:
+ *   Primary   — solid green, one per screen.
+ *   Secondary — white with a gray hairline, for the alternative action.
+ *   Ghost     — transparent, green text, for inline / low-stakes actions.
+ * Danger is a soft red variant of Secondary; it never shouts.
+ *
+ * All of them respect the field minimums (48 pt targets) and show the pressed
+ * state as a quieter fill instead of a colour change.
+ */
 
-interface PrimaryButtonProps {
+interface BaseProps {
   label: string;
   onPress: () => void;
-  /** The design's pill-with-circular-arrow variant used for the main action. */
-  withArrow?: boolean;
   icon?: React.ReactNode;
   loading?: boolean;
   disabled?: boolean;
+  /** Compact height (44) for rows and headers. */
+  small?: boolean;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 }
 
 export function PrimaryButton({
   label,
   onPress,
-  withArrow = false,
   icon,
   loading = false,
   disabled = false,
+  small = false,
   style,
-}: PrimaryButtonProps) {
+  testID,
+  withArrow = false,
+}: BaseProps & {withArrow?: boolean}) {
   const inactive = disabled || loading;
-
   return (
     <Pressable
+      testID={testID}
       onPress={onPress}
       disabled={inactive}
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityState={{disabled: inactive, busy: loading}}
-      style={({pressed}) => [pressed && styles.pressed, inactive && styles.inactive, style]}>
-      <LinearGradient
-        colors={PRIMARY_COLORS}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
-        style={[withArrow ? styles.primaryWithArrow : styles.primary, shadows.primaryButton]}>
-        {loading ? (
-          <ActivityIndicator color={colors.neutral.white} />
-        ) : (
-          <>
-            <Text
-              style={[
-                text('cardTitle', colors.neutral.white),
-                withArrow ? styles.primaryLabelLeft : styles.primaryLabelCenter,
-              ]}>
-              {label}
-            </Text>
-            {withArrow ? (
-              <View style={styles.arrowCircle}>{icon ?? <ArrowRight />}</View>
-            ) : null}
-          </>
-        )}
-      </LinearGradient>
+      style={({pressed}) => [
+        styles.base,
+        small && styles.small,
+        styles.primary,
+        pressed && styles.primaryPressed,
+        inactive && styles.inactive,
+        style,
+      ]}>
+      {loading ? (
+        <ActivityIndicator color={colors.primary.onPrimary} />
+      ) : (
+        <>
+          {icon}
+          <Text style={text('bodyStrong', colors.primary.onPrimary)}>{label}</Text>
+          {withArrow ? (
+            <View style={styles.arrow}>
+              <ArrowRight size={18} />
+            </View>
+          ) : null}
+        </>
+      )}
     </Pressable>
   );
 }
 
-interface GhostButtonProps {
-  label: string;
-  onPress: () => void;
-  icon?: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
-  disabled?: boolean;
-}
-
-/** The translucent pill used for secondary actions ("Huỷ", "Chụp lại"...). */
-export function GhostButton({label, onPress, icon, style, disabled = false}: GhostButtonProps) {
+export function SecondaryButton({
+  label,
+  onPress,
+  icon,
+  loading = false,
+  disabled = false,
+  small = false,
+  style,
+  testID,
+}: BaseProps) {
+  const inactive = disabled || loading;
   return (
     <Pressable
+      testID={testID}
+      onPress={onPress}
+      disabled={inactive}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{disabled: inactive, busy: loading}}
+      style={({pressed}) => [
+        styles.base,
+        small && styles.small,
+        styles.secondary,
+        pressed && styles.secondaryPressed,
+        inactive && styles.inactive,
+        style,
+      ]}>
+      {loading ? (
+        <ActivityIndicator color={colors.text.primary} />
+      ) : (
+        <>
+          {icon}
+          <Text style={text('bodyStrong', colors.text.primary)}>{label}</Text>
+        </>
+      )}
+    </Pressable>
+  );
+}
+
+export function GhostButton({
+  label,
+  onPress,
+  icon,
+  disabled = false,
+  small = false,
+  style,
+  testID,
+}: BaseProps) {
+  return (
+    <Pressable
+      testID={testID}
       onPress={onPress}
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityState={{disabled}}
-      style={({pressed}) => [pressed && styles.pressed, disabled && styles.inactive, style]}>
-      <LinearGradient
-        colors={CONTROL_COLORS}
-        start={glass.control.gradientStart}
-        end={glass.control.gradientEnd}
-        style={styles.ghost}>
-        {icon}
-        <Text style={text('bodySm', colors.text.primary)}>{label}</Text>
-      </LinearGradient>
+      style={({pressed}) => [
+        styles.base,
+        small && styles.small,
+        styles.ghost,
+        pressed && styles.ghostPressed,
+        disabled && styles.inactive,
+        style,
+      ]}>
+      {icon}
+      <Text style={text('bodyStrong', colors.primary.default)}>{label}</Text>
+    </Pressable>
+  );
+}
+
+export function DangerButton({label, onPress, style, testID}: BaseProps) {
+  return (
+    <Pressable
+      testID={testID}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      style={({pressed}) => [styles.base, styles.danger, pressed && styles.dangerPressed, style]}>
+      <Text style={text('bodyStrong', colors.badge.redFg)}>{label}</Text>
     </Pressable>
   );
 }
@@ -100,118 +161,80 @@ interface IconButtonProps {
   children: React.ReactNode;
   accessibilityLabel: string;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 }
 
-/** 44×44 rounded glass square — back arrow, edit pencil, share. */
-export function IconButton({onPress, children, accessibilityLabel, style}: IconButtonProps) {
+/** 44×44 transparent square — back arrow, close, edit pencil. */
+export function IconButton({onPress, children, accessibilityLabel, style, testID}: IconButtonProps) {
   return (
     <Pressable
+      testID={testID}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       hitSlop={6}
-      style={({pressed}) => [pressed && styles.pressed, style]}>
-      <LinearGradient
-        colors={CONTROL_COLORS}
-        start={glass.control.gradientStart}
-        end={glass.control.gradientEnd}
-        style={styles.iconButton}>
-        {children}
-      </LinearGradient>
-    </Pressable>
-  );
-}
-
-interface DangerButtonProps {
-  label: string;
-  onPress: () => void;
-  style?: StyleProp<ViewStyle>;
-}
-
-/** The amber "Xoá lô đất" pill from screen 08. */
-export function DangerButton({label, onPress, style}: DangerButtonProps) {
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      style={({pressed}) => [pressed && styles.pressed, style]}>
-      <LinearGradient
-        colors={['rgba(250,204,128,0.62)', 'rgba(242,161,4,0.34)']}
-        start={{x: 0.18, y: 0}}
-        end={{x: 0.82, y: 1}}
-        style={styles.danger}>
-        <Text style={text('bodySm', '#5C3A00')}>{label}</Text>
-      </LinearGradient>
+      style={({pressed}) => [styles.iconButton, pressed && styles.iconButtonPressed, style]}>
+      {children}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  pressed: {
-    opacity: 0.82,
+  base: {
+    minHeight: size.buttonMinHeight,
+    borderRadius: radius.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: space.sm,
+    paddingHorizontal: space.lg,
+  },
+  small: {
+    minHeight: size.buttonMinHeightSm,
+    paddingHorizontal: space.md,
   },
   inactive: {
-    opacity: 0.55,
+    opacity: 0.5,
   },
   primary: {
-    minHeight: size.buttonMinHeight,
-    borderRadius: radius.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing['14'],
+    backgroundColor: colors.primary.default,
+    ...shadows.sm,
   },
-  primaryWithArrow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing['8'],
-    borderRadius: radius.pill,
-    paddingLeft: spacing['14'],
-    paddingRight: spacing['2'],
-    paddingVertical: spacing['2'],
-    minHeight: 60,
+  primaryPressed: {
+    backgroundColor: colors.primary.pressed,
   },
-  primaryLabelCenter: {
-    textAlign: 'center',
+  arrow: {
+    marginLeft: space.xs,
   },
-  primaryLabelLeft: {
-    flex: 1,
-    textAlign: 'left',
+  secondary: {
+    backgroundColor: colors.surface.card,
+    borderWidth: 1,
+    borderColor: colors.border.strong,
   },
-  arrowCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: radius.pill,
-    backgroundColor: colors.green['075'],
-    alignItems: 'center',
-    justifyContent: 'center',
+  secondaryPressed: {
+    backgroundColor: colors.surface.pressed,
   },
   ghost: {
-    minHeight: size.minTouchTarget,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: glass.control.borderColor,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing['6'],
-    paddingHorizontal: spacing['11'],
+    backgroundColor: 'transparent',
+  },
+  ghostPressed: {
+    backgroundColor: colors.primary.soft,
+  },
+  danger: {
+    backgroundColor: colors.badge.redBg,
+  },
+  dangerPressed: {
+    opacity: motion.pressOpacity,
   },
   iconButton: {
     width: size.iconButton,
     height: size.iconButton,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: glass.control.borderColor,
+    borderRadius: radius.sm,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
-  danger: {
-    minHeight: size.minTouchTarget,
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    borderColor: 'rgba(242,161,4,.55)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  iconButtonPressed: {
+    backgroundColor: colors.surface.pressed,
   },
 });

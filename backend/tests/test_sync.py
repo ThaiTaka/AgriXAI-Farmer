@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 from app.core.config import settings
 from app.main import app
-from app.seed import run as run_seed
+from app.seed import iter_seed_varieties, run as run_seed
 
 run_seed()
 client = TestClient(app)
@@ -38,7 +38,8 @@ def plot_row(record_id: str, name: str, updated_at: int, **overrides) -> dict:
         "region": "Cam Ly",
         "area": 1200.0,
         "area_unit": "m2",
-        "crop_type": "ca_chua",
+        "crop_type": "tomato",
+        "crop_name": "Cà chua",
         "variety_id": None,
         "variety_name": None,
         "planted_at": None,
@@ -66,8 +67,12 @@ def test_pull_first_sync_returns_seed_varieties(token: str):
     body = res.json()
     assert "timestamp" in body
     varieties = body["changes"]["crop_varieties"]["created"]
-    assert len(varieties) == 8, "8 giống cà chua từ seed phải đồng bộ xuống máy"
+    expected = sum(1 for _ in iter_seed_varieties())
+    assert len(varieties) == expected, "toàn bộ giống trong danh mục seed phải đồng bộ xuống máy"
     assert all(v["is_seed"] for v in varieties)
+    # Every seeded row carries the two upper catalogue levels.
+    assert all(v["category_id"] and v["category_name"] and v["crop_name"] for v in varieties)
+    assert {v["crop_type"] for v in varieties} >= {"tomato", "coffee", "cucumber", "chili"}
 
 
 def test_push_then_pull_roundtrip(token: str):

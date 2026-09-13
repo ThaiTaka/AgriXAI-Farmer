@@ -11,7 +11,8 @@ class PlotBase(BaseModel):
     region: str | None = Field(default=None, max_length=160)
     area: float = Field(default=0.0, ge=0)
     area_unit: str = Field(default="m2", max_length=8)
-    crop_type: str = Field(default="ca_chua", max_length=48)
+    crop_type: str = Field(default="tomato", max_length=48)
+    crop_name: str | None = Field(default=None, max_length=64)
     variety_id: str | None = Field(default=None, max_length=64)
     variety_name: str | None = Field(default=None, max_length=128)
     planted_at: int | None = None
@@ -33,6 +34,7 @@ class PlotUpdate(BaseModel):
     area: float | None = Field(default=None, ge=0)
     area_unit: str | None = Field(default=None, max_length=8)
     crop_type: str | None = Field(default=None, max_length=48)
+    crop_name: str | None = Field(default=None, max_length=64)
     variety_id: str | None = Field(default=None, max_length=64)
     variety_name: str | None = Field(default=None, max_length=128)
     planted_at: int | None = None
@@ -54,9 +56,12 @@ class CropVarietyBase(BaseModel):
     name: str = Field(min_length=1, max_length=128)
     crop_type: str = Field(max_length=48)
     crop_name: str = Field(max_length=64)
-    fruit: str | None = None
+    category_id: str | None = Field(default=None, max_length=64)
+    category_name: str | None = Field(default=None, max_length=96)
+    description: str | None = None
     usage: str | None = None
-    note: str | None = None
+    growing_note: str | None = None
+    badge: str | None = Field(default=None, max_length=16)
 
 
 class CropVarietyCreate(CropVarietyBase):

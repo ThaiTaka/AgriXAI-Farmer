@@ -1,12 +1,12 @@
 /**
  * Màn hình 09 — Thêm / sửa lô đất.
  *
- * Design reference: screen "09 Thêm / sửa lô đất". Same field order and pill
- * inputs; the variety picker and the planting date are the two fields Giai đoạn 1
- * adds on top of the mock.
- *
  * Saving writes to SQLite and pops straight back (Điều 1) — the screen never
  * waits for the network, and there is no spinner tied to an HTTP call.
+ *
+ * The crop + variety field opens the three-step picker (crop type → category →
+ * variety); the picker navigates back here with `pickedVariety` merged into the
+ * route params, which the effect below folds into the form.
  */
 
 import type {RouteProp} from '@react-navigation/native';
@@ -14,26 +14,15 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor} from '../auth/AuthContext';
-import {GhostButton, IconButton, PrimaryButton} from '../components/buttons';
+import {AppHeader} from '../components/AppHeader';
+import {PrimaryButton, SecondaryButton} from '../components/buttons';
 import {Field, PickerField, SelectChip} from '../components/form';
-import {GlassSurface} from '../components/GlassSurface';
-import {CalendarIcon, ChevronLeft, ChevronRight} from '../components/icons';
-import {ScreenBackground} from '../components/ScreenBackground';
-import {VarietyPicker} from '../components/VarietyPicker';
+import {CalendarIcon, ChevronRight} from '../components/icons';
+import {Screen} from '../components/Screen';
 import {collections} from '../db';
-import type {VarietyOption} from '../db/repositories/varietyRepository';
 import type Plot from '../db/models/Plot';
 import type {PlotStatus} from '../db/models/Plot';
 import {
@@ -43,16 +32,15 @@ import {
   updatePlot,
 } from '../db/repositories/plotRepository';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, radius, spacing, text} from '../theme';
+import {colors, space, text} from '../theme';
 import {formatDate} from '../utils/format';
 import {isWellFormedPlotCode} from '../utils/plotCode';
+import {cropNameOf} from '../utils/staticData';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'PlotForm'>;
 
 const STATUSES: PlotStatus[] = ['active', 'fallow', 'harvested'];
-const CROP_TYPE = 'ca_chua';
-const CROP_NAME = 'Cà chua';
 
 interface FormState {
   code: string;
@@ -60,6 +48,8 @@ interface FormState {
   region: string;
   area: string;
   areaUnit: 'm2' | 'ha';
+  cropType: string;
+  cropName: string;
   varietyId: string | null;
   varietyName: string;
   plantedAt: number | null;
@@ -73,6 +63,8 @@ const EMPTY: FormState = {
   region: '',
   area: '',
   areaUnit: 'm2',
+  cropType: '',
+  cropName: '',
   varietyId: null,
   varietyName: '',
   plantedAt: null,
@@ -85,11 +77,11 @@ export function PlotFormScreen() {
   const {params} = useRoute<Route>();
   const author = useChangeAuthor();
   const editingId = params?.plotId;
+  const picked = params?.pickedVariety;
 
   const [form, setForm] = useState<FormState>(EMPTY);
   const [existing, setExisting] = useState<Plot | null>(null);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [showVarietyPicker, setShowVarietyPicker] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -108,6 +100,8 @@ export function PlotFormScreen() {
           region: plot.region ?? '',
           area: plot.area ? String(plot.area) : '',
           areaUnit: plot.areaUnit === 'ha' ? 'ha' : 'm2',
+          cropType: plot.cropType,
+          cropName: cropNameOf(plot.cropType, plot.cropName),
           varietyId: plot.varietyId,
           varietyName: plot.varietyName ?? '',
           plantedAt: plot.plantedAt,
@@ -122,6 +116,19 @@ export function PlotFormScreen() {
       alive = false;
     };
   }, [editingId]);
+
+  // The picker hands its result back through the route params.
+  useEffect(() => {
+    if (!picked) return;
+    setForm(prev => ({
+      ...prev,
+      cropType: picked.cropType,
+      cropName: picked.cropName,
+      varietyId: picked.varietyId,
+      varietyName: picked.varietyName ?? '',
+    }));
+    setErrors(prev => (prev.cropType ? {...prev, cropType: undefined} : prev));
+  }, [picked]);
 
   const set = useCallback(<K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm(prev => ({...prev, [key]: value}));
@@ -146,6 +153,8 @@ export function PlotFormScreen() {
       next.area = 'Nhập diện tích lô đất.';
     }
 
+    if (!form.cropType) next.cropType = 'Chọn cây trồng cho lô đất.';
+
     setErrors(next);
     return Object.keys(next).length === 0;
   }, [form]);
@@ -160,7 +169,8 @@ export function PlotFormScreen() {
         region: form.region.trim() || null,
         area: Number(form.area.replace(',', '.')),
         areaUnit: form.areaUnit,
-        cropType: CROP_TYPE,
+        cropType: form.cropType,
+        cropName: form.cropName || null,
         varietyId: form.varietyId,
         varietyName: form.varietyName || null,
         plantedAt: form.plantedAt,
@@ -182,160 +192,152 @@ export function PlotFormScreen() {
     }
   }, [saving, validate, form, existing, author, navigation]);
 
-  const onPickVariety = useCallback((variety: VarietyOption) => {
-    setForm(prev => ({...prev, varietyId: variety.id, varietyName: variety.name}));
-    setShowVarietyPicker(false);
-  }, []);
+  const openPicker = useCallback(() => {
+    navigation.navigate('VarietyCropType', {selectedId: form.varietyId});
+  }, [navigation, form.varietyId]);
 
   const title = editingId ? 'Sửa lô đất' : 'Thêm lô đất';
   const maxDate = useMemo(() => new Date(), []);
+  const cropValue = form.cropName
+    ? form.varietyName
+      ? `${form.cropName} · ${form.varietyName}`
+      : form.cropName
+    : '';
 
   return (
-    <ScreenBackground>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-      <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
-        <KeyboardAvoidingView
-          style={styles.root}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <View style={styles.header}>
-            <IconButton accessibilityLabel="Quay lại" onPress={() => navigation.goBack()}>
-              <ChevronLeft />
-            </IconButton>
-            <Text style={text('screenHeading')}>{title}</Text>
+    <Screen edges={['top', 'bottom']}>
+      <KeyboardAvoidingView
+        style={styles.root}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <AppHeader title={title} onBack={() => navigation.goBack()} />
+
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
+          <Field
+            testID="plot-name"
+            label="Tên lô đất"
+            value={form.name}
+            onChangeText={value => set('name', value)}
+            placeholder="Ví dụ: Vườn nhà trên"
+            error={errors.name}
+            style={styles.field}
+          />
+
+          <Field
+            testID="plot-code"
+            label="Mã vùng trồng (PUC)"
+            value={form.code}
+            onChangeText={value => set('code', value)}
+            placeholder="Để trống — hệ thống tự sinh"
+            autoCapitalize="characters"
+            hint="Định dạng PUC-YYMM-XXXX."
+            error={errors.code}
+            style={styles.field}
+          />
+
+          <Field
+            label="Khu vực"
+            value={form.region}
+            onChangeText={value => set('region', value)}
+            placeholder="Xã / phường, tỉnh"
+            style={styles.field}
+          />
+
+          <View style={[styles.row, styles.field]}>
+            <Field
+              testID="plot-area"
+              label={`Diện tích (${form.areaUnit === 'ha' ? 'ha' : 'm²'})`}
+              value={form.area}
+              onChangeText={value => set('area', value)}
+              placeholder="1200"
+              keyboardType="numeric"
+              error={errors.area}
+              style={styles.rowItem}
+            />
+            <View style={styles.rowItemNarrow}>
+              <Text style={[text('meta', colors.text.secondary), styles.unitLabel]}>Đơn vị</Text>
+              <View style={styles.unitRow}>
+                <SelectChip
+                  label="m²"
+                  selected={form.areaUnit === 'm2'}
+                  onPress={() => set('areaUnit', 'm2')}
+                />
+                <SelectChip
+                  label="ha"
+                  selected={form.areaUnit === 'ha'}
+                  onPress={() => set('areaUnit', 'ha')}
+                />
+              </View>
+            </View>
           </View>
 
-          <ScrollView
-            contentContainerStyle={styles.scroll}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}>
-            <GlassSurface level="card" style={styles.card}>
-              <Field
-                testID="plot-name"
-                label="Tên lô đất"
-                value={form.name}
-                onChangeText={value => set('name', value)}
-                placeholder="Ví dụ: Vườn nhà trên"
-                error={errors.name}
-              />
+          <PickerField
+            testID="plot-variety"
+            label="Cây trồng & giống"
+            value={cropValue}
+            placeholder="Chọn loại cây → loại → giống"
+            onPress={openPicker}
+            icon={<ChevronRight />}
+            error={errors.cropType}
+            hint={
+              errors.cropType
+                ? undefined
+                : 'Chọn theo 3 bước; có thể thêm giống mới hoặc cây trồng chưa có trong danh mục.'
+            }
+            style={styles.field}
+          />
 
-              <Field
-                testID="plot-code"
-                label="Mã vùng trồng (PUC)"
-                value={form.code}
-                onChangeText={value => set('code', value)}
-                placeholder="Để trống — hệ thống tự sinh"
-                autoCapitalize="characters"
-                hint="Định dạng PUC-YYMM-XXXX."
-                error={errors.code}
-              />
+          <PickerField
+            testID="plot-planted-at"
+            label="Ngày trồng"
+            value={form.plantedAt ? formatDate(form.plantedAt) : ''}
+            placeholder="Chọn ngày xuống giống"
+            onPress={() => setShowDatePicker(true)}
+            icon={<CalendarIcon />}
+            hint="Dùng để gợi ý công việc theo giai đoạn cây ở tab Chăm sóc."
+            style={styles.field}
+          />
 
-              <Field
-                label="Khu vực"
-                value={form.region}
-                onChangeText={value => set('region', value)}
-                placeholder="Xã / phường, tỉnh"
-              />
-
-              <View style={styles.row}>
-                <Field
-                  testID="plot-area"
-                  label={`Diện tích (${form.areaUnit === 'ha' ? 'ha' : 'm²'})`}
-                  value={form.area}
-                  onChangeText={value => set('area', value)}
-                  placeholder="1200"
-                  keyboardType="numeric"
-                  error={errors.area}
-                  style={styles.rowItem}
+          <View style={styles.field}>
+            <Text style={[text('meta', colors.text.secondary), styles.unitLabel]}>Trạng thái</Text>
+            <View style={styles.statusRow}>
+              {STATUSES.map(status => (
+                <SelectChip
+                  key={status}
+                  label={PLOT_STATUS_LABELS[status]}
+                  selected={form.status === status}
+                  onPress={() => set('status', status)}
                 />
-                <View style={styles.rowItemNarrow}>
-                  <Text style={[text('metaSm', colors.text.alpha['74']), styles.unitLabel]}>
-                    Đơn vị
-                  </Text>
-                  <View style={styles.unitRow}>
-                    <SelectChip
-                      label="m²"
-                      selected={form.areaUnit === 'm2'}
-                      onPress={() => set('areaUnit', 'm2')}
-                    />
-                    <SelectChip
-                      label="ha"
-                      selected={form.areaUnit === 'ha'}
-                      onPress={() => set('areaUnit', 'ha')}
-                    />
-                  </View>
-                </View>
-              </View>
+              ))}
+            </View>
+          </View>
 
-              <Field label="Cây trồng" value={CROP_NAME} editable={false} />
+          <Field
+            label="Ghi chú"
+            value={form.notes}
+            onChangeText={value => set('notes', value)}
+            placeholder="Đặc điểm đất, nguồn nước, điều cần lưu ý…"
+            multiline
+            style={styles.field}
+          />
 
-              <PickerField
-                testID="plot-variety"
-                label="Giống cây"
-                value={form.varietyName}
-                placeholder="Chọn giống hoặc thêm giống mới"
-                onPress={() => setShowVarietyPicker(true)}
-                icon={<ChevronRight />}
-              />
+          <PrimaryButton
+            testID="plot-save"
+            label={editingId ? 'Lưu thay đổi' : 'Lưu lô đất'}
+            onPress={onSave}
+            loading={saving}
+            style={styles.save}
+          />
+          <SecondaryButton label="Huỷ" onPress={() => navigation.goBack()} style={styles.cancel} />
 
-              <PickerField
-                testID="plot-planted-at"
-                label="Ngày trồng"
-                value={form.plantedAt ? formatDate(form.plantedAt) : ''}
-                placeholder="Chọn ngày xuống giống"
-                onPress={() => setShowDatePicker(true)}
-                icon={<CalendarIcon />}
-                hint="Dùng để gợi ý công việc theo giai đoạn cây ở tab Lịch chăm sóc."
-              />
-
-              <View>
-                <Text style={[text('metaSm', colors.text.alpha['74']), styles.unitLabel]}>
-                  Trạng thái
-                </Text>
-                <View style={styles.statusRow}>
-                  {STATUSES.map(status => (
-                    <SelectChip
-                      key={status}
-                      label={PLOT_STATUS_LABELS[status]}
-                      selected={form.status === status}
-                      onPress={() => set('status', status)}
-                    />
-                  ))}
-                </View>
-              </View>
-
-              <Field
-                label="Ghi chú"
-                value={form.notes}
-                onChangeText={value => set('notes', value)}
-                placeholder="Giống, ngày xuống giống, đặc điểm cần lưu ý…"
-                multiline
-              />
-            </GlassSurface>
-
-            <PrimaryButton
-              label={editingId ? 'Lưu thay đổi' : 'Lưu lô đất'}
-              onPress={onSave}
-              loading={saving}
-              style={styles.save}
-            />
-            <GhostButton label="Huỷ" onPress={() => navigation.goBack()} style={styles.cancel} />
-
-            <Text style={[text('caption', colors.text.alpha['60']), styles.footnote]}>
-              Lưu vào máy ngay cả khi không có mạng. Dữ liệu tự đồng bộ lên hệ thống khi có
-              mạng trở lại.
-            </Text>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-
-      <VarietyPicker
-        visible={showVarietyPicker}
-        cropType={CROP_TYPE}
-        cropName={CROP_NAME}
-        selectedId={form.varietyId}
-        onSelect={onPickVariety}
-        onClose={() => setShowVarietyPicker(false)}
-      />
+          <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+            Lưu vào máy ngay cả khi không có mạng. Dữ liệu tự đồng bộ lên hệ thống khi có mạng
+            trở lại.
+          </Text>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {showDatePicker ? (
         <DateTimePicker
@@ -350,7 +352,7 @@ export function PlotFormScreen() {
           }}
         />
       ) : null}
-    </ScreenBackground>
+    </Screen>
   );
 }
 
@@ -358,51 +360,42 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing['7'],
-    paddingHorizontal: spacing['11'],
-    paddingTop: spacing['6'],
-    paddingBottom: spacing['10'],
-  },
   scroll: {
-    paddingHorizontal: spacing['11'],
-    paddingBottom: spacing['18'],
+    paddingHorizontal: space.lg,
+    paddingBottom: space['3xl'],
   },
-  card: {
-    padding: spacing['12'],
-    borderRadius: radius['6xl'],
-    gap: spacing['11'],
+  field: {
+    marginBottom: space.lg,
   },
   row: {
     flexDirection: 'row',
-    gap: spacing['7'],
+    gap: space.md,
   },
   rowItem: {
     flex: 1,
   },
   rowItemNarrow: {
-    width: 132,
+    width: 128,
   },
   unitLabel: {
-    marginBottom: spacing['2'],
+    marginBottom: space.sm,
   },
   unitRow: {
     flexDirection: 'row',
-    gap: spacing['3'],
+    gap: space.sm,
   },
   statusRow: {
     flexDirection: 'row',
-    gap: spacing['3'],
+    gap: space.sm,
   },
   save: {
-    marginTop: spacing['13'],
+    marginTop: space.sm,
   },
   cancel: {
-    marginTop: spacing['6'],
+    marginTop: space.md,
   },
   footnote: {
-    marginTop: spacing['11'],
+    marginTop: space.lg,
+    textAlign: 'center',
   },
 });

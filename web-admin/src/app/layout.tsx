@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "AgriLog v2 — Quản trị",
   description:
-    "Trang quản trị AgriLog v2: theo dõi lô đất, chẩn đoán bệnh cà chua, giá phân bón, kho vật tư và thu chi của các nông hộ.",
+    "Trang quản trị AgriLog v2: lô đất, danh mục giống cây, giá phân bón, kho vật tư và thu chi của các nông hộ.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -6,15 +6,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.core.database import Base, engine
+from app.core.database import engine
+from app.core.schema_upgrade import upgrade
 from app.routers import auth, health, plots, sync
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    # Alembic owns schema migrations from Giai doan 1 onwards; create_all keeps
-    # a freshly cloned repo runnable with a single command today.
-    Base.metadata.create_all(bind=engine)
+    # create_all + additive column upgrades keep a freshly cloned repo (and a
+    # dev database from an earlier version) runnable with a single command.
+    # See app/core/schema_upgrade.py.
+    upgrade(engine)
     yield
 
 

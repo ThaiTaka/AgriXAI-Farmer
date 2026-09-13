@@ -9,7 +9,8 @@ import uuid
 from sqlalchemy import select
 
 from app.core.config import settings
-from app.core.database import Base, SessionLocal, engine
+from app.core.database import SessionLocal, engine
+from app.core.schema_upgrade import upgrade
 from app.core.security import hash_password
 from app.models.farm import CropVariety
 from app.models.user import User, UserRole
@@ -56,38 +57,52 @@ def seed_users(db) -> None:
         print(f"  user {action}: {spec['username']} ({spec['role'].value})")
 
 
+def iter_seed_varieties():
+    """Flattens the three-level catalogue into (crop, category, variety) rows."""
+    for crop in static_data.load("crop_varieties")["crop_types"]:
+        for category in crop["categories"]:
+            for variety in category["varieties"]:
+                yield crop, category, variety
+
+
 def seed_varieties(db) -> None:
-    """Loads shared/data/crop_varieties.json.
+    """Loads shared/data/crop_varieties.json (crop type -> category -> variety).
 
     Matched on `seed_key`, so re-running after the file gains a variety adds only
     what is missing and never touches a variety a farmer created.
 
-    The id is derived from the seed key rather than random, so the row the mobile
-    app seeds offline and the row seeded here are the SAME record. Otherwise the
-    first sync would leave the farmer with two of every variety.
+    The id is derived from the seed key rather than random, so the entry the
+    mobile app reads from its bundled copy and the row seeded here are the SAME
+    record. Otherwise the first sync would leave the farmer with two of every
+    variety.
     """
-    catalogue = static_data.load("crop_varieties")["varieties"]
-    added = 0
-    for entry in catalogue:
+    added = total = 0
+    for crop, category, entry in iter_seed_varieties():
+        total += 1
         existing = db.scalar(select(CropVariety).where(CropVariety.seed_key == entry["id"]))
         if existing is None:
             existing = CropVariety(id=f"seed_{entry['id']}", seed_key=entry["id"])
             db.add(existing)
             added += 1
         existing.name = entry["name"]
-        existing.crop_type = entry["crop_type"]
-        existing.crop_name = entry["crop_name"]
-        existing.fruit = entry.get("fruit")
+        existing.crop_type = crop["id"]
+        existing.crop_name = crop["name"]
+        existing.category_id = category["category_id"]
+        existing.category_name = category["category_name"]
+        existing.description = entry.get("description")
         existing.usage = entry.get("usage")
-        existing.note = entry.get("note")
+        existing.growing_note = entry.get("growing_note")
+        existing.badge = entry.get("badge")
         existing.is_seed = True
         existing.approved = True
         existing.source = "seed"
-    print(f"  crop varieties: {added} added, {len(catalogue) - added} already present")
+    print(f"  crop varieties: {added} added, {total - added} already present")
 
 
 def run() -> None:
-    Base.metadata.create_all(bind=engine)
+    added = upgrade(engine)
+    if added:
+        print(f"  schema: added columns {', '.join(added)}")
     with SessionLocal() as db:
         seed_users(db)
         seed_varieties(db)

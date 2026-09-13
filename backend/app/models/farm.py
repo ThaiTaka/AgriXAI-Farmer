@@ -36,7 +36,9 @@ class Plot(Base, SyncMixin):
     region: Mapped[str | None] = mapped_column(String(160), default=None)
     area: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     area_unit: Mapped[str] = mapped_column(String(8), default="m2", nullable=False)
-    crop_type: Mapped[str] = mapped_column(String(48), default="ca_chua", nullable=False)
+    # Catalogue crop id ("tomato", "coffee"...) or a slug the farmer created.
+    crop_type: Mapped[str] = mapped_column(String(48), default="tomato", nullable=False)
+    crop_name: Mapped[str | None] = mapped_column(String(64), default=None)
     variety_id: Mapped[str | None] = mapped_column(String(64), default=None)
     variety_name: Mapped[str | None] = mapped_column(String(128), default=None)
     planted_at: Mapped[int | None] = mapped_column(BigInteger, default=None)
@@ -47,7 +49,12 @@ class Plot(Base, SyncMixin):
 
 
 class CropVariety(Base, SyncMixin):
-    """Open catalogue: seeded from shared/data, extended by farmers in the app."""
+    """Open catalogue: seeded from shared/data, extended by farmers in the app.
+
+    The catalogue has three levels (crop type -> category -> variety). Only the
+    variety is a row; the two upper levels are static and denormalised here as
+    ids + names so a row stays readable for a crop a farmer invented.
+    """
 
     __tablename__ = "crop_varieties"
 
@@ -55,9 +62,12 @@ class CropVariety(Base, SyncMixin):
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     crop_type: Mapped[str] = mapped_column(String(48), index=True, nullable=False)
     crop_name: Mapped[str] = mapped_column(String(64), nullable=False)
-    fruit: Mapped[str | None] = mapped_column(Text, default=None)
+    category_id: Mapped[str | None] = mapped_column(String(64), index=True, default=None)
+    category_name: Mapped[str | None] = mapped_column(String(96), default=None)
+    description: Mapped[str | None] = mapped_column(Text, default=None)
     usage: Mapped[str | None] = mapped_column(Text, default=None)
-    note: Mapped[str | None] = mapped_column(Text, default=None)
+    growing_note: Mapped[str | None] = mapped_column(Text, default=None)
+    badge: Mapped[str | None] = mapped_column(String(16), default=None)
     is_seed: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     # Farmer-added varieties arrive unapproved; an admin flips this in web-admin.
     approved: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
@@ -70,7 +80,7 @@ class CropCycle(Base, SyncMixin):
 
     plot_id: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
     name: Mapped[str] = mapped_column(String(128), nullable=False)
-    crop_type: Mapped[str] = mapped_column(String(48), default="ca_chua", nullable=False)
+    crop_type: Mapped[str] = mapped_column(String(48), default="tomato", nullable=False)
     variety_id: Mapped[str | None] = mapped_column(String(64), default=None)
     variety_name: Mapped[str | None] = mapped_column(String(128), default=None)
     stage: Mapped[str] = mapped_column(String(16), default=GrowthStage.SEEDLING.value, nullable=False)

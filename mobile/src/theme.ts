@@ -1,503 +1,140 @@
 /**
  * GENERATED FILE - DO NOT EDIT BY HAND.
  *
- * Source: shared/design/tokens.json (extracted from "AgriXAI Farmer v4 - Standalone (1).html")
+ * Source: shared/design/tokens.json
  * Regenerate with: node shared/design/build-tokens.js
  */
 
-import type {TextStyle, ViewStyle} from 'react-native';
+import type {TextStyle} from 'react-native';
 
 export const colors = {
   "green": {
     "100": "#DCE9DD",
-    "150": "#C9DCC0",
     "200": "#B0CBA4",
     "300": "#96BC87",
-    "400": "#5A8B44",
     "500": "#54A96A",
+    "600": "#3D8A52",
     "700": "#2E6F40",
-    "750": "#1F4E2C",
     "800": "#1B4429",
-    "850": "#122E1D",
     "900": "#12301D",
     "075": "#F1F6EF",
-    "050": "#EEF2EC"
+    "050": "#F4F8F3"
   },
-  "lime": {
-    "200": "#E6EBD3",
-    "500": "#C3D24A",
-    "800": "#4A5810",
-    "900": "#12240F"
+  "gray": {
+    "50": "#F9FAFB",
+    "100": "#F3F4F6",
+    "200": "#E5E7EB",
+    "300": "#D1D5DB",
+    "400": "#9CA3AF",
+    "500": "#6B7280",
+    "600": "#4B5563",
+    "700": "#374151",
+    "800": "#1F2937",
+    "900": "#111827"
   },
   "amber": {
     "100": "#FBEDD2",
-    "300": "#E5AC3D",
     "500": "#F2A104",
-    "700": "#7A4F00",
-    "800": "#5C4405",
-    "900": "#3D2400"
+    "800": "#92400E"
   },
-  "danger": {
-    "bg": "#C24A12",
-    "fg": "#FFF3E8",
-    "dot": "#E4661F"
+  "red": {
+    "600": "#DC2626",
+    "800": "#991B1B"
   },
-  "neutral": {
-    "white": "#FFFFFF",
-    "photoBackdrop": "#081711",
-    "iconDeep": "#0C2418"
-  },
+  "white": "#FFFFFF",
   "text": {
-    "primary": "#12301D",
-    "secondary": "#4B5F51",
-    "webBody": "#42564A",
-    "muted": "#6E8175",
-    "eyebrow": "#7B8C7F",
+    "primary": "#111827",
+    "secondary": "#374151",
+    "muted": "#6B7280",
+    "placeholder": "#9CA3AF",
     "onPrimary": "#FFFFFF",
-    "alpha": {
-      "55": "rgba(18,48,29,0.55)",
-      "60": "rgba(18,48,29,0.60)",
-      "62": "rgba(18,48,29,0.62)",
-      "68": "rgba(18,48,29,0.68)",
-      "70": "rgba(18,48,29,0.70)",
-      "72": "rgba(18,48,29,0.72)",
-      "74": "rgba(18,48,29,0.74)",
-      "88": "rgba(18,48,29,0.88)",
-      "deep86": "rgba(23,58,36,0.86)",
-      "deep78": "rgba(23,58,36,0.78)",
-      "deep70": "rgba(23,58,36,0.70)"
-    }
+    "link": "#2E6F40",
+    "danger": "#991B1B"
+  },
+  "surface": {
+    "page": "#F9FAFB",
+    "card": "#FFFFFF",
+    "subtle": "#F3F4F6",
+    "selected": "#F1F6EF",
+    "pressed": "#F3F4F6",
+    "overlay": "rgba(17,24,39,0.35)"
   },
   "border": {
-    "soft": "#E2E8E2",
-    "webCard": "#D3DBD4",
-    "webChip": "#CFD8CF",
-    "glass": "rgba(255,255,255,0.62)",
-    "glassStrong": "rgba(255,255,255,0.72)",
-    "glassDashed": "rgba(255,255,255,0.94)",
-    "amberSoft": "rgba(242,161,4,0.34)",
-    "limeSoft": "rgba(195,210,74,0.22)",
-    "greenSoft": "rgba(46,111,64,0.34)"
+    "default": "#E5E7EB",
+    "strong": "#D1D5DB",
+    "focus": "#2E6F40",
+    "selected": "#2E6F40",
+    "danger": "#DC2626"
   },
-  "track": "rgba(23,58,36,0.10)"
-} as const;
-
-export const gradients = {
-  "appBackground": {
-    "colors": [
-      "#C9DCC0",
-      "#B0CBA4",
-      "#96BC87"
-    ],
-    "css": "linear-gradient(168deg,#C9DCC0 0%,#B0CBA4 52%,#96BC87 100%)",
-    "locations": [
-      0,
-      0.52,
-      1
-    ]
+  "primary": {
+    "default": "#2E6F40",
+    "pressed": "#245A33",
+    "soft": "#F1F6EF",
+    "softStrong": "#DCE9DD",
+    "onPrimary": "#FFFFFF"
   },
-  "primaryAction": {
-    "colors": [
-      "#54A96A",
-      "#2E6F40"
-    ],
-    "css": "linear-gradient(135deg,#54A96A,#2E6F40)",
-    "locations": [
-      0,
-      1
-    ]
-  },
-  "primaryActionTranslucent": {
-    "colors": [
-      "rgba(84,169,106,.9)",
-      "rgba(46,111,64,.86)"
-    ],
-    "css": "linear-gradient(135deg,rgba(84,169,106,.9),rgba(46,111,64,.86))"
-  },
-  "progress": {
-    "colors": [
-      "#C3D24A",
-      "#54A96A"
-    ],
-    "css": "linear-gradient(90deg,#C3D24A,#54A96A)"
-  },
-  "resultHighlight": {
-    "colors": [
-      "rgba(216,236,208,0.86)",
-      "rgba(178,213,164,0.5)"
-    ],
-    "css": "linear-gradient(165deg,rgba(216,236,208,0.86) 0%,rgba(178,213,164,0.5) 100%)"
-  },
-  "loginScrim": {
-    "colors": [
-      "rgba(190,212,178,.92)",
-      "rgba(190,212,178,.86)",
-      "rgba(190,212,178,.5)",
-      "rgba(190,212,178,.94)"
-    ],
-    "css": "linear-gradient(180deg,rgba(190,212,178,.92) 0%,rgba(190,212,178,.86) 30%,rgba(190,212,178,.5) 56%,rgba(190,212,178,.94) 100%)"
-  },
-  "homeScrim": {
-    "colors": [
-      "rgba(190,212,178,.9)",
-      "rgba(190,212,178,.72)",
-      "rgba(190,212,178,.44)",
-      "rgba(190,212,178,.84)"
-    ],
-    "css": "linear-gradient(180deg,rgba(190,212,178,.9) 0%,rgba(190,212,178,.72) 26%,rgba(190,212,178,.44) 52%,rgba(190,212,178,.84) 100%)"
-  }
-} as const;
-
-export const halo = {
-  "$note": "Three fixed blurred radial glows behind the glass layer — they give backdrop-filter something to blur. Render behind all screen content, pointerEvents none.",
-  "green": {
-    "top": -90,
-    "left": -70,
-    "size": 300,
-    "blur": 26,
-    "css": "radial-gradient(circle,rgba(84,169,106,.34) 0%,rgba(84,169,106,0) 70%)"
-  },
-  "lime": {
-    "top": 210,
-    "right": -110,
-    "size": 290,
-    "blur": 30,
-    "css": "radial-gradient(circle,rgba(195,210,74,.3) 0%,rgba(195,210,74,0) 70%)"
-  },
-  "amber": {
-    "bottom": -70,
-    "left": 20,
-    "size": 280,
-    "blur": 34,
-    "css": "radial-gradient(circle,rgba(242,161,4,.22) 0%,rgba(242,161,4,0) 70%)"
-  }
-} as const;
-
-/**
- * Liquid-glass surfaces.
- *
- * React Native has no `backdrop-filter`. Each level therefore ships both:
- *   - `gradientColors` for <LinearGradient> (+ an optional <BlurView> behind), and
- *   - `solidBackground`, the opaque fallback required by the field constraints
- *     (weak devices, or when the farmer turns on "Che do ngoai nang").
- * Pick between them with `surface(level, solid)`.
- */
-export const glass = {
-  "strong": {
-    "gradientColors": [
-      "rgba(255,255,255,0.82)",
-      "rgba(255,255,255,0.43)"
-    ],
-    "gradientStart": {
-      "x": 0.18,
-      "y": 0
-    },
-    "gradientEnd": {
-      "x": 0.82,
-      "y": 1
-    },
-    "borderColor": "rgba(255,255,255,0.62)",
-    "borderWidth": 1,
-    "blurAmount": 32,
-    "saturate": 200,
-    "solidBackground": "#E1ECDD",
-    "shadow": {
-      "shadowColor": "#1A3C26",
-      "shadowOffset": {
-        "width": 0,
-        "height": 20
-      },
-      "shadowRadius": 23,
-      "shadowOpacity": 0.15,
-      "elevation": 12
-    }
-  },
-  "card": {
-    "gradientColors": [
-      "rgba(255,255,255,0.81)",
-      "rgba(255,255,255,0.38)"
-    ],
-    "gradientStart": {
-      "x": 0.18,
-      "y": 0
-    },
-    "gradientEnd": {
-      "x": 0.82,
-      "y": 1
-    },
-    "borderColor": "rgba(255,255,255,0.62)",
-    "borderWidth": 1,
-    "blurAmount": 28,
-    "saturate": 200,
-    "solidBackground": "#DFEADA",
-    "shadow": {
-      "shadowColor": "#1A3C26",
-      "shadowOffset": {
-        "width": 0,
-        "height": 12
-      },
-      "shadowRadius": 15,
-      "shadowOpacity": 0.12,
-      "elevation": 7
-    }
-  },
-  "soft": {
-    "gradientColors": [
-      "rgba(255,255,255,0.76)",
-      "rgba(255,255,255,0.35)"
-    ],
-    "gradientStart": {
-      "x": 0.18,
-      "y": 0
-    },
-    "gradientEnd": {
-      "x": 0.82,
-      "y": 1
-    },
-    "borderColor": "rgba(255,255,255,0.72)",
-    "borderWidth": 1,
-    "blurAmount": 26,
-    "saturate": 200,
-    "solidBackground": "#DCE8D7",
-    "shadow": {
-      "shadowColor": "#1A3C26",
-      "shadowOffset": {
-        "width": 0,
-        "height": 10
-      },
-      "shadowRadius": 13,
-      "shadowOpacity": 0.11,
-      "elevation": 6
-    }
-  },
-  "control": {
-    "gradientColors": [
-      "rgba(255,255,255,0.82)",
-      "rgba(255,255,255,0.40)"
-    ],
-    "gradientStart": {
-      "x": 0.18,
-      "y": 0
-    },
-    "gradientEnd": {
-      "x": 0.82,
-      "y": 1
-    },
-    "borderColor": "rgba(255,255,255,0.62)",
-    "borderWidth": 1,
-    "blurAmount": 22,
-    "saturate": 200,
-    "solidBackground": "#E0EBDC",
-    "shadow": null
-  },
-  "pill": {
-    "gradientColors": [
-      "rgba(255,255,255,0.82)",
-      "rgba(255,255,255,0.47)"
-    ],
-    "gradientStart": {
-      "x": 0.18,
-      "y": 0
-    },
-    "gradientEnd": {
-      "x": 0.82,
-      "y": 1
-    },
-    "borderColor": "rgba(255,255,255,0.62)",
-    "borderWidth": 1,
-    "blurAmount": 24,
-    "saturate": 200,
-    "solidBackground": "#E3EDDF",
-    "shadow": null
-  },
-  "tabBar": {
-    "gradientColors": [
-      "rgba(255,255,255,0.82)",
-      "rgba(255,255,255,0.41)"
-    ],
-    "gradientStart": {
-      "x": 0.18,
-      "y": 0
-    },
-    "gradientEnd": {
-      "x": 0.82,
-      "y": 1
-    },
-    "borderColor": "rgba(255,255,255,0.62)",
-    "borderWidth": 1,
-    "blurAmount": 34,
-    "saturate": 200,
-    "solidBackground": "#E1EBDC",
-    "shadow": {
-      "shadowColor": "#1A3C26",
-      "shadowOffset": {
-        "width": 0,
-        "height": -6
-      },
-      "shadowRadius": 15,
-      "shadowOpacity": 0.14,
-      "elevation": 4
-    }
+  "badge": {
+    "yellowBg": "#FEF3C7",
+    "yellowFg": "#92400E",
+    "greenBg": "#D1FAE5",
+    "greenFg": "#065F46",
+    "redBg": "#FEE2E2",
+    "redFg": "#991B1B",
+    "grayBg": "#F3F4F6",
+    "grayFg": "#374151",
+    "blueBg": "#DBEAFE",
+    "blueFg": "#1E40AF",
+    "purpleBg": "#EDE9FE",
+    "purpleFg": "#5B21B6"
   }
 } as const;
 
 export const shadows = {
-  "primaryButton": {
-    "shadowColor": "#18562D",
+  "sm": {
+    "shadowColor": "#000000",
     "shadowOffset": {
       "width": 0,
-      "height": 14
+      "height": 1
     },
-    "shadowRadius": 15,
-    "shadowOpacity": 0.5,
-    "elevation": 8
+    "shadowRadius": 1,
+    "shadowOpacity": 0.05,
+    "elevation": 1
   },
-  "primaryButtonSm": {
-    "shadowColor": "#18562D",
+  "md": {
+    "shadowColor": "#000000",
     "shadowOffset": {
       "width": 0,
-      "height": 10
+      "height": 4
     },
-    "shadowRadius": 11,
-    "shadowOpacity": 0.32,
-    "elevation": 6
-  },
-  "fab": {
-    "shadowColor": "#104624",
-    "shadowOffset": {
-      "width": 0,
-      "height": 12
-    },
-    "shadowRadius": 14,
-    "shadowOpacity": 0.6,
-    "elevation": 7
-  },
-  "heroCard": {
-    "shadowColor": "#0C3A1D",
-    "shadowOffset": {
-      "width": 0,
-      "height": 16
-    },
-    "shadowRadius": 17,
-    "shadowOpacity": 0.46,
-    "elevation": 10
-  },
-  "cardXl": {
-    "shadowColor": "#1A3C26",
-    "shadowOffset": {
-      "width": 0,
-      "height": 20
-    },
-    "shadowRadius": 23,
-    "shadowOpacity": 0.15,
-    "elevation": 12
-  },
-  "cardLg": {
-    "shadowColor": "#1A3C26",
-    "shadowOffset": {
-      "width": 0,
-      "height": 18
-    },
-    "shadowRadius": 20,
-    "shadowOpacity": 0.14,
-    "elevation": 11
-  },
-  "cardMd": {
-    "shadowColor": "#1A3C26",
-    "shadowOffset": {
-      "width": 0,
-      "height": 12
-    },
-    "shadowRadius": 15,
-    "shadowOpacity": 0.12,
-    "elevation": 7
-  },
-  "cardSm": {
-    "shadowColor": "#1A3C26",
-    "shadowOffset": {
-      "width": 0,
-      "height": 10
-    },
-    "shadowRadius": 13,
-    "shadowOpacity": 0.11,
-    "elevation": 6
-  },
-  "tabBar": {
-    "shadowColor": "#1A3C26",
-    "shadowOffset": {
-      "width": 0,
-      "height": -6
-    },
-    "shadowRadius": 15,
-    "shadowOpacity": 0.14,
+    "shadowRadius": 3,
+    "shadowOpacity": 0.1,
     "elevation": 4
-  },
-  "amberButton": {
-    "shadowColor": "#7A4F00",
-    "shadowOffset": {
-      "width": 0,
-      "height": 8
-    },
-    "shadowRadius": 9,
-    "shadowOpacity": 0.38,
-    "elevation": 5
-  },
-  "logo": {
-    "shadowColor": "#18562D",
-    "shadowOffset": {
-      "width": 0,
-      "height": 10
-    },
-    "shadowRadius": 11,
-    "shadowOpacity": 0.3,
-    "elevation": 6
   }
 } as const;
 
 export const radius = {
-  "xs": 8,
+  "xs": 6,
   "sm": 10,
   "md": 14,
-  "lg": 16,
-  "xl": 18,
-  "2xl": 20,
-  "3xl": 22,
-  "4xl": 24,
-  "5xl": 26,
-  "6xl": 28,
-  "7xl": 30,
-  "8xl": 32,
-  "sheet": 34,
+  "lg": 18,
+  "xl": 24,
   "pill": 999
 } as const;
 
-export const spacing = {
-  "0": 0,
-  "1": 3,
-  "2": 6,
-  "3": 7,
-  "4": 8,
-  "5": 9,
-  "6": 10,
-  "7": 11,
-  "8": 12,
-  "9": 13,
-  "10": 14,
-  "11": 16,
-  "12": 18,
-  "13": 20,
-  "14": 22,
-  "15": 24,
-  "16": 26,
-  "17": 28,
-  "18": 34,
-  "19": 40,
-  "20": 62
+/** 8pt spacing grid. */
+export const space = {
+  "xs": 4,
+  "sm": 8,
+  "md": 12,
+  "lg": 16,
+  "xl": 24,
+  "2xl": 32,
+  "3xl": 40,
+  "4xl": 48
 } as const;
 
 export const typography = {
   "fontFamily": {
-    "$note": "Open Sans is BUNDLED with the app (mobile/src/assets/fonts, web-admin/public/fonts). Never load from Google Fonts at runtime — the farmer app must work offline.",
     "sans": "Open Sans",
     "fallback": "system-ui, -apple-system, sans-serif"
   },
@@ -509,82 +146,40 @@ export const typography = {
     "extrabold": 800
   },
   "role": {
-    "screenTitle": {
+    "display": {
       "size": 34,
       "weight": 800,
       "lineHeight": 1.16,
       "letterSpacing": -0.02
     },
-    "displayLg": {
-      "size": 32,
+    "title": {
+      "size": 28,
       "weight": 800,
-      "lineHeight": 1,
-      "letterSpacing": -0.02
-    },
-    "resultTitle": {
-      "size": 26,
-      "weight": 800,
-      "lineHeight": 1.12,
-      "letterSpacing": -0.02
-    },
-    "pageTitle": {
-      "size": 25,
-      "weight": 800,
-      "lineHeight": 1.12,
-      "letterSpacing": -0.02
-    },
-    "sectionTitleLg": {
-      "size": 24,
-      "weight": 700,
       "lineHeight": 1.2,
       "letterSpacing": -0.02
     },
-    "sectionTitle": {
-      "size": 23,
+    "heading": {
+      "size": 22,
       "weight": 700,
       "lineHeight": 1.25,
-      "letterSpacing": -0.02
+      "letterSpacing": -0.01
     },
-    "screenHeading": {
-      "size": 21,
+    "subheading": {
+      "size": 18,
       "weight": 700,
       "lineHeight": 1.3,
       "letterSpacing": -0.01
     },
-    "groupTitle": {
-      "size": 19,
-      "weight": 700,
-      "lineHeight": 1.3,
-      "letterSpacing": -0.01
-    },
-    "cardTitleLg": {
-      "size": 18.5,
+    "cardTitle": {
+      "size": 16,
       "weight": 700,
       "lineHeight": 1.35,
       "letterSpacing": -0.01
     },
-    "cardTitle": {
-      "size": 16.5,
-      "weight": 700,
-      "lineHeight": 1.4,
-      "letterSpacing": -0.01
-    },
-    "listTitle": {
-      "size": 16,
-      "weight": 700,
-      "lineHeight": 1.4,
-      "letterSpacing": -0.01
-    },
     "input": {
       "size": 16,
-      "weight": 600,
+      "weight": 500,
       "lineHeight": 1.4,
-      "letterSpacing": 0
-    },
-    "bodyStrong": {
-      "size": 15.5,
-      "weight": 600,
-      "lineHeight": 1.5,
       "letterSpacing": 0
     },
     "body": {
@@ -593,20 +188,20 @@ export const typography = {
       "lineHeight": 1.55,
       "letterSpacing": 0
     },
-    "bodySm": {
-      "size": 14.5,
+    "bodyStrong": {
+      "size": 15,
       "weight": 600,
       "lineHeight": 1.5,
       "letterSpacing": 0
     },
-    "meta": {
-      "size": 13.5,
-      "weight": 600,
-      "lineHeight": 1.45,
+    "bodySm": {
+      "size": 14,
+      "weight": 500,
+      "lineHeight": 1.5,
       "letterSpacing": 0
     },
-    "metaSm": {
-      "size": 12.5,
+    "meta": {
+      "size": 13,
       "weight": 600,
       "lineHeight": 1.45,
       "letterSpacing": 0
@@ -629,62 +224,29 @@ export const typography = {
       "lineHeight": 1.3,
       "letterSpacing": 0.08,
       "textTransform": "uppercase"
-    },
-    "tabLabel": {
-      "size": 10.5,
-      "weight": 600,
-      "lineHeight": 1.2,
-      "letterSpacing": 0
-    },
-    "overline": {
-      "size": 11,
-      "weight": 700,
-      "lineHeight": 1.2,
-      "letterSpacing": 0.11,
-      "textTransform": "uppercase"
     }
   }
 } as const;
 
 /** Hard minimums from the field constraints - these outrank aesthetics. */
 export const size = {
-  "$note": "Field constraints (§3.4) — these are hard minimums, they outrank aesthetics.",
   "minTouchTarget": 48,
   "inputMinHeight": 50,
-  "buttonMinHeight": 54,
-  "buttonMinHeightSm": 46,
-  "chipMinHeight": 44,
-  "tabItemMinHeight": 52,
-  "fab": 62,
+  "buttonMinHeight": 52,
+  "buttonMinHeightSm": 44,
+  "chipMinHeight": 40,
   "iconButton": 44,
-  "avatar": 46,
-  "deviceWidth": 402,
-  "deviceHeight": 874,
-  "screenPaddingX": 16,
-  "screenPaddingTop": 62
+  "avatar": 44,
+  "screenPaddingX": 16
 } as const;
 
 export const motion = {
-  "rise": {
-    "duration": 320,
-    "easing": "ease-out",
-    "keyframes": "from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}"
-  },
-  "pulse": {
-    "duration": 1600,
-    "easing": "ease-in-out",
-    "keyframes": "0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.07);opacity:1}"
-  },
-  "progress": {
-    "duration": 500,
-    "easing": "ease"
-  }
+  "pressOpacity": 0.72,
+  "fast": 120,
+  "normal": 220
 } as const;
 
-export type GlassLevel = keyof typeof glass;
 export type TypographyRole = keyof typeof typography.role;
-
-const FONT = typography.fontFamily.sans;
 
 const FONT_FILES: Record<number, string> = {
   400: 'OpenSans-Regular',
@@ -698,7 +260,7 @@ const FONT_FILES: Record<number, string> = {
 export function text(role: TypographyRole, color: string = colors.text.primary): TextStyle {
   const r = typography.role[role];
   const style: TextStyle = {
-    fontFamily: FONT_FILES[r.weight] ?? FONT,
+    fontFamily: FONT_FILES[r.weight] ?? typography.fontFamily.sans,
     fontSize: r.size,
     fontWeight: String(r.weight) as TextStyle['fontWeight'],
     lineHeight: Math.round(r.size * r.lineHeight),
@@ -711,35 +273,15 @@ export function text(role: TypographyRole, color: string = colors.text.primary):
   return style;
 }
 
-/**
- * Container style for a glass surface.
- * @param level  which glass recipe
- * @param solid  true => opaque fallback ("Che do ngoai nang" / low-end devices)
- */
-export function surface(level: GlassLevel, solid = false): ViewStyle {
-  const g = glass[level];
-  const base: ViewStyle = {
-    borderWidth: g.borderWidth,
-    borderColor: g.borderColor,
-  };
-  if (solid) base.backgroundColor = g.solidBackground;
-  if (g.shadow) Object.assign(base, g.shadow);
-  return base;
-}
-
 export const theme = {
   colors,
-  gradients,
-  halo,
-  glass,
   shadows,
   radius,
-  spacing,
+  space,
   typography,
   size,
   motion,
   text,
-  surface,
 } as const;
 
 export default theme;

@@ -4,11 +4,16 @@ import React from 'react';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
 import {useAuth} from '../auth/AuthContext';
-import {ScreenBackground} from '../components/ScreenBackground';
+import {Screen} from '../components/Screen';
+import {FertilizerGroupsScreen} from '../screens/fertilizer/FertilizerGroupsScreen';
+import {FertilizerProductsScreen} from '../screens/fertilizer/FertilizerProductsScreen';
 import {HomeScreen} from '../screens/HomeScreen';
 import {LoginScreen} from '../screens/LoginScreen';
 import {PlotDetailScreen} from '../screens/PlotDetailScreen';
 import {PlotFormScreen} from '../screens/PlotFormScreen';
+import {VarietyCategoryScreen} from '../screens/variety/VarietyCategoryScreen';
+import {VarietyCropTypeScreen} from '../screens/variety/VarietyCropTypeScreen';
+import {VarietyPickScreen} from '../screens/variety/VarietyPickScreen';
 import {colors} from '../theme';
 import type {RootStackParamList} from './types';
 
@@ -19,11 +24,11 @@ export function RootNavigator() {
 
   if (status === 'loading') {
     return (
-      <ScreenBackground>
+      <Screen>
         <View style={styles.center}>
-          <ActivityIndicator size="large" color={colors.green['700']} />
+          <ActivityIndicator size="large" color={colors.primary.default} />
         </View>
-      </ScreenBackground>
+      </Screen>
     );
   }
 
@@ -32,9 +37,7 @@ export function RootNavigator() {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
-          // Screens paint their own gradient shell; a white card underneath
-          // would flash on every transition.
-          contentStyle: {backgroundColor: 'transparent'},
+          contentStyle: {backgroundColor: colors.surface.page},
           animation: 'slide_from_right',
         }}>
         {status === 'signedOut' ? (
@@ -48,6 +51,11 @@ export function RootNavigator() {
               component={PlotFormScreen}
               options={{animation: 'slide_from_bottom'}}
             />
+            <Stack.Screen name="VarietyCropType" component={VarietyCropTypeScreen} />
+            <Stack.Screen name="VarietyCategory" component={VarietyCategoryScreen} />
+            <Stack.Screen name="VarietyPick" component={VarietyPickScreen} />
+            <Stack.Screen name="FertilizerGroups" component={FertilizerGroupsScreen} />
+            <Stack.Screen name="FertilizerProducts" component={FertilizerProductsScreen} />
           </>
         )}
       </Stack.Navigator>

@@ -2,14 +2,15 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 import {useSync} from '../sync/SyncContext';
-import {colors, radius, spacing, text} from '../theme';
+import {colors, radius, space, text} from '../theme';
 import {OfflineIcon} from './icons';
 
 /**
  * A quiet line telling the farmer where their data stands.
  *
  * Being offline is a normal working state out in a field, so it is reported as
- * information, never as an error dialog that blocks what they were doing.
+ * information (a soft yellow note), never as an error dialog that blocks what
+ * they were doing.
  */
 export function SyncStatus() {
   const {state, lastSyncedAt, sync} = useSync();
@@ -17,7 +18,7 @@ export function SyncStatus() {
   if (state === 'syncing') {
     return (
       <View style={styles.row}>
-        <Text style={text('caption', colors.text.alpha['60'])}>Đang đồng bộ…</Text>
+        <Text style={text('caption', colors.text.muted)}>Đang đồng bộ…</Text>
       </View>
     );
   }
@@ -32,7 +33,7 @@ export function SyncStatus() {
         }}
         style={({pressed}) => [styles.offline, pressed && styles.pressed]}>
         <OfflineIcon size={16} />
-        <Text style={[text('caption', colors.amber['700']), styles.offlineText]}>
+        <Text style={[text('caption', colors.badge.yellowFg), styles.offlineText]}>
           {state === 'offline'
             ? 'Chưa đồng bộ được — dữ liệu vẫn lưu an toàn trên máy. Chạm để thử lại.'
             : 'Đồng bộ gặp lỗi. Chạm để thử lại.'}
@@ -43,7 +44,7 @@ export function SyncStatus() {
 
   return (
     <View style={styles.row}>
-      <Text style={text('caption', colors.text.alpha['60'])}>
+      <Text style={text('caption', colors.text.muted)}>
         {lastSyncedAt ? `Đã đồng bộ lúc ${formatClock(lastSyncedAt)}` : 'Chưa đồng bộ lần nào'}
       </Text>
     </View>
@@ -57,18 +58,16 @@ function formatClock(timestamp: number): string {
 
 const styles = StyleSheet.create({
   row: {
-    paddingVertical: spacing['3'],
+    paddingVertical: space.xs,
   },
   offline: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing['4'],
-    paddingVertical: spacing['5'],
-    paddingHorizontal: spacing['8'],
-    borderRadius: radius['2xl'],
-    backgroundColor: 'rgba(242,161,4,0.16)',
-    borderWidth: 1,
-    borderColor: 'rgba(242,161,4,0.34)',
+    gap: space.sm,
+    paddingVertical: space.md,
+    paddingHorizontal: space.md,
+    borderRadius: radius.sm,
+    backgroundColor: colors.badge.yellowBg,
   },
   offlineText: {
     flex: 1,

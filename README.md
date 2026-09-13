@@ -1,13 +1,15 @@
 # AgriLog v2
 
-Ứng dụng ghi chú vật tư nông nghiệp cho nông hộ trồng cà chua: nhật ký canh tác, quản lý
-lô đất, tư vấn phân bón, lịch chăm sóc, quản lý kho vật tư và ghi thu chi — kèm trang
-quản trị web cho cán bộ quản lý.
+Ứng dụng ghi chép vật tư và chi phí cho nông hộ: quản lý lô đất theo cây trồng và giống,
+tư vấn phân bón, lịch chăm sóc, quản lý kho vật tư và ghi thu chi — kèm trang quản trị web
+cho cán bộ quản lý.
 
-> **Trạng thái: đã thu hẹp phạm vi — bỏ toàn bộ tính năng chẩn đoán bệnh.**
-> Nền tảng (đăng nhập, lô đất, đồng bộ hai chiều) chạy được. Bốn module của Giai đoạn 3 —
-> Phân bón, Chăm sóc, Kho, Thu-Chi — **chưa xây**.
+> **Trạng thái:** nền tảng (đăng nhập, lô đất, chọn giống 3 cấp, danh mục phân bón, đồng bộ
+> hai chiều) chạy được trên hệ thiết kế phẳng v5. Bốn module của Giai đoạn 3 — Tư vấn phân
+> bón F1–F4, Chăm sóc F5–F6, Kho, Thu-Chi — **chưa xây**.
 > README này sẽ được viết đầy đủ ở Giai đoạn 6; bản hiện tại chỉ đủ để chạy dự án.
+
+![Trang chủ, chọn giống 3 bước và danh mục phân bón](docs/screenshots/01-home.png)
 
 ## Phạm vi
 
@@ -19,10 +21,13 @@ Bốn mảng nghiệp vụ của dự án:
 
 | # | Mảng | Trạng thái |
 |---|---|---|
-| 1 | Tư vấn & phân loại phân bón (F1–F4) | Chưa xây — dữ liệu giá thật đã có sẵn |
-| 2 | Quy trình chăm sóc theo giai đoạn (F5–F6) | Một phần: tab "Lịch chăm sóc" trong Chi tiết lô đất |
+| 1 | Tư vấn & phân loại phân bón (F1–F4) | Một phần: màn hình **Danh mục phân bón** (6 nhóm → sản phẩm, lọc theo mức giá). F1 tính lượng, F4 kiểm tra kho chưa có |
+| 2 | Quy trình chăm sóc theo giai đoạn (F5–F6) | Một phần: tab "Chăm sóc" trong Chi tiết lô đất (mới có quy trình cà chua) |
 | 3 | Nhập – Xuất kho | Chưa xây |
 | 4 | Thu – Chi | Chưa xây |
+
+Nền cho cả bốn mảng: **danh mục giống cây 3 cấp** (loại cây → loại con → giống) với 4 loại
+cây · 17 loại con · 40 giống có nguồn — xem [ADR 0004](docs/adr/0004-he-thiet-ke-phang-va-danh-muc-giong-3-cap.md).
 
 Hệ quả đáng chú ý: app chỉ xin **đúng một quyền** — `INTERNET`. Không còn quyền máy ảnh
 hay quyền đọc thư viện ảnh.
@@ -82,7 +87,8 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | `admin` | `admin123` | Quản trị viên |
 | `thaitaka` | `matkhau123` | Nông dân |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest`
+Chạy test: `./.venv/Scripts/python.exe -m pytest` (19 test: smoke, sync hai chiều, parity
+schema mobile ↔ server, toàn vẹn dữ liệu tĩnh).
 
 ## Chạy web-admin
 
@@ -122,9 +128,11 @@ Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **c
 
 ## Design token và font
 
-`shared/design/tokens.json` là **nguồn sự thật duy nhất** cho màu, font, bo góc, spacing,
-hiệu ứng kính — trích từ file thiết kế `AgriXAI Farmer v4 - Standalone (1).html`. Không
-hard-code màu trong component.
+`shared/design/tokens.json` (v5) là **nguồn sự thật duy nhất** cho màu, font, bo góc, lưới
+8pt và hai mức bóng. Hệ thiết kế phẳng: nền trắng / xám-50, viền xám mảnh, một màu xanh chủ
+đạo `#2E6F40`, nhãn pastel — không gradient, không glassmorphism (`react-native-linear-gradient`
+đã bị gỡ). Không hard-code màu trong component. File mock-up v4 trong `docs/design-reference/`
+chỉ còn là tư liệu.
 
 ```bash
 node shared/design/build-tokens.js     # -> mobile/src/theme.ts, web-admin/src/app/tokens.css
@@ -141,9 +149,13 @@ Font Open Sans được **nhúng kèm** cả hai nền tảng, không tải từ
 
 | File | Nội dung | Nguồn |
 |---|---|---|
-| `fertilizer_recommendations.json` | Danh mục và **giá thật** phân bón | `fertilizers_seed.json` (sfarm.vn, giacaphe.com — 06–07/09/2026) |
-| `care_protocols.json` | Lịch bón phân theo giai đoạn cây | `care_protocol_tomato_seed.json` (giongcaytrong.org) |
-| `crop_varieties.json` | 8 giống cà chua thật | `crop_varieties_seed.json` (sfarm.vn, nguonsinhthai.com) |
+| `fertilizer_recommendations.json` | 6 nhóm phân, 17 sản phẩm có **giá thật**; nhóm vi sinh khai báo rõ "chưa có giá" | `fertilizers_seed.json` (sfarm.vn, giacaphe.com — 06–07/09/2026) |
+| `care_protocols.json` | Lịch bón phân theo giai đoạn cây (mới có cà chua) | `care_protocol_tomato_seed.json` (giongcaytrong.org) |
+| `crop_varieties.json` | Danh mục 3 cấp: cà chua 8 · cà phê 17 · dưa leo 9 · ớt 6 giống, **mỗi giống có `source`** | Viện Eakmat/WASI, vista.gov.vn, Rạng Đông, East-West Seed, Phú Điền, Chánh Phong, Rijk Zwaan, sfarm.vn, nguonsinhthai.com, Wikipedia |
+
+Quy tắc bất di bất dịch của `crop_varieties.json`: không bịa dữ liệu. Số liệu chép đúng
+nguồn; thiếu thì ghi "Chưa có dữ liệu". `backend/tests/test_static_data.py` từ chối giống
+không có nguồn.
 
 **Giá phân bón trong file chỉ là dữ liệu khởi tạo.** Giá biến động theo ngày và vùng miền,
 nên nguồn sự thật khi chạy là bảng `fertilizer_prices` trong backend, sửa được ở màn hình
@@ -163,21 +175,37 @@ và các test bắt buộc ghi ở [ADR 0002](docs/adr/0002-giai-doan-1.md).
 Mọi thao tác của nông dân ghi vào SQLite trước rồi mới đồng bộ — tắt mạng vẫn dùng được
 toàn bộ ứng dụng.
 
+## Màn hình mobile hiện có
+
+| Màn hình | Ảnh |
+|---|---|
+| Đăng nhập | `docs/screenshots/00-login.png` |
+| Trang chủ (công cụ + lô đất) | `01-home.png` |
+| Chi tiết lô đất (4 tab) | `02-plot-detail.png`, `16-plot-care-tab.png` |
+| Thêm / sửa lô đất | `03-plot-form.png` |
+| Chọn giống — bước 1 loại cây | `04-variety-step1-crop-type.png`, `12-step1-with-user-crop.png` |
+| Chọn giống — bước 2 loại con | `05-variety-step2-category.png`, `08-coffee-categories.png` |
+| Chọn giống — bước 3 giống | `06-variety-step3-pick.png`, `09-coffee-arabica-varieties.png` |
+| Thêm cây trồng khác / giống mới | `10-add-other-crop-sheet.png`, `11-plot-form-custom-crop.png` |
+| Danh mục phân bón — nhóm | `13-fertilizer-groups.png` |
+| Danh mục phân bón — sản phẩm / chưa có giá | `14-fertilizer-npk-products.png`, `15-fertilizer-no-price.png` |
+
 ## Giới hạn hiện tại
 
-- **Bốn module của Giai đoạn 3 chưa được xây**: Tư vấn phân bón (F1–F4), Quy trình chăm
-  sóc (F5–F6), Kho, Thu-Chi. Hiện app mới có đăng nhập, danh sách lô đất, chi tiết lô đất
-  (4 tab) và thêm/sửa lô đất.
+- **Bốn module của Giai đoạn 3 chưa được xây đầy đủ**: F1 tính lượng phân, F3 lọc ngân
+  sách (mới có ở danh mục), F4 kiểm tra kho, F5–F6 cho cây ngoài cà chua, Kho, Thu-Chi.
+- Quy trình chăm sóc mới có cho cà chua; cà phê, dưa leo, ớt hiển thị "Chưa có dữ liệu"
+  cho tới khi có nguồn chính thức (Giai đoạn 3).
 - Trang chủ web-admin vẫn là màn hình kiểm tra design token; các trang quản trị thật thuộc
   Giai đoạn 4.
 - Backend có `GET /health`, `POST /auth/login`, `GET/PATCH /auth/me`, CRUD `/plots`,
   `/crop-varieties` và `/sync`. Endpoint cho kho và thu-chi sẽ bổ sung ở Giai đoạn 3.
 - Bảng `crop_cycles` đã có trong schema nhưng chưa có màn hình nào ghi vào nó, nên tab
   "Chu kỳ canh tác" luôn rỗng.
-- Hai bảng `diagnoses` và `pending_diagnoses` đã bị gỡ khỏi schema (v3). Trên máy đã cài
-  bản cũ, hai bảng vật lý vẫn còn trong file SQLite nhưng không được đọc hay đồng bộ —
-  WatermelonDB không hỗ trợ `destroyTable` trong migration.
-- Giai đoạn cây ở tab "Lịch chăm sóc" hiện **ước tính từ ngày trồng**; khi có bản ghi chu
-  kỳ canh tác thật thì bản ghi đó được ưu tiên.
+- Schema mobile đang ở **v4**. Migration v3→v4 đổi id cây (`ca_chua` → `tomato`), thêm cột
+  danh mục 3 cấp và drop hẳn hai bảng `diagnoses`, `pending_diagnoses` còn sót. Server tự
+  thêm cột thiếu lúc khởi động (`app/core/schema_upgrade.py`) thay cho Alembic.
+- Giai đoạn cây ở tab "Chăm sóc" hiện **ước tính từ ngày trồng** theo chu kỳ cà chua; khi
+  có bản ghi chu kỳ canh tác thật thì bản ghi đó được ưu tiên.
 - Nhận dạng giọng nói chưa có — sẽ dùng `DummyAsrEngine` trước, chọn Vosk hay whisper.cpp
   bằng benchmark ở Giai đoạn 5.
