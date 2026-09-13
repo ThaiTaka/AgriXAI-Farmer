@@ -1,51 +1,42 @@
 /**
  * Màn hình 08 — Chi tiết lô đất.
  *
- * Design reference: screen "08 Chi tiết lô đất" — hero header with a scrim,
- * back + edit icon buttons, then a facts card. Tabs: info, cycles, care, audit.
- *
- * Every tab reads from the local database or from the bundled JSON catalogues,
- * so the whole screen works with the network off.
+ * Header with back + edit, a segmented control for the four tabs (info, cycles,
+ * care, audit), then the tab body. Every tab reads from the local database or
+ * from the bundled JSON catalogues, so the whole screen works with the network
+ * off.
  */
 
 import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useMemo, useState} from 'react';
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor} from '../auth/AuthContext';
+import {AppHeader} from '../components/AppHeader';
+import {Badge} from '../components/Badge';
 import {DangerButton, IconButton} from '../components/buttons';
-import {GlassSurface} from '../components/GlassSurface';
-import {CheckIcon, ChevronLeft, ClockIcon, PencilIcon} from '../components/icons';
-import {ScreenBackground} from '../components/ScreenBackground';
+import {Card} from '../components/Card';
+import {EmptyState} from '../components/EmptyState';
+import {SegmentedControl} from '../components/form';
+import {CheckIcon, ClockIcon, PencilIcon} from '../components/icons';
+import {Screen} from '../components/Screen';
 import type ChangeLog from '../db/models/ChangeLog';
 import type CropCycle from '../db/models/CropCycle';
 import type Plot from '../db/models/Plot';
 import {observeChangeLogs} from '../db/repositories/changeLogRepository';
-import {
-  deletePlot,
-  observePlot,
-  PLOT_STATUS_LABELS,
-} from '../db/repositories/plotRepository';
+import {deletePlot, observePlot, PLOT_STATUS_LABELS} from '../db/repositories/plotRepository';
 import {useObservable} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, radius, spacing, text} from '../theme';
+import {colors, radius, space, text} from '../theme';
 import {formatArea, formatDate, formatDateTime, formatRelative} from '../utils/format';
 import {inferGrowthStage} from '../utils/growthStage';
 import {
   allCareStages,
   careProtocolDisclaimer,
   careProtocolSource,
+  cropNameOf,
   STAGE_LABELS,
 } from '../utils/staticData';
 
@@ -67,11 +58,7 @@ export function PlotDetailScreen() {
   const author = useChangeAuthor();
   const [tab, setTab] = useState<TabKey>('info');
 
-  const plot = useObservable<Plot | null>(
-    () => observePlot(params.plotId),
-    [params.plotId],
-    null,
-  );
+  const plot = useObservable<Plot | null>(() => observePlot(params.plotId), [params.plotId], null);
 
   const onDelete = useCallback(() => {
     if (!plot) return;
@@ -94,72 +81,48 @@ export function PlotDetailScreen() {
 
   if (!plot) {
     return (
-      <ScreenBackground>
-        <SafeAreaView style={styles.root} edges={['top']}>
-          <View style={styles.missing}>
-            <Text style={text('cardTitleLg')}>Không tìm thấy lô đất</Text>
-            <Text style={[text('body', colors.text.alpha['74']), styles.missingBody]}>
-              Lô đất này có thể đã bị xoá trên một thiết bị khác.
-            </Text>
-          </View>
-        </SafeAreaView>
-      </ScreenBackground>
+      <Screen>
+        <AppHeader title="Lô đất" onBack={() => navigation.goBack()} />
+        <View style={styles.missing}>
+          <EmptyState
+            title="Không tìm thấy lô đất"
+            body="Lô đất này có thể đã bị xoá trên một thiết bị khác."
+          />
+        </View>
+      </Screen>
     );
   }
 
   return (
-    <ScreenBackground>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-      <SafeAreaView style={styles.root} edges={['top']}>
-        <View style={styles.header}>
-          <IconButton accessibilityLabel="Quay lại" onPress={() => navigation.goBack()}>
-            <ChevronLeft />
-          </IconButton>
-          <View style={styles.headerText}>
-            <Text style={text('groupTitle')} numberOfLines={1}>
-              {plot.name}
-            </Text>
-            <Text style={[text('metaSm', 'rgba(18,48,29,0.88)')]}>
-              {plot.code}
-            </Text>
-          </View>
+    <Screen>
+      <AppHeader
+        eyebrow={plot.code}
+        title={plot.name}
+        onBack={() => navigation.goBack()}
+        right={
           <IconButton
             accessibilityLabel="Sửa lô đất"
             onPress={() => navigation.navigate('PlotForm', {plotId: plot.id})}>
             <PencilIcon />
           </IconButton>
-        </View>
+        }
+      />
 
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.tabScroll}
-          contentContainerStyle={styles.tabRow}>
-          {TABS.map(item => (
-            <Pressable
-              key={item.key}
-              accessibilityRole="tab"
-              accessibilityState={{selected: tab === item.key}}
-              onPress={() => setTab(item.key)}
-              style={[styles.tab, tab === item.key ? styles.tabActive : styles.tabIdle]}>
-              <Text
-                style={text('meta', tab === item.key ? colors.neutral.white : colors.text.alpha['74'])}>
-                {item.label}
-              </Text>
-            </Pressable>
-          ))}
-        </ScrollView>
+      <View style={styles.tabs}>
+        <SegmentedControl items={TABS} value={tab} onChange={setTab} />
+      </View>
 
-        <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-          {tab === 'info' ? <InfoTab plot={plot} /> : null}
-          {tab === 'cycles' ? <CyclesTab plot={plot} /> : null}
-          {tab === 'care' ? <CareTab plot={plot} /> : null}
-          {tab === 'audit' ? <AuditTab plot={plot} /> : null}
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        {tab === 'info' ? <InfoTab plot={plot} /> : null}
+        {tab === 'cycles' ? <CyclesTab plot={plot} /> : null}
+        {tab === 'care' ? <CareTab plot={plot} /> : null}
+        {tab === 'audit' ? <AuditTab plot={plot} /> : null}
 
+        {tab === 'info' ? (
           <DangerButton label="Xoá lô đất" onPress={onDelete} style={styles.deleteAction} />
-        </ScrollView>
-      </SafeAreaView>
-    </ScreenBackground>
+        ) : null}
+      </ScrollView>
+    </Screen>
   );
 }
 
@@ -168,12 +131,11 @@ export function PlotDetailScreen() {
 function InfoTab({plot}: {plot: Plot}) {
   const facts = useMemo(
     () => [
-      {label: 'Tên lô đất', value: plot.name},
       {label: 'Mã vùng trồng', value: plot.code},
       {label: 'Diện tích', value: formatArea(plot.area, plot.areaUnit)},
       {label: 'Khu vực', value: plot.region || '—'},
-      {label: 'Cây trồng', value: plot.cropType === 'ca_chua' ? 'Cà chua' : plot.cropType},
-      {label: 'Giống', value: plot.varietyName || '—'},
+      {label: 'Cây trồng', value: cropNameOf(plot.cropType, plot.cropName)},
+      {label: 'Giống', value: plot.varietyName || 'Chưa rõ giống'},
       {label: 'Ngày trồng', value: formatDate(plot.plantedAt)},
       {label: 'Trạng thái', value: PLOT_STATUS_LABELS[plot.status]},
       {label: 'Cập nhật lần cuối', value: formatRelative(plot.updatedAt)},
@@ -183,26 +145,24 @@ function InfoTab({plot}: {plot: Plot}) {
 
   return (
     <>
-      <GlassSurface level="card" style={styles.factCard}>
+      <Card flush style={styles.factCard}>
         {facts.map((fact, index) => (
           <View
             key={fact.label}
             style={[styles.factRow, index === facts.length - 1 && styles.factRowLast]}>
-            <Text style={[text('meta', colors.text.alpha['72']), styles.factLabel]}>
-              {fact.label}
-            </Text>
-            <Text style={text('bodySm')} numberOfLines={2}>
+            <Text style={[text('bodySm', colors.text.muted), styles.factLabel]}>{fact.label}</Text>
+            <Text style={[text('bodyStrong'), styles.factValue]} numberOfLines={2}>
               {fact.value}
             </Text>
           </View>
         ))}
-      </GlassSurface>
+      </Card>
 
       {plot.notes ? (
-        <GlassSurface level="soft" style={styles.noteCard}>
-          <Text style={text('eyebrow', colors.green['700'])}>Ghi chú</Text>
+        <Card style={styles.noteCard}>
+          <Text style={text('eyebrow', colors.text.muted)}>Ghi chú</Text>
           <Text style={[text('body'), styles.noteBody]}>{plot.notes}</Text>
-        </GlassSurface>
+        </Card>
       ) : null}
     </>
   );
@@ -215,7 +175,7 @@ function CyclesTab({plot}: {plot: Plot}) {
 
   if (rows.length === 0) {
     return (
-      <EmptyTab
+      <EmptyState
         title="Chưa có chu kỳ canh tác"
         body="Chu kỳ canh tác ghi lại từng vụ trên lô: ngày xuống giống, giai đoạn hiện tại và sản lượng thu được."
       />
@@ -225,27 +185,23 @@ function CyclesTab({plot}: {plot: Plot}) {
   return (
     <View style={styles.rowList}>
       {rows.map(cycle => (
-        <GlassSurface key={cycle.id} level="soft" style={styles.cycleCard}>
+        <Card key={cycle.id}>
           <View style={styles.cycleHead}>
-            <Text style={text('cardTitle')} numberOfLines={1}>
+            <Text style={[text('cardTitle'), styles.cycleTitle]} numberOfLines={1}>
               {cycle.name}
             </Text>
-            <View style={styles.stagePill}>
-              <Text style={text('badge', colors.green['700'])}>{STAGE_LABELS[cycle.stage]}</Text>
-            </View>
+            <Badge label={STAGE_LABELS[cycle.stage]} tone="green" />
           </View>
-          <Text style={text('metaSm', colors.text.alpha['72'])}>
+          <Text style={[text('bodySm', colors.text.muted), styles.cycleLine]}>
             {formatDate(cycle.startedAt)} → {cycle.endedAt ? formatDate(cycle.endedAt) : 'đang canh tác'}
           </Text>
           {cycle.varietyName ? (
-            <Text style={text('caption', colors.text.alpha['68'])}>Giống: {cycle.varietyName}</Text>
+            <Text style={text('caption', colors.text.muted)}>Giống: {cycle.varietyName}</Text>
           ) : null}
           {cycle.yieldKg ? (
-            <Text style={text('caption', colors.text.alpha['68'])}>
-              Sản lượng: {cycle.yieldKg} kg
-            </Text>
+            <Text style={text('caption', colors.text.muted)}>Sản lượng: {cycle.yieldKg} kg</Text>
           ) : null}
-        </GlassSurface>
+        </Card>
       ))}
     </View>
   );
@@ -261,19 +217,20 @@ function CareTab({plot}: {plot: Plot}) {
   const stage = active?.stage ?? inferred?.stage ?? null;
   const stages = allCareStages(plot.cropType);
   const current = stage ? stages.find(s => s.stage_code === stage) : undefined;
+  const cropName = cropNameOf(plot.cropType, plot.cropName);
 
   if (stages.length === 0) {
     return (
-      <EmptyTab
-        title="Chưa có quy trình chăm sóc"
-        body={`Hiện chỉ có quy trình cho cà chua. Cây trồng "${plot.cropType}" chưa có dữ liệu.`}
+      <EmptyState
+        title="Chưa có dữ liệu"
+        body={`Chưa có quy trình chăm sóc cho ${cropName}. Hiện mới có quy trình cho cà chua; các cây khác sẽ được bổ sung từ nguồn chính thức ở Giai đoạn 3.`}
       />
     );
   }
 
   if (!stage) {
     return (
-      <EmptyTab
+      <EmptyState
         title="Chưa xác định được giai đoạn"
         body="Nhập ngày trồng ở màn hình sửa lô đất để hệ thống gợi ý công việc theo giai đoạn cây."
       />
@@ -282,43 +239,39 @@ function CareTab({plot}: {plot: Plot}) {
 
   return (
     <>
-      <GlassSurface level="card" style={styles.stageHeader}>
-        <Text style={text('eyebrow', colors.green['700'])}>Giai đoạn hiện tại</Text>
-        <Text style={[text('cardTitleLg'), styles.stageTitle]}>{STAGE_LABELS[stage]}</Text>
-        <Text style={text('metaSm', colors.text.alpha['72'])}>
+      <Card style={styles.stageHeader}>
+        <Text style={text('eyebrow', colors.text.muted)}>Giai đoạn hiện tại</Text>
+        <Text style={[text('subheading'), styles.stageTitle]}>{STAGE_LABELS[stage]}</Text>
+        <Text style={text('bodySm', colors.text.muted)}>
           {active
             ? `Theo chu kỳ "${active.name}"`
             : `Ước tính từ ngày trồng · ngày thứ ${inferred?.dayCount ?? 0}`}
         </Text>
         {current ? (
-          <Text style={[text('caption', colors.text.alpha['68']), styles.stagePct]}>
+          <Text style={[text('caption', colors.text.muted), styles.stagePct]}>
             Đợt bón thúc này chiếm {current.pct_of_total_topdress}% tổng lượng phân thúc cả vụ.
           </Text>
         ) : null}
-      </GlassSurface>
+      </Card>
 
       <View style={styles.rowList}>
         {(current?.tasks ?? []).map(task => (
-          <GlassSurface key={task.key} level="soft" style={styles.taskCard}>
-            <CheckIcon />
-            <View style={styles.taskBody}>
-              <Text style={text('bodySm')}>{task.title}</Text>
-              <Text style={[text('caption', colors.text.alpha['68']), styles.taskDetail]}>
-                {task.detail}
-              </Text>
+          <Card key={task.key} style={styles.taskCard}>
+            <View style={styles.taskIcon}>
+              <CheckIcon size={18} />
             </View>
-          </GlassSurface>
+            <View style={styles.taskBody}>
+              <Text style={text('bodyStrong')}>{task.title}</Text>
+              <Text style={[text('bodySm', colors.text.muted), styles.taskDetail]}>{task.detail}</Text>
+            </View>
+          </Card>
         ))}
       </View>
 
-      <GlassSurface level="soft" style={styles.disclaimer}>
-        <Text style={text('caption', colors.text.alpha['68'])}>
-          {careProtocolDisclaimer(plot.cropType)}
-        </Text>
-        <Text style={[text('caption', colors.text.alpha['60']), styles.source]}>
-          Nguồn: {careProtocolSource(plot.cropType)}
-        </Text>
-      </GlassSurface>
+      <Text style={[text('caption', colors.text.muted), styles.disclaimer]}>
+        {careProtocolDisclaimer(plot.cropType)}
+        {'\n'}Nguồn: {careProtocolSource(plot.cropType)}
+      </Text>
     </>
   );
 }
@@ -326,15 +279,11 @@ function CareTab({plot}: {plot: Plot}) {
 /* ------------------------------ tab 4: audit ------------------------------ */
 
 function AuditTab({plot}: {plot: Plot}) {
-  const rows = useObservable<ChangeLog[]>(
-    () => observeChangeLogs('plots', plot.id),
-    [plot.id],
-    [],
-  );
+  const rows = useObservable<ChangeLog[]>(() => observeChangeLogs('plots', plot.id), [plot.id], []);
 
   if (rows.length === 0) {
     return (
-      <EmptyTab
+      <EmptyState
         title="Chưa có thay đổi nào"
         body="Mọi lần sửa lô đất sẽ được ghi lại ở đây: ai sửa, sửa gì, lúc nào."
       />
@@ -342,19 +291,19 @@ function AuditTab({plot}: {plot: Plot}) {
   }
 
   return (
-    <View style={styles.rowList}>
-      {rows.map(row => (
-        <GlassSurface key={row.id} level="soft" style={styles.auditRow}>
+    <Card flush>
+      {rows.map((row, index) => (
+        <View key={row.id} style={[styles.auditRow, index === rows.length - 1 && styles.factRowLast]}>
           <ClockIcon size={20} />
           <View style={styles.auditBody}>
-            <Text style={text('bodySm')}>{describeChange(row)}</Text>
-            <Text style={text('caption', colors.text.alpha['68'])}>
+            <Text style={text('bodySm', colors.text.primary)}>{describeChange(row)}</Text>
+            <Text style={text('caption', colors.text.muted)}>
               {row.changedByName ?? row.changedBy} · {formatDateTime(row.changedAt)}
             </Text>
           </View>
-        </GlassSurface>
+        </View>
       ))}
-    </View>
+    </Card>
   );
 }
 
@@ -364,6 +313,7 @@ const FIELD_LABELS: Record<string, string> = {
   region: 'khu vực',
   area: 'diện tích',
   cropType: 'cây trồng',
+  cropName: 'cây trồng',
   varietyName: 'giống cây',
   plantedAt: 'ngày trồng',
   status: 'trạng thái',
@@ -377,172 +327,107 @@ function describeChange(row: ChangeLog): string {
   return `Đổi ${label}: ${row.oldValue || '(trống)'} → ${row.newValue || '(trống)'}`;
 }
 
-/* -------------------------------- shared --------------------------------- */
-
-function EmptyTab({title, body}: {title: string; body: string}) {
-  return (
-    <GlassSurface level="card" style={styles.emptyTab}>
-      <Text style={text('cardTitle')}>{title}</Text>
-      <Text style={[text('body', colors.text.alpha['74']), styles.emptyTabBody]}>{body}</Text>
-    </GlassSurface>
-  );
-}
-
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing['7'],
-    paddingHorizontal: spacing['11'],
-    paddingTop: spacing['6'],
-    paddingBottom: spacing['8'],
-  },
-  headerText: {
-    flex: 1,
-    minWidth: 0,
-  },
-  tabScroll: {
-    flexGrow: 0,
-    flexShrink: 0,
-  },
-  tabRow: {
-    alignItems: 'center',
-    paddingHorizontal: spacing['11'],
-    gap: spacing['3'],
-    paddingBottom: spacing['8'],
-  },
-  tab: {
-    minHeight: 44,
-    paddingHorizontal: spacing['11'],
-    borderRadius: radius.pill,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tabIdle: {
-    borderColor: 'rgba(255,255,255,0.62)',
-    backgroundColor: 'rgba(255,255,255,0.5)',
-  },
-  tabActive: {
-    borderColor: colors.green['700'],
-    backgroundColor: colors.green['700'],
+  tabs: {
+    paddingHorizontal: space.lg,
+    paddingBottom: space.lg,
   },
   scroll: {
-    paddingHorizontal: spacing['11'],
-    paddingBottom: spacing['18'],
+    paddingHorizontal: space.lg,
+    paddingBottom: space['3xl'],
   },
   factCard: {
-    borderRadius: radius['5xl'],
     overflow: 'hidden',
   },
   factRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing['6'],
-    paddingHorizontal: spacing['12'],
-    paddingVertical: spacing['10'],
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.72)',
+    gap: space.md,
+    paddingHorizontal: space.lg,
+    paddingVertical: space.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border.default,
+    minHeight: 48,
   },
   factRowLast: {
     borderBottomWidth: 0,
   },
   factLabel: {
+    width: 128,
+  },
+  factValue: {
     flex: 1,
+    textAlign: 'right',
   },
   noteCard: {
-    marginTop: spacing['8'],
-    padding: spacing['12'],
-    borderRadius: radius['4xl'],
+    marginTop: space.md,
   },
   noteBody: {
-    marginTop: spacing['3'],
+    marginTop: space.xs,
   },
   rowList: {
-    gap: spacing['6'],
-  },
-  cycleCard: {
-    padding: spacing['12'],
-    borderRadius: radius['4xl'],
-    gap: spacing['1'],
+    gap: space.md,
   },
   cycleHead: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: spacing['6'],
-    marginBottom: spacing['2'],
+    gap: space.sm,
   },
-  stagePill: {
-    paddingHorizontal: spacing['6'],
-    paddingVertical: 4,
-    borderRadius: radius.pill,
-    backgroundColor: 'rgba(84,169,106,0.2)',
+  cycleTitle: {
+    flexShrink: 1,
+  },
+  cycleLine: {
+    marginTop: space.xs,
   },
   stageHeader: {
-    padding: spacing['12'],
-    borderRadius: radius['5xl'],
-    marginBottom: spacing['8'],
+    marginBottom: space.md,
   },
   stageTitle: {
-    marginTop: spacing['1'],
-    marginBottom: spacing['2'],
+    marginTop: space.xs,
+    marginBottom: 2,
   },
   stagePct: {
-    marginTop: spacing['4'],
+    marginTop: space.sm,
   },
   taskCard: {
     flexDirection: 'row',
-    gap: spacing['8'],
-    padding: spacing['11'],
-    borderRadius: radius['4xl'],
+    gap: space.md,
+  },
+  taskIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: radius.pill,
+    backgroundColor: colors.primary.soft,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   taskBody: {
     flex: 1,
   },
   taskDetail: {
-    marginTop: spacing['2'],
+    marginTop: 2,
   },
   disclaimer: {
-    marginTop: spacing['8'],
-    padding: spacing['11'],
-    borderRadius: radius['3xl'],
-  },
-  source: {
-    marginTop: spacing['3'],
+    marginTop: space.lg,
   },
   auditRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing['8'],
-    padding: spacing['11'],
-    borderRadius: radius['3xl'],
+    gap: space.md,
+    paddingHorizontal: space.lg,
+    paddingVertical: space.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border.default,
   },
   auditBody: {
     flex: 1,
-    gap: spacing['1'],
-  },
-  emptyTab: {
-    padding: spacing['13'],
-    borderRadius: radius['6xl'],
-  },
-  emptyTabBody: {
-    marginTop: spacing['3'],
+    gap: 2,
   },
   deleteAction: {
-    marginTop: spacing['15'],
+    marginTop: space.xl,
   },
   missing: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: spacing['13'],
-  },
-  missingBody: {
-    marginTop: spacing['3'],
-    textAlign: 'center',
+    padding: space.lg,
   },
 });

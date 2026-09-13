@@ -105,3 +105,7 @@ không phải xoá file database (sẽ mất dữ liệu nông dân đã nhập 
 - Trang chủ bỏ badge sức khoẻ, thay bằng **badge trạng thái canh tác** (Đang canh tác / Bỏ
   hoá / Đã thu hoạch) — vẫn cho nông dân quét nhanh danh sách, nhưng dựa trên dữ liệu thật
   sự còn tồn tại.
+
+> **Cập nhật 2026-09-13:** hai bảng `diagnoses` và `pending_diagnoses` còn sót trên máy đã
+> cài bản cũ đã được **drop hẳn** trong migration v3→v4 (dùng `unsafeExecuteSql`) — xem
+> [ADR 0004](0004-he-thiet-ke-phang-va-danh-muc-giong-3-cap.md).

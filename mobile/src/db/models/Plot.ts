@@ -18,7 +18,9 @@ export default class Plot extends Model {
   @text('region') region!: string | null;
   @field('area') area!: number;
   @text('area_unit') areaUnit!: string;
+  /** Catalogue crop id ('tomato', 'coffee'...) or a slug the farmer created. */
   @text('crop_type') cropType!: string;
+  @text('crop_name') cropName!: string | null;
   @text('variety_id') varietyId!: string | null;
   @text('variety_name') varietyName!: string | null;
   @field('planted_at') plantedAt!: number | null;

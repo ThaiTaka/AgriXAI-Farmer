@@ -15,6 +15,7 @@ export interface PlotInput {
   area: number;
   areaUnit: string;
   cropType: string;
+  cropName: string | null;
   varietyId: string | null;
   varietyName: string | null;
   plantedAt: number | null;
@@ -36,6 +37,7 @@ const FIELD_LABELS: Record<keyof PlotInput, string> = {
   area: 'Diện tích',
   areaUnit: 'Đơn vị diện tích',
   cropType: 'Cây trồng',
+  cropName: 'Cây trồng',
   varietyId: 'Giống cây',
   varietyName: 'Giống cây',
   plantedAt: 'Ngày trồng',
@@ -46,7 +48,7 @@ const FIELD_LABELS: Record<keyof PlotInput, string> = {
 export function observePlots(ownerId: string) {
   return collections.plots
     .query(Q.where('owner_id', ownerId), Q.sortBy('created_at', Q.desc))
-    .observeWithColumns(['name', 'code', 'area', 'status', 'variety_name', 'updated_at']);
+    .observeWithColumns(['name', 'code', 'area', 'status', 'crop_name', 'variety_name', 'updated_at']);
 }
 
 export function observePlot(plotId: string) {
@@ -80,6 +82,7 @@ export async function createPlot(input: PlotInput, author: ChangeAuthor): Promis
       plot.area = input.area;
       plot.areaUnit = input.areaUnit;
       plot.cropType = input.cropType;
+      plot.cropName = input.cropName;
       plot.varietyId = input.varietyId;
       plot.varietyName = input.varietyName;
       plot.plantedAt = input.plantedAt;
@@ -115,6 +118,7 @@ export async function updatePlot(
       p.area = input.area;
       p.areaUnit = input.areaUnit;
       p.cropType = input.cropType;
+      p.cropName = input.cropName;
       p.varietyId = input.varietyId;
       p.varietyName = input.varietyName;
       p.plantedAt = input.plantedAt;
@@ -153,7 +157,7 @@ function diffPlot(plot: Plot, input: PlotInput): FieldChange[] {
     name: plot.name,
     region: plot.region,
     area: formatArea(plot.area, plot.areaUnit),
-    cropType: plot.cropType,
+    cropName: plot.cropName ?? plot.cropType,
     varietyName: plot.varietyName,
     plantedAt: plot.plantedAt ? formatDate(plot.plantedAt) : null,
     status: PLOT_STATUS_LABELS[plot.status],
@@ -164,7 +168,7 @@ function diffPlot(plot: Plot, input: PlotInput): FieldChange[] {
     name: input.name,
     region: input.region,
     area: formatArea(input.area, input.areaUnit),
-    cropType: input.cropType,
+    cropName: input.cropName ?? input.cropType,
     varietyName: input.varietyName,
     plantedAt: input.plantedAt ? formatDate(input.plantedAt) : null,
     status: PLOT_STATUS_LABELS[input.status],
@@ -189,6 +193,7 @@ export function plotToInput(plot: Plot): PlotInput {
     area: plot.area,
     areaUnit: plot.areaUnit,
     cropType: plot.cropType,
+    cropName: plot.cropName,
     varietyId: plot.varietyId,
     varietyName: plot.varietyName,
     plantedAt: plot.plantedAt,

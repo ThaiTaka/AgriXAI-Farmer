@@ -15,7 +15,7 @@
   "protocols": [
     {
       "id": "tomato_default",
-      "crop_type": "ca_chua",
+      "crop_type": "tomato",
       "crop_name": "Cà chua",
       "name": "Quy trình bón phân cà chua (tham khảo phổ biến tại Việt Nam)",
       "source": "https://giongcaytrong.org/kt-trong-cay/ki-thuat-trong-rau-sach/huong-dan-cach-bon-phan-cho-ca-chua-181.html",

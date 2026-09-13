@@ -1,123 +1,560 @@
 {
   "$meta": {
-    "description": "Danh sách giống cây trồng THẬT dùng làm seed ban đầu cho bảng crop_varieties. Đây là danh sách khởi tạo — ứng dụng PHẢI cho phép người dùng bấm '+ Thêm giống mới' để nhập giống chưa có trong danh sách, lưu cục bộ (SQLite) và đồng bộ lên server để mọi người dùng chung.",
-    "collected_at": "2026-09-07",
-    "primary_crop_scope": "Đồ án tập trung tư vấn phân bón, quy trình chăm sóc, kho vật tư và thu-chi cho CÀ CHUA. Danh sách giống cà chua dưới đây là dữ liệu chính, chi tiết nhất.",
+    "description": "Danh mục giống cây trồng THẬT, phân cấp 3 tầng: loại cây (crop_type) → loại con (category) → giống chi tiết (variety). Dùng làm seed cho bảng crop_varieties và làm dữ liệu offline cho màn hình Chọn giống.",
+    "collected_at": "2026-09-12",
+    "data_policy": "Mọi giống trong file này đều có trường `source` trỏ tới trang đã tra cứu; số liệu (kích thước, năng suất, thời gian thu hoạch, độ cay...) chép đúng theo nguồn, không tự suy diễn. Chỗ nào nguồn không nói → ghi 'Chưa có dữ liệu' hoặc để null. Việc gom giống vào 'loại con' là cách phân nhóm của ứng dụng để dễ chọn, không phải một phân loại thực vật học.",
+    "extensibility": "Bảng crop_varieties là dữ liệu MỞ RỘNG ĐƯỢC qua UI/API: người dùng thêm giống mới (kể cả cây trồng chưa có trong danh mục) bằng nút '+ Thêm giống mới', lưu SQLite cục bộ rồi đồng bộ lên server. File này chỉ là seed ban đầu.",
+    "id_policy": "Bản ghi seed trong CSDL có id = 'seed_' + variety.id. Tám giống cà chua giữ nguyên id từ crop_varieties_seed.json nên lô đất đã gắn giống cũ không bị đứt liên kết.",
+    "badge_values": {
+      "popular": "Phổ biến — nguồn ghi rõ giống đang được trồng nhiều / nông dân tin dùng",
+      "new": "Mới — giống mới được công nhận / chuyển giao gần đây theo nguồn",
+      "premium": "Premium — nguồn ghi rõ giá bán / thị trường cao cấp"
+    },
     "sources": [
       "https://sfarm.vn/ca-chua-bi-cac-loai-pho-bien-cong-dung-va-cach-trong-sai-qua/",
-      "https://www.nguonsinhthai.com/blogs/news/6-giong-ca-chua-pho-bien-lua-chon-phu-hop-cho-nha-vuon"
-    ],
-    "derived_from": "crop_varieties_seed.json",
-    "generated_at": "2026-09-07",
-    "extensibility": "Bảng crop_varieties là dữ liệu MỞ RỘNG ĐƯỢC qua UI/API. File này chỉ là seed ban đầu — người dùng thêm giống mới qua nút '+ Thêm giống mới', lưu SQLite cục bộ rồi đồng bộ lên server. Tuyệt đối không hard-code danh sách giống trong mã nguồn."
-  },
-  "varieties": [
-    {
-      "id": "ca_chua_bi_do",
-      "name": "Cà chua bi đỏ",
-      "fruit": "Quả tròn nhỏ, đỏ tươi đến đỏ đậm khi chín",
-      "usage": "Ăn tươi, salad, trang trí món ăn, làm sốt",
-      "note": "Giống được trồng phổ biến nhất trong nhóm cà chua bi tại Việt Nam",
-      "crop_type": "ca_chua",
-      "crop_name": "Cà chua",
-      "is_seed": true,
-      "source": "seed",
-      "approved": true
-    },
-    {
-      "id": "ca_chua_bi_vang",
-      "name": "Cà chua bi vàng",
-      "fruit": "Quả vàng/cam vàng khi chín",
-      "usage": "Salad, trang trí món ăn",
-      "note": "Vị ngọt hơn, ít chua hơn cà chua bi đỏ; giàu beta-carotene",
-      "crop_type": "ca_chua",
-      "crop_name": "Cà chua",
-      "is_seed": true,
-      "source": "seed",
-      "approved": true
-    },
-    {
-      "id": "ca_chua_bi_lun",
-      "name": "Cà chua bi lùn",
-      "fruit": "Quả nhỏ, mọc thành chùm",
-      "usage": "Trồng chậu, ban công, sân thượng",
-      "note": "Cây thấp 30–50cm, phù hợp diện tích nhỏ",
-      "crop_type": "ca_chua",
-      "crop_name": "Cà chua",
-      "is_seed": true,
-      "source": "seed",
-      "approved": true
-    },
-    {
-      "id": "ca_chua_bi_socola",
-      "name": "Cà chua bi sô-cô-la",
-      "fruit": "Màu nâu đỏ đến tím nâu",
-      "usage": "Salad cao cấp, trang trí",
-      "note": "Vị ngọt đậm, ít chua; giá bán thường cao hơn giống thường",
-      "crop_type": "ca_chua",
-      "crop_name": "Cà chua",
-      "is_seed": true,
-      "source": "seed",
-      "approved": true
-    },
-    {
-      "id": "ca_chua_tim",
-      "name": "Cà chua tím",
-      "fruit": "Màu tím đậm (chứa anthocyanin)",
-      "usage": "Ăn tươi, giá trị dinh dưỡng cao",
-      "note": "Chống oxy hoá cao, giá trị thương phẩm cao",
-      "crop_type": "ca_chua",
-      "crop_name": "Cà chua",
-      "is_seed": true,
-      "source": "seed",
-      "approved": true
-    },
-    {
-      "id": "ca_chua_bach_tuoc_leo_gian",
-      "name": "Cà chua bạch tuộc leo giàn",
-      "fruit": "Quả 100–150g, mọc thành chùm 5–6 quả",
-      "usage": "Trồng giàn quy mô, thu hoạch dài ngày",
-      "note": "Giống lai nguồn gốc Trung Quốc, một cây có thể leo phủ tới 10m² trong khoảng 5 tháng",
-      "crop_type": "ca_chua",
-      "crop_name": "Cà chua",
-      "is_seed": true,
-      "source": "seed",
-      "approved": true
-    },
-    {
-      "id": "ca_chua_trai_cay_nova",
-      "name": "Cà chua trái cây NOVA",
-      "fruit": "Quả vàng, thon dài hình trụ",
-      "usage": "Ăn tươi như trái cây, thị trường cao cấp",
-      "note": "Nguồn gốc Đài Loan; vị ngọt gần như không chua (8–9 độ brix); chịu nhiệt tốt; khoảng 75 ngày cho thu hoạch",
-      "crop_type": "ca_chua",
-      "crop_name": "Cà chua",
-      "is_seed": true,
-      "source": "seed",
-      "approved": true
-    },
-    {
-      "id": "ca_chua_mv1",
-      "name": "Cà chua MV1",
-      "fruit": "Quả nhỏ, đỏ khi chín, thơm",
-      "usage": "Canh tác đại trà, chế biến",
-      "note": "Giống Việt Nam, cây thân đứng thấp (~65cm), sinh trưởng hữu hạn, khá kháng bệnh, chu kỳ 90–100 ngày; năng suất tham khảo 52–60 tấn/ha chính vụ, 33–46 tấn/ha trái vụ",
-      "crop_type": "ca_chua",
-      "crop_name": "Cà chua",
-      "is_seed": true,
-      "source": "seed",
-      "approved": true
-    }
-  ],
-  "other_common_crops_reference_only": {
-    "note": "Đây CHỈ là danh mục nhóm cây trồng phổ biến ở Việt Nam để tham khảo khi mở rộng module Kho/Thu-chi sang nông sản khác ngoài cà chua — KHÔNG có dữ liệu giống chi tiết đã xác thực kèm theo. Khi người dùng cần giống cụ thể cho các cây này, dùng chức năng '+ Thêm giống mới' để họ tự nhập, không tự tạo danh sách giống chi tiết giả.",
-    "groups": [
-      "Cây lương thực: lúa, ngô (bắp), khoai lang, khoai tây, sắn (khoai mì)",
-      "Rau ăn lá: rau muống, cải xanh, cải ngọt, xà lách, rau dền",
-      "Rau ăn quả: dưa leo, bí xanh, bí đỏ, mướp, khổ qua, đậu cove, ớt, cà tím",
-      "Rau ăn củ: cà rốt, củ cải trắng, hành tây, khoai môn",
-      "Cây công nghiệp: cà phê, hồ tiêu, điều, cao su, mía",
-      "Cây ăn trái: sầu riêng, xoài, thanh long, bơ, cam/quýt, chuối"
+      "https://www.nguonsinhthai.com/blogs/news/6-giong-ca-chua-pho-bien-lua-chon-phu-hop-cho-nha-vuon",
+      "https://www.vista.gov.vn/vi/news/khoa-hoc-nong-nghiep/20-giong-ca-phe-cua-vien-khoa-hoc-ky-thuat-nong-lam-nghiep-tay-nguyen-da-duoc-chuyen-giao-san-xuat-9705.html",
+      "https://giongcaytrongeakmat.myharavan.com/blogs/news/dac-diem-mot-so-giong-ca-phe-de-ba-con-de-nhan-biet-tr4-xanh-lun-t",
+      "https://giongcaytrongeakmat.com/tim-hieu-ve-cay-ca-phe-arabica/",
+      "https://nongnghiepmoitruong.vn/tri-thuc-nong-dan/quy-trinh-tham-canh-ben-vung-giong-ca-phe-che-tha1-d823494.html",
+      "https://simexcodl.com.vn/giong-ca-phe-che/",
+      "https://vi.wikipedia.org/wiki/C%C3%A0_ph%C3%AA_m%C3%ADt",
+      "https://hophuongcoffee.com/blogs/news/ca-phe-excelsa-ca-phe-mit",
+      "https://hatgiongtruongphuc.vn/products/hunter-1-0-dua-leo-lai-f1",
+      "https://hatgiongtruongphuc.vn/products/702-dua-leo-lai-f1",
+      "https://nongnghieppho.vn/products/hat-giong-dua-leo-lai-f1-hunter-2-0-east-west-seed-hai-mui-ten-do-goi-50-hat",
+      "https://phudienseed.com.vn/san-pham/hat-giong-dua-leo-lai-f1-pd288/",
+      "https://hatgiongrangdong.com/hat-giong/dua-leo-nhat-chiu-nhiet-lai-f1-summer-901/",
+      "https://xuannong.vn/hat-giong-dua-leo-nhat-lai-f1.html",
+      "https://hatgiongrangdong.com/hat-giong/dua-leo-trai-trang-lai-f1-rado-1339/",
+      "https://hatgiongrangdong.com/hat-giong/dua-chuot-nep-lai-f1-nari-902/",
+      "https://nongnghieppho.vn/products/hat-giong-dua-leo-baby-lai-f1-lyssa-353-rang-dong",
+      "https://phudienseed.com.vn/san-pham/hat-giong-ot-chi-thien-lai-f1-vifon686/",
+      "https://hatgiongrangdong.com/hat-giong/ot-chi-thien-trai-dai-rado-911/",
+      "https://hatgiongrangdong.com/hat-giong/ot-hiem-lai-rado-789/",
+      "https://vuonxanhpho.vn/products/hat-giong-ot-hiem-lai-f1-rado-789-rang-dong-0-2g-sai-trai-thu-hoach-lien-tuc",
+      "https://saulongvtnn.com/san-pham/hat-giong-ot-lai-f1-sung-vang-hoang-long-chanh-phong/",
+      "https://hatgiongthegioi.com/hat-giong-rau-cu/ot-pepper/hat-giong-ot-chuong-vang-bachata-rz-f1.htm",
+      "https://hatgiongrangdong.com/hat-giong/ot-kieng-ngu-sac-rd-825-2/",
+      "https://en.wikipedia.org/wiki/Scoville_scale",
+      "https://en.wikipedia.org/wiki/Bird%27s_eye_chili"
     ]
-  }
+  },
+  "crop_types": [
+    {
+      "id": "tomato",
+      "name": "Cà chua",
+      "icon": "tomato",
+      "scientific_name": "Solanum lycopersicum",
+      "description": "Rau ăn quả ngắn ngày (75–100 ngày). Nhóm giống chi tiết nhất của ứng dụng.",
+      "categories": [
+        {
+          "category_id": "tomato_cherry",
+          "category_name": "Cà chua bi",
+          "description": "Quả nhỏ 1,5–3 cm, mọc thành chùm; ăn tươi, salad, trang trí.",
+          "varieties": [
+            {
+              "id": "ca_chua_bi_do",
+              "name": "Cà chua bi đỏ",
+              "description": "Quả tròn nhỏ 1,5–3 cm, đỏ tươi đến đỏ đậm khi chín; vị chua ngọt hài hoà, mọng nước.",
+              "usage": "Ăn tươi, salad, trang trí món ăn, làm sốt",
+              "growing_note": "Dạng leo giàn, cây cao 1,5–3 m; năng suất ổn định, kháng bệnh tốt. Giống được trồng phổ biến nhất trong nhóm cà chua bi tại Việt Nam.",
+              "badge": "popular",
+              "source": "https://sfarm.vn/ca-chua-bi-cac-loai-pho-bien-cong-dung-va-cach-trong-sai-qua/"
+            },
+            {
+              "id": "ca_chua_bi_vang",
+              "name": "Cà chua bi vàng",
+              "description": "Quả tròn, vàng óng hoặc vàng cam khi chín, cỡ tương đương bi đỏ; vị ngọt hơn, ít chua.",
+              "usage": "Salad, trang trí món ăn (thường phối cùng bi đỏ)",
+              "growing_note": "Hàm lượng beta-caroten cao, lượng axit thấp hơn bi đỏ.",
+              "badge": null,
+              "source": "https://sfarm.vn/ca-chua-bi-cac-loai-pho-bien-cong-dung-va-cach-trong-sai-qua/"
+            },
+            {
+              "id": "ca_chua_bi_lun",
+              "name": "Cà chua bi lùn",
+              "description": "Quả nhỏ, mọc thành các chùm sát nhau; thu hoạch tập trung.",
+              "usage": "Trồng chậu, ban công, sân thượng",
+              "growing_note": "Cây thấp 30–50 cm, sinh trưởng hữu hạn; dễ chăm sóc, tiết kiệm diện tích nhưng năng suất mỗi cây thấp hơn giống leo giàn.",
+              "badge": null,
+              "source": "https://sfarm.vn/ca-chua-bi-cac-loai-pho-bien-cong-dung-va-cach-trong-sai-qua/"
+            },
+            {
+              "id": "ca_chua_bi_socola",
+              "name": "Cà chua bi sô-cô-la",
+              "description": "Quả nâu đỏ hoặc nâu tím khi chín; vị ngọt đậm, ít chua, thịt mềm.",
+              "usage": "Salad cao cấp, trang trí, làm cảnh vườn",
+              "growing_note": "Thuộc nhóm giống di sản (heirloom); giá bán thường cao hơn giống thường. Cần 6–8 giờ nắng/ngày; 85–90 ngày cho thu hoạch; năng suất tham khảo khoảng 18 kg/m².",
+              "badge": "premium",
+              "source": "https://sfarm.vn/ca-chua-bi-cac-loai-pho-bien-cong-dung-va-cach-trong-sai-qua/"
+            }
+          ]
+        },
+        {
+          "category_id": "tomato_round",
+          "category_name": "Cà chua tròn (thường)",
+          "description": "Quả tròn canh tác đại trà; dùng nấu ăn và chế biến.",
+          "varieties": [
+            {
+              "id": "ca_chua_mv1",
+              "name": "Cà chua MV1",
+              "description": "Quả nhỏ, đỏ khi chín, thơm.",
+              "usage": "Canh tác đại trà, chế biến",
+              "growing_note": "Giống Việt Nam (chọn lọc tại ĐH Nông Lâm); cây thân đứng thấp ~65 cm, sinh trưởng hữu hạn, khá kháng bệnh, chịu nhiệt; chu kỳ 90–100 ngày. Năng suất tham khảo 52–60 tấn/ha chính vụ, 33–46 tấn/ha trái vụ.",
+              "badge": null,
+              "source": "https://www.nguonsinhthai.com/blogs/news/6-giong-ca-chua-pho-bien-lua-chon-phu-hop-cho-nha-vuon"
+            }
+          ]
+        },
+        {
+          "category_id": "tomato_vine",
+          "category_name": "Cà chua leo giàn",
+          "description": "Cây leo dài ngày, cần làm giàn; thu hoạch kéo dài nhiều tháng.",
+          "varieties": [
+            {
+              "id": "ca_chua_bach_tuoc_leo_gian",
+              "name": "Cà chua bạch tuộc leo giàn",
+              "description": "Quả 100–150 g, mọc thành chùm 5–6 quả.",
+              "usage": "Trồng giàn quy mô, thu hoạch dài ngày",
+              "growing_note": "Giống lai nguồn gốc Trung Quốc; một cây có thể leo phủ tới 10 m² trong khoảng 5 tháng. Cần 6–8 giờ nắng/ngày, nhiệt độ 15–30 °C.",
+              "badge": null,
+              "source": "https://www.nguonsinhthai.com/blogs/news/6-giong-ca-chua-pho-bien-lua-chon-phu-hop-cho-nha-vuon"
+            }
+          ]
+        },
+        {
+          "category_id": "tomato_specialty",
+          "category_name": "Cà chua trái cây & đặc sản",
+          "description": "Giống ăn tươi như trái cây hoặc có giá trị dinh dưỡng, thương phẩm cao.",
+          "varieties": [
+            {
+              "id": "ca_chua_trai_cay_nova",
+              "name": "Cà chua trái cây NOVA",
+              "description": "Quả vàng, thon dài hình trụ; vị ngọt gần như không chua (8–9 độ Brix).",
+              "usage": "Ăn tươi như trái cây, thị trường cao cấp",
+              "growing_note": "Nguồn gốc Đài Loan; chịu nhiệt tốt (vẫn cho năng suất ổn định ở 40 °C); khoảng 75 ngày cho thu hoạch, thu kéo dài 3–4 tháng.",
+              "badge": "premium",
+              "source": "https://www.nguonsinhthai.com/blogs/news/6-giong-ca-chua-pho-bien-lua-chon-phu-hop-cho-nha-vuon"
+            },
+            {
+              "id": "ca_chua_tim",
+              "name": "Cà chua tím",
+              "description": "Quả màu tím đậm do chứa anthocyanin.",
+              "usage": "Ăn tươi, chế độ ăn chú trọng sức khoẻ",
+              "growing_note": "Giống lai tạo; chống oxy hoá cao, giá trị thương phẩm cao.",
+              "badge": null,
+              "source": "https://www.nguonsinhthai.com/blogs/news/6-giong-ca-chua-pho-bien-lua-chon-phu-hop-cho-nha-vuon"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coffee",
+      "name": "Cà phê",
+      "icon": "coffee",
+      "scientific_name": "Coffea spp.",
+      "description": "Cây công nghiệp lâu năm. WASI (Viện KHKT Nông Lâm nghiệp Tây Nguyên) đã chuyển giao 20 giống: 14 giống vối và 6 giống chè.",
+      "categories": [
+        {
+          "category_id": "coffee_robusta",
+          "category_name": "Cà phê vối (Robusta)",
+          "description": "Coffea canephora. WASI đã chuyển giao 14 giống vối: TR4–TR9, TR11–TR15, TRS1, cà phê dây, xanh lùn.",
+          "varieties": [
+            {
+              "id": "coffee_robusta_tr4",
+              "name": "TR4",
+              "description": "Quả đỏ cam, dạng trứng ngược. Khối lượng 100 nhân ~17 g; tỷ lệ nhân loại R1 trên 70%.",
+              "usage": "Trồng sản xuất đại trà ở Tây Nguyên; nhân giống vô tính (ghép, nuôi cấy mô)",
+              "growing_note": "Cây sinh trưởng khoẻ, phân cành nhiều, cành hơi rũ, cây cao trung bình, tán rộng; lá cỡ trung bình dạng mũi mác. Năng suất 5–7 tấn nhân/ha; kháng gỉ sắt cao. Giống WASI chọn tạo trước 2011, vẫn được nông dân tin dùng.",
+              "badge": "popular",
+              "source": "https://giongcaytrongeakmat.myharavan.com/blogs/news/dac-diem-mot-so-giong-ca-phe-de-ba-con-de-nhan-biet-tr4-xanh-lun-t"
+            },
+            {
+              "id": "coffee_robusta_tr9",
+              "name": "TR9",
+              "description": "Quả đỏ máu, to, thon dài. Khối lượng 100 nhân 24–25 g; nhân loại R1 trên 95%.",
+              "usage": "Trồng sản xuất; nhân giống vô tính",
+              "growing_note": "Sinh trưởng khoẻ, nhiều cành cơ bản, tán rộng, lóng đốt ngắn, cây cao trung bình; lá xanh đậm. Năng suất 5–6 tấn nhân/ha; kháng gỉ sắt cao; thu hoạch tập trung tháng 12.",
+              "badge": "popular",
+              "source": "https://giongcaytrongeakmat.myharavan.com/blogs/news/dac-diem-mot-so-giong-ca-phe-de-ba-con-de-nhan-biet-tr4-xanh-lun-t"
+            },
+            {
+              "id": "coffee_robusta_tr11",
+              "name": "TR11",
+              "description": "Quả đỏ máu, thon dài. Khối lượng 100 nhân trên 18 g; nhân loại R1 trên 95%.",
+              "usage": "Trồng sản xuất; nhân giống vô tính",
+              "growing_note": "Sinh trưởng khoẻ, cành to khoẻ và dài, tán khá rộng; lá trưởng thành xanh nhạt. Năng suất 5–6 tấn nhân/ha; kháng gỉ sắt cao; thu hoạch rộ tháng 12.",
+              "badge": "popular",
+              "source": "https://giongcaytrongeakmat.myharavan.com/blogs/news/dac-diem-mot-so-giong-ca-phe-de-ba-con-de-nhan-biet-tr4-xanh-lun-t"
+            },
+            {
+              "id": "coffee_robusta_trs1",
+              "name": "TRS1 (vối lai)",
+              "description": "Quả đỏ hoặc đỏ máu, dạng bầu dục. Khối lượng 100 nhân ~19–20 g; nhân loại 1 trên 85%; tỷ lệ tươi/nhân ~4,1.",
+              "usage": "Trồng mới bằng hạt (giống thực sinh) — phù hợp tái canh diện rộng",
+              "growing_note": "Giống lai tổng hợp từ 4 dòng vô tính TR4, TR9, TR11, TR12 (WASI, 2015); cây cao trung bình, tán rộng, phân cành nhiều và cân đối. Năng suất 4,5–6 tấn nhân/ha; tỷ lệ cây nhiễm gỉ sắt dưới 10%. Giải nhất Sáng tạo KHCN Việt Nam 2023.",
+              "badge": "new",
+              "source": "https://www.vista.gov.vn/vi/news/khoa-hoc-nong-nghiep/20-giong-ca-phe-cua-vien-khoa-hoc-ky-thuat-nong-lam-nghiep-tay-nguyen-da-duoc-chuyen-giao-san-xuat-9705.html"
+            },
+            {
+              "id": "coffee_robusta_xanh_lun",
+              "name": "Xanh lùn (TS5)",
+              "description": "Quả đỏ cam, thon dài, dễ hái. Khối lượng 100 nhân ~18,4 g; nhân loại R1 ~83,5%.",
+              "usage": "Trồng sản xuất ở Tây Nguyên",
+              "growing_note": "Cây cao ~2 m, tán hình trụ đường kính 2,5–3 m; lá to (24,5 × 10,5 cm) xanh đậm, mép gợn sóng. Năng suất 4–4,5 tấn nhân/ha; kháng gỉ sắt cao, chịu hạn tốt; thu hoạch 25/12–15/1.",
+              "badge": null,
+              "source": "https://giongcaytrongeakmat.myharavan.com/blogs/news/dac-diem-mot-so-giong-ca-phe-de-ba-con-de-nhan-biet-tr4-xanh-lun-t"
+            },
+            {
+              "id": "coffee_robusta_thien_truong",
+              "name": "Thiện Trường (TS1)",
+              "description": "Quả to, chùm 50–60 quả; tỷ lệ tươi/nhân 4,0–4,3.",
+              "usage": "Trồng sản xuất",
+              "growing_note": "Sinh trưởng khoẻ, cành to; khả năng phân cành thứ cấp yếu; lá non hơi đỏ, lá trưởng thành xanh đậm bóng như có dầu. Năng suất 5–7 tấn/ha; kháng gỉ sắt khá.",
+              "badge": null,
+              "source": "https://giongcaytrongeakmat.myharavan.com/blogs/news/dac-diem-mot-so-giong-ca-phe-de-ba-con-de-nhan-biet-tr4-xanh-lun-t"
+            },
+            {
+              "id": "coffee_robusta_ca_day",
+              "name": "Cà phê dây Thuận An",
+              "description": "Quả cỡ trung bình, đều, ít nhân lép, chín đỏ; tỷ lệ sàng 16 đạt 100%; tỷ lệ tươi/nhân 3,9–4,1.",
+              "usage": "Trồng dày được do tán ít giao nhau",
+              "growing_note": "Lá to hình mũi mác, mép hơi gợn sóng; cành mang quả dài, có xu hướng rũ xuống. Năng suất 7–8 tấn/ha; kháng gỉ sắt và nấm hồng tốt, chịu hạn; thu hoạch tháng 1–2 (muộn hơn các giống khác ~1 tháng). Phù hợp độ cao trên 400 m ở Tây Nguyên.",
+              "badge": null,
+              "source": "https://giongcaytrongeakmat.myharavan.com/blogs/news/dac-diem-mot-so-giong-ca-phe-de-ba-con-de-nhan-biet-tr4-xanh-lun-t"
+            }
+          ]
+        },
+        {
+          "category_id": "coffee_arabica",
+          "category_name": "Cà phê chè (Arabica)",
+          "description": "Coffea arabica; trồng ở vùng có độ cao trên 600 m (Tây Nguyên, Bắc Trung Bộ, Tây Bắc). WASI có 6 giống: TN1, TN2, TN6, TN7, TN9, THA1.",
+          "varieties": [
+            {
+              "id": "coffee_arabica_catimor",
+              "name": "Catimor",
+              "description": "Con lai Timor (mang gen Robusta) × Caturra, tạo ra tại Bồ Đào Nha năm 1959. Vị chua, hơi chát, hậu vị hơi mặn.",
+              "usage": "Giống Arabica đang trồng phổ biến trong sản xuất tại Việt Nam",
+              "growing_note": "Kháng gỉ sắt; năng suất khá cao (tham khảo 20–25 tấn quả tươi/ha/năm); khả năng thích ứng khí hậu và chống chịu bệnh kém hơn THA1.",
+              "badge": "popular",
+              "source": "https://simexcodl.com.vn/giong-ca-phe-che/"
+            },
+            {
+              "id": "coffee_arabica_tha1",
+              "name": "THA1",
+              "description": "Quả chín đỏ tươi, dạng bầu dục. Khối lượng 100 hạt 17,3 g; hạt loại 1 đạt 84,9%; tỷ lệ tươi/nhân 5,6; điểm thử nếm trên 80 (SCA).",
+              "usage": "Trồng mới / tái canh Arabica vùng cao; thích hợp trồng dày",
+              "growing_note": "Dòng chọn lọc phả hệ F5 của con lai TN1 (KH3-1 × Catimor), do WASI chọn tạo; công nhận sản xuất thử theo QĐ 2812/QĐ-BNN-TT ngày 7/7/2016. Cây thấp, tán gọn, đốt ngắn, phân cành nhiều; kháng gỉ sắt cao. Năng suất ~3 tấn nhân/ha khi thâm canh, có thể 4–5 tấn. Độ cao 600–2.000 m (tối ưu 1.000–2.000 m); pH đất 4,5–6,0.",
+              "badge": "new",
+              "source": "https://nongnghiepmoitruong.vn/tri-thuc-nong-dan/quy-trinh-tham-canh-ben-vung-giong-ca-phe-che-tha1-d823494.html"
+            },
+            {
+              "id": "coffee_arabica_tn1",
+              "name": "TN1",
+              "description": "Con lai giữa vật liệu KH3-1 (nguồn gốc Ethiopia) và Catimor.",
+              "usage": "Giống lai của WASI; là nguồn vật liệu chọn ra THA1",
+              "growing_note": "Các giống chè lai của WASI thích ứng rộng, kháng gỉ sắt, chất lượng tách cải thiện so với Catimor. Chưa có dữ liệu chi tiết riêng về năng suất và cỡ hạt của TN1.",
+              "badge": null,
+              "source": "https://www.vista.gov.vn/vi/news/khoa-hoc-nong-nghiep/20-giong-ca-phe-cua-vien-khoa-hoc-ky-thuat-nong-lam-nghiep-tay-nguyen-da-duoc-chuyen-giao-san-xuat-9705.html"
+            },
+            {
+              "id": "coffee_arabica_typica",
+              "name": "Typica",
+              "description": "Giống chuẩn tham chiếu của Arabica. Vị chua của chanh với chút hương hoa, hậu vị ngọt kéo dài.",
+              "usage": "Cà phê đặc sản; dùng làm chuẩn thử nếm",
+              "growing_note": "Cây hình nón, có thể cao tới 4,5 m; cành hợp với thân góc 50–70°; năng suất thấp.",
+              "badge": null,
+              "source": "https://giongcaytrongeakmat.com/tim-hieu-ve-cay-ca-phe-arabica/"
+            },
+            {
+              "id": "coffee_arabica_bourbon",
+              "name": "Bourbon",
+              "description": "Hạt nhỏ và tròn hơn Typica. Acid nhẹ, mùi rượu vang, hậu vị ngọt; có hương hoa khi trồng ở độ cao lớn.",
+              "usage": "Cà phê đặc sản",
+              "growing_note": "Nguồn gốc đảo Réunion (tên cũ Bourbon); lá rộng.",
+              "badge": null,
+              "source": "https://giongcaytrongeakmat.com/tim-hieu-ve-cay-ca-phe-arabica/"
+            },
+            {
+              "id": "coffee_arabica_caturra",
+              "name": "Caturra",
+              "description": "Vị acid của chanh rõ rệt, ít ngọt hơn Bourbon.",
+              "usage": "Sản xuất; là bố mẹ của Catimor",
+              "growing_note": "Đột biến của Bourbon phát hiện tại Minas Gerais, Brazil (1937); cây tương đối thấp; năng suất cao nếu thụ phấn và tỉa cành tốt.",
+              "badge": null,
+              "source": "https://giongcaytrongeakmat.com/tim-hieu-ve-cay-ca-phe-arabica/"
+            },
+            {
+              "id": "coffee_arabica_catuai",
+              "name": "Catuai",
+              "description": "Hương vị không quá đặc trưng; độ ngọt phụ thuộc cách thụ phấn.",
+              "usage": "Sản xuất",
+              "growing_note": "Con lai Mundo Novo × Caturra; chịu gió và mưa tốt; năng suất cao nếu thụ phấn tốt.",
+              "badge": null,
+              "source": "https://giongcaytrongeakmat.com/tim-hieu-ve-cay-ca-phe-arabica/"
+            },
+            {
+              "id": "coffee_arabica_mundo_novo",
+              "name": "Mundo Novo",
+              "description": "Ít ngọt, vị đắng rõ.",
+              "usage": "Sản xuất",
+              "growing_note": "Con lai tự nhiên Typica × Bourbon; năng suất cao, kháng bệnh tốt.",
+              "badge": null,
+              "source": "https://giongcaytrongeakmat.com/tim-hieu-ve-cay-ca-phe-arabica/"
+            }
+          ]
+        },
+        {
+          "category_id": "coffee_liberica",
+          "category_name": "Cà phê mít (Liberica)",
+          "description": "Coffea liberica; cây cao 2–5 m, lá to như lá mít; chịu hạn, trồng quảng canh ở Nghệ An, Quảng Trị, Gia Lai, Kon Tum.",
+          "varieties": [
+            {
+              "id": "coffee_liberica_ca_phe_mit",
+              "name": "Cà phê mít (Liberica)",
+              "description": "Thân, lá và quả đều to hơn hẳn cà phê chè, vối; vị chua.",
+              "usage": "Trộn với cà phê khác để tăng hương vị; làm gốc ghép; trồng làm hàng chắn gió",
+              "growing_note": "Cây cao 2–5 m; chịu hạn tốt, ít cần tưới, sức đề kháng sâu bệnh cao; ra hoa và thu hoạch muộn hơn các loại khác (thu quả khoảng tháng 12 âm lịch). Năng suất kém nên diện tích không lớn.",
+              "badge": null,
+              "source": "https://vi.wikipedia.org/wiki/C%C3%A0_ph%C3%AA_m%C3%ADt"
+            }
+          ]
+        },
+        {
+          "category_id": "coffee_excelsa",
+          "category_name": "Cà phê Excelsa",
+          "description": "Coffea excelsa — nay thường được xếp chung với Coffea liberica; chiếm khoảng 1% sản lượng cà phê thế giới.",
+          "varieties": [
+            {
+              "id": "coffee_excelsa_excelsa",
+              "name": "Cà phê Excelsa",
+              "description": "Quả to hơn Arabica và Robusta, vỏ dày; hạt lớn, xốp. Vị chua thanh, thơm nhẹ như mít sấy; caffeine 2–4%.",
+              "usage": "Phối trộn tạo hương; cà phê đặc sản",
+              "growing_note": "Cây cao 6–10 m nếu không tỉa, thường giữ 2–4 m để thu hái; lá dài 15–22 cm. Độ cao thích hợp 700–1.000 m, nhiệt độ 26–30 °C, mưa 800–1.000 mm/năm; chịu hạn, kháng gỉ sắt và nấm hồng. Năng suất 1–3 tấn/ha. Ở Việt Nam trồng tại Nghệ An, Quảng Trị, Gia Lai, Kon Tum, Tây Ninh, Đắk Lắk (~6.000 ha).",
+              "badge": null,
+              "source": "https://hophuongcoffee.com/blogs/news/ca-phe-excelsa-ca-phe-mit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cucumber",
+      "name": "Dưa leo",
+      "icon": "cucumber",
+      "scientific_name": "Cucumis sativus",
+      "description": "Rau ăn quả ngắn ngày: 30–40 ngày sau gieo đã cho thu hoạch; trồng được quanh năm ở nhiều vùng.",
+      "categories": [
+        {
+          "category_id": "cucumber_green",
+          "category_name": "Dưa leo xanh (lai F1 thường)",
+          "description": "Quả xanh 12–22 cm, giống lai F1 trồng đại trà; thu 30–35 ngày sau gieo.",
+          "varieties": [
+            {
+              "id": "cucumber_hunter_1",
+              "name": "Hunter 1.0",
+              "description": "Trái dài 18–20 cm, dạng trái đẹp.",
+              "usage": "Trồng thương phẩm; trồng được quanh năm",
+              "growing_note": "Cây sinh trưởng khoẻ, kháng bệnh virus, năng suất cao. Khoảng cách 1,4–1,6 m × 0,6–0,8 m (800–1.000 cây/1.000 m²); lượng giống 30–40 g/1.000 m². Nhà sản xuất: East-West Seed (Hai Mũi Tên Đỏ).",
+              "badge": null,
+              "source": "https://hatgiongtruongphuc.vn/products/hunter-1-0-dua-leo-lai-f1"
+            },
+            {
+              "id": "cucumber_702",
+              "name": "702",
+              "description": "Trái xanh, dài 18–20 cm.",
+              "usage": "Trồng thương phẩm; trồng quanh năm",
+              "growing_note": "Năng suất cao, dễ chăm sóc. Khoảng cách 1,4–1,6 m × 0,4–0,5 m; lượng giống 40–50 g/1.000 m². Nhà sản xuất: East-West Seed (Hai Mũi Tên Đỏ).",
+              "badge": null,
+              "source": "https://hatgiongtruongphuc.vn/products/702-dua-leo-lai-f1"
+            },
+            {
+              "id": "cucumber_hunter_2",
+              "name": "Hunter 2.0",
+              "description": "Trái màu xanh nhạt, dài 12–13 cm, chất lượng ăn ngon.",
+              "usage": "Trồng thương phẩm; trồng quanh năm",
+              "growing_note": "Năng suất cao, kháng virus. Khoảng cách 1,2 m × 0,25–0,3 m; lượng giống 60–70 g/1.000 m². Nhà sản xuất: East-West Seed (Hai Mũi Tên Đỏ).",
+              "badge": null,
+              "source": "https://nongnghieppho.vn/products/hat-giong-dua-leo-lai-f1-hunter-2-0-east-west-seed-hai-mui-ten-do-goi-50-hat"
+            },
+            {
+              "id": "cucumber_pd288",
+              "name": "PD288",
+              "description": "Trái suôn dài 19–22 cm, nặng 170–250 g, xanh đậm, chậm đổi màu sau thu hoạch.",
+              "usage": "Trồng thương phẩm; đặc biệt vụ xuân và thu ở miền Bắc",
+              "growing_note": "Cây sinh trưởng rất khoẻ; chịu lạnh, chịu rét rất tốt; thu hoạch 32–35 ngày sau gieo. Cây cách cây 45–55 cm, hàng cách hàng 70–90 cm; lượng giống 35–40 g/1.000 m²; nhiệt độ thích hợp 20–30 °C. Nhà sản xuất: Phú Điền.",
+              "badge": null,
+              "source": "https://phudienseed.com.vn/san-pham/hat-giong-dua-leo-lai-f1-pd288/"
+            }
+          ]
+        },
+        {
+          "category_id": "cucumber_japanese",
+          "category_name": "Dưa leo Nhật (trái dài)",
+          "description": "Quả dài 20–35 cm, xanh đậm, gai nhỏ, ruột nhỏ giòn; thu 35–40 ngày sau gieo.",
+          "varieties": [
+            {
+              "id": "cucumber_summer_901",
+              "name": "SUMMER 901 (dưa leo Nhật chịu nhiệt)",
+              "description": "Trái dài 21–22 cm, xanh đậm, bóng; không phai màu trong mùa khô nóng.",
+              "usage": "Trồng quanh năm, kể cả mùa nắng nóng",
+              "growing_note": "Cây sinh trưởng mạnh, chịu nhiệt, năng suất cao; tỷ lệ hoa cái trên thân chính 50–60%; cần bón lót nhiều hơn các giống khác; thu hoạch 35–40 ngày sau gieo. Khoảng cách cây 20–25 cm, hàng 1,2 m. Nhà sản xuất: Hạt giống Rạng Đông.",
+              "badge": null,
+              "source": "https://hatgiongrangdong.com/hat-giong/dua-leo-nhat-chiu-nhiet-lai-f1-summer-901/"
+            },
+            {
+              "id": "cucumber_nhat_lai_f1",
+              "name": "Dưa leo Nhật lai F1 (trái 30–35 cm)",
+              "description": "Trái dài 30–35 cm, xanh đậm, gai nhỏ; ruột trắng, nhỏ, rất giòn, nhiều nước, vị ngọt thanh.",
+              "usage": "Ăn tươi, salad; trồng quanh năm",
+              "growing_note": "Cây sinh trưởng mạnh, kháng bệnh tốt; thu hoạch 35–40 ngày sau gieo. Trang bán không ghi rõ nhà sản xuất.",
+              "badge": null,
+              "source": "https://xuannong.vn/hat-giong-dua-leo-nhat-lai-f1.html"
+            }
+          ]
+        },
+        {
+          "category_id": "cucumber_white",
+          "category_name": "Dưa leo trắng & dưa chuột nếp",
+          "description": "Quả vỏ trắng hoặc nửa trắng nửa xanh, giòn ngọt.",
+          "varieties": [
+            {
+              "id": "cucumber_rado_1339",
+              "name": "Rado 1339 (dưa leo trái trắng)",
+              "description": "Trái màu trắng, dài 6–7 cm, giòn, ngọt.",
+              "usage": "Ăn tươi; trồng quanh năm",
+              "growing_note": "Cây sinh trưởng mạnh, năng suất cao; thu hoạch 35–40 ngày sau gieo. Nhà sản xuất: Hạt giống Rạng Đông.",
+              "badge": null,
+              "source": "https://hatgiongrangdong.com/hat-giong/dua-leo-trai-trang-lai-f1-rado-1339/"
+            },
+            {
+              "id": "cucumber_nari_902",
+              "name": "NARI 902 (dưa chuột nếp)",
+              "description": "Trái dài 22–24 cm; vai xanh, nửa dưới màu trắng — tương phản đẹp.",
+              "usage": "Ăn tươi",
+              "growing_note": "Cây sinh trưởng mạnh; tỷ lệ hoa cái trên thân chính gần 100%; thu hoạch 35–40 ngày sau gieo. Khoảng cách cây 20–25 cm, hàng 1,2 m. Nhà sản xuất: Hạt giống Rạng Đông.",
+              "badge": null,
+              "source": "https://hatgiongrangdong.com/hat-giong/dua-chuot-nep-lai-f1-nari-902/"
+            }
+          ]
+        },
+        {
+          "category_id": "cucumber_baby",
+          "category_name": "Dưa leo baby",
+          "description": "Quả ngắn 6–8 cm, đậu thành chùm; trồng nhà màng hoặc ngoài trời.",
+          "varieties": [
+            {
+              "id": "cucumber_lyssa_353",
+              "name": "Lyssa 353",
+              "description": "Trái bóng, dài 6–8 cm, giòn ngọt; đậu thành từng chùm, rất sai.",
+              "usage": "Ăn tươi; trồng nhà màng hoặc ngoài trời, quanh năm",
+              "growing_note": "Thu hoạch 32–35 ngày sau gieo; mật độ 0,6 m × 1,2 m. Nhà sản xuất: Hạt giống Rạng Đông.",
+              "badge": null,
+              "source": "https://nongnghieppho.vn/products/hat-giong-dua-leo-baby-lai-f1-lyssa-353-rang-dong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chili",
+      "name": "Ớt",
+      "icon": "chili",
+      "scientific_name": "Capsicum spp.",
+      "description": "Độ cay đo bằng đơn vị Scoville (SHU): ớt chuông 0 · jalapeño 2.500–10.000 · cayenne 25.000–50.000 · ớt hiểm / chỉ thiên (bird's eye) 50.000–100.000 · habanero 100.000–350.000.",
+      "categories": [
+        {
+          "category_id": "chili_chi_thien",
+          "category_name": "Ớt chỉ thiên",
+          "description": "Quả nhỏ 7–11 cm chĩa lên trời, rất cay (nhóm bird's eye, ~50.000–100.000 SHU); thu 60–75 ngày.",
+          "varieties": [
+            {
+              "id": "chili_vifon686",
+              "name": "VIFON686 (chỉ thiên lai F1)",
+              "description": "Trái dài 7–9 cm, đường kính 0,9–1,1 cm, nặng 4–4,2 g; da bóng, thịt rất cứng; chín đỏ tươi; vị rất cay.",
+              "usage": "Trồng thương phẩm vụ xuân, hè-thu, thu-đông",
+              "growing_note": "Cây sinh trưởng khoẻ, phân tán nhanh, sai trái; kháng bệnh rất tốt (đặc biệt chết xanh, thán thư); bắt đầu thu 60–70 ngày; năng suất 2,2–2,5 tấn/1.000 m²; lượng giống 10–15 g/1.000 m². Nguồn gốc Thái Lan; phân phối: Phú Điền.",
+              "badge": null,
+              "source": "https://phudienseed.com.vn/san-pham/hat-giong-ot-chi-thien-lai-f1-vifon686/"
+            },
+            {
+              "id": "chili_rado_911",
+              "name": "RADO 911 (chỉ thiên trái dài)",
+              "description": "Trái rất sai, dài 9–11 cm, chín có màu đẹp.",
+              "usage": "Trồng quanh năm",
+              "growing_note": "Cây sinh trưởng mạnh, kháng bệnh tốt; thu lứa đầu 70–75 ngày sau gieo; mật độ 0,6 × 1,2 m. Nhà sản xuất: Hạt giống Rạng Đông.",
+              "badge": null,
+              "source": "https://hatgiongrangdong.com/hat-giong/ot-chi-thien-trai-dai-rado-911/"
+            }
+          ]
+        },
+        {
+          "category_id": "chili_hiem",
+          "category_name": "Ớt hiểm (ớt xiêm)",
+          "description": "Quả nhỏ 6–8 cm, siêu cay (bird's eye, 50.000–100.000 SHU); cây nhỏ, có thể sống nhiều năm.",
+          "varieties": [
+            {
+              "id": "chili_rado_789",
+              "name": "RADO 789 (ớt hiểm lai F1)",
+              "description": "Trái dài 6–8 cm, chín đỏ tươi, cay.",
+              "usage": "Gia vị; trồng quanh năm",
+              "growing_note": "Cây sinh trưởng mạnh, nhiều cành nhánh, sai trái, thu hoạch liên tục; ưa nắng; thu hoạch khoảng 75–80 ngày. Nhà sản xuất: Hạt giống Rạng Đông.",
+              "badge": null,
+              "source": "https://hatgiongrangdong.com/hat-giong/ot-hiem-lai-rado-789/"
+            }
+          ]
+        },
+        {
+          "category_id": "chili_sung",
+          "category_name": "Ớt sừng",
+          "description": "Quả dài ~15 cm dạng sừng, thịt dày, cay thơm; thu 75–80 ngày sau trồng.",
+          "varieties": [
+            {
+              "id": "chili_sung_vang_hoang_long",
+              "name": "Sừng vàng Hoàng Long (lai F1)",
+              "description": "Trái 15 × 2 cm, vàng tươi, bóng, khi chín chuyển đỏ; thịt quả dày, rất cay và thơm.",
+              "usage": "Trồng thương phẩm quanh năm",
+              "growing_note": "Bắt đầu thu 75–80 ngày sau trồng; năng suất 2,5–3,5 tấn/1.000 m²; khoảng cách 50 × 40 cm (17.000–22.000 cây/ha); lượng giống 20–25 g/1.000 m²; vườn ươm 30–35 ngày. Nhà sản xuất: Chánh Phong.",
+              "badge": null,
+              "source": "https://saulongvtnn.com/san-pham/hat-giong-ot-lai-f1-sung-vang-hoang-long-chanh-phong/"
+            }
+          ]
+        },
+        {
+          "category_id": "chili_bell",
+          "category_name": "Ớt chuông (ớt ngọt)",
+          "description": "Quả to vuông 150–260 g, không cay (0 SHU); trồng nhà màng vùng mát hoặc vụ thu-đông.",
+          "varieties": [
+            {
+              "id": "chili_bachata_rz",
+              "name": "Bachata RZ F1 (ớt chuông vàng)",
+              "description": "Quả vuông, vàng tươi, 240–260 g; cùi dày, quả cứng, bảo quản lâu; không cay.",
+              "usage": "Trồng nhà màng, nhà lưới; quanh năm ở vùng khí hậu mát, vụ thu-đông ở vùng khác",
+              "growing_note": "Cây thấp, khoẻ; đậu quả tốt cả trong điều kiện khắc nghiệt; kháng cao PVMV chủng 0–3, kháng trung bình TSWV chủng 0; mật độ 4 cây/m². Nhà sản xuất: Rijk Zwaan (Hà Lan).",
+              "badge": null,
+              "source": "https://hatgiongthegioi.com/hat-giong-rau-cu/ot-pepper/hat-giong-ot-chuong-vang-bachata-rz-f1.htm"
+            }
+          ]
+        },
+        {
+          "category_id": "chili_ornamental",
+          "category_name": "Ớt kiểng",
+          "description": "Trồng chậu làm cảnh; quả đổi màu qua nhiều giai đoạn.",
+          "varieties": [
+            {
+              "id": "chili_rd_825",
+              "name": "Ớt kiểng ngũ sắc RD 825",
+              "description": "Quả hình chóp nhỏ, đổi màu từ vàng chanh sang tím, chín cam đỏ.",
+              "usage": "Trồng chậu làm cảnh, quanh năm",
+              "growing_note": "Cây cao 25–30 cm; thu hoạch nhiều đợt; khoảng 2.000 hạt/10 g. Nhà sản xuất: Hạt giống Rạng Đông.",
+              "badge": null,
+              "source": "https://hatgiongrangdong.com/hat-giong/ot-kieng-ngu-sac-rd-825-2/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

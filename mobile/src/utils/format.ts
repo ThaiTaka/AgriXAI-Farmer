@@ -19,6 +19,17 @@ export function formatNumber(value: number): string {
   return new Intl.NumberFormat('vi-VN', {maximumFractionDigits: 2}).format(value);
 }
 
+/** 125500 -> "125.500₫". Whole đồng only: prices in this app are never fractional. */
+export function formatVnd(value: number): string {
+  return `${new Intl.NumberFormat('vi-VN', {maximumFractionDigits: 0}).format(value)}₫`;
+}
+
+/** "610.000 – 690.000₫" — one currency sign for the whole range. */
+export function formatVndRange(min: number, max: number): string {
+  if (min === max) return formatVnd(min);
+  return `${new Intl.NumberFormat('vi-VN', {maximumFractionDigits: 0}).format(min)} – ${formatVnd(max)}`;
+}
+
 export function formatDate(value: number | Date | null | undefined): string {
   if (value === null || value === undefined) return '—';
   const d = value instanceof Date ? value : new Date(value);

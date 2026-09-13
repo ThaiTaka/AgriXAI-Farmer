@@ -53,7 +53,7 @@ export async function clearSession(): Promise<void> {
   await Keychain.resetGenericPassword({service: SERVICE});
 }
 
-/** Used by the diagnostics screen and the Giai đoạn 1 acceptance test. */
+/** Used by the Giai đoạn 1 acceptance test (Keychain check). */
 export async function hasSession(): Promise<boolean> {
   return Keychain.hasGenericPassword({service: SERVICE});
 }
@@ -61,7 +61,7 @@ export async function hasSession(): Promise<boolean> {
 /**
  * Which hardware backs the store on this device — SECURE_HARDWARE means the
  * Android StrongBox/TEE holds the key, SECURE_SOFTWARE means it is encrypted but
- * kept in software. Reported by the diagnostics helper, never gates login.
+ * kept in software. Informational only — it never gates login.
  */
 export async function securityLevel(): Promise<string> {
   try {

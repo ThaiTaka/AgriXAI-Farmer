@@ -20,7 +20,7 @@
 
 import {appSchema, tableSchema} from '@nozbe/watermelondb';
 
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 export const schema = appSchema({
   version: SCHEMA_VERSION,
@@ -34,6 +34,7 @@ export const schema = appSchema({
         {name: 'area', type: 'number'},
         {name: 'area_unit', type: 'string'},
         {name: 'crop_type', type: 'string'},
+        {name: 'crop_name', type: 'string', isOptional: true},
         {name: 'variety_id', type: 'string', isOptional: true, isIndexed: true},
         {name: 'variety_name', type: 'string', isOptional: true},
         {name: 'planted_at', type: 'number', isOptional: true},
@@ -46,6 +47,9 @@ export const schema = appSchema({
       ],
     }),
 
+    // Three-level catalogue: crop_type -> category -> variety. Crop types and
+    // categories are static (shared/data/crop_varieties.json); only the
+    // varieties are rows, because that is the level farmers add to.
     tableSchema({
       name: 'crop_varieties',
       columns: [
@@ -53,9 +57,12 @@ export const schema = appSchema({
         {name: 'name', type: 'string'},
         {name: 'crop_type', type: 'string', isIndexed: true},
         {name: 'crop_name', type: 'string'},
-        {name: 'fruit', type: 'string', isOptional: true},
+        {name: 'category_id', type: 'string', isOptional: true, isIndexed: true},
+        {name: 'category_name', type: 'string', isOptional: true},
+        {name: 'description', type: 'string', isOptional: true},
         {name: 'usage', type: 'string', isOptional: true},
-        {name: 'note', type: 'string', isOptional: true},
+        {name: 'growing_note', type: 'string', isOptional: true},
+        {name: 'badge', type: 'string', isOptional: true},
         {name: 'is_seed', type: 'boolean'},
         {name: 'approved', type: 'boolean'},
         {name: 'source', type: 'string'},

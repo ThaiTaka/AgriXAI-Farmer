@@ -1,11 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import type {KeyboardTypeOptions, StyleProp, ViewStyle} from 'react-native';
 import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
-import {colors, glass, radius, size, spacing, text} from '../theme';
-
-const CONTROL_COLORS = [...glass.control.gradientColors] as string[];
+import {colors, radius, size, space, text} from '../theme';
 
 interface FieldProps {
   label: string;
@@ -24,11 +21,11 @@ interface FieldProps {
 }
 
 /**
- * Label + pill input, matching screens 01 and 09.
+ * Label + boxed input.
  *
- * Font size is fixed at the token value (16) and the box at 50px minimum: below
- * either of those iOS zooms the page on focus and the control stops being a
- * reliable target with muddy hands (§3.4).
+ * Font size is fixed at 16 and the box at 50 pt minimum: below either of those
+ * iOS zooms the page on focus and the control stops being a reliable target
+ * with muddy hands (§3.4). Focus is shown with the green border, error with red.
  */
 export function Field({
   label,
@@ -45,24 +42,27 @@ export function Field({
   style,
   testID,
 }: FieldProps) {
+  const [focused, setFocused] = useState(false);
+
   return (
     <View style={style}>
-      <Text style={[text('metaSm', colors.text.alpha['74']), styles.label]}>{label}</Text>
-      <LinearGradient
-        colors={CONTROL_COLORS}
-        start={glass.control.gradientStart}
-        end={glass.control.gradientEnd}
+      <Text style={[text('meta', colors.text.secondary), styles.label]}>{label}</Text>
+      <View
         style={[
           styles.inputWrap,
           multiline && styles.inputWrapMultiline,
+          !editable && styles.inputWrapReadonly,
+          focused && styles.inputWrapFocused,
           error ? styles.inputWrapError : null,
         ]}>
         <TextInput
           testID={testID}
           value={value}
           onChangeText={onChangeText}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           placeholder={placeholder}
-          placeholderTextColor={colors.text.alpha['55']}
+          placeholderTextColor={colors.text.placeholder}
           keyboardType={keyboardType}
           secureTextEntry={secureTextEntry}
           autoCapitalize={autoCapitalize}
@@ -71,63 +71,70 @@ export function Field({
           editable={editable}
           style={[styles.input, multiline && styles.inputMultiline]}
         />
-      </LinearGradient>
+      </View>
       {error ? (
-        <Text style={[text('caption', '#8A3708'), styles.hint]}>{error}</Text>
+        <Text style={[text('caption', colors.text.danger), styles.hint]}>{error}</Text>
       ) : hint ? (
-        <Text style={[text('caption', colors.text.alpha['60']), styles.hint]}>{hint}</Text>
+        <Text style={[text('caption', colors.text.muted), styles.hint]}>{hint}</Text>
       ) : null}
     </View>
   );
 }
 
-interface ReadonlyFieldProps {
+interface PickerFieldProps {
   label: string;
   value: string;
   onPress?: () => void;
   icon?: React.ReactNode;
   hint?: string;
+  error?: string | null;
   placeholder?: string;
   testID?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
-/** A pill that looks like an input but opens a picker — date, variety, etc. */
+/** A box that looks like an input but opens a picker — date, variety, etc. */
 export function PickerField({
   label,
   value,
   onPress,
   icon,
   hint,
+  error,
   placeholder,
   testID,
-}: ReadonlyFieldProps) {
+  style,
+}: PickerFieldProps) {
   const empty = !value;
   return (
-    <View>
-      <Text style={[text('metaSm', colors.text.alpha['74']), styles.label]}>{label}</Text>
+    <View style={style}>
+      <Text style={[text('meta', colors.text.secondary), styles.label]}>{label}</Text>
       <Pressable
         testID={testID}
         onPress={onPress}
         accessibilityRole="button"
         accessibilityLabel={`${label}: ${value || placeholder || 'chưa chọn'}`}
-        style={({pressed}) => (pressed ? styles.pressed : null)}>
-        <LinearGradient
-          colors={CONTROL_COLORS}
-          start={glass.control.gradientStart}
-          end={glass.control.gradientEnd}
-          style={[styles.inputWrap, styles.pickerWrap]}>
-          <Text
-            numberOfLines={1}
-            style={[
-              text('input', empty ? colors.text.alpha['55'] : colors.text.primary),
-              styles.pickerValue,
-            ]}>
-            {value || placeholder || 'Chưa chọn'}
-          </Text>
-          {icon}
-        </LinearGradient>
+        style={({pressed}) => [
+          styles.inputWrap,
+          styles.pickerWrap,
+          pressed && styles.pickerPressed,
+          error ? styles.inputWrapError : null,
+        ]}>
+        <Text
+          numberOfLines={1}
+          style={[
+            text('input', empty ? colors.text.placeholder : colors.text.primary),
+            styles.pickerValue,
+          ]}>
+          {value || placeholder || 'Chưa chọn'}
+        </Text>
+        {icon}
       </Pressable>
-      {hint ? <Text style={[text('caption', colors.text.alpha['60']), styles.hint]}>{hint}</Text> : null}
+      {error ? (
+        <Text style={[text('caption', colors.text.danger), styles.hint]}>{error}</Text>
+      ) : hint ? (
+        <Text style={[text('caption', colors.text.muted), styles.hint]}>{hint}</Text>
+      ) : null}
     </View>
   );
 }
@@ -139,7 +146,7 @@ interface ChipProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/** Selectable pill — status picker on screen 09, tab bar on screen 08. */
+/** Selectable chip — status picker, unit picker. Selected = green border + soft fill. */
 export function SelectChip({label, selected, onPress, style}: ChipProps) {
   return (
     <Pressable
@@ -150,50 +157,86 @@ export function SelectChip({label, selected, onPress, style}: ChipProps) {
       style={({pressed}) => [
         styles.chip,
         selected ? styles.chipSelected : styles.chipIdle,
-        pressed && styles.pressed,
+        pressed && !selected && styles.chipPressed,
         style,
       ]}>
       <Text
         numberOfLines={1}
-        // metaSm, not meta: three status chips share one row and "Đang canh tác"
-        // was being clipped at the larger size.
-        style={text('metaSm', selected ? colors.neutral.white : colors.text.alpha['74'])}>
+        style={text('meta', selected ? colors.primary.default : colors.text.secondary)}>
         {label}
       </Text>
     </Pressable>
   );
 }
 
+interface SegmentedProps<K extends string> {
+  items: ReadonlyArray<{key: K; label: string}>;
+  value: K;
+  onChange: (key: K) => void;
+  style?: StyleProp<ViewStyle>;
+}
+
+/** Segmented control: gray track, the active segment lifted to white. */
+export function SegmentedControl<K extends string>({items, value, onChange, style}: SegmentedProps<K>) {
+  return (
+    <View style={[styles.segmentTrack, style]} accessibilityRole="tablist">
+      {items.map(item => {
+        const active = item.key === value;
+        return (
+          <Pressable
+            key={item.key}
+            accessibilityRole="tab"
+            accessibilityState={{selected: active}}
+            onPress={() => onChange(item.key)}
+            style={[styles.segment, active && styles.segmentActive]}>
+            <Text
+              numberOfLines={1}
+              style={text('meta', active ? colors.text.primary : colors.text.muted)}>
+              {item.label}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   label: {
-    marginBottom: spacing['2'],
+    marginBottom: space.sm,
   },
   inputWrap: {
     minHeight: size.inputMinHeight,
-    borderRadius: radius.pill,
+    borderRadius: radius.sm,
     borderWidth: 1,
-    borderColor: glass.control.borderColor,
+    borderColor: colors.border.strong,
+    backgroundColor: colors.surface.card,
     justifyContent: 'center',
   },
   inputWrapMultiline: {
-    minHeight: 96,
-    borderRadius: radius['4xl'],
+    minHeight: 104,
+  },
+  inputWrapReadonly: {
+    backgroundColor: colors.surface.subtle,
+  },
+  inputWrapFocused: {
+    borderColor: colors.border.focus,
   },
   inputWrapError: {
-    borderColor: 'rgba(194,74,18,0.6)',
+    borderColor: colors.border.danger,
   },
   input: {
-    paddingHorizontal: spacing['12'],
+    paddingHorizontal: space.lg,
     paddingVertical: 0,
-    fontFamily: 'OpenSans-SemiBold',
+    fontFamily: 'OpenSans-Medium',
     fontSize: 16,
     color: colors.text.primary,
     minHeight: size.inputMinHeight,
   },
   inputMultiline: {
-    minHeight: 96,
-    paddingTop: spacing['10'],
-    paddingBottom: spacing['10'],
+    minHeight: 104,
+    paddingTop: space.md,
+    paddingBottom: space.md,
     textAlignVertical: 'top',
     fontFamily: 'OpenSans-Regular',
     fontSize: 15,
@@ -201,34 +244,56 @@ const styles = StyleSheet.create({
   pickerWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing['4'],
-    paddingHorizontal: spacing['12'],
+    gap: space.sm,
+    paddingHorizontal: space.lg,
+  },
+  pickerPressed: {
+    backgroundColor: colors.surface.pressed,
   },
   pickerValue: {
     flex: 1,
   },
   hint: {
-    marginTop: spacing['3'],
-    paddingLeft: spacing['2'],
+    marginTop: space.sm,
   },
   chip: {
     flex: 1,
-    minHeight: size.buttonMinHeightSm,
-    borderRadius: radius.pill,
+    minHeight: size.chipMinHeight,
+    borderRadius: radius.sm,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: spacing['3'],
+    paddingHorizontal: space.sm,
   },
   chipIdle: {
-    borderColor: glass.control.borderColor,
-    backgroundColor: 'rgba(255,255,255,0.5)',
+    borderColor: colors.border.strong,
+    backgroundColor: colors.surface.card,
+  },
+  chipPressed: {
+    backgroundColor: colors.surface.pressed,
   },
   chipSelected: {
-    borderColor: colors.green['700'],
-    backgroundColor: colors.green['700'],
+    borderColor: colors.border.selected,
+    backgroundColor: colors.surface.selected,
   },
-  pressed: {
-    opacity: 0.82,
+  segmentTrack: {
+    flexDirection: 'row',
+    backgroundColor: colors.surface.subtle,
+    borderRadius: radius.sm,
+    padding: 3,
+    gap: 2,
+  },
+  segment: {
+    flex: 1,
+    minHeight: size.chipMinHeight - 4,
+    borderRadius: radius.sm - 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: space.sm,
+  },
+  segmentActive: {
+    backgroundColor: colors.surface.card,
+    borderWidth: 1,
+    borderColor: colors.border.default,
   },
 });

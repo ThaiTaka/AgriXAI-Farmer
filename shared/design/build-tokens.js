@@ -25,7 +25,7 @@ const BANNER = [
   '/**',
   ' * GENERATED FILE - DO NOT EDIT BY HAND.',
   ' *',
-  ` * Source: shared/design/tokens.json (extracted from "${t.$meta.source}")`,
+  ' * Source: shared/design/tokens.json',
   ' * Regenerate with: node shared/design/build-tokens.js',
   ' */',
 ].join('\n');
@@ -34,7 +34,21 @@ const BANNER = [
 // helpers
 // ---------------------------------------------------------------------------
 
-/** "rgba(255,255,255,0.62)" | "#RRGGBB" -> { hex, opacity } */
+/** Drops every "$note"-style key, recursively, so notes never reach the outputs. */
+function stripNotes(value) {
+  if (Array.isArray(value)) return value.map(stripNotes);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const [k, v] of Object.entries(value)) {
+      if (k.startsWith('$')) continue;
+      out[k] = stripNotes(v);
+    }
+    return out;
+  }
+  return value;
+}
+
+/** "rgba(0,0,0,0.05)" | "#RRGGBB" -> { hex, opacity } */
 function splitColor(value) {
   const m = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)$/.exec(value);
   if (!m) return { hex: value, opacity: 1 };
@@ -44,124 +58,58 @@ function splitColor(value) {
   return { hex, opacity: m[4] === undefined ? 1 : Number(m[4]) };
 }
 
-/** "linear-gradient(165deg,rgba(..) 0%,rgba(..) 100%)" -> ordered colour stops */
-function gradientColors(css) {
-  const inner = css.slice(css.indexOf('(') + 1, css.lastIndexOf(')'));
-  const parts = [];
-  let depth = 0;
-  let buf = '';
-  for (const ch of inner) {
-    if (ch === '(') depth++;
-    if (ch === ')') depth--;
-    if (ch === ',' && depth === 0) {
-      parts.push(buf.trim());
-      buf = '';
-    } else {
-      buf += ch;
-    }
-  }
-  parts.push(buf.trim());
-  return parts
-    .filter((p) => !/^-?[\d.]+deg$/.test(p) && !/^to /.test(p))
-    .map((p) => p.replace(/\s+-?[\d.]+%$/, '').trim());
-}
-
 /**
  * CSS box-shadow -> React Native shadow props.
- * RN has no spread/blur parity, so blur maps to shadowRadius/2 and Android
- * elevation is approximated from the vertical offset.
+ * iOS takes the values as-is (blur maps to shadowRadius/2); Android only has
+ * `elevation`, approximated from the vertical offset so "sm" stays a whisper.
  */
 function shadowToRN(css) {
-  if (!css || css === 'none') return null;
-  // `(?:px)?` on the offset, not `px?` — the latter only makes the "x" optional
-  // and silently fails to match every real shadow value.
   const m = /^(-?[\d.]+)(?:px)?\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+(rgba?\([^)]+\)|#[0-9A-Fa-f]{3,8})$/.exec(
     css.trim(),
   );
-  if (!m) return null;
+  if (!m) throw new Error(`Unparseable shadow: ${css}`);
   const { hex, opacity } = splitColor(m[4]);
   return {
     shadowColor: hex,
     shadowOffset: { width: Number(m[1]), height: Number(m[2]) },
     shadowRadius: Number(m[3]) / 2,
     shadowOpacity: opacity,
-    elevation: Math.max(1, Math.round(Math.abs(Number(m[2])) * 0.6)),
+    elevation: Math.max(1, Math.round(Number(m[2]))),
   };
 }
 
 const j = (v, indent = 2) => JSON.stringify(v, null, indent);
 
+const clean = stripNotes(t);
+
 // ---------------------------------------------------------------------------
 // mobile/src/theme.ts
 // ---------------------------------------------------------------------------
 
-const glassMobile = {};
-for (const [name, g] of Object.entries(t.glass)) {
-  if (name.startsWith('$')) continue;
-  glassMobile[name] = {
-    gradientColors: gradientColors(g.gradient),
-    gradientStart: { x: 0.18, y: 0 }, // 165deg, top-ish to bottom-ish
-    gradientEnd: { x: 0.82, y: 1 },
-    borderColor: g.border,
-    borderWidth: 1,
-    blurAmount: g.blur,
-    saturate: g.saturate,
-    solidBackground: g.solid,
-    shadow: shadowToRN(g.shadow),
-  };
-}
-
-const gradientsMobile = {};
-for (const [name, g] of Object.entries(t.gradient)) {
-  if (name.startsWith('$')) continue;
-  gradientsMobile[name] = { colors: gradientColors(g.css), css: g.css };
-  if (g.stops) gradientsMobile[name].locations = g.stops.map((s) => s.position / 100);
-}
-
 const shadowsMobile = {};
-for (const [name, css] of Object.entries(t.shadow)) {
-  const rn = shadowToRN(css);
-  if (rn) shadowsMobile[name] = rn;
-}
+for (const [name, css] of Object.entries(clean.shadow)) shadowsMobile[name] = shadowToRN(css);
 
 const mobile = `${BANNER}
 
-import type {TextStyle, ViewStyle} from 'react-native';
+import type {TextStyle} from 'react-native';
 
-export const colors = ${j(t.color)} as const;
-
-export const gradients = ${j(gradientsMobile)} as const;
-
-export const halo = ${j(t.halo)} as const;
-
-/**
- * Liquid-glass surfaces.
- *
- * React Native has no \`backdrop-filter\`. Each level therefore ships both:
- *   - \`gradientColors\` for <LinearGradient> (+ an optional <BlurView> behind), and
- *   - \`solidBackground\`, the opaque fallback required by the field constraints
- *     (weak devices, or when the farmer turns on "Che do ngoai nang").
- * Pick between them with \`surface(level, solid)\`.
- */
-export const glass = ${j(glassMobile)} as const;
+export const colors = ${j(clean.color)} as const;
 
 export const shadows = ${j(shadowsMobile)} as const;
 
-export const radius = ${j(t.radius)} as const;
+export const radius = ${j(clean.radius)} as const;
 
-export const spacing = ${j(t.spacing)} as const;
+/** 8pt spacing grid. */
+export const space = ${j(clean.space)} as const;
 
-export const typography = ${j(t.typography)} as const;
+export const typography = ${j(clean.typography)} as const;
 
 /** Hard minimums from the field constraints - these outrank aesthetics. */
-export const size = ${j(t.size)} as const;
+export const size = ${j(clean.size)} as const;
 
-export const motion = ${j(t.motion)} as const;
+export const motion = ${j(clean.motion)} as const;
 
-export type GlassLevel = keyof typeof glass;
 export type TypographyRole = keyof typeof typography.role;
-
-const FONT = typography.fontFamily.sans;
 
 const FONT_FILES: Record<number, string> = {
   400: 'OpenSans-Regular',
@@ -175,7 +123,7 @@ const FONT_FILES: Record<number, string> = {
 export function text(role: TypographyRole, color: string = colors.text.primary): TextStyle {
   const r = typography.role[role];
   const style: TextStyle = {
-    fontFamily: FONT_FILES[r.weight] ?? FONT,
+    fontFamily: FONT_FILES[r.weight] ?? typography.fontFamily.sans,
     fontSize: r.size,
     fontWeight: String(r.weight) as TextStyle['fontWeight'],
     lineHeight: Math.round(r.size * r.lineHeight),
@@ -188,35 +136,15 @@ export function text(role: TypographyRole, color: string = colors.text.primary):
   return style;
 }
 
-/**
- * Container style for a glass surface.
- * @param level  which glass recipe
- * @param solid  true => opaque fallback ("Che do ngoai nang" / low-end devices)
- */
-export function surface(level: GlassLevel, solid = false): ViewStyle {
-  const g = glass[level];
-  const base: ViewStyle = {
-    borderWidth: g.borderWidth,
-    borderColor: g.borderColor,
-  };
-  if (solid) base.backgroundColor = g.solidBackground;
-  if (g.shadow) Object.assign(base, g.shadow);
-  return base;
-}
-
 export const theme = {
   colors,
-  gradients,
-  halo,
-  glass,
   shadows,
   radius,
-  spacing,
+  space,
   typography,
   size,
   motion,
   text,
-  surface,
 } as const;
 
 export default theme;
@@ -229,70 +157,42 @@ export default theme;
 const css = [];
 const push = (k, v) => css.push(`  --${k}: ${v};`);
 
-function walkColors(obj, prefix) {
+function walk(obj, prefix, format = (v) => v) {
   for (const [k, v] of Object.entries(obj)) {
-    if (k.startsWith('$')) continue;
     const name = `${prefix}-${k}`.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
-    if (typeof v === 'object' && v !== null) walkColors(v, name);
-    else push(name, v);
+    if (v && typeof v === 'object') walk(v, name, format);
+    else push(name, format(v));
   }
 }
 
 css.push('/**');
 css.push(' * GENERATED FILE - DO NOT EDIT BY HAND.');
-css.push(` * Source: shared/design/tokens.json (extracted from "${t.$meta.source}")`);
+css.push(' * Source: shared/design/tokens.json');
 css.push(' * Regenerate with: node shared/design/build-tokens.js');
 css.push(' */');
 css.push('');
 css.push(':root {');
 
 css.push('  /* ---- colour ---- */');
-walkColors(t.color, 'color');
-
-css.push('');
-css.push('  /* ---- gradients ---- */');
-for (const [k, g] of Object.entries(t.gradient)) {
-  if (!k.startsWith('$')) push(`gradient-${k.toLowerCase()}`, g.css);
-}
-
-css.push('');
-css.push('  /* ---- halos (blurred glows behind the glass layer) ---- */');
-for (const [k, h] of Object.entries(t.halo)) {
-  if (k.startsWith('$')) continue;
-  push(`halo-${k}`, h.css);
-  push(`halo-${k}-size`, `${h.size}px`);
-  push(`halo-${k}-blur`, `${h.blur}px`);
-}
-
-css.push('');
-css.push('  /* ---- liquid glass ---- */');
-for (const [k, g] of Object.entries(t.glass)) {
-  if (k.startsWith('$')) continue;
-  const kk = k.toLowerCase();
-  push(`glass-${kk}-bg`, g.gradient);
-  push(`glass-${kk}-border`, g.border);
-  push(`glass-${kk}-filter`, `blur(${g.blur}px) saturate(${g.saturate}%)`);
-  push(`glass-${kk}-shadow`, g.shadow);
-  push(`glass-${kk}-solid`, g.solid);
-}
+walk(clean.color, 'color');
 
 css.push('');
 css.push('  /* ---- shadows ---- */');
-for (const [k, v] of Object.entries(t.shadow)) push(`shadow-${k.toLowerCase()}`, v);
+walk(clean.shadow, 'shadow');
 
 css.push('');
 css.push('  /* ---- radius ---- */');
-for (const [k, v] of Object.entries(t.radius)) push(`radius-${k}`, `${v}px`);
+walk(clean.radius, 'radius', (v) => `${v}px`);
 
 css.push('');
-css.push('  /* ---- spacing ---- */');
-for (const [k, v] of Object.entries(t.spacing)) push(`space-${k}`, `${v}px`);
+css.push('  /* ---- spacing (8pt grid) ---- */');
+walk(clean.space, 'space', (v) => `${v}px`);
 
 css.push('');
 css.push('  /* ---- typography ---- */');
-push('font-sans', `"${t.typography.fontFamily.sans}", ${t.typography.fontFamily.fallback}`);
-for (const [k, v] of Object.entries(t.typography.weight)) push(`weight-${k}`, v);
-for (const [role, r] of Object.entries(t.typography.role)) {
+push('font-sans', `"${clean.typography.fontFamily.sans}", ${clean.typography.fontFamily.fallback}`);
+for (const [k, v] of Object.entries(clean.typography.weight)) push(`weight-${k}`, v);
+for (const [role, r] of Object.entries(clean.typography.role)) {
   const rr = role.replace(/([A-Z])/g, '-$1').toLowerCase();
   push(`text-${rr}-size`, `${r.size}px`);
   push(`text-${rr}-weight`, r.weight);
@@ -302,30 +202,10 @@ for (const [role, r] of Object.entries(t.typography.role)) {
 
 css.push('');
 css.push('  /* ---- sizes (field constraints: these are hard minimums) ---- */');
-for (const [k, v] of Object.entries(t.size)) {
-  if (k.startsWith('$')) continue;
+for (const [k, v] of Object.entries(clean.size)) {
   push(`size-${k.replace(/([A-Z])/g, '-$1').toLowerCase()}`, `${v}px`);
 }
 
-css.push('}');
-css.push('');
-css.push('/* Opaque fallback: no backdrop-filter support, or the user picked "Che do ngoai nang". */');
-css.push('@supports not (backdrop-filter: blur(1px)) {');
-css.push('  :root {');
-for (const [k, g] of Object.entries(t.glass)) {
-  if (k.startsWith('$')) continue;
-  css.push(`    --glass-${k.toLowerCase()}-bg: ${g.solid};`);
-  css.push(`    --glass-${k.toLowerCase()}-filter: none;`);
-}
-css.push('  }');
-css.push('}');
-css.push('');
-css.push('[data-sunlight-mode="on"] {');
-for (const [k, g] of Object.entries(t.glass)) {
-  if (k.startsWith('$')) continue;
-  css.push(`  --glass-${k.toLowerCase()}-bg: ${g.solid};`);
-  css.push(`  --glass-${k.toLowerCase()}-filter: none;`);
-}
 css.push('}');
 css.push('');
 
