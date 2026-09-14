@@ -32,9 +32,10 @@ export function VarietyCategoryScreen() {
   const crop = cropTypeById(params.cropTypeId);
   const categories = useMemo(() => categoryOptions(params.cropTypeId, all), [params.cropTypeId, all]);
 
+  const returnTo = params.returnTo ?? 'PlotForm';
   const cancel = useCallback(
-    () => navigation.popTo('PlotForm', undefined, {merge: true}),
-    [navigation],
+    () => navigation.popTo(returnTo, undefined, {merge: true}),
+    [navigation, returnTo],
   );
 
   const cropName = crop?.name ?? params.cropTypeId;
@@ -73,6 +74,7 @@ export function VarietyCategoryScreen() {
                     cropTypeId: params.cropTypeId,
                     categoryId: category.id,
                     selectedId: params.selectedId,
+                    returnTo,
                   })
                 }
               />

@@ -18,19 +18,44 @@ import {useAuth, useCurrentUser} from '../auth/AuthContext';
 import {GhostButton} from '../components/buttons';
 import {Card} from '../components/Card';
 import {EmptyState} from '../components/EmptyState';
-import {ChevronRight, PlusIcon, SackIcon, SproutIcon} from '../components/icons';
+import {
+  BellIcon,
+  CalculatorIcon,
+  ClipboardIcon,
+  CoinsIcon,
+  PlusIcon,
+  SackIcon,
+  ScaleIcon,
+  SproutIcon,
+  TagIcon,
+  WarehouseIcon,
+} from '../components/icons';
 import {PlotCard} from '../components/PlotCard';
 import {Screen} from '../components/Screen';
 import {SyncStatus} from '../components/SyncStatus';
 import type Plot from '../db/models/Plot';
+import type TaskHistory from '../db/models/TaskHistory';
 import {observePlots} from '../db/repositories/plotRepository';
+import {observeUpcomingReminders} from '../db/repositories/taskHistoryRepository';
 import {useObservable} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
 import {colors, radius, space, text} from '../theme';
-import {formatWeekdayDate} from '../utils/format';
-import {fertilizerCategories, fertilizerProducts} from '../utils/staticData';
+import {formatDate, formatWeekdayDate} from '../utils/format';
+import {allProtocols, fertilizerProducts} from '../utils/staticData';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
+
+type ToolRoute = 'FertilizerCalculator' | 'FertilizerBudget' | 'StockCheck' | 'CareProtocol' | 'Warehouse' | 'Finance';
+
+/** The six Giai đoạn 3 tools, two per row; the catalogue sits under them. */
+const TOOLS: {route: ToolRoute; title: string; meta: string; icon: React.ReactNode; testID: string}[] = [
+  {route: 'FertilizerCalculator', title: 'Tính lượng phân', meta: 'Theo diện tích & phương án', icon: <CalculatorIcon />, testID: 'home-calculator'},
+  {route: 'FertilizerBudget', title: 'Lọc theo ngân sách', meta: 'Bình dân · Trung bình · Cao cấp', icon: <TagIcon />, testID: 'home-budget'},
+  {route: 'StockCheck', title: 'Kiểm tra kho', meta: 'Đủ hay thiếu trước khi bón', icon: <ScaleIcon />, testID: 'home-stock-check'},
+  {route: 'CareProtocol', title: 'Quy trình chăm sóc', meta: `${allProtocols().length} quy trình có nguồn`, icon: <ClipboardIcon />, testID: 'home-care'},
+  {route: 'Warehouse', title: 'Kho vật tư', meta: 'Nhập · Xuất · Tồn', icon: <WarehouseIcon />, testID: 'home-warehouse'},
+  {route: 'Finance', title: 'Thu – Chi', meta: 'Ghi chép & lãi/lỗ', icon: <CoinsIcon />, testID: 'home-finance'},
+];
 
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
@@ -38,6 +63,7 @@ export function HomeScreen() {
   const {signOut} = useAuth();
 
   const plots = useObservable<Plot[]>(() => observePlots(user.id), [user.id], []);
+  const reminders = useObservable<TaskHistory[]>(() => observeUpcomingReminders(user.id), [user.id], []);
 
   const openPlot = useCallback(
     (plot: Plot) => navigation.navigate('PlotDetail', {plotId: plot.id}),
@@ -85,23 +111,66 @@ export function HomeScreen() {
         </View>
 
         <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Công cụ</Text>
+        <View style={styles.toolGrid}>
+          {TOOLS.map(tool => (
+            <Card
+              key={tool.route}
+              onPress={() => navigation.navigate(tool.route)}
+              accessibilityLabel={tool.title}
+              style={styles.toolTile}
+              testID={tool.testID}>
+              <View style={styles.toolIcon}>{tool.icon}</View>
+              <Text style={text('cardTitle')} numberOfLines={1}>
+                {tool.title}
+              </Text>
+              <Text style={[text('caption', colors.text.muted), styles.toolMeta]} numberOfLines={2}>
+                {tool.meta}
+              </Text>
+            </Card>
+          ))}
+        </View>
         <Card
           onPress={() => navigation.navigate('FertilizerGroups')}
           accessibilityLabel="Danh mục phân bón"
           style={styles.tool}
           testID="home-fertilizers">
-          <View style={styles.toolIcon}>
+          <View style={styles.toolIconSm}>
             <SackIcon />
           </View>
           <View style={styles.toolBody}>
-            <Text style={text('cardTitle')}>Danh mục phân bón</Text>
-            <Text style={[text('bodySm', colors.text.muted), styles.toolMeta]} numberOfLines={1}>
-              {fertilizerCategories().length} nhóm · {fertilizerProducts().length} sản phẩm · giá
-              tham khảo
+            <Text style={text('bodyStrong')}>Danh mục phân bón</Text>
+            <Text style={text('caption', colors.text.muted)} numberOfLines={1}>
+              {fertilizerProducts().length} sản phẩm · giá tham khảo
             </Text>
           </View>
-          <ChevronRight />
         </Card>
+
+        {reminders.length > 0 ? (
+          <>
+            <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Nhắc việc sắp tới</Text>
+            <Card flush style={styles.reminders}>
+              {reminders.slice(0, 5).map((row, index) => (
+                <Pressable
+                  key={row.id}
+                  accessibilityRole="button"
+                  onPress={() => navigation.navigate('CareProtocol', {plotId: row.plotId ?? undefined, protocolId: row.protocolId})}
+                  style={({pressed}) => [
+                    styles.reminderRow,
+                    index === Math.min(reminders.length, 5) - 1 && styles.reminderLast,
+                    pressed && styles.reminderPressed,
+                  ]}>
+                  <BellIcon size={18} />
+                  <View style={styles.toolBody}>
+                    <Text style={text('bodySm')} numberOfLines={1}>
+                      {row.taskTitle}
+                    </Text>
+                    <Text style={text('caption', colors.text.muted)}>{formatDate(row.remindAt)}</Text>
+                  </View>
+                </Pressable>
+              ))}
+            </Card>
+          </>
+        ) : null}
 
         <View style={styles.sectionHead}>
           <Text style={text('eyebrow', colors.text.muted)}>Lô đất của bạn</Text>
@@ -174,15 +243,36 @@ const styles = StyleSheet.create({
   sectionLabel: {
     marginBottom: space.sm,
   },
+  toolGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.lg,
+    marginBottom: space.lg,
+  },
+  toolTile: {
+    // Two columns with a 16pt gutter: (100% - 16) / 2.
+    width: '47.8%',
+    minHeight: 124,
+  },
   tool: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
     marginBottom: space.xl,
+    paddingVertical: space.md,
   },
   toolIcon: {
     width: 44,
     height: 44,
+    borderRadius: radius.sm,
+    backgroundColor: colors.primary.soft,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: space.md,
+  },
+  toolIconSm: {
+    width: 36,
+    height: 36,
     borderRadius: radius.sm,
     backgroundColor: colors.primary.soft,
     alignItems: 'center',
@@ -194,6 +284,26 @@ const styles = StyleSheet.create({
   },
   toolMeta: {
     marginTop: 2,
+  },
+  reminders: {
+    overflow: 'hidden',
+    marginBottom: space.xl,
+  },
+  reminderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    paddingHorizontal: space.lg,
+    paddingVertical: space.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border.default,
+    minHeight: 52,
+  },
+  reminderLast: {
+    borderBottomWidth: 0,
+  },
+  reminderPressed: {
+    backgroundColor: colors.surface.pressed,
   },
   sectionHead: {
     flexDirection: 'row',

@@ -1,0 +1,149 @@
+{
+  "$meta": {
+    "crop_type": "tomato",
+    "crop_name": "Cà chua",
+    "description": "Quy trình bón phân và chăm sóc cà chua — dữ liệu THẬT chép từ nguồn công khai. Dùng cho F1 (tính lượng phân theo diện tích) và F5–F6 (quy trình theo giai đoạn).",
+    "format_version": 2,
+    "collected_at": "2026-09-07",
+    "data_policy": "Số liệu chép đúng nguồn, không suy diễn. Chỗ nguồn không nói → ghi null / 'Chưa có dữ liệu'. Mọi liều lượng chỉ là THAM KHẢO, không thay thế khuyến cáo khuyến nông địa phương hay kết quả phân tích đất.",
+    "sources": [
+      "https://giongcaytrong.org/kt-trong-cay/ki-thuat-trong-rau-sach/huong-dan-cach-bon-phan-cho-ca-chua-181.html"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "tomato_default",
+      "crop_type": "tomato",
+      "crop_name": "Cà chua",
+      "category_ids": null,
+      "name": "Quy trình bón phân cà chua (tham khảo phổ biến tại Việt Nam)",
+      "source": {
+        "title": "Hướng dẫn cách bón phân cho cà chua",
+        "publisher": "giongcaytrong.org",
+        "url": "https://giongcaytrong.org/kt-trong-cay/ki-thuat-trong-rau-sach/huong-dan-cach-bon-phan-cho-ca-chua-181.html",
+        "published_at": null,
+        "collected_at": "2026-09-07",
+        "section": "Lượng phân cho 1 ha và cách bón thúc 4 đợt"
+      },
+      "disclaimer": "Đây là liều lượng tham khảo phổ biến, KHÔNG thay thế khuyến cáo của trung tâm khuyến nông địa phương hoặc kết quả phân tích đất thực tế.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {"value": 1, "unit": "ha", "m2": 10000},
+      "cycle_note": "Chu kỳ ~90–100 ngày (theo giống MV1 trong danh mục giống). Nguồn quy trình không nêu số ngày của từng giai đoạn.",
+      "scenarios": [
+        {
+          "id": "scenario_25_huu_co",
+          "name": "Phương án 1 — 25% hữu cơ + 75% vô cơ",
+          "description": "Toàn bộ super lân bón lót; NPK 5-10-3, urê và kali chia 4 đợt thúc.",
+          "items": [
+            {"key": "npk_5_10_3", "name": "NPK 5-10-3", "fertilizer_category": "npk", "unit": "kg", "min": 400, "max": 600, "price_product_id": null},
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 140, "max": 150, "price_product_id": "ure_ca_mau"},
+            {"key": "super_lan", "name": "Super lân", "fertilizer_category": "lan", "unit": "kg", "min": 185, "max": 220, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "kali_clorua", "name": "Kali clorua (KCl)", "fertilizer_category": "kali", "unit": "kg", "min": 140, "max": 150, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "scenario_50_phan_chuong",
+          "name": "Phương án 2 — 50% phân chuồng hoai + 50% vô cơ",
+          "description": "Phân chuồng hoai mục và super lân bón lót toàn bộ; NPK 5-10-3, urê, kali chia 4 đợt thúc.",
+          "items": [
+            {"key": "phan_chuong", "name": "Phân chuồng hoai mục", "fertilizer_category": "huu_co", "unit": "tấn", "min": 6, "max": 8, "price_product_id": null},
+            {"key": "npk_5_10_3", "name": "NPK 5-10-3", "fertilizer_category": "npk", "unit": "kg", "min": 400, "max": 600, "price_product_id": null},
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 75, "max": 85, "price_product_id": "ure_ca_mau"},
+            {"key": "super_lan", "name": "Super lân", "fertilizer_category": "lan", "unit": "kg", "min": 160, "max": 190, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "kali_clorua", "name": "Kali clorua (KCl)", "fertilizer_category": "kali", "unit": "kg", "min": 150, "max": 165, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Khi làm đất, trước khi trồng",
+        "applications": [
+          {"item_key": "phan_chuong", "pct": 100},
+          {"item_key": "super_lan", "pct": 100}
+        ],
+        "note": "Bón lót toàn bộ lượng phân hữu cơ (phân chuồng hoai mục) và toàn bộ lượng phân lân (super lân) đã tính cho cả vụ."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Hồi xanh",
+          "source_stage_name_vi": "Hồi xanh (sau trồng, cây bén rễ)",
+          "timing": "Sau trồng, khi cây đã bén rễ và hồi xanh",
+          "duration_days": null,
+          "growth_stages": ["seedling"],
+          "pct_of_total_topdress": 20,
+          "applications": [
+            {"item_key": "npk_5_10_3", "pct": 20},
+            {"item_key": "ure", "pct": 20},
+            {"item_key": "kali_clorua", "pct": 20}
+          ],
+          "tasks": [
+            {"key": "bon_lot", "title": "Bón lót toàn bộ phân hữu cơ và lân", "detail": "Trước khi trồng, bón 100% lượng phân chuồng hoai mục và 100% super lân đã tính cho cả vụ.", "type": "fertilize", "timing": "Trước khi trồng"},
+            {"key": "tuoi_giu_am", "title": "Tưới giữ ẩm cho cây bén rễ", "detail": "Tưới nhẹ đều, tránh đọng nước gây thối rễ.", "type": "water", "timing": "Hằng ngày sau trồng"},
+            {"key": "bon_thuc_1", "title": "Bón thúc đợt 1 (hồi xanh)", "detail": "Bón 20% tổng lượng phân thúc khi cây đã bén rễ, hồi xanh.", "type": "fertilize", "timing": "Khi cây hồi xanh"}
+          ]
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Ra hoa đợt đầu",
+          "source_stage_name_vi": "Ra hoa đợt đầu",
+          "timing": "Khi cây bắt đầu ra hoa đợt đầu",
+          "duration_days": null,
+          "growth_stages": ["vegetative", "flowering"],
+          "pct_of_total_topdress": 20,
+          "applications": [
+            {"item_key": "npk_5_10_3", "pct": 20},
+            {"item_key": "ure", "pct": 20},
+            {"item_key": "kali_clorua", "pct": 20}
+          ],
+          "tasks": [
+            {"key": "lam_gian", "title": "Làm giàn, buộc cây", "detail": "Dựng giàn khi cây cao 40–50 cm để tán thông thoáng, hạn chế nấm bệnh.", "type": "cultivate", "timing": "Cây cao 40–50 cm"},
+            {"key": "tia_la_goc", "title": "Tỉa lá gốc", "detail": "Tỉa bớt lá sát mặt đất để giảm bào tử nấm bắn từ đất lên lá.", "type": "cultivate", "timing": "Trước khi ra hoa"},
+            {"key": "bon_thuc_2", "title": "Bón thúc đợt 2 (ra hoa đợt đầu)", "detail": "Bón 20% tổng lượng phân thúc khi cây bắt đầu ra hoa đợt đầu.", "type": "fertilize", "timing": "Ra hoa đợt đầu"},
+            {"key": "kiem_tra_benh", "title": "Kiểm tra vườn 3–5 ngày/lần", "detail": "Phát hiện sớm đốm lá bất thường để xử lý kịp thời.", "type": "scout", "timing": "3–5 ngày/lần"}
+          ]
+        },
+        {
+          "stage_code": "fruiting",
+          "stage_name_vi": "Rộ hoa và đậu quả",
+          "source_stage_name_vi": "Rộ hoa và đậu quả",
+          "timing": "Giai đoạn rộ hoa, quả bắt đầu đậu",
+          "duration_days": null,
+          "growth_stages": ["fruiting"],
+          "pct_of_total_topdress": 30,
+          "applications": [
+            {"item_key": "npk_5_10_3", "pct": 30},
+            {"item_key": "ure", "pct": 30},
+            {"item_key": "kali_clorua", "pct": 30}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_3", "title": "Bón thúc đợt 3 (rộ hoa – đậu quả)", "detail": "Bón 30% tổng lượng phân thúc giai đoạn rộ hoa và đậu quả.", "type": "fertilize", "timing": "Rộ hoa – đậu quả"},
+            {"key": "can_doi_npk", "title": "Bón cân đối đạm – lân – kali", "detail": "Tránh thừa đạm gây rậm lá, dễ nhiễm bệnh; tăng kali để quả chắc.", "type": "fertilize", "timing": "Suốt giai đoạn nuôi quả"},
+            {"key": "phong_benh", "title": "Phun phòng trước đợt mưa ẩm kéo dài", "detail": "Thời tiết mát ẩm 15–22°C là điều kiện thuận lợi cho mốc sương muộn.", "type": "spray", "timing": "Trước đợt mưa ẩm"}
+          ]
+        },
+        {
+          "stage_code": "harvesting",
+          "stage_name_vi": "Thu hoạch đợt đầu",
+          "source_stage_name_vi": "Thu hoạch đợt đầu",
+          "timing": "Sau khi thu hoạch lứa quả đầu tiên",
+          "duration_days": null,
+          "growth_stages": ["harvesting"],
+          "pct_of_total_topdress": 30,
+          "applications": [
+            {"item_key": "npk_5_10_3", "pct": 30},
+            {"item_key": "ure", "pct": 30},
+            {"item_key": "kali_clorua", "pct": 30}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_4", "title": "Bón thúc đợt 4 (sau thu hoạch đợt đầu)", "detail": "Bón 30% tổng lượng phân thúc để nuôi các lứa quả tiếp theo.", "type": "fertilize", "timing": "Sau thu hoạch đợt đầu"},
+            {"key": "thu_hoach", "title": "Thu hoạch đúng độ chín", "detail": "Ghi sản lượng vào mục Thu để theo dõi lãi/lỗ theo lô.", "type": "harvest", "timing": "Khi quả chín"},
+            {"key": "don_tan_du", "title": "Dọn và tiêu huỷ tàn dư sau vụ", "detail": "Cắt nguồn bệnh lưu tồn cho vụ sau.", "type": "cultivate", "timing": "Cuối vụ"}
+          ]
+        }
+      ],
+      "extra_rules": []
+    }
+  ],
+  "unavailable": []
+}

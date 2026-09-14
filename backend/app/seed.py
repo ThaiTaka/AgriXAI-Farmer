@@ -14,6 +14,7 @@ from app.core.schema_upgrade import upgrade
 from app.core.security import hash_password
 from app.models.farm import CropVariety
 from app.models.user import User, UserRole
+from app.seed_demo import seed_demo_farm
 from app.services import static_data
 
 SEED_USERS = [
@@ -106,6 +107,7 @@ def run() -> None:
     with SessionLocal() as db:
         seed_users(db)
         seed_varieties(db)
+        seed_demo_farm(db)
         db.commit()
     print("Seed done.")
 

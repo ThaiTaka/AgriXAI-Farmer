@@ -1,0 +1,246 @@
+{
+  "$meta": {
+    "crop_type": "cucumber",
+    "crop_name": "Dưa leo",
+    "description": "Quy trình bón phân và chăm sóc dưa leo (dưa chuột) — dữ liệu THẬT chép từ Sở Nông nghiệp và Môi trường tỉnh Lai Châu (quy trình vụ xuân hè, miền Bắc) và từ Liên hiệp các Hội KH&KT Việt Nam (VUSTA) đăng lại bài của báo Kinh tế nông thôn (canh tác ở các tỉnh phía Nam).",
+    "format_version": 2,
+    "collected_at": "2026-09-13",
+    "data_policy": "Số liệu chép đúng nguồn, không suy diễn. Chỗ nguồn không nói → null / 'Chưa có dữ liệu'. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://sonnmt.laichau.gov.vn/thu-vien/tai-lieu/ky-thuat-trong-va-cham-soc-cay-dua-chuot-vu-xuan-he.html",
+      "https://vusta.vn/ky-thuat-trong-dua-leo-p79272.html"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "cucumber_laichau_2025",
+      "crop_type": "cucumber",
+      "crop_name": "Dưa leo",
+      "category_ids": null,
+      "name": "Dưa chuột vụ xuân hè — Sở NN&MT Lai Châu (2025)",
+      "source": {
+        "title": "Kỹ thuật trồng và chăm sóc cây dưa chuột vụ xuân hè",
+        "publisher": "Cổng thông tin điện tử Sở Nông nghiệp và Môi trường tỉnh Lai Châu",
+        "url": "https://sonnmt.laichau.gov.vn/thu-vien/tai-lieu/ky-thuat-trong-va-cham-soc-cay-dua-chuot-vu-xuan-he.html",
+        "published_at": "2025-04-16",
+        "collected_at": "2026-09-13",
+        "section": "Mục 3 Chuẩn bị đất (bón lót), mục 5 Chăm sóc (bón phân, liều lượng cho 1 ha), mục 7 Thu hoạch"
+      },
+      "disclaimer": "Liều lượng viết cho vụ xuân hè tại Lai Châu (gieo tháng 2 – đầu tháng 4). Nguồn ghi chung cho dưa lai F1, dưa chuột địa phương và dưa chuột nếp, không phân biệt theo giống. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {"value": 1, "unit": "ha", "m2": 10000},
+      "cycle_note": "Thu hoạch sau 30–40 ngày gieo (quả dài 10–15 cm, vỏ xanh mịn).",
+      "scenarios": [
+        {
+          "id": "laichau_xuan_he",
+          "name": "Vụ xuân hè (lượng cho 1 ha)",
+          "description": "Bón lót phân chuồng + lân (+ vôi nếu đất chua); 3 đợt thúc: 10–15 ngày sau gieo, ra hoa, đậu quả.",
+          "items": [
+            {"key": "phan_chuong", "name": "Phân chuồng hoai mục", "fertilizer_category": "huu_co", "unit": "tấn", "min": 8, "max": 10, "price_product_id": null},
+            {"key": "lan", "name": "Lân", "fertilizer_category": "lan", "unit": "kg", "min": 300, "max": 300, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "voi", "name": "Vôi bột (nếu đất chua)", "fertilizer_category": "khac", "unit": "kg", "min": 50, "max": 50, "price_product_id": null},
+            {"key": "npk_16_16_8", "name": "NPK 16-16-8", "fertilizer_category": "npk", "unit": "kg", "min": 100, "max": 100, "price_product_id": "npk_16_16_8_ca_mau"},
+            {"key": "ure", "name": "Đạm urê", "fertilizer_category": "dam", "unit": "kg", "min": 50, "max": 50, "price_product_id": "ure_ca_mau"},
+            {"key": "npk_12_12_17", "name": "NPK 12-12-17", "fertilizer_category": "npk", "unit": "kg", "min": 150, "max": 150, "price_product_id": null},
+            {"key": "kali", "name": "Kali", "fertilizer_category": "kali", "unit": "kg", "min": 130, "max": 130, "price_product_id": "kali_bot_ca_mau", "note": "30 kg đợt ra hoa + 100 kg đợt đậu quả"}
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Khi làm đất, trước khi gieo",
+        "applications": [
+          {"item_key": "phan_chuong", "pct": 100},
+          {"item_key": "lan", "pct": 100},
+          {"item_key": "voi", "pct": 100}
+        ],
+        "note": "Bón lót: phân chuồng hoai mục 8–10 tấn/ha; lân 300 kg/ha; vôi bột (nếu đất chua) 50 kg/ha. Phơi ải, làm sạch cỏ, bón vôi khử trùng đất trước khi trồng."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Gieo hạt và cây con",
+          "source_stage_name_vi": "Gieo hạt",
+          "timing": "Gieo tháng 2 – đầu tháng 4 dương lịch",
+          "duration_days": null,
+          "growth_stages": ["seedling"],
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {"key": "lam_dat", "title": "Làm đất, lên luống, bón lót", "detail": "Đất tơi xốp, thoát nước tốt; cày bừa kỹ, lên luống cao 25–30 cm, rộng 1–1,2 m, rãnh 30 cm. Bón lót phân chuồng hoai mục 8–10 tấn/ha + lân 300 kg/ha + vôi 50 kg/ha nếu đất chua.", "type": "fertilize", "timing": "Trước khi gieo"},
+            {"key": "gieo_hat", "title": "Ngâm ủ và gieo hạt", "detail": "Ngâm hạt 6–8 tiếng, ủ ấm 24–36 giờ cho nứt nanh rồi gieo. Cây cách cây 30 cm, hàng cách hàng 60 cm; gieo sâu 1–1,5 cm, phủ đất mỏng hoặc rơm rạ giữ ẩm.", "type": "cultivate", "timing": "Tháng 2 – đầu tháng 4"},
+            {"key": "tuoi", "title": "Tưới 2 lần/ngày", "detail": "Sáng sớm và chiều mát, tránh tưới đẫm gây thối rễ. Mùa mưa: đào rãnh thoát nước.", "type": "water", "timing": "Hằng ngày"}
+          ]
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Cây leo giàn (10–15 ngày sau gieo)",
+          "source_stage_name_vi": "Bón thúc lần 1 (10–15 ngày sau gieo)",
+          "timing": "10–15 ngày sau gieo",
+          "duration_days": null,
+          "growth_stages": ["vegetative"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "npk_16_16_8", "pct": 100},
+            {"item_key": "ure", "pct": 100}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_1", "title": "Bón thúc lần 1: 100 kg NPK 16-16-8 + 50 kg đạm urê", "detail": "Liều lượng cho 1 ha, bón 10–15 ngày sau gieo.", "type": "fertilize", "timing": "10–15 ngày sau gieo"},
+            {"key": "lam_gian", "title": "Cắm giàn khi cây 3–4 lá", "detail": "Cắm dóc kiểu chữ A hoặc cọc tre cố định và giăng lưới vuông cho dưa leo.", "type": "cultivate", "timing": "Cây 3–4 lá"}
+          ]
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Ra hoa",
+          "source_stage_name_vi": "Bón thúc lần 2 (ra hoa)",
+          "timing": "Khi cây ra hoa",
+          "duration_days": null,
+          "growth_stages": ["flowering"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "npk_12_12_17", "pct": 100},
+            {"item_key": "kali", "pct": 23}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_2", "title": "Bón thúc lần 2: 150 kg NPK 12-12-17 + 30 kg kali", "detail": "Liều lượng cho 1 ha, bón khi cây ra hoa.", "type": "fertilize", "timing": "Ra hoa"},
+            {"key": "bam_ngon_tia_nhanh", "title": "Bấm ngọn, tỉa nhánh", "detail": "Khi cây leo đến đỉnh dóc hoặc lưới: bấm ngọn để ra nhánh; tỉa nhánh yếu, quả cong queo, quả bị ong châm và lá già dưới gốc cho thoáng, đỡ nấm bệnh.", "type": "cultivate", "timing": "Khi cây leo tới đỉnh giàn"},
+            {"key": "tham_dong", "title": "Thăm đồng thường xuyên", "detail": "Sâu đục quả, bọ rầy, sâu vẽ bùa, sâu cuốn lá; phấn trắng, sương mai, thối rễ, héo xanh. Ưu tiên chế phẩm sinh học; thuốc BVTV trong danh mục, đúng thời gian cách ly.", "type": "scout", "timing": "Suốt vụ"}
+          ]
+        },
+        {
+          "stage_code": "harvesting",
+          "stage_name_vi": "Đậu quả và thu hoạch",
+          "source_stage_name_vi": "Bón thúc lần 3 (đậu quả); Thu hoạch",
+          "timing": "Khi đậu quả; thu hoạch 30–40 ngày sau gieo",
+          "duration_days": null,
+          "growth_stages": ["fruiting", "harvesting"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "kali", "pct": 77}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_3", "title": "Bón thúc lần 3: 100 kg kali", "detail": "Liều lượng cho 1 ha, bón khi đậu quả.", "type": "fertilize", "timing": "Đậu quả"},
+            {"key": "thu_hoach", "title": "Thu hoạch khi quả dài 10–15 cm", "detail": "Sau 30–40 ngày gieo, vỏ xanh mịn. Dùng kéo cắt cuống, tránh làm dập quả. Bảo quản nơi thoáng mát 10–12°C nếu bán xa.", "type": "harvest", "timing": "30–40 ngày sau gieo"}
+          ]
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ kali theo đợt (23% / 77%) là phần chia của tổng 130 kg kali trong nguồn: 30 kg đợt ra hoa và 100 kg đợt đậu quả."
+      ]
+    },
+    {
+      "id": "cucumber_vusta_2005",
+      "crop_type": "cucumber",
+      "crop_name": "Dưa leo",
+      "category_ids": null,
+      "name": "Dưa leo các tỉnh phía Nam — VUSTA / Kinh tế nông thôn (2005)",
+      "source": {
+        "title": "Kỹ thuật trồng dưa leo (Nguồn: Kinh tế nông thôn, số 44, 11/2005, tr 6)",
+        "publisher": "Liên hiệp các Hội Khoa học và Kỹ thuật Việt Nam (VUSTA)",
+        "url": "https://vusta.vn/ky-thuat-trong-dua-leo-p79272.html",
+        "published_at": "2005-11",
+        "collected_at": "2026-09-13",
+        "section": "Chăm sóc, bón phân (lượng cho 1 công rẫy = 1.000 m²); Thu hoạch"
+      },
+      "disclaimer": "Liều lượng viết cho 1 công rẫy (1.000 m²) ở các tỉnh phía Nam; bài đăng năm 2005 nên tên thuốc BVTV trong nguồn có thể đã thay đổi — ứng dụng chỉ chép phần phân bón và chăm sóc. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {"value": 1000, "unit": "m2", "m2": 1000},
+      "cycle_note": "Sau khi gieo khoảng 30–35 ngày cho thu hái; 2–3 ngày hái một lần; chăm sóc tốt có thể thu 20–25 đợt trái.",
+      "scenarios": [
+        {
+          "id": "vusta_nam_bo",
+          "name": "Phía Nam (lượng cho 1 công = 1.000 m²)",
+          "description": "Tổng cả vụ: phân chuồng mục 1,2–2 tấn; urê 20–30 kg; kali 20–25 kg; DAP 30–35 kg. Bón lót phân chuồng + 5–6 kg DAP; thúc 1 (4–5 lá) 17–20 kg DAP + 10–15 kg urê + 10 kg kali; thúc 2 (sắp ra hoa) toàn bộ phần còn lại.",
+          "items": [
+            {"key": "phan_chuong", "name": "Phân chuồng mục (hoặc hữu cơ vi sinh)", "fertilizer_category": "huu_co", "unit": "tấn", "min": 1.2, "max": 2, "price_product_id": null},
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 20, "max": 30, "price_product_id": "ure_ca_mau"},
+            {"key": "kali", "name": "Kali", "fertilizer_category": "kali", "unit": "kg", "min": 20, "max": 25, "price_product_id": "kali_bot_ca_mau"},
+            {"key": "dap", "name": "DAP", "fertilizer_category": "lan", "unit": "kg", "min": 30, "max": 35, "price_product_id": "dap_han_quoc"}
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Trước khi gieo",
+        "applications": [
+          {"item_key": "phan_chuong", "pct": 100}
+        ],
+        "note": "Bón lót toàn bộ phân chuồng, cộng với 5–6 kg DAP. Không dùng phân chuồng tươi. Trước khi trồng 7–10 ngày rải khoảng 100 kg vôi bột/công rồi tưới ướt, xới lại."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Chuẩn bị đất, gieo hạt",
+          "source_stage_name_vi": "Chuẩn bị đất trồng; Hạt giống",
+          "timing": "Đông xuân: tháng 11 – tháng 2, 3; Hè thu: tháng 5 – tháng 7, 8",
+          "duration_days": null,
+          "growth_stages": ["seedling"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "dap", "pct": 17}
+          ],
+          "tasks": [
+            {"key": "lam_dat", "title": "Bón vôi, lên liếp", "detail": "Rải khoảng 100 kg vôi bột/công 7–10 ngày trước trồng. Đông xuân: liếp rộng 1–1,2 m, cao 2–2,5 tấc, mương 5–7 tấc, mỗi liếp 2 hàng cách nhau 4–5 tấc, hốc cách 2–2,5 tấc. Hè thu: liếp cao 2,5–3 tấc, rộng 6–7 tấc, mỗi liếp 1 hàng, hốc cách 2,5–3 tấc.", "type": "cultivate", "timing": "Trước gieo 7–10 ngày"},
+            {"key": "bon_lot", "title": "Bón lót toàn bộ phân chuồng + 5–6 kg DAP", "detail": "Không dùng phân chuồng tươi. Nguồn ghi kết hợp 3 kg Basudin 10H (thuốc BVTV — kiểm tra danh mục hiện hành trước khi dùng).", "type": "fertilize", "timing": "Trước khi gieo"},
+            {"key": "gieo_hat", "title": "Ngâm ủ, gieo hạt", "detail": "50–80 g hạt/công. Ngâm nước ấm (3 sôi 2 lạnh) 2 giờ, ủ khăn ẩm đến nứt nanh rồi gieo 1–2 hạt/hốc; gieo thêm bầu để trồng dặm.", "type": "cultivate", "timing": "Đầu vụ"}
+          ]
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Cây 4–5 lá, sắp có tua cuốn",
+          "source_stage_name_vi": "Bón thúc lần 1",
+          "timing": "Khi cây có 4–5 lá, sắp có tua cuốn",
+          "duration_days": null,
+          "growth_stages": ["vegetative"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "dap", "pct": 57},
+            {"item_key": "ure", "pct": 50},
+            {"item_key": "kali", "pct": 44}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_1", "title": "Bón thúc lần 1: 17–20 kg DAP + 10–15 kg urê + 10 kg kali", "detail": "Lượng cho 1 công (1.000 m²).", "type": "fertilize", "timing": "Cây 4–5 lá, sắp có tua cuốn"},
+            {"key": "cam_cha", "title": "Cắm chà (giàn) hình chữ A", "detail": "Khi cây có tua cuốn thì cắm chà, chà cao khoảng 2,5 m.", "type": "cultivate", "timing": "Khi có tua cuốn"},
+            {"key": "trong_dam", "title": "Trồng dặm cây chết", "detail": "Khi cây mọc khỏi mặt đất, trồng dặm những cây bị chết bằng bầu đã gieo sẵn.", "type": "cultivate", "timing": "Sau mọc"}
+          ]
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Sắp ra hoa đầu tiên",
+          "source_stage_name_vi": "Bón thúc lần 2",
+          "timing": "Khi cây dưa sắp ra hoa đầu tiên",
+          "duration_days": null,
+          "growth_stages": ["flowering"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "dap", "pct": 26},
+            {"item_key": "ure", "pct": 50},
+            {"item_key": "kali", "pct": 56}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_2", "title": "Bón thúc lần 2: toàn bộ số phân còn lại", "detail": "Phần urê, kali, DAP còn lại sau bón lót và thúc 1.", "type": "fertilize", "timing": "Sắp ra hoa đầu tiên"},
+            {"key": "kiem_tra", "title": "Kiểm tra ruộng dưa phát hiện sâu bệnh", "detail": "Sâu xám/dế ở cây con, sâu vẽ bùa, bù lạch, sâu xanh ăn lá; bệnh chết cây con, nứt thân, sương mai. Dùng thuốc trong danh mục được phép hiện hành.", "type": "scout", "timing": "Thường xuyên"}
+          ]
+        },
+        {
+          "stage_code": "harvesting",
+          "stage_name_vi": "Thu hoạch",
+          "source_stage_name_vi": "Thu hoạch",
+          "timing": "Khoảng 30–35 ngày sau gieo",
+          "duration_days": null,
+          "growth_stages": ["fruiting", "harvesting"],
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {"key": "thu_hoach", "title": "Thu hái 2–3 ngày một lần", "detail": "Hái trái lớn, da láng bóng; không để trái quá lớn. Một vụ có thể 20–25 đợt trái.", "type": "harvest", "timing": "Từ 30–35 ngày sau gieo"},
+            {"key": "tuoi_npk_bo_sung", "title": "Tưới NPK pha loãng bổ sung", "detail": "Cứ sau 2–3 đợt hái trái lại pha loãng NPK (16-16-8 hoặc 20-20-5) tưới bổ sung một lần. Nguồn không nêu lượng.", "type": "fertilize", "timing": "Sau mỗi 2–3 đợt hái"}
+          ]
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % theo đợt của DAP/urê/kali là phần chia ứng dụng suy ra từ chính các con số của nguồn (bón lót 5–6 kg DAP; thúc 1: 17–20 kg DAP, 10–15 kg urê, 10 kg kali; thúc 2: phần còn lại), tính trên mức giữa của khoảng."
+      ]
+    }
+  ],
+  "unavailable": []
+}

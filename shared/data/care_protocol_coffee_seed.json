@@ -1,0 +1,359 @@
+{
+  "$meta": {
+    "crop_type": "coffee",
+    "crop_name": "Cà phê",
+    "description": "Quy trình bón phân và chăm sóc cà phê — dữ liệu THẬT chép từ văn bản của Cục Trồng trọt (cà phê vối) và Viện KHKT Nông Lâm nghiệp Tây Nguyên (cà phê chè). Cà phê mít (Liberica) và Excelsa CHƯA có quy trình chính thức → khai báo rõ ở mục 'unavailable', không sinh số.",
+    "format_version": 2,
+    "collected_at": "2026-09-13",
+    "data_policy": "Số liệu chép đúng nguồn, không suy diễn. Chỗ nguồn không nói → null / 'Chưa có dữ liệu'. Mọi liều lượng chỉ là THAM KHẢO, không thay thế khuyến cáo khuyến nông địa phương hay kết quả phân tích đất.",
+    "conversion": {
+      "note": "Chỉ dùng cho quy trình có basis = 'nutrient' (nguồn cho lượng N–P₂O₅–K₂O nguyên chất). Nguồn ghi rõ: 'Khi dùng các loại phân đơn hoặc phân hỗn hợp NPK, căn cứ vào tỷ lệ nguyên chất của các loại phân để tính toán đủ lượng bón.' Công thức quy đổi lấy từ Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia: lượng phân thương phẩm = lượng nguyên chất × 100 : hàm lượng (%).",
+      "formula_source": "https://phanbonquocgia.gov.vn/quy-trinh-bon-phan-cho-cay-ca-phe-giai-doan-kinh-doanh/ (18/03/2021)",
+      "factors": {
+        "N": {"product_name": "Urê (46% N)", "pct": 46, "fertilizer_category": "dam", "price_product_id": "ure_ca_mau"},
+        "P2O5": {"product_name": "Super lân (16% P₂O₅)", "pct": 16, "fertilizer_category": "lan", "price_product_id": "sieu_lan_lam_thao"},
+        "K2O": {"product_name": "Kali clorua (60% K₂O)", "pct": 60, "fertilizer_category": "kali", "price_product_id": "kali_bot_ca_mau"}
+      }
+    },
+    "sources": [
+      "https://vicofa.org.vn/quy-trinh-tai-canh-ca-phe-voi-bid45.html",
+      "https://nongnghiepmoitruong.vn/tri-thuc-nong-dan/quy-trinh-tham-canh-ben-vung-giong-ca-phe-che-tha1-d823494.html",
+      "https://phanbonquocgia.gov.vn/quy-trinh-bon-phan-cho-cay-ca-phe-giai-doan-kinh-doanh/",
+      "http://wasi.org.vn/wp-content/uploads/2021/11/QUYET-DINH-BAN-HANH-QUY-TRINH-TAI-CANH-CA-PHE-VOI-2020.pdf"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "coffee_robusta_ctt_2010",
+      "crop_type": "coffee",
+      "crop_name": "Cà phê",
+      "category_ids": ["coffee_robusta"],
+      "name": "Cà phê vối (Robusta) — Quy trình tái canh, Cục Trồng trọt 2010",
+      "source": {
+        "title": "Quy trình tái canh cà phê vối (ban hành kèm theo Quyết định số 254/QĐ-TT-CCN ngày 20/7/2010 của Cục trưởng Cục Trồng trọt)",
+        "publisher": "Cục Trồng trọt — Bộ Nông nghiệp và PTNT; bản đăng lại tại Hiệp hội Cà phê – Ca cao Việt Nam (VICOFA)",
+        "url": "https://vicofa.org.vn/quy-trinh-tai-canh-ca-phe-voi-bid45.html",
+        "published_at": "2010-07-20",
+        "collected_at": "2026-09-13",
+        "section": "Phần II: mục 10 Bón phân (Bảng 1), mục 11 Tưới nước (Bảng 2), mục 12 Tạo hình"
+      },
+      "disclaimer": "Định lượng trong Bảng 1 là mức cho 1 ha/năm theo văn bản của Cục Trồng trọt (2010), viết cho vườn tái canh. Chỉ dùng để tham khảo — cần điều chỉnh theo đất, tuổi cây và khuyến cáo khuyến nông địa phương.",
+      "stage_model": "calendar",
+      "basis": "commercial",
+      "reference_area": {"value": 1, "unit": "ha", "m2": 10000},
+      "cycle_note": "Cây lâu năm: lượng phân tính cho 1 năm, chia 4 lần bón theo mùa. Kiến thiết cơ bản 3 năm (năm trồng mới + 2 năm chăm sóc); chu kỳ kinh doanh 20 năm.",
+      "scenarios": [
+        {
+          "id": "ktcb_nam_trong_moi",
+          "name": "Kiến thiết cơ bản — năm trồng mới",
+          "description": "Riêng năm thứ nhất: toàn bộ phân lân bón lót; urê và kali chia đều, bón 2 lần trong mùa mưa.",
+          "items": [
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 130, "max": 130, "price_product_id": "ure_ca_mau"},
+            {"key": "sa", "name": "Sunphat amon (SA)", "fertilizer_category": "dam", "unit": "kg", "min": 0, "max": 0, "price_product_id": null, "note": "Nguồn ghi '-' (không bón SA năm trồng mới)"},
+            {"key": "lan_nung_chay", "name": "Lân nung chảy", "fertilizer_category": "lan", "unit": "kg", "min": 550, "max": 550, "price_product_id": "lan_nung_chay_van_dien"},
+            {"key": "kcl", "name": "Clorua kali (KCl)", "fertilizer_category": "kali", "unit": "kg", "min": 50, "max": 50, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "ktcb_nam_2",
+          "name": "Kiến thiết cơ bản — năm 2",
+          "description": "Chia 4 lần bón trong năm theo mùa (xem các đợt).",
+          "items": [
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 200, "max": 200, "price_product_id": "ure_ca_mau"},
+            {"key": "sa", "name": "Sunphat amon (SA)", "fertilizer_category": "dam", "unit": "kg", "min": 100, "max": 100, "price_product_id": null},
+            {"key": "lan_nung_chay", "name": "Lân nung chảy", "fertilizer_category": "lan", "unit": "kg", "min": 550, "max": 550, "price_product_id": "lan_nung_chay_van_dien"},
+            {"key": "kcl", "name": "Clorua kali (KCl)", "fertilizer_category": "kali", "unit": "kg", "min": 150, "max": 150, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "ktcb_nam_3",
+          "name": "Kiến thiết cơ bản — năm 3",
+          "description": "Chia 4 lần bón trong năm theo mùa (xem các đợt).",
+          "items": [
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 250, "max": 250, "price_product_id": "ure_ca_mau"},
+            {"key": "sa", "name": "Sunphat amon (SA)", "fertilizer_category": "dam", "unit": "kg", "min": 150, "max": 150, "price_product_id": null},
+            {"key": "lan_nung_chay", "name": "Lân nung chảy", "fertilizer_category": "lan", "unit": "kg", "min": 550, "max": 550, "price_product_id": "lan_nung_chay_van_dien"},
+            {"key": "kcl", "name": "Clorua kali (KCl)", "fertilizer_category": "kali", "unit": "kg", "min": 200, "max": 200, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "kinh_doanh_bazan",
+          "name": "Kinh doanh — đất bazan (năng suất 3 tấn nhân/ha)",
+          "description": "Nếu năng suất cao hơn mức bình quân: cứ 1 tấn nhân tăng thêm/ha bón thêm 150 kg urê + 100 kg lân nung chảy + 120 kg KCl/ha.",
+          "items": [
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 400, "max": 450, "price_product_id": "ure_ca_mau"},
+            {"key": "sa", "name": "Sunphat amon (SA)", "fertilizer_category": "dam", "unit": "kg", "min": 200, "max": 250, "price_product_id": null},
+            {"key": "lan_nung_chay", "name": "Lân nung chảy", "fertilizer_category": "lan", "unit": "kg", "min": 450, "max": 550, "price_product_id": "lan_nung_chay_van_dien"},
+            {"key": "kcl", "name": "Clorua kali (KCl)", "fertilizer_category": "kali", "unit": "kg", "min": 350, "max": 400, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "kinh_doanh_dat_khac",
+          "name": "Kinh doanh — đất khác (năng suất 2 tấn nhân/ha)",
+          "description": "Nếu năng suất cao hơn mức bình quân: cứ 1 tấn nhân tăng thêm/ha bón thêm 150 kg urê + 100 kg lân nung chảy + 120 kg KCl/ha.",
+          "items": [
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 350, "max": 400, "price_product_id": "ure_ca_mau"},
+            {"key": "sa", "name": "Sunphat amon (SA)", "fertilizer_category": "dam", "unit": "kg", "min": 200, "max": 250, "price_product_id": null},
+            {"key": "lan_nung_chay", "name": "Lân nung chảy", "fertilizer_category": "lan", "unit": "kg", "min": 550, "max": 750, "price_product_id": "lan_nung_chay_van_dien"},
+            {"key": "kcl", "name": "Clorua kali (KCl)", "fertilizer_category": "kali", "unit": "kg", "min": 300, "max": 350, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Phân hữu cơ: đầu hoặc giữa mùa mưa, bón theo rãnh",
+        "applications": [],
+        "note": "Phân chuồng ủ hoai mục bón định kỳ 2–3 năm một lần, 10–15 kg/cây; không có phân chuồng thì bón 2–3 kg phân hữu cơ sinh học hoặc hữu cơ vi sinh/cây/năm. Vườn đã giao tán: 3–4 năm một lần. Nguồn tính theo cây, không theo ha, nên không đưa vào bảng tính lượng."
+      },
+      "stages": [
+        {
+          "stage_code": "dot_1_giua_mua_kho",
+          "stage_name_vi": "Đợt 1 — giữa mùa khô",
+          "source_stage_name_vi": "Lần 1 (giữa mùa khô kết hợp với tưới nước lần 2)",
+          "timing": "Giữa mùa khô, kết hợp với tưới nước lần 2",
+          "duration_days": null,
+          "months": [1, 2],
+          "growth_stages": [],
+          "pct_of_total_topdress": null,
+          "applications": [{"item_key": "sa", "pct": 100}],
+          "tasks": [
+            {"key": "bon_sa", "title": "Bón 100% phân SA", "detail": "Bón toàn bộ lượng sunphat amon của năm, kết hợp với tưới nước lần 2.", "type": "fertilize", "timing": "Giữa mùa khô"},
+            {"key": "tuoi_kd", "title": "Tưới nước theo chu kỳ 20–25 ngày", "detail": "Cà phê kinh doanh: tưới phun 600–700 m³/ha/lần hoặc tưới gốc 400–500 lít/gốc/lần; lần tưới đầu cao hơn định mức 10–15%. Lượng mưa 35–40 mm thay được một lần tưới.", "type": "water", "timing": "Bắt đầu khi mầm hoa đã phát triển đầy đủ (2–2,5 tháng sau khi hết mùa mưa)"},
+            {"key": "cat_tia_1", "title": "Cắt tỉa cành lần 1 (sau thu hoạch)", "detail": "Cắt bỏ cành vô hiệu (khô, sâu bệnh, nhỏ yếu), tỉa kỹ cành vô hiệu trên đỉnh tán; cắt ngắn cành già cỗi.", "type": "cultivate", "timing": "Ngay sau khi thu hoạch"}
+          ]
+        },
+        {
+          "stage_code": "dot_2_dau_mua_mua",
+          "stage_name_vi": "Đợt 2 — đầu mùa mưa",
+          "source_stage_name_vi": "Lần 2 (đầu mùa mưa)",
+          "timing": "Đầu mùa mưa",
+          "duration_days": null,
+          "months": [5],
+          "growth_stages": [],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "ure", "pct": 30},
+            {"item_key": "kcl", "pct": 30},
+            {"item_key": "lan_nung_chay", "pct": 100}
+          ],
+          "tasks": [
+            {"key": "bon_dot_2", "title": "Bón 30% urê + 30% kali + 100% lân", "detail": "Bón khi đất đủ ẩm. Lân rải đều trên mặt cách gốc 30–40 cm, không trộn lân nung chảy với đạm; kali và đạm có thể trộn đều và bón ngay.", "type": "fertilize", "timing": "Đầu mùa mưa"},
+            {"key": "bon_huu_co", "title": "Bón phân hữu cơ theo rãnh", "detail": "Rãnh đào dọc một bên thành bồn rộng 20 cm, sâu 25–30 cm; lấp đất sau khi bón. Năm sau đào rãnh hướng khác.", "type": "fertilize", "timing": "Đầu hoặc giữa mùa mưa (định kỳ 2–3 năm/lần)"},
+            {"key": "phun_bon_la", "title": "Phun phân bón lá trung vi lượng", "detail": "Loại có S, Mg, Zn, B cao; phun đều mặt trên và dưới lá lúc trời mát, không mưa, đất đủ ẩm. 2–3 lần/năm.", "type": "spray", "timing": "Trong mùa mưa"}
+          ]
+        },
+        {
+          "stage_code": "dot_3_giua_mua_mua",
+          "stage_name_vi": "Đợt 3 — giữa mùa mưa",
+          "source_stage_name_vi": "Lần 3 (giữa mùa mưa)",
+          "timing": "Giữa mùa mưa",
+          "duration_days": null,
+          "months": [7],
+          "growth_stages": [],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "ure", "pct": 40},
+            {"item_key": "kcl", "pct": 30}
+          ],
+          "tasks": [
+            {"key": "bon_dot_3", "title": "Bón 40% urê + 30% kali", "detail": "Vườn kinh doanh khép tán: rải phân theo tán, xăm xới để lấp phân vào đất. Vườn kiến thiết cơ bản hoặc đất dốc: đào rãnh để bón.", "type": "fertilize", "timing": "Giữa mùa mưa"},
+            {"key": "cat_tia_2", "title": "Cắt tỉa cành lần 2", "detail": "Cây cà phê kinh doanh được cắt tỉa cành 2 lần/năm; lần 2 tỉa thưa cành thứ cấp mọc ở vị trí không thuận lợi để tán thông thoáng.", "type": "cultivate", "timing": "Giữa mùa mưa"}
+          ]
+        },
+        {
+          "stage_code": "dot_4_cuoi_mua_mua",
+          "stage_name_vi": "Đợt 4 — cuối mùa mưa",
+          "source_stage_name_vi": "Lần 4 (trước khi kết thúc mùa mưa 1 tháng)",
+          "timing": "Trước khi kết thúc mùa mưa 1 tháng",
+          "duration_days": null,
+          "months": [9, 10],
+          "growth_stages": [],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "ure", "pct": 30},
+            {"item_key": "kcl", "pct": 40}
+          ],
+          "tasks": [
+            {"key": "bon_dot_4", "title": "Bón 30% urê + 40% kali", "detail": "Đợt bón cuối để nuôi nhân; bón khi đất đủ ẩm.", "type": "fertilize", "timing": "Trước khi kết thúc mùa mưa 1 tháng"},
+            {"key": "thu_hoach", "title": "Thu hoạch và ghi sản lượng", "detail": "Ghi sản lượng nhân vào mục Thu để theo dõi lãi/lỗ; nếu năng suất vượt mức bình quân, năm sau bón tăng cường theo quy tắc của nguồn.", "type": "harvest", "timing": "Cuối năm"}
+          ]
+        }
+      ],
+      "extra_rules": [
+        "Riêng năm thứ nhất (trồng mới): toàn bộ phân lân được bón lót; urê và kali chia đều, bón 2 lần trong mùa mưa.",
+        "Trong thời kỳ kinh doanh, cứ 1 tấn cà phê nhân tăng thêm/ha cần bón thêm 150 kg urê + 100 kg lân nung chảy + 120 kg kali clorua/ha.",
+        "Trước khi bừa lần 1 khi làm đất tái canh: rải đều 1.000 kg vôi bột/ha.",
+        "Hãm ngọn lần đầu: cà phê thực sinh ở độ cao 1,2–1,3 m; cà phê ghép 1–1,1 m."
+      ]
+    },
+    {
+      "id": "coffee_arabica_wasi_2026",
+      "crop_type": "coffee",
+      "crop_name": "Cà phê",
+      "category_ids": ["coffee_arabica"],
+      "name": "Cà phê chè (Arabica) — Quy trình thâm canh bền vững, Viện Eakmat/WASI 2026",
+      "source": {
+        "title": "Quy trình thâm canh bền vững giống cà phê chè THA1 (Viện Khoa học Kỹ thuật Nông Lâm nghiệp Tây Nguyên). Căn cứ: 10 TCN 527-2002 và Quyết định 4428/QĐ-BNN-TT ngày 09/11/2018 (Quy trình tái canh cà phê chè).",
+        "publisher": "Báo Nông nghiệp và Môi trường (cơ quan của Bộ Nông nghiệp và Môi trường) — chuyên mục Tri thức nghề nông",
+        "url": "https://nongnghiepmoitruong.vn/tri-thuc-nong-dan/quy-trinh-tham-canh-ben-vung-giong-ca-phe-che-tha1-d823494.html",
+        "published_at": "2026-07-29",
+        "collected_at": "2026-09-13",
+        "section": "Phần II, mục 3.3 Bón phân — Bảng 2 (lượng phân nguyên chất), Bảng 3 (tỷ lệ bón các tỉnh phía Nam), Bảng 4 (tỷ lệ bón các tỉnh phía Bắc); mục 3.4 Tưới nước; mục 3.5 Tạo hình. Bảng 2–4 là ảnh trong bài, số liệu được chép lại từ ảnh."
+      },
+      "disclaimer": "Nguồn cho lượng dinh dưỡng NGUYÊN CHẤT (N–P₂O₅–K₂O) cho 1 ha/năm; lượng phân thương phẩm trong ứng dụng là kết quả QUY ĐỔI theo hàm lượng của phân đơn (ghi rõ hệ số) đúng như nguồn hướng dẫn. Quy trình viết cho giống THA1 nhưng căn cứ tiêu chuẩn chung của cà phê chè (10 TCN 527-2002). Chỉ để tham khảo.",
+      "stage_model": "calendar",
+      "basis": "nutrient",
+      "reference_area": {"value": 1, "unit": "ha", "m2": 10000},
+      "cycle_note": "Cây lâu năm: kiến thiết cơ bản 3 năm (1 năm trồng mới, 2 năm chăm sóc); chu kỳ kinh doanh 15–20 năm. Năng suất bình quân 2,5–3,5 tấn nhân/ha trên đất bazan; 2,0–3,0 tấn/ha đất khác.",
+      "scenarios": [
+        {
+          "id": "trong_moi",
+          "name": "Năm trồng mới",
+          "description": "Khoảng 25–30 ngày sau trồng bón thúc đạm và kali, chia đều 2 lần trong mùa mưa; toàn bộ lân bón lót vào hố trước lúc trồng.",
+          "items": [
+            {"key": "n", "name": "Đạm (N)", "nutrient": "N", "fertilizer_category": "dam", "unit": "kg", "min": 40, "max": 50, "price_product_id": "ure_ca_mau"},
+            {"key": "p2o5", "name": "Lân (P₂O₅)", "nutrient": "P2O5", "fertilizer_category": "lan", "unit": "kg", "min": 150, "max": 180, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "k2o", "name": "Kali (K₂O)", "nutrient": "K2O", "fertilizer_category": "kali", "unit": "kg", "min": 30, "max": 40, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "cham_soc_1",
+          "name": "Kiến thiết cơ bản — chăm sóc năm 1",
+          "description": "Chia đợt theo Bảng 3 (phía Nam) hoặc Bảng 4 (phía Bắc).",
+          "items": [
+            {"key": "n", "name": "Đạm (N)", "nutrient": "N", "fertilizer_category": "dam", "unit": "kg", "min": 70, "max": 95, "price_product_id": "ure_ca_mau"},
+            {"key": "p2o5", "name": "Lân (P₂O₅)", "nutrient": "P2O5", "fertilizer_category": "lan", "unit": "kg", "min": 80, "max": 90, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "k2o", "name": "Kali (K₂O)", "nutrient": "K2O", "fertilizer_category": "kali", "unit": "kg", "min": 50, "max": 60, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "cham_soc_2",
+          "name": "Kiến thiết cơ bản — chăm sóc năm 2",
+          "description": "Chia đợt theo Bảng 3 (phía Nam) hoặc Bảng 4 (phía Bắc).",
+          "items": [
+            {"key": "n", "name": "Đạm (N)", "nutrient": "N", "fertilizer_category": "dam", "unit": "kg", "min": 160, "max": 185, "price_product_id": "ure_ca_mau"},
+            {"key": "p2o5", "name": "Lân (P₂O₅)", "nutrient": "P2O5", "fertilizer_category": "lan", "unit": "kg", "min": 80, "max": 90, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "k2o", "name": "Kali (K₂O)", "nutrient": "K2O", "fertilizer_category": "kali", "unit": "kg", "min": 180, "max": 210, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "kinh_doanh",
+          "name": "Kinh doanh (chu kỳ 1 và chu kỳ 2)",
+          "description": "Bảng 2 cho cùng một mức ở kinh doanh chu kỳ 1 và chu kỳ 2. Năng suất trên 3,5 tấn nhân/ha: bón tăng thêm 70 kg N + 16 kg P₂O₅ + 70 kg K₂O/ha cho mỗi 1,0 tấn nhân tăng thêm.",
+          "items": [
+            {"key": "n", "name": "Đạm (N)", "nutrient": "N", "fertilizer_category": "dam", "unit": "kg", "min": 255, "max": 280, "price_product_id": "ure_ca_mau"},
+            {"key": "p2o5", "name": "Lân (P₂O₅)", "nutrient": "P2O5", "fertilizer_category": "lan", "unit": "kg", "min": 90, "max": 120, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "k2o", "name": "Kali (K₂O)", "nutrient": "K2O", "fertilizer_category": "kali", "unit": "kg", "min": 270, "max": 300, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Đầu hoặc giữa mùa mưa, bón theo rãnh",
+        "applications": [],
+        "note": "Phân chuồng hoai mục bón định kỳ 2–3 năm một lần, 4–5 kg/gốc; hoặc phân hữu cơ vi sinh 1,5–2,0 kg/gốc. Vôi 1.200–1.500 kg/ha, chu kỳ 2 năm/lần, rải đầu mùa mưa, trước khi bón phân hoá học ít nhất 10 ngày. Vi lượng: 20–30 kg kẽm sunphat + 10–15 kg borax/ha, định kỳ 2–3 năm, bón đầu mùa mưa cùng đạm và kali."
+      },
+      "stages": [
+        {
+          "stage_code": "dot_1_thang_2_3",
+          "stage_name_vi": "Đợt 1 — tháng 2–3",
+          "source_stage_name_vi": "Lần 1 (tháng 2–3)",
+          "timing": "Tháng 2–3 (các tỉnh phía Nam)",
+          "duration_days": null,
+          "months": [2, 3],
+          "growth_stages": [],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "n", "pct": 20},
+            {"item_key": "k2o", "pct": 20}
+          ],
+          "tasks": [
+            {"key": "bon_dot_1", "title": "Bón 20% đạm + 20% kali", "detail": "Dùng dạng đạm sunfat amôn để bón lần 1; các tỉnh Tây Nguyên bón lần 2 kết hợp với tưới nước.", "type": "fertilize", "timing": "Tháng 2–3"},
+            {"key": "tuoi_mua_kho", "title": "Tưới mùa khô 3–4 đợt", "detail": "Vùng Tây Nguyên: mỗi đợt cách nhau 20–25 ngày; đợt đầu khi mầm hoa đã phát triển đầy đủ (cuối tháng 1). Các tỉnh phía Bắc và Bắc Trung Bộ: không cần tưới.", "type": "water", "timing": "Cuối tháng 1 → hết mùa khô"},
+            {"key": "cat_tia_1", "title": "Cắt tỉa cành lần 1", "detail": "Ngay sau thu hoạch: cắt cành tăm, cành vòi voi, cành chùm, cành sâu bệnh, cành khô, cành thứ cấp mọc vào trong hoặc xuống dưới; tỉa cành thứ cấp quá dày; cắt cành cơ bản chạm đất.", "type": "cultivate", "timing": "Ngay sau khi thu hoạch"}
+          ]
+        },
+        {
+          "stage_code": "dot_2_thang_4_5",
+          "stage_name_vi": "Đợt 2 — tháng 4–5 (đầu mùa mưa)",
+          "source_stage_name_vi": "Lần 2 (tháng 4–5)",
+          "timing": "Tháng 4–5, đầu mùa mưa",
+          "duration_days": null,
+          "months": [4, 5],
+          "growth_stages": [],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "n", "pct": 30},
+            {"item_key": "p2o5", "pct": 100},
+            {"item_key": "k2o", "pct": 30}
+          ],
+          "tasks": [
+            {"key": "bon_dot_2", "title": "Bón 30% đạm + 100% lân + 30% kali", "detail": "100% phân lân bón vào đầu mùa mưa, rải đều xung quanh trong phạm vi tán cà phê.", "type": "fertilize", "timing": "Tháng 4–5"},
+            {"key": "bon_voi", "title": "Bón vôi (chu kỳ 2 năm/lần)", "detail": "1.200–1.500 kg/ha, rải đều mặt đất đầu mùa mưa, trước khi bón phân hoá học ít nhất 10 ngày; không trộn chung với phân khác.", "type": "fertilize", "timing": "Đầu mùa mưa"},
+            {"key": "bon_huu_co", "title": "Bón phân hữu cơ theo rãnh", "detail": "Rãnh dọc theo thành bồn, rộng 15–20 cm, sâu 20–25 cm; đưa phân xuống rãnh, lấp đất. Năm sau đào về phía khác.", "type": "fertilize", "timing": "Đầu hoặc giữa mùa mưa (2–3 năm/lần)"},
+            {"key": "phun_bon_la", "title": "Phun phân bón lá", "detail": "Loại có S, Mg, Zn, B cao, giàu hữu cơ và axit amin; phun các tháng 5, 6, 7, 8 sau mưa dầm hoặc hạn tạm thời, ít nhất 2 lần cách nhau 25–30 ngày.", "type": "spray", "timing": "Tháng 5–8"}
+          ]
+        },
+        {
+          "stage_code": "dot_3_thang_6_7",
+          "stage_name_vi": "Đợt 3 — tháng 6–7 (giữa mùa mưa)",
+          "source_stage_name_vi": "Lần 3 (tháng 6–7)",
+          "timing": "Tháng 6–7, giữa mùa mưa",
+          "duration_days": null,
+          "months": [6, 7],
+          "growth_stages": [],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "n", "pct": 30},
+            {"item_key": "k2o", "pct": 30}
+          ],
+          "tasks": [
+            {"key": "bon_dot_3", "title": "Bón 30% đạm + 30% kali", "detail": "Có thể thay phân đơn bằng NPK 16-8-16+TE ở giai đoạn kinh doanh (NPK 16-16-8-6S ở kiến thiết cơ bản), tỷ lệ các đợt tương đương.", "type": "fertilize", "timing": "Tháng 6–7"},
+            {"key": "cat_tia_2", "title": "Cắt tỉa cành lần 2", "detail": "Tỉa thưa cành thứ cấp mọc ở vị trí không thuận lợi (sâu trong tán, thẳng đứng, hướng vào trong, cành tăm, cành yếu, chạm đất, sâu bệnh) để tán thông thoáng. Cắt chồi vượt thường xuyên.", "type": "cultivate", "timing": "Giữa mùa mưa (tháng 6–7)"}
+          ]
+        },
+        {
+          "stage_code": "dot_4_thang_8_9",
+          "stage_name_vi": "Đợt 4 — tháng 8–9",
+          "source_stage_name_vi": "Lần 4 (tháng 8–9)",
+          "timing": "Tháng 8–9",
+          "duration_days": null,
+          "months": [8, 9],
+          "growth_stages": [],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "n", "pct": 20},
+            {"item_key": "k2o", "pct": 20}
+          ],
+          "tasks": [
+            {"key": "bon_dot_4", "title": "Bón 20% đạm + 20% kali", "detail": "Đợt bón cuối năm theo Bảng 3.", "type": "fertilize", "timing": "Tháng 8–9"},
+            {"key": "thu_hoach", "title": "Thu hoạch và ghi sản lượng", "detail": "Ghi sản lượng nhân vào mục Thu; nếu vượt 3,5 tấn nhân/ha thì năm sau bón tăng thêm theo quy tắc của nguồn.", "type": "harvest", "timing": "Cuối năm"}
+          ]
+        }
+      ],
+      "extra_rules": [
+        "Các tỉnh phía Bắc bón 2 lần/năm (Bảng 4): lần 1 tháng 4–5: 50% đạm + 100% lân + 40% kali; lần 2 tháng 9–10: 50% đạm + 60% kali.",
+        "Năng suất trên 3,5 tấn nhân/ha: bón tăng thêm 70 kg N + 16 kg P₂O₅ (lân nung chảy) + 70 kg K₂O/ha cho mỗi 1,0 tấn nhân tăng thêm.",
+        "Có thể thay phân đơn bằng NPK 16-16-8-6S (kiến thiết cơ bản) và NPK 16-8-16+TE (kinh doanh); tỷ lệ bón các đợt tương đương phân đơn."
+      ]
+    }
+  ],
+  "unavailable": [
+    {
+      "category_id": "coffee_liberica",
+      "category_name": "Cà phê mít (Liberica)",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho cà phê mít từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam (tra cứu 13/09/2026). Không tự suy diễn từ quy trình cà phê vối.",
+      "suggested_sources": [
+        {"title": "Viện Khoa học Kỹ thuật Nông Lâm nghiệp Tây Nguyên (WASI)", "url": "http://wasi.org.vn/"},
+        {"title": "Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia — Kỹ thuật bón phân cho cây cà phê", "url": "https://phanbonquocgia.gov.vn/ky-thuat-bon-phan-hieu-qua-cho-cay-ca-phe/"}
+      ]
+    },
+    {
+      "category_id": "coffee_excelsa",
+      "category_name": "Cà phê Excelsa",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho cà phê Excelsa từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam (tra cứu 13/09/2026). Không tự suy diễn.",
+      "suggested_sources": [
+        {"title": "Viện Khoa học Kỹ thuật Nông Lâm nghiệp Tây Nguyên (WASI)", "url": "http://wasi.org.vn/"},
+        {"title": "Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia — Kỹ thuật bón phân cho cây cà phê", "url": "https://phanbonquocgia.gov.vn/ky-thuat-bon-phan-hieu-qua-cho-cay-ca-phe/"}
+      ]
+    }
+  ]
+}

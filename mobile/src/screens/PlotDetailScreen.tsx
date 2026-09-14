@@ -16,11 +16,11 @@ import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useChangeAuthor} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
 import {Badge} from '../components/Badge';
-import {DangerButton, IconButton} from '../components/buttons';
+import {DangerButton, GhostButton, IconButton} from '../components/buttons';
 import {Card} from '../components/Card';
 import {EmptyState} from '../components/EmptyState';
 import {SegmentedControl} from '../components/form';
-import {CheckIcon, ClockIcon, PencilIcon} from '../components/icons';
+import {CalculatorIcon, ClockIcon, PencilIcon} from '../components/icons';
 import {Screen} from '../components/Screen';
 import type ChangeLog from '../db/models/ChangeLog';
 import type CropCycle from '../db/models/CropCycle';
@@ -29,16 +29,20 @@ import {observeChangeLogs} from '../db/repositories/changeLogRepository';
 import {deletePlot, observePlot, PLOT_STATUS_LABELS} from '../db/repositories/plotRepository';
 import {useObservable} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, radius, space, text} from '../theme';
+import {colors, space, text} from '../theme';
 import {formatArea, formatDate, formatDateTime, formatRelative} from '../utils/format';
 import {inferGrowthStage} from '../utils/growthStage';
 import {
-  allCareStages,
-  careProtocolDisclaimer,
-  careProtocolSource,
+  citation,
   cropNameOf,
+  protocolAvailability,
+  stageForGrowth,
+  stageForMonth,
   STAGE_LABELS,
 } from '../utils/staticData';
+import {CareStageAccordion} from './care/CareStageAccordion';
+import {ProtocolUnavailable} from './care/ProtocolUnavailable';
+import {useCategoryOf} from './care/useCategoryOf';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'PlotDetail'>;
@@ -210,67 +214,88 @@ function CyclesTab({plot}: {plot: Plot}) {
 /* ------------------------------ tab 3: care ------------------------------- */
 
 function CareTab({plot}: {plot: Plot}) {
+  const navigation = useNavigation<Nav>();
   const cycles = useObservable<CropCycle[]>(() => plot.cycles.observe(), [plot.id], []);
+  const categoryId = useCategoryOf(plot.varietyId);
+  const cropName = cropNameOf(plot.cropType, plot.cropName);
+
+  const {protocols, unavailable} = useMemo(
+    () => protocolAvailability(plot.cropType, categoryId),
+    [plot.cropType, categoryId],
+  );
+  const protocol = protocols[0];
 
   const active = cycles.find(c => !c.endedAt);
   const inferred = inferGrowthStage(plot.plantedAt);
-  const stage = active?.stage ?? inferred?.stage ?? null;
-  const stages = allCareStages(plot.cropType);
-  const current = stage ? stages.find(s => s.stage_code === stage) : undefined;
-  const cropName = cropNameOf(plot.cropType, plot.cropName);
+  const growth = active?.stage ?? inferred?.stage ?? null;
+  const month = new Date().getMonth() + 1;
 
-  if (stages.length === 0) {
-    return (
-      <EmptyState
-        title="Chưa có dữ liệu"
-        body={`Chưa có quy trình chăm sóc cho ${cropName}. Hiện mới có quy trình cho cà chua; các cây khác sẽ được bổ sung từ nguồn chính thức ở Giai đoạn 3.`}
-      />
-    );
-  }
+  const current = useMemo(() => {
+    if (!protocol) return null;
+    if (protocol.stage_model === 'calendar') return stageForMonth(protocol, month) ?? null;
+    return growth ? (stageForGrowth(protocol, growth) ?? null) : null;
+  }, [protocol, growth, month]);
 
-  if (!stage) {
-    return (
-      <EmptyState
-        title="Chưa xác định được giai đoạn"
-        body="Nhập ngày trồng ở màn hình sửa lô đất để hệ thống gợi ý công việc theo giai đoạn cây."
-      />
-    );
+  if (!protocol) {
+    return <ProtocolUnavailable cropName={cropName} entry={unavailable} />;
   }
 
   return (
     <>
       <Card style={styles.stageHeader}>
-        <Text style={text('eyebrow', colors.text.muted)}>Giai đoạn hiện tại</Text>
-        <Text style={[text('subheading'), styles.stageTitle]}>{STAGE_LABELS[stage]}</Text>
-        <Text style={text('bodySm', colors.text.muted)}>
-          {active
-            ? `Theo chu kỳ "${active.name}"`
-            : `Ước tính từ ngày trồng · ngày thứ ${inferred?.dayCount ?? 0}`}
+        <Text style={text('eyebrow', colors.text.muted)}>
+          {protocol.stage_model === 'calendar' ? `Đợt bón của tháng ${month}` : 'Giai đoạn hiện tại'}
         </Text>
-        {current ? (
-          <Text style={[text('caption', colors.text.muted), styles.stagePct]}>
-            Đợt bón thúc này chiếm {current.pct_of_total_topdress}% tổng lượng phân thúc cả vụ.
-          </Text>
-        ) : null}
+        <Text style={[text('subheading'), styles.stageTitle]}>
+          {current
+            ? current.stage_name_vi
+            : protocol.stage_model === 'calendar'
+              ? 'Ngoài các đợt bón'
+              : growth
+                ? STAGE_LABELS[growth]
+                : 'Chưa xác định'}
+        </Text>
+        <Text style={text('bodySm', colors.text.muted)}>
+          {protocol.stage_model === 'calendar'
+            ? 'Cây lâu năm: lịch bón theo mùa trong năm.'
+            : active
+              ? `Theo chu kỳ "${active.name}"`
+              : inferred
+                ? `Ước tính từ ngày trồng · ngày thứ ${inferred.dayCount}`
+                : 'Nhập ngày trồng ở màn hình sửa lô đất để ứng dụng gợi ý giai đoạn.'}
+        </Text>
+        <View style={styles.stageActions}>
+          <GhostButton
+            small
+            label="Toàn bộ quy trình"
+            onPress={() => navigation.navigate('CareProtocol', {plotId: plot.id})}
+          />
+          <GhostButton
+            small
+            label="Tính lượng phân"
+            icon={<CalculatorIcon size={18} />}
+            onPress={() => navigation.navigate('FertilizerCalculator', {plotId: plot.id})}
+          />
+        </View>
       </Card>
 
-      <View style={styles.rowList}>
-        {(current?.tasks ?? []).map(task => (
-          <Card key={task.key} style={styles.taskCard}>
-            <View style={styles.taskIcon}>
-              <CheckIcon size={18} />
-            </View>
-            <View style={styles.taskBody}>
-              <Text style={text('bodyStrong')}>{task.title}</Text>
-              <Text style={[text('bodySm', colors.text.muted), styles.taskDetail]}>{task.detail}</Text>
-            </View>
-          </Card>
-        ))}
-      </View>
+      {current ? (
+        <CareStageAccordion protocol={protocol} plotId={plot.id} currentStageCode={current.stage_code} onlyStage={current.stage_code} />
+      ) : (
+        <EmptyState
+          title={protocol.stage_model === 'calendar' ? 'Tháng này không có đợt bón' : 'Chưa xác định được giai đoạn'}
+          body={
+            protocol.stage_model === 'calendar'
+              ? 'Xem toàn bộ quy trình để biết đợt bón kế tiếp rơi vào tháng nào.'
+              : 'Nhập ngày trồng ở màn hình sửa lô đất để hệ thống gợi ý công việc theo giai đoạn cây.'
+          }
+          action={{label: 'Xem toàn bộ quy trình', onPress: () => navigation.navigate('CareProtocol', {plotId: plot.id})}}
+        />
+      )}
 
       <Text style={[text('caption', colors.text.muted), styles.disclaimer]}>
-        {careProtocolDisclaimer(plot.cropType)}
-        {'\n'}Nguồn: {careProtocolSource(plot.cropType)}
+        {protocol.disclaimer}
+        {'\n'}Nguồn: {citation(protocol)} — {protocol.source.url}
       </Text>
     </>
   );
@@ -387,26 +412,12 @@ const styles = StyleSheet.create({
     marginTop: space.xs,
     marginBottom: 2,
   },
-  stagePct: {
-    marginTop: space.sm,
-  },
-  taskCard: {
+  stageActions: {
     flexDirection: 'row',
-    gap: space.md,
-  },
-  taskIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: radius.pill,
-    backgroundColor: colors.primary.soft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  taskBody: {
-    flex: 1,
-  },
-  taskDetail: {
-    marginTop: 2,
+    flexWrap: 'wrap',
+    gap: space.sm,
+    marginTop: space.md,
+    marginLeft: -space.md,
   },
   disclaimer: {
     marginTop: space.lg,

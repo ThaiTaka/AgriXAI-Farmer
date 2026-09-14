@@ -60,14 +60,17 @@ export function VarietyPickScreen() {
   const categoryName =
     category?.category_name ?? (params.categoryId === USER_CATEGORY_ID ? USER_CATEGORY_NAME : params.categoryId);
 
+  const returnTo = params.returnTo ?? 'PlotForm';
+
   const finish = useCallback(
     (variety: VarietyOption | null) => {
       navigation.popTo(
-        'PlotForm',
+        returnTo,
         {
           pickedVariety: {
             cropType: params.cropTypeId,
             cropName,
+            categoryId: params.categoryId === USER_CATEGORY_ID ? null : params.categoryId,
             varietyId: variety?.id ?? null,
             varietyName: variety?.name ?? null,
           },
@@ -75,12 +78,12 @@ export function VarietyPickScreen() {
         {merge: true},
       );
     },
-    [navigation, params.cropTypeId, cropName],
+    [navigation, returnTo, params.cropTypeId, params.categoryId, cropName],
   );
 
   const cancel = useCallback(
-    () => navigation.popTo('PlotForm', undefined, {merge: true}),
-    [navigation],
+    () => navigation.popTo(returnTo, undefined, {merge: true}),
+    [navigation, returnTo],
   );
 
   return (

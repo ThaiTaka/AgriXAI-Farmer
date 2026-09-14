@@ -20,7 +20,7 @@
 
 import {appSchema, tableSchema} from '@nozbe/watermelondb';
 
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 export const schema = appSchema({
   version: SCHEMA_VERSION,
@@ -108,6 +108,135 @@ export const schema = appSchema({
         {name: 'updated_at', type: 'number'},
       ],
     }),
+
+    // ---- Giai đoạn 3: plans, stock ledger, income/expense, care history ----
+    // Column-for-column mirrors of app/models/ledger.py on the server.
+    // `occurred_at` is the business date the farmer typed; `created_at` is
+    // when the row was written — a purchase entered on Friday for Tuesday's
+    // delivery belongs in Tuesday's report.
+
+    tableSchema({
+      name: 'plans',
+      columns: [
+        {name: 'plot_id', type: 'string', isOptional: true, isIndexed: true},
+        {name: 'crop_type', type: 'string'},
+        {name: 'crop_name', type: 'string', isOptional: true},
+        {name: 'category_id', type: 'string', isOptional: true},
+        {name: 'variety_id', type: 'string', isOptional: true},
+        {name: 'variety_name', type: 'string', isOptional: true},
+        {name: 'protocol_id', type: 'string'},
+        {name: 'scenario_id', type: 'string'},
+        {name: 'scenario_name', type: 'string'},
+        {name: 'area_input', type: 'number'},
+        {name: 'area_unit', type: 'string'},
+        {name: 'area_m2', type: 'number'},
+        {name: 'items_json', type: 'string'},
+        {name: 'cost_min', type: 'number', isOptional: true},
+        {name: 'cost_max', type: 'number', isOptional: true},
+        {name: 'note', type: 'string', isOptional: true},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+
+    tableSchema({
+      name: 'warehouse_in',
+      columns: [
+        {name: 'fertilizer_id', type: 'string', isIndexed: true},
+        {name: 'fertilizer_name', type: 'string'},
+        {name: 'category', type: 'string', isOptional: true},
+        {name: 'quantity', type: 'number'},
+        {name: 'unit', type: 'string'},
+        {name: 'quantity_kg', type: 'number'},
+        {name: 'price', type: 'number'},
+        {name: 'unit_price', type: 'number'},
+        {name: 'occurred_at', type: 'number', isIndexed: true},
+        {name: 'note', type: 'string', isOptional: true},
+        {name: 'plot_id', type: 'string', isOptional: true},
+        {name: 'expense_id', type: 'string', isOptional: true},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+
+    tableSchema({
+      name: 'warehouse_out',
+      columns: [
+        {name: 'fertilizer_id', type: 'string', isIndexed: true},
+        {name: 'fertilizer_name', type: 'string'},
+        {name: 'category', type: 'string', isOptional: true},
+        {name: 'quantity_kg', type: 'number'},
+        {name: 'unit_price', type: 'number'},
+        {name: 'total_cost', type: 'number'},
+        {name: 'occurred_at', type: 'number', isIndexed: true},
+        {name: 'note', type: 'string', isOptional: true},
+        {name: 'plot_id', type: 'string', isOptional: true},
+        {name: 'plan_id', type: 'string', isOptional: true},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+
+    tableSchema({
+      name: 'income',
+      columns: [
+        {name: 'kind', type: 'string'},
+        {name: 'description', type: 'string'},
+        {name: 'amount', type: 'number'},
+        {name: 'occurred_at', type: 'number', isIndexed: true},
+        {name: 'note', type: 'string', isOptional: true},
+        {name: 'plot_id', type: 'string', isOptional: true},
+        {name: 'checked', type: 'boolean'},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+
+    tableSchema({
+      name: 'expense',
+      columns: [
+        {name: 'kind', type: 'string'},
+        {name: 'description', type: 'string'},
+        {name: 'amount', type: 'number'},
+        {name: 'occurred_at', type: 'number', isIndexed: true},
+        {name: 'note', type: 'string', isOptional: true},
+        {name: 'plot_id', type: 'string', isOptional: true},
+        {name: 'checked', type: 'boolean'},
+        {name: 'warehouse_in_id', type: 'string', isOptional: true},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+
+    tableSchema({
+      name: 'tasks_history',
+      columns: [
+        {name: 'protocol_id', type: 'string', isIndexed: true},
+        {name: 'stage_code', type: 'string'},
+        {name: 'task_key', type: 'string'},
+        {name: 'task_title', type: 'string'},
+        {name: 'crop_type', type: 'string'},
+        {name: 'plot_id', type: 'string', isOptional: true, isIndexed: true},
+        {name: 'done', type: 'boolean'},
+        {name: 'done_at', type: 'number', isOptional: true},
+        {name: 'remind_at', type: 'number', isOptional: true},
+        {name: 'note', type: 'string', isOptional: true},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
   ],
 });
 
@@ -117,6 +246,12 @@ export const SYNC_TABLES = [
   'crop_varieties',
   'crop_cycles',
   'change_logs',
+  'plans',
+  'warehouse_in',
+  'warehouse_out',
+  'income',
+  'expense',
+  'tasks_history',
 ] as const;
 
 /** Tables that stay on the device and have no server counterpart. */

@@ -1,0 +1,291 @@
+{
+  "$meta": {
+    "crop_type": "chili",
+    "crop_name": "Ớt",
+    "description": "Quy trình bón phân và chăm sóc ớt — dữ liệu THẬT chép từ Trung tâm Khuyến nông Lâm Đồng (ớt cay: chỉ thiên, hiểm, sừng…) và Chi cục Trồng trọt & BVTV Ninh Bình (ớt ngọt / ớt chuông). Ớt kiểng CHƯA có quy trình chính thức → khai báo ở 'unavailable'.",
+    "format_version": 2,
+    "collected_at": "2026-09-13",
+    "data_policy": "Số liệu chép đúng nguồn, không suy diễn. Chỗ nguồn không nói → null / 'Chưa có dữ liệu'. Mọi liều lượng chỉ là THAM KHẢO.",
+    "conversion": {
+      "note": "Chỉ dùng cho quy trình có basis = 'nutrient'. Công thức quy đổi lấy từ Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia: lượng phân thương phẩm = lượng nguyên chất × 100 : hàm lượng (%).",
+      "formula_source": "https://phanbonquocgia.gov.vn/quy-trinh-bon-phan-cho-cay-ca-phe-giai-doan-kinh-doanh/ (18/03/2021)",
+      "factors": {
+        "N": {"product_name": "Urê (46% N)", "pct": 46, "fertilizer_category": "dam", "price_product_id": "ure_ca_mau"},
+        "P2O5": {"product_name": "Super lân (16% P₂O₅)", "pct": 16, "fertilizer_category": "lan", "price_product_id": "sieu_lan_lam_thao"},
+        "K2O": {"product_name": "Kali clorua (60% K₂O)", "pct": 60, "fertilizer_category": "kali", "price_product_id": "kali_bot_ca_mau"}
+      }
+    },
+    "sources": [
+      "http://khuyennong.lamdong.gov.vn/ky-thuat-trong-trot/ki-thuat-trong-rau/887-k-thut-trng-t-cay",
+      "https://web.archive.org/web/20250124221005/https://khuyennong.lamdong.gov.vn/ky-thuat-trong-trot/ki-thuat-trong-rau/887-k-thut-trng-t-cay",
+      "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-so-c-cay-o-t-ngo-t-197.html"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "chili_hot_lamdong",
+      "crop_type": "chili",
+      "crop_name": "Ớt",
+      "category_ids": ["chili_chi_thien", "chili_hiem", "chili_sung"],
+      "name": "Ớt cay — Trung tâm Khuyến nông Lâm Đồng",
+      "source": {
+        "title": "Kỹ thuật trồng ớt cay (Hoài Nam – TTKN Lâm Đồng)",
+        "publisher": "Trung tâm Khuyến nông Lâm Đồng (khuyennong.lamdong.gov.vn)",
+        "url": "http://khuyennong.lamdong.gov.vn/ky-thuat-trong-trot/ki-thuat-trong-rau/887-k-thut-trng-t-cay",
+        "archive_url": "https://web.archive.org/web/20250124221005/https://khuyennong.lamdong.gov.vn/ky-thuat-trong-trot/ki-thuat-trong-rau/887-k-thut-trng-t-cay",
+        "published_at": null,
+        "collected_at": "2026-09-13",
+        "section": "Chăm sóc và bón phân — Phân bón trung bình cho 1 ha; bản lưu Wayback Machine 24/01/2025 vì trang gốc trả về 404 khi tra cứu"
+      },
+      "disclaimer": "Nguồn ghi 'phân bón trung bình cho 1 ha (tuỳ theo đất và mùa vụ mà tăng giảm lượng phân cho phù hợp)'. Áp dụng chung cho các giống ớt cay (ớt xiêm, chỉ thiên, sừng trâu, hiểm…). Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {"value": 1, "unit": "ha", "m2": 10000},
+      "cycle_note": "Cây con 20–25 ngày tuổi thì trồng; thúc lần 1 ở 20–25 ngày sau trồng; cây cho thu quả liên tục kéo dài nên phải chia nhiều lần bón. Nguồn không nêu số ngày đến thu hoạch.",
+      "scenarios": [
+        {
+          "id": "lamdong_1ha",
+          "name": "Ớt cay (lượng trung bình cho 1 ha)",
+          "description": "Bón lót khi làm đất + 4 lần bón thúc: 20–25 ngày sau trồng, đậu trái đều, bắt đầu thu trái, thu hoạch rộ.",
+          "items": [
+            {"key": "voi", "name": "Vôi", "fertilizer_category": "khac", "unit": "kg", "min": 1000, "max": 1000, "price_product_id": null},
+            {"key": "phan_chuong", "name": "Phân chuồng", "fertilizer_category": "huu_co", "unit": "tấn", "min": 8, "max": 10, "price_product_id": null},
+            {"key": "super_lan", "name": "Super lân", "fertilizer_category": "lan", "unit": "kg", "min": 500, "max": 500, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "kali", "name": "Kali", "fertilizer_category": "kali", "unit": "kg", "min": 200, "max": 200, "price_product_id": "kali_bot_ca_mau", "note": "30 lót + 30 + 50 + 50 + 40 thúc"},
+            {"key": "calcium_nitrat", "name": "Calcium nitrat", "fertilizer_category": "khac", "unit": "kg", "min": 120, "max": 120, "price_product_id": null, "note": "20 lót + 20 + 20 + 30 + 30 thúc"},
+            {"key": "npk_16_16_8", "name": "NPK 16-16-8", "fertilizer_category": "npk", "unit": "kg", "min": 500, "max": 720, "price_product_id": "npk_16_16_8_ca_mau", "note": "100–150 lót + 100 + 100–120 + 100–150 + 100–150 thúc"},
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 200, "max": 200, "price_product_id": "ure_ca_mau", "note": "40 + 60 + 60 + 40 thúc"}
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón lót khi làm đất",
+        "applications": [
+          {"item_key": "voi", "pct": 100},
+          {"item_key": "phan_chuong", "pct": 100},
+          {"item_key": "super_lan", "pct": 100},
+          {"item_key": "kali", "pct": 15},
+          {"item_key": "calcium_nitrat", "pct": 17},
+          {"item_key": "npk_16_16_8", "pct": 21}
+        ],
+        "note": "Bón lót khi làm đất (1 ha): 1.000 kg vôi, 8–10 tấn phân chuồng, 500 kg super lân, 30 kg kali, 20 kg calcium nitrat, 100–150 kg NPK 16-16-8."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Làm đất, ươm và trồng cây con",
+          "source_stage_name_vi": "Chọn và làm đất; Gieo trồng",
+          "timing": "Cây con 20–25 ngày tuổi thì trồng ra vườn",
+          "duration_days": null,
+          "growth_stages": ["seedling"],
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {"key": "lam_dat", "title": "Làm đất, lên luống, bón lót", "detail": "Đất cày bừa sâu 20–30 cm, phơi ải, pH 5,5–6,5. Luống cao 15–20 cm, mặt luống 40–50 cm (hàng đơn) hoặc 1–1,2 m (hàng đôi). Bón lót: 1.000 kg vôi + 8–10 tấn phân chuồng + 500 kg super lân + 30 kg kali + 20 kg calcium nitrat + 100–150 kg NPK 16-16-8 (1 ha).", "type": "fertilize", "timing": "Trước khi trồng"},
+            {"key": "uom_cay", "title": "Ngâm ủ hạt, ươm cây con", "detail": "Ngâm 3 sôi 2 lạnh 12 giờ, ủ 2–3 ngày cho mọc mầm, gieo luống ươm hoặc vỉ xốp. Trước khi nhổ: xiết nước 5–6 ngày, tưới đẫm 4–6 giờ rồi nhổ trồng lúc sáng hoặc chiều mát.", "type": "cultivate", "timing": "Ươm 20–25 ngày"},
+            {"key": "trong", "title": "Trồng theo mật độ", "detail": "Hàng đơn: cây cách cây 50–60 cm. Hàng đôi: cây cách cây 50–55 cm, hàng cách hàng 55–65 cm. Vụ xuân hè cho năng suất cao (ớt ưa 25–30°C).", "type": "cultivate", "timing": "Khi cây con 20–25 ngày"}
+          ]
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Sinh trưởng (20–25 ngày sau trồng)",
+          "source_stage_name_vi": "Bón thúc lần 1",
+          "timing": "20–25 ngày sau khi trồng",
+          "duration_days": null,
+          "growth_stages": ["vegetative"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "ure", "pct": 20},
+            {"item_key": "kali", "pct": 15},
+            {"item_key": "npk_16_16_8", "pct": 17},
+            {"item_key": "calcium_nitrat", "pct": 17}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_1", "title": "Thúc lần 1: 40 kg urê + 30 kg kali + 100 kg NPK 16-16-8 + 20 kg calcium nitrat", "detail": "Lượng cho 1 ha, bón 20–25 ngày sau khi trồng.", "type": "fertilize", "timing": "20–25 ngày sau trồng"},
+            {"key": "tuoi", "title": "Tưới nước đầy đủ, tủ gốc giữ ẩm", "detail": "Mùa nắng tưới đầy đủ; mùa mưa đảm bảo thoát nước tốt. Tủ gốc bằng rơm rạ hoặc cỏ khô.", "type": "water", "timing": "Suốt vụ"},
+            {"key": "tia_nhanh", "title": "Tỉa nhánh dưới điểm phân cành", "detail": "Tỉa bỏ cành, lá dưới điểm phân cành để tán rộng, gốc thông thoáng; tỉa lúc nắng ráo bằng kéo.", "type": "cultivate", "timing": "Khi cây phân cành"}
+          ]
+        },
+        {
+          "stage_code": "fruiting",
+          "stage_name_vi": "Đậu trái đều",
+          "source_stage_name_vi": "Bón thúc lần 2",
+          "timing": "Khi ớt đã đậu trái đều",
+          "duration_days": null,
+          "growth_stages": ["flowering", "fruiting"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "ure", "pct": 30},
+            {"item_key": "kali", "pct": 25},
+            {"item_key": "npk_16_16_8", "pct": 19},
+            {"item_key": "calcium_nitrat", "pct": 17}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_2", "title": "Thúc lần 2: 60 kg urê + 50 kg kali + 100–120 kg NPK 16-16-8 + 20 kg calcium nitrat", "detail": "Lượng cho 1 ha, bón khi ớt đã đậu trái đều.", "type": "fertilize", "timing": "Đậu trái đều"},
+            {"key": "lam_gian", "title": "Làm giàn đỡ cây", "detail": "Giống tán rộng, cao thì làm giàn để cây khỏi đổ ngã, gãy cành, kéo dài thời gian thu hoạch, hạn chế trái bị sâu bệnh do đổ ngã.", "type": "cultivate", "timing": "Trước khi mang trái nặng"},
+            {"key": "phong_tru", "title": "Phòng trừ tổng hợp sâu bệnh", "detail": "Rầy mềm (Imidacloprid, Abamectin); thán thư (Chlorothalonil / Metiram + Pyraclostrobin / Ningnanmycin); đốm trắng lá (Ningnanmycin); héo xanh (nhổ tiêu huỷ, rắc vôi). Ưu tiên thuốc sinh học, dùng thuốc trong danh mục cho cây ớt.", "type": "spray", "timing": "Khi sâu bệnh hại nặng"}
+          ]
+        },
+        {
+          "stage_code": "harvesting",
+          "stage_name_vi": "Thu trái → thu hoạch rộ",
+          "source_stage_name_vi": "Bón thúc lần 3 và lần 4",
+          "timing": "Khi bắt đầu thu trái; khi thu hoạch rộ",
+          "duration_days": null,
+          "growth_stages": ["harvesting"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "ure", "pct": 50},
+            {"item_key": "kali", "pct": 45},
+            {"item_key": "npk_16_16_8", "pct": 43},
+            {"item_key": "calcium_nitrat", "pct": 50}
+          ],
+          "tasks": [
+            {"key": "bon_thuc_3", "title": "Thúc lần 3: 60 kg urê + 50 kg kali + 100–150 kg NPK 16-16-8 + 30 kg calcium nitrat", "detail": "Lượng cho 1 ha, bón khi bắt đầu thu trái.", "type": "fertilize", "timing": "Bắt đầu thu trái"},
+            {"key": "bon_thuc_4", "title": "Thúc lần 4: 40 kg urê + 40 kg kali + 100–150 kg NPK 16-16-8 + 30 kg calcium nitrat", "detail": "Lượng cho 1 ha, bón khi thu hoạch rộ.", "type": "fertilize", "timing": "Thu hoạch rộ"},
+            {"key": "thu_hoach", "title": "Thu hoạch và ghi sản lượng", "detail": "Ghi sản lượng vào mục Thu để theo dõi lãi/lỗ theo lô.", "type": "harvest", "timing": "Liên tục nhiều đợt"}
+          ]
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % theo đợt của urê/kali/NPK/calcium nitrat là phần chia suy ra từ chính các con số của nguồn (lót + 4 đợt thúc), tính trên mức giữa của khoảng và làm tròn.",
+        "Không trồng cây họ cà trong vòng 2–3 năm trên cùng chân đất; tránh trồng ớt ngoài trời trong mùa mưa."
+      ]
+    },
+    {
+      "id": "chili_bell_ninhbinh",
+      "crop_type": "chili",
+      "crop_name": "Ớt",
+      "category_ids": ["chili_bell"],
+      "name": "Ớt ngọt (ớt chuông) — Chi cục Trồng trọt & BVTV Ninh Bình",
+      "source": {
+        "title": "Kỹ thuật trồng và chăm sóc cây ớt ngọt (Đinh Thị Trang – Phòng Nghiệp vụ kỹ thuật)",
+        "publisher": "Chi cục Trồng trọt và Bảo vệ thực vật tỉnh Ninh Bình (chicucttbvtv.ninhbinh.gov.vn)",
+        "url": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-so-c-cay-o-t-ngo-t-197.html",
+        "published_at": null,
+        "collected_at": "2026-09-13",
+        "section": "Mục 5 Phân bón và cách bón; mục 4 Mật độ; mục 6 Trồng; mục 7 Chăm sóc; mục 8 Thu hoạch"
+      },
+      "disclaimer": "Nguồn cho lượng dinh dưỡng NGUYÊN CHẤT (N–P₂O₅–K₂O) cho 1 ha; lượng phân thương phẩm là kết quả QUY ĐỔI theo hàm lượng phân đơn (ghi rõ hệ số). Nguồn cũng nêu mức thấp hơn tuỳ độ màu mỡ của đất. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "nutrient",
+      "reference_area": {"value": 1, "unit": "ha", "m2": 10000},
+      "cycle_note": "Trồng khi cây có 4–5 lá thật (4–5 tuần sau gieo). Vụ đông xuân gieo tháng 8–9, thu hoạch tháng 1–2; vụ xuân hè gieo tháng 12, thu tháng 3–4.",
+      "scenarios": [
+        {
+          "id": "ninhbinh_muc_chuan",
+          "name": "Mức chuẩn (1 ha)",
+          "description": "200 kg N; 150 kg P₂O₅; 150 kg K₂O cho 1 ha, kèm 20–25 tấn phân chuồng đã ủ (hoặc 18–20 tấn phân gà). Đất chua bón thêm 100–110 kg vôi bột/ha.",
+          "items": [
+            {"key": "phan_chuong", "name": "Phân chuồng đã ủ", "fertilizer_category": "huu_co", "unit": "tấn", "min": 20, "max": 25, "price_product_id": null},
+            {"key": "n", "name": "Đạm (N)", "nutrient": "N", "fertilizer_category": "dam", "unit": "kg", "min": 200, "max": 200, "price_product_id": "ure_ca_mau"},
+            {"key": "p2o5", "name": "Lân (P₂O₅)", "nutrient": "P2O5", "fertilizer_category": "lan", "unit": "kg", "min": 150, "max": 150, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "k2o", "name": "Kali (K₂O)", "nutrient": "K2O", "fertilizer_category": "kali", "unit": "kg", "min": 150, "max": 150, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        },
+        {
+          "id": "ninhbinh_muc_thap",
+          "name": "Mức thấp hơn (tuỳ độ màu mỡ của đất)",
+          "description": "150 kg N; 120–150 kg P₂O₅; 60–70 kg K₂O cho 1 ha (nguồn quy ra khoảng 12 kg urê, 30 kg super lân, 11 kg kali sunfat mỗi sào).",
+          "items": [
+            {"key": "phan_chuong", "name": "Phân chuồng đã ủ", "fertilizer_category": "huu_co", "unit": "tấn", "min": 20, "max": 25, "price_product_id": null},
+            {"key": "n", "name": "Đạm (N)", "nutrient": "N", "fertilizer_category": "dam", "unit": "kg", "min": 150, "max": 150, "price_product_id": "ure_ca_mau"},
+            {"key": "p2o5", "name": "Lân (P₂O₅)", "nutrient": "P2O5", "fertilizer_category": "lan", "unit": "kg", "min": 120, "max": 150, "price_product_id": "sieu_lan_lam_thao"},
+            {"key": "k2o", "name": "Kali (K₂O)", "nutrient": "K2O", "fertilizer_category": "kali", "unit": "kg", "min": 60, "max": 70, "price_product_id": "kali_bot_ca_mau"}
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón lót trước khi trồng",
+        "applications": [
+          {"item_key": "phan_chuong", "pct": 100},
+          {"item_key": "p2o5", "pct": 100},
+          {"item_key": "k2o", "pct": 33}
+        ],
+        "note": "Bón lót: toàn bộ phân chuồng, lân và 1/3 kali. Không bón phân ngâm tươi. Đất chua bón thêm 100–110 kg vôi bột/ha."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Vườn ươm và trồng",
+          "source_stage_name_vi": "Chuẩn bị vườn ươm; Trồng",
+          "timing": "Trồng khi cây có 4–5 lá thật (4–5 tuần sau gieo)",
+          "duration_days": null,
+          "growth_stages": ["seedling"],
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {"key": "xu_ly_hat", "title": "Xử lý hạt, gieo vườn ươm", "detail": "Ngâm hạt nước 50°C khoảng 30 phút, rửa lại, hong khô. Cần 400–600 hạt giống cho 1 ha; mỗi m² vườn ươm gieo 0,4–0,5 g hạt; có thể gieo khay/bầu đường kính 5 cm.", "type": "cultivate", "timing": "Đầu vụ"},
+            {"key": "bon_lot", "title": "Bón lót toàn bộ phân chuồng, lân và 1/3 kali", "detail": "Phân chuồng 20–25 tấn/ha đã ủ (hoặc 18–20 tấn phân gà/ha); đất chua thêm 100–110 kg vôi bột/ha.", "type": "fertilize", "timing": "Trước khi trồng"},
+            {"key": "trong", "title": "Trồng 2 hàng/luống, 60 × 30–35 cm", "detail": "Luống rộng 1,3–1,4 m; mật độ khoảng 35–40 nghìn cây/ha. Trồng khi cây 4–5 lá thật; không để cây con quá già. Có điều kiện che phủ nilon hoặc rơm.", "type": "cultivate", "timing": "4–5 tuần sau gieo"}
+          ]
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Hồi xanh, vun xới lần 1–2",
+          "source_stage_name_vi": "Làm cỏ, xới xáo, vun gốc lần 1 và 2",
+          "timing": "Lần 1: 10–12 ngày sau trồng; lần 2: sau lần 1 12–15 ngày",
+          "duration_days": null,
+          "growth_stages": ["vegetative"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "n", "pct": 67},
+            {"item_key": "k2o", "pct": 22}
+          ],
+          "tasks": [
+            {"key": "tuoi_hoi_xanh", "title": "Tưới hằng ngày đến khi hồi xanh", "detail": "Sau trồng tưới hằng ngày cho đến khi cây hồi xanh; sau đó thường xuyên giữ ẩm 75–80%; không để ruộng quá ướt (héo xanh vi khuẩn).", "type": "water", "timing": "Sau trồng"},
+            {"key": "vun_xoi_1_2", "title": "Làm cỏ, xới xáo, vun gốc kết hợp bón thúc", "detail": "Bón thúc: 1/3 kali và toàn bộ đạm chia vào các lần vun xới. Lần 1 sau trồng 10–12 ngày; lần 2 sau lần 1 12–15 ngày.", "type": "fertilize", "timing": "10–12 ngày và ~25 ngày sau trồng"},
+            {"key": "tia_canh", "title": "Tỉa cành, tỉa lá già", "detail": "Giống nhiều cành chỉ để 3–4 cành; thường xuyên tỉa bỏ lá già.", "type": "cultivate", "timing": "Khi phân cành"}
+          ]
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Ra hoa, vun xới lần 3",
+          "source_stage_name_vi": "Làm cỏ, xới xáo, vun gốc lần 3",
+          "timing": "Sau lần 2 khoảng 20 ngày",
+          "duration_days": null,
+          "growth_stages": ["flowering", "fruiting"],
+          "pct_of_total_topdress": null,
+          "applications": [
+            {"item_key": "n", "pct": 33},
+            {"item_key": "k2o", "pct": 11}
+          ],
+          "tasks": [
+            {"key": "vun_xoi_3", "title": "Vun xới lần 3 kết hợp bón thúc", "detail": "Bón phân trước khi thu hoạch khoảng 15–20 ngày; không bón nhiều đạm trước khi thu quả để tránh tích luỹ NO₃ trong quả.", "type": "fertilize", "timing": "Sau lần 2 khoảng 20 ngày"},
+            {"key": "bon_la", "title": "Phun phân bón lá khi cây sinh trưởng kém", "detail": "Trong điều kiện sinh trưởng kém có thể bổ sung phân bón lá tổng hợp, phun giai đoạn cây đang ra hoa.", "type": "spray", "timing": "Ra hoa"},
+            {"key": "tuoi_ranh", "title": "Tưới rãnh khi cây đã ra hoa", "detail": "Giữ ẩm 75–80%; thoát nước ngay sau mưa to. Dùng nước sạch, không nhiễm chất thải.", "type": "water", "timing": "Sau ra hoa"}
+          ]
+        },
+        {
+          "stage_code": "harvesting",
+          "stage_name_vi": "Thu hoạch",
+          "source_stage_name_vi": "Thu hoạch",
+          "timing": "Khi vỏ quả bóng, ấn cứng tay",
+          "duration_days": null,
+          "growth_stages": ["harvesting"],
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {"key": "thu_hoach", "title": "Thu quả xanh đúng độ", "detail": "Ớt ngọt dùng khi quả còn xanh (chuyển đỏ giảm giá trị thương phẩm). Thu khi vỏ bóng, ấn vào thấy cứng tay, nghe tiếng 'pop'. Thu quá non thịt mỏng, thu già kém chất lượng.", "type": "harvest", "timing": "Đông xuân: tháng 1–2; xuân hè: tháng 3–4"},
+            {"key": "vun_xoi_4", "title": "Vun xới lần 4 (tuỳ điều kiện)", "detail": "Có thể bổ sung lần 4 khi cây đã cho thu hoạch lứa thứ nhất; không bón nhiều đạm trước khi thu quả.", "type": "cultivate", "timing": "Sau thu lứa đầu"}
+          ]
+        }
+      ],
+      "extra_rules": [
+        "Nguồn ghi bón lót 1/3 kali và bón thúc 1/3 kali; phần 1/3 còn lại nguồn không nói rõ — ứng dụng chép nguyên như vậy, không tự phân bổ.",
+        "Tỷ lệ đạm/kali theo đợt (67/33 và 22/11) là phần chia ứng dụng suy ra từ nguồn ('toàn bộ đạm chia vào các lần vun xới', 3 lần), không phải số của nguồn."
+      ]
+    }
+  ],
+  "unavailable": [
+    {
+      "category_id": "chili_ornamental",
+      "category_name": "Ớt kiểng",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho ớt kiểng từ cơ quan khuyến nông hoặc công ty giống (tra cứu 13/09/2026). Không tự suy diễn từ quy trình ớt cay.",
+      "suggested_sources": [
+        {"title": "Trung tâm Khuyến nông Lâm Đồng — Kỹ thuật trồng ớt cay", "url": "http://khuyennong.lamdong.gov.vn/ky-thuat-trong-trot/ki-thuat-trong-rau/887-k-thut-trng-t-cay"},
+        {"title": "Công ty Giống cây trồng Rạng Đông", "url": "https://rado.com.vn/"}
+      ]
+    }
+  ]
+}

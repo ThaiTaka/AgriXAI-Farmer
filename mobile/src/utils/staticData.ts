@@ -6,73 +6,39 @@
  * available with no network at all.
  */
 
-import careProtocolsJson from '@shared/data/care_protocols.json';
 import cropVarietiesJson from '@shared/data/crop_varieties.json';
 import fertilizerJson from '@shared/data/fertilizer_recommendations.json';
 
-import type {GrowthStage} from '../db/models/CropCycle';
 import type {VarietyBadge} from '../db/models/CropVariety';
 
 /* ------------------------------ care protocols ----------------------------- */
 
-export type CareTaskType = 'fertilize' | 'water' | 'cultivate' | 'scout' | 'spray' | 'harvest';
-
-export interface CareTask {
-  key: string;
-  title: string;
-  detail: string;
-  type: CareTaskType;
-}
-
-export interface CareStage {
-  stage_code: string;
-  stage_name_vi: string;
-  source_stage_code: string;
-  source_stage_name_vi: string;
-  pct_of_total_topdress: number;
-  tasks: CareTask[];
-}
-
-export interface CareProtocol {
-  id: string;
-  crop_type: string;
-  crop_name: string;
-  name: string;
-  source: string;
-  collected_at: string;
-  disclaimer: string;
-  stage_mapping_note: string;
-  stages: CareStage[];
-}
-
-const careProtocols = careProtocolsJson.protocols as unknown as CareProtocol[];
-
-export function careProtocolFor(cropType: string): CareProtocol | undefined {
-  return careProtocols.find(p => p.crop_type === cropType);
-}
-
-export function careStageFor(cropType: string, stage: GrowthStage): CareStage | undefined {
-  return careProtocolFor(cropType)?.stages.find(s => s.stage_code === stage);
-}
-
-export function allCareStages(cropType: string): CareStage[] {
-  return careProtocolFor(cropType)?.stages ?? [];
-}
-
-export const STAGE_LABELS: Record<GrowthStage, string> = {
-  seedling: 'Cây con / hồi xanh',
-  vegetative: 'Sinh trưởng thân lá',
-  flowering: 'Ra hoa',
-  fruiting: 'Đậu quả / nuôi quả',
-  harvesting: 'Thu hoạch',
-  finished: 'Đã kết thúc',
-};
-
-export const careProtocolDisclaimer = (cropType: string): string =>
-  careProtocolFor(cropType)?.disclaimer ?? '';
-
-export const careProtocolSource = (cropType: string): string =>
-  careProtocolFor(cropType)?.source ?? '';
+// Typed access lives in src/domain/careProtocol.ts (pure TS, jest-tested);
+// re-exported here so screens keep one import path for static data.
+export {
+  allProtocols,
+  applicationPct,
+  citation,
+  conversionFactors,
+  conversionNote,
+  protocolAvailability,
+  protocolById,
+  protocolsFor,
+  stageForGrowth,
+  stageForMonth,
+  STAGE_LABELS,
+  TASK_TYPE_LABELS,
+  unavailableEntries,
+} from '../domain/careProtocol';
+export type {
+  CareProtocol,
+  CareStage,
+  CareTask,
+  CareTaskType,
+  Scenario,
+  ScenarioItem,
+  UnavailableEntry,
+} from '../domain/careProtocol';
 
 /* ------------------------- crop catalogue (3 levels) ----------------------- */
 
@@ -149,6 +115,13 @@ export function flatSeedVarieties(): FlatSeedVariety[] {
   return flatCache;
 }
 
+/** Catalogue category of a seeded variety ('seed_<key>' or bare key); null for farmer-added rows. */
+export function seedVarietyCategory(varietyId: string | null | undefined): string | null {
+  if (!varietyId) return null;
+  const key = varietyId.startsWith('seed_') ? varietyId.slice('seed_'.length) : varietyId;
+  return flatSeedVarieties().find(v => v.id === key)?.category_id ?? null;
+}
+
 export const VARIETY_BADGE_LABELS: Record<VarietyBadge, string> = {
   popular: 'Phổ biến',
   new: 'Mới',
@@ -214,6 +187,10 @@ export function fertilizerProducts(categoryCode?: string): FertilizerProduct[] {
   return [...rows].sort(
     (a, b) => (a.price_per_kg_avg ?? Number.MAX_SAFE_INTEGER) - (b.price_per_kg_avg ?? Number.MAX_SAFE_INTEGER),
   );
+}
+
+export function fertilizerProduct(id: string): FertilizerProduct | undefined {
+  return fertilizers.products.find(p => p.id === id);
 }
 
 export function budgetTiers(): BudgetTier[] {

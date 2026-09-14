@@ -304,3 +304,142 @@ export function CropIcon({name, size, color}: {name: CropIconName} & IconProps) 
       return <SproutIcon size={size} color={color} />;
   }
 }
+
+/* ---------------------------- Giai đoạn 3 icons ---------------------------- */
+
+/** Calculator — F1. */
+export function CalculatorIcon({size = 22, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke={color} strokeWidth={STROKE} />
+      <Path d="M8 7h8" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+      <Path d="M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 15.5h.01M12 15.5h.01M15.5 15.5h.01" stroke={color} strokeWidth={2.6} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+/** Price tag — F3 budget tiers. */
+export function TagIcon({size = 22, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M3 11.5V4a1 1 0 0 1 1-1h7.5l9 9-8.5 8.5-9-9Z"
+        stroke={color}
+        strokeWidth={STROKE}
+        strokeLinejoin="round"
+      />
+      <Circle cx={8} cy={8} r={1.5} fill={color} />
+    </Svg>
+  );
+}
+
+/** Scales — F4 stock check. */
+export function ScaleIcon({size = 22, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 3v18M5 21h14M4 7h16" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+      <Path d="M7 7l-3.5 7a3.5 3.5 0 0 0 7 0L7 7ZM17 7l-3.5 7a3.5 3.5 0 0 0 7 0L17 7Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+/** Clipboard with ticks — F5/F6 care protocol. */
+export function ClipboardIcon({size = 22, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M9 4h6v3H9zM7 5H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-1" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="m8.5 12 1.5 1.5 3-3M8.5 17l1.5 1.5 3-3" stroke={color} strokeWidth={STROKE} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+/** Shed — warehouse. */
+export function WarehouseIcon({size = 22, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M3 10 12 4l9 6v10H3V10Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="M7 20v-6h10v6M7 17h10" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+/** Coins — income / expense. */
+export function CoinsIcon({size = 22, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Circle cx={9} cy={9} r={5.5} stroke={color} strokeWidth={STROKE} />
+      <Path d="M14.5 8.2A5.5 5.5 0 1 1 8.2 14.5" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+      <Path d="M9 6.5v5M7.5 8h3" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+/** Empty / ticked square for task lists. */
+export function CheckboxIcon({checked, size = 24}: {checked: boolean; size?: number}) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"
+        fill={checked ? colors.primary.default : colors.white}
+        stroke={checked ? colors.primary.default : colors.border.strong}
+        strokeWidth={STROKE}
+      />
+      {checked ? (
+        <Path d="m7.5 12.5 3 3 6-7" stroke={colors.white} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" />
+      ) : null}
+    </Svg>
+  );
+}
+
+export function BellIcon({size = 18, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="M10 20a2 2 0 0 0 4 0" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+export function ShareIcon({size = 18, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 3v12M8 7l4-4 4 4" stroke={color} strokeWidth={STROKE} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+export function TrashIcon({size = 18, color = colors.gray['500']}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" stroke={color} strokeWidth={STROKE} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+export function ExternalLinkIcon({size = 16, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M14 4h6v6M20 4l-9 9" stroke={color} strokeWidth={STROKE} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+export function AlertIcon({size = 20, color = colors.badge.yellowFg}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 3 2.5 20h19L12 3Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="M12 9v5M12 17h.01" stroke={color} strokeWidth={2.4} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+export function CheckCircleIcon({size = 20, color = colors.badge.greenFg}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Circle cx={12} cy={12} r={9} stroke={color} strokeWidth={STROKE} />
+      <Path d="m8 12.5 2.5 2.5 5.5-6" stroke={color} strokeWidth={STROKE} strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
+}

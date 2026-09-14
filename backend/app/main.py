@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import engine
 from app.core.schema_upgrade import upgrade
-from app.routers import auth, health, plots, sync
+from app.routers import auth, health, ledger, plots, sync
 
 
 @asynccontextmanager
@@ -40,6 +40,13 @@ app.include_router(auth.router)
 app.include_router(plots.plots_router)
 app.include_router(plots.varieties_router)
 app.include_router(sync.router)
+app.include_router(ledger.plans_router)
+app.include_router(ledger.warehouse_router)
+app.include_router(ledger.income_router)
+app.include_router(ledger.expense_router)
+app.include_router(ledger.reports_router)
+app.include_router(ledger.protocols_router)
+app.include_router(ledger.tasks_router)
 
 
 @app.get("/", include_in_schema=False)

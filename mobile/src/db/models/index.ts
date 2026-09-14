@@ -2,7 +2,17 @@ export {default as Plot} from './Plot';
 export {default as CropVariety} from './CropVariety';
 export {default as CropCycle} from './CropCycle';
 export {default as ChangeLog} from './ChangeLog';
+export {default as Plan} from './Plan';
+export {default as WarehouseIn} from './WarehouseIn';
+export {default as WarehouseOut} from './WarehouseOut';
+export {default as Income} from './Income';
+export {default as Expense} from './Expense';
+export {default as TaskHistory} from './TaskHistory';
 
 export type {PlotStatus} from './Plot';
 export type {GrowthStage} from './CropCycle';
 export type {ChangeAction} from './ChangeLog';
+export type {PlanItem} from './Plan';
+export type {StockUnit} from './WarehouseIn';
+export type {IncomeKind} from './Income';
+export type {ExpenseKind} from './Expense';

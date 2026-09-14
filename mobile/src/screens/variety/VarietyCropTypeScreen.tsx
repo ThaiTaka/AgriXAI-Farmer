@@ -34,20 +34,23 @@ export function VarietyCropTypeScreen() {
   const crops = useMemo(() => cropTypeOptions(all), [all]);
   const [adding, setAdding] = useState(false);
 
+  const returnTo = params.returnTo ?? 'PlotForm';
+
   const cancel = useCallback(
-    () => navigation.popTo('PlotForm', undefined, {merge: true}),
-    [navigation],
+    () => navigation.popTo(returnTo, undefined, {merge: true}),
+    [navigation, returnTo],
   );
 
   const onCreated = useCallback(
     (variety: VarietyOption) => {
       setAdding(false);
       navigation.popTo(
-        'PlotForm',
+        returnTo,
         {
           pickedVariety: {
             cropType: variety.cropType,
             cropName: variety.cropName,
+            categoryId: variety.categoryId === USER_CATEGORY_ID ? null : variety.categoryId,
             varietyId: variety.id,
             varietyName: variety.name,
           },
@@ -55,7 +58,7 @@ export function VarietyCropTypeScreen() {
         {merge: true},
       );
     },
-    [navigation],
+    [navigation, returnTo],
   );
 
   return (
@@ -79,11 +82,13 @@ export function VarietyCropTypeScreen() {
                   ? navigation.navigate('VarietyCategory', {
                       cropTypeId: crop.id,
                       selectedId: params.selectedId,
+                      returnTo,
                     })
                   : navigation.navigate('VarietyPick', {
                       cropTypeId: crop.id,
                       categoryId: USER_CATEGORY_ID,
                       selectedId: params.selectedId,
+                      returnTo,
                     })
               }
               style={styles.tile}>

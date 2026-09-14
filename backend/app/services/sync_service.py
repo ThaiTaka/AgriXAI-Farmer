@@ -28,6 +28,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.farm import ChangeLog, CropCycle, CropVariety, Plot
+from app.models.ledger import Expense, Income, Plan, TaskHistory, WarehouseIn, WarehouseOut
 from app.models.user import User
 
 # Table name -> (model, is_owned). Owned tables are filtered to the caller;
@@ -37,6 +38,13 @@ SYNC_MODELS: dict[str, tuple[type, bool]] = {
     "crop_varieties": (CropVariety, False),
     "crop_cycles": (CropCycle, True),
     "change_logs": (ChangeLog, False),
+    # Giai đoạn 3 ledgers — every row belongs to the farmer who wrote it.
+    "plans": (Plan, True),
+    "warehouse_in": (WarehouseIn, True),
+    "warehouse_out": (WarehouseOut, True),
+    "income": (Income, True),
+    "expense": (Expense, True),
+    "tasks_history": (TaskHistory, True),
 }
 
 # Columns the client owns. `id`, `created_at` and `updated_at` are handled

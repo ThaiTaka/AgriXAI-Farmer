@@ -8,12 +8,139 @@
 
 import {
   addColumns,
+  createTable,
   schemaMigrations,
   unsafeExecuteSql,
 } from '@nozbe/watermelondb/Schema/migrations';
 
 export const migrations = schemaMigrations({
   migrations: [
+    {
+      // v4 -> v5: Giai đoạn 3 ledgers. Six new tables, nothing changed on the
+      // existing ones. Column lists are copied from schema.ts on purpose —
+      // a migration must describe the shape at the time it ran, not follow
+      // later edits to the live schema.
+      toVersion: 5,
+      steps: [
+        createTable({
+          name: 'plans',
+          columns: [
+            {name: 'plot_id', type: 'string', isOptional: true, isIndexed: true},
+            {name: 'crop_type', type: 'string'},
+            {name: 'crop_name', type: 'string', isOptional: true},
+            {name: 'category_id', type: 'string', isOptional: true},
+            {name: 'variety_id', type: 'string', isOptional: true},
+            {name: 'variety_name', type: 'string', isOptional: true},
+            {name: 'protocol_id', type: 'string'},
+            {name: 'scenario_id', type: 'string'},
+            {name: 'scenario_name', type: 'string'},
+            {name: 'area_input', type: 'number'},
+            {name: 'area_unit', type: 'string'},
+            {name: 'area_m2', type: 'number'},
+            {name: 'items_json', type: 'string'},
+            {name: 'cost_min', type: 'number', isOptional: true},
+            {name: 'cost_max', type: 'number', isOptional: true},
+            {name: 'note', type: 'string', isOptional: true},
+            {name: 'owner_id', type: 'string', isIndexed: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+        createTable({
+          name: 'warehouse_in',
+          columns: [
+            {name: 'fertilizer_id', type: 'string', isIndexed: true},
+            {name: 'fertilizer_name', type: 'string'},
+            {name: 'category', type: 'string', isOptional: true},
+            {name: 'quantity', type: 'number'},
+            {name: 'unit', type: 'string'},
+            {name: 'quantity_kg', type: 'number'},
+            {name: 'price', type: 'number'},
+            {name: 'unit_price', type: 'number'},
+            {name: 'occurred_at', type: 'number', isIndexed: true},
+            {name: 'note', type: 'string', isOptional: true},
+            {name: 'plot_id', type: 'string', isOptional: true},
+            {name: 'expense_id', type: 'string', isOptional: true},
+            {name: 'owner_id', type: 'string', isIndexed: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+        createTable({
+          name: 'warehouse_out',
+          columns: [
+            {name: 'fertilizer_id', type: 'string', isIndexed: true},
+            {name: 'fertilizer_name', type: 'string'},
+            {name: 'category', type: 'string', isOptional: true},
+            {name: 'quantity_kg', type: 'number'},
+            {name: 'unit_price', type: 'number'},
+            {name: 'total_cost', type: 'number'},
+            {name: 'occurred_at', type: 'number', isIndexed: true},
+            {name: 'note', type: 'string', isOptional: true},
+            {name: 'plot_id', type: 'string', isOptional: true},
+            {name: 'plan_id', type: 'string', isOptional: true},
+            {name: 'owner_id', type: 'string', isIndexed: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+        createTable({
+          name: 'income',
+          columns: [
+            {name: 'kind', type: 'string'},
+            {name: 'description', type: 'string'},
+            {name: 'amount', type: 'number'},
+            {name: 'occurred_at', type: 'number', isIndexed: true},
+            {name: 'note', type: 'string', isOptional: true},
+            {name: 'plot_id', type: 'string', isOptional: true},
+            {name: 'checked', type: 'boolean'},
+            {name: 'owner_id', type: 'string', isIndexed: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+        createTable({
+          name: 'expense',
+          columns: [
+            {name: 'kind', type: 'string'},
+            {name: 'description', type: 'string'},
+            {name: 'amount', type: 'number'},
+            {name: 'occurred_at', type: 'number', isIndexed: true},
+            {name: 'note', type: 'string', isOptional: true},
+            {name: 'plot_id', type: 'string', isOptional: true},
+            {name: 'checked', type: 'boolean'},
+            {name: 'warehouse_in_id', type: 'string', isOptional: true},
+            {name: 'owner_id', type: 'string', isIndexed: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+        createTable({
+          name: 'tasks_history',
+          columns: [
+            {name: 'protocol_id', type: 'string', isIndexed: true},
+            {name: 'stage_code', type: 'string'},
+            {name: 'task_key', type: 'string'},
+            {name: 'task_title', type: 'string'},
+            {name: 'crop_type', type: 'string'},
+            {name: 'plot_id', type: 'string', isOptional: true, isIndexed: true},
+            {name: 'done', type: 'boolean'},
+            {name: 'done_at', type: 'number', isOptional: true},
+            {name: 'remind_at', type: 'number', isOptional: true},
+            {name: 'note', type: 'string', isOptional: true},
+            {name: 'owner_id', type: 'string', isIndexed: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+      ],
+    },
     {
       // v3 -> v4: three-level crop catalogue + flat redesign clean-up.
       //

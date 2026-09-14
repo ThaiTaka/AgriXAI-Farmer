@@ -5,15 +5,21 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
 import {useAuth} from '../auth/AuthContext';
 import {Screen} from '../components/Screen';
+import {FertilizerCalculatorScreen} from '../screens/calculator/FertilizerCalculatorScreen';
+import {CareProtocolScreen} from '../screens/care/CareProtocolScreen';
+import {FertilizerBudgetScreen} from '../screens/fertilizer/FertilizerBudgetScreen';
 import {FertilizerGroupsScreen} from '../screens/fertilizer/FertilizerGroupsScreen';
 import {FertilizerProductsScreen} from '../screens/fertilizer/FertilizerProductsScreen';
+import {FinanceScreen} from '../screens/finance/FinanceScreen';
 import {HomeScreen} from '../screens/HomeScreen';
 import {LoginScreen} from '../screens/LoginScreen';
 import {PlotDetailScreen} from '../screens/PlotDetailScreen';
 import {PlotFormScreen} from '../screens/PlotFormScreen';
+import {StockCheckScreen} from '../screens/stock/StockCheckScreen';
 import {VarietyCategoryScreen} from '../screens/variety/VarietyCategoryScreen';
 import {VarietyCropTypeScreen} from '../screens/variety/VarietyCropTypeScreen';
 import {VarietyPickScreen} from '../screens/variety/VarietyPickScreen';
+import {WarehouseScreen} from '../screens/warehouse/WarehouseScreen';
 import {colors} from '../theme';
 import type {RootStackParamList} from './types';
 
@@ -56,6 +62,12 @@ export function RootNavigator() {
             <Stack.Screen name="VarietyPick" component={VarietyPickScreen} />
             <Stack.Screen name="FertilizerGroups" component={FertilizerGroupsScreen} />
             <Stack.Screen name="FertilizerProducts" component={FertilizerProductsScreen} />
+            <Stack.Screen name="FertilizerCalculator" component={FertilizerCalculatorScreen} />
+            <Stack.Screen name="FertilizerBudget" component={FertilizerBudgetScreen} />
+            <Stack.Screen name="StockCheck" component={StockCheckScreen} />
+            <Stack.Screen name="CareProtocol" component={CareProtocolScreen} />
+            <Stack.Screen name="Warehouse" component={WarehouseScreen} />
+            <Stack.Screen name="Finance" component={FinanceScreen} />
           </>
         )}
       </Stack.Navigator>
