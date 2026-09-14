@@ -140,7 +140,11 @@ export function PlotFormScreen() {
 
     if (!form.name.trim()) next.name = 'Tên lô đất là bắt buộc.';
 
-    if (form.code.trim() && !isWellFormedPlotCode(form.code)) {
+    // A code the plot already carries (issued by the back office, e.g.
+    // "PUC-001-HB") is valid as it is; only a newly typed code has to follow
+    // the app's own PUC-YYMM-XXXX shape.
+    const codeUnchanged = existing != null && form.code.trim() === (existing.code ?? '');
+    if (form.code.trim() && !codeUnchanged && !isWellFormedPlotCode(form.code)) {
       next.code = 'Sai định dạng. Đúng phải là PUC-YYMM-XXXX, hoặc để trống để tự sinh.';
     }
 
@@ -157,7 +161,7 @@ export function PlotFormScreen() {
 
     setErrors(next);
     return Object.keys(next).length === 0;
-  }, [form]);
+  }, [form, existing]);
 
   const onSave = useCallback(async () => {
     if (saving || !validate()) return;

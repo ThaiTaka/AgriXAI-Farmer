@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Overrides react-native-share's FileProvider paths (same resource name wins at
+  merge time). The first two entries are the library's own; the last two let the
+  share sheet reach the PDF reports that react-native-html-to-pdf writes under
+  <files>/bao-cao/ (internal) or <external files>/bao-cao/ (when mounted).
+-->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-path name="rnshare1" path="Download/" />
+    <cache-path name="rnshare2" path="/" />
+    <files-path name="agrilog_reports" path="bao-cao/" />
+    <external-files-path name="agrilog_reports_ext" path="bao-cao/" />
+</paths>

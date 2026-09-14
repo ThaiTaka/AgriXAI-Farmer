@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.models.ledger import Expense, ExpenseKind, Income, Plan, TaskHistory, WarehouseIn, WarehouseOut
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.schemas.ledger import (
     CheckedUpdate,
     ExpenseCreate,
@@ -52,12 +52,31 @@ def _alive(model, user: User):
     return select(model).where(model.owner_id == user.id, model.is_deleted.is_(False))
 
 
+def _viewer(db: Session, user: User, owner_id: str | None) -> User:
+    """Whose ledger a list endpoint shows: the caller, or — admin only — a
+    given farm. A farmer asking for someone else gets a 404, not a 403, so
+    the existence of other ids is not confirmed."""
+    if not owner_id or owner_id == user.id:
+        return user
+    if user.role is not UserRole.ADMIN:
+        raise HTTPException(status_code=404, detail="Không tìm thấy nông hộ")
+    target = db.get(User, owner_id)
+    if target is None or target.is_deleted:
+        raise HTTPException(status_code=404, detail="Không tìm thấy nông hộ")
+    return target
+
+
 # --------------------------------- plans ---------------------------------
 
 
 @plans_router.get("", response_model=list[PlanOut])
-def list_plans(user: User = Depends(current_user), db: Session = Depends(get_db)) -> list[Plan]:
-    return list(db.scalars(_alive(Plan, user).order_by(Plan.created_at.desc())))
+def list_plans(
+    owner_id: str | None = Query(default=None),
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+) -> list[Plan]:
+    target = _viewer(db, user, owner_id)
+    return list(db.scalars(_alive(Plan, target).order_by(Plan.created_at.desc())))
 
 
 @plans_router.post("", response_model=PlanOut, status_code=status.HTTP_201_CREATED)
@@ -79,8 +98,13 @@ def create_plan(body: PlanCreate, user: User = Depends(current_user), db: Sessio
 
 
 @warehouse_router.get("/in", response_model=list[WarehouseInOut])
-def list_warehouse_in(user: User = Depends(current_user), db: Session = Depends(get_db)) -> list[WarehouseIn]:
-    return list(db.scalars(_alive(WarehouseIn, user).order_by(WarehouseIn.occurred_at.desc())))
+def list_warehouse_in(
+    owner_id: str | None = Query(default=None),
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+) -> list[WarehouseIn]:
+    target = _viewer(db, user, owner_id)
+    return list(db.scalars(_alive(WarehouseIn, target).order_by(WarehouseIn.occurred_at.desc())))
 
 
 @warehouse_router.post("/in", response_model=WarehouseInOut, status_code=status.HTTP_201_CREATED)
@@ -131,8 +155,13 @@ def create_warehouse_in(
 
 
 @warehouse_router.get("/out", response_model=list[WarehouseOutOut])
-def list_warehouse_out(user: User = Depends(current_user), db: Session = Depends(get_db)) -> list[WarehouseOut]:
-    return list(db.scalars(_alive(WarehouseOut, user).order_by(WarehouseOut.occurred_at.desc())))
+def list_warehouse_out(
+    owner_id: str | None = Query(default=None),
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+) -> list[WarehouseOut]:
+    target = _viewer(db, user, owner_id)
+    return list(db.scalars(_alive(WarehouseOut, target).order_by(WarehouseOut.occurred_at.desc())))
 
 
 @warehouse_router.post("/out", response_model=WarehouseOutOut, status_code=status.HTTP_201_CREATED)
@@ -180,8 +209,13 @@ def create_warehouse_out(
 
 
 @warehouse_router.get("/summary", response_model=StockSummaryOut)
-def warehouse_summary(user: User = Depends(current_user), db: Session = Depends(get_db)) -> StockSummaryOut:
-    lines = ledger.stock_summary(db.scalars(_alive(WarehouseIn, user)), db.scalars(_alive(WarehouseOut, user)))
+def warehouse_summary(
+    owner_id: str | None = Query(default=None),
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+) -> StockSummaryOut:
+    target = _viewer(db, user, owner_id)
+    lines = ledger.stock_summary(db.scalars(_alive(WarehouseIn, target)), db.scalars(_alive(WarehouseOut, target)))
     out = [
         StockLineOut(
             fertilizer_id=l.fertilizer_id,
@@ -250,8 +284,13 @@ def warehouse_check(
 
 
 @income_router.get("", response_model=list[IncomeOut])
-def list_income(user: User = Depends(current_user), db: Session = Depends(get_db)) -> list[Income]:
-    return list(db.scalars(_alive(Income, user).order_by(Income.occurred_at.desc())))
+def list_income(
+    owner_id: str | None = Query(default=None),
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+) -> list[Income]:
+    target = _viewer(db, user, owner_id)
+    return list(db.scalars(_alive(Income, target).order_by(Income.occurred_at.desc())))
 
 
 @income_router.post("", response_model=IncomeOut, status_code=status.HTTP_201_CREATED)
@@ -284,8 +323,13 @@ def set_income_checked(
 
 
 @expense_router.get("", response_model=list[ExpenseOut])
-def list_expense(user: User = Depends(current_user), db: Session = Depends(get_db)) -> list[Expense]:
-    return list(db.scalars(_alive(Expense, user).order_by(Expense.occurred_at.desc())))
+def list_expense(
+    owner_id: str | None = Query(default=None),
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+) -> list[Expense]:
+    target = _viewer(db, user, owner_id)
+    return list(db.scalars(_alive(Expense, target).order_by(Expense.occurred_at.desc())))
 
 
 @expense_router.post("", response_model=ExpenseOut, status_code=status.HTTP_201_CREATED)
@@ -330,11 +374,13 @@ def financials(
     year: int = Query(...),
     month: int | None = Query(default=None),
     quarter: int | None = Query(default=None),
+    owner_id: str | None = Query(default=None),
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ) -> FinancialReportOut:
+    target = _viewer(db, user, owner_id)
     report = ledger.financial_report(
-        db.scalars(_alive(Income, user)), db.scalars(_alive(Expense, user)), _period(year, month, quarter)
+        db.scalars(_alive(Income, target)), db.scalars(_alive(Expense, target)), _period(year, month, quarter)
     )
     return FinancialReportOut(
         period=report.period,

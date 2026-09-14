@@ -13,6 +13,10 @@ alembic==1.19.2
 # --- Config & validation ---
 pydantic==2.12.4
 pydantic-settings==2.11.0
+
+# --- Reports ---
+# Unicode PDF (Open Sans TTF from mobile/src/assets/fonts).
+fpdf2==2.8.8
 email-validator==2.3.0
 
 # --- Auth ---
@@ -22,4 +26,6 @@ bcrypt==5.0.0
 # --- Dev / test ---
 pytest==8.4.2
 pytest-cov==7.1.0
+# Reads the generated PDF back in tests.
+pypdf==6.18.1
 httpx==0.28.1

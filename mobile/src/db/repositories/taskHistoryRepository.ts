@@ -34,6 +34,13 @@ export function observeUpcomingReminders(ownerId: string, now: number = Date.now
     .observeWithColumns(['done', 'remind_at']);
 }
 
+/** Every ticked task of the account — the dashboard subtracts these from the current stages. */
+export function observeDoneTasks(ownerId: string) {
+  return collections.tasksHistory
+    .query(Q.where('owner_id', ownerId), Q.where('done', true))
+    .observeWithColumns(['done']);
+}
+
 export const historyKey = (stageCode: string, taskKey: string) => `${stageCode}/${taskKey}`;
 
 async function findRow(ownerId: string, ref: TaskRef): Promise<TaskHistory | null> {

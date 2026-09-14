@@ -19,6 +19,7 @@ import {
   ChangeLog,
   CropCycle,
   CropVariety,
+  ErrorLogEntry,
   Expense,
   Income,
   Plan,
@@ -54,6 +55,7 @@ export const database = new Database({
     Income,
     Expense,
     TaskHistory,
+    ErrorLogEntry,
   ],
 });
 
@@ -68,6 +70,7 @@ export const collections = {
   income: database.get<Income>('income'),
   expense: database.get<Expense>('expense'),
   tasksHistory: database.get<TaskHistory>('tasks_history'),
+  errorLogs: database.get<ErrorLogEntry>('error_logs'),
 };
 
 export {schema, SCHEMA_VERSION, SYNC_TABLES, LOCAL_ONLY_TABLES} from './schema';

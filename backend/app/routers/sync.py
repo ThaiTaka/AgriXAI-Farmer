@@ -47,5 +47,8 @@ def push(
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
     applied = push_changes(db, user, changes)
+    conflicts = applied.pop("conflict_rows", [])
     logger.debug("push user=%s last_pulled_at=%s applied=%s", user.username, last_pulled_at, applied)
-    return {"ok": True, "applied": applied}
+    # `conflicts` carries the server copy of every rejected row so the phone
+    # can offer "giữ bản của tôi / lấy bản mới" instead of diverging silently.
+    return {"ok": True, "applied": applied, "conflicts": conflicts}

@@ -15,9 +15,17 @@ export type PickerReturnRoute = 'PlotForm' | 'FertilizerCalculator' | 'CareProto
 export type WarehouseTab = 'in' | 'out' | 'stock';
 export type FinanceTab = 'income' | 'expense' | 'report';
 
+/** Bottom tabs inside the signed-in stack. */
+export type MainTabParamList = {
+  Home: undefined;
+  Tools: undefined;
+  Settings: undefined;
+};
+
 export type RootStackParamList = {
   Login: undefined;
-  Home: undefined;
+  /** The tab bar (Trang chủ · Công cụ · Cài đặt). */
+  Main: {screen?: keyof MainTabParamList} | undefined;
   PlotDetail: {plotId: string};
   /**
    * No `plotId` => create mode; with one => edit mode with the fields pre-filled.
@@ -51,6 +59,8 @@ export type RootStackParamList = {
   Warehouse: {tab?: WarehouseTab; prefill?: {fertilizerId: string; quantityKg?: number}} | undefined;
   /** Thu – chi và báo cáo lãi/lỗ. */
   Finance: {tab?: FinanceTab} | undefined;
+  /** Báo cáo tháng/quý → PDF. */
+  ReportExport: undefined;
 };
 
 declare global {

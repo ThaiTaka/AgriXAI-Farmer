@@ -443,3 +443,35 @@ export function CheckCircleIcon({size = 20, color = colors.badge.greenFg}: IconP
     </Svg>
   );
 }
+
+/* ------------------------------ tab bar icons ------------------------------ */
+
+export function HomeIcon({size = 24, color = colors.text.muted}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+export function ToolsIcon({size = 24, color = colors.text.muted}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M4 5h6v6H4zM14 5h6v6h-6zM4 15h6v6H4zM14 15h6v6h-6z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+export function SettingsIcon({size = 24, color = colors.text.muted}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Circle cx={12} cy={12} r={3} stroke={color} strokeWidth={STROKE} />
+      <Path
+        d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"
+        stroke={color}
+        strokeWidth={STROKE}
+        strokeLinecap="round"
+      />
+    </Svg>
+  );
+}

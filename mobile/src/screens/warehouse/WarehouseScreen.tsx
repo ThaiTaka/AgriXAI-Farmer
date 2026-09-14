@@ -51,6 +51,7 @@ import {useObservable} from '../../db/useObservable';
 import type {PeriodFilter, StockUnit} from '../../domain/warehouse';
 import {fifoCost, inPeriod, periodBounds, stockCsv, stockOf, stockSummary, stockTimeline, toKg} from '../../domain/warehouse';
 import type {RootStackParamList, WarehouseTab} from '../../navigation/types';
+import {useSync} from '../../sync/SyncContext';
 import {colors, radius, space, text} from '../../theme';
 import {formatDate, formatNumber, formatVnd} from '../../utils/format';
 import {fertilizerProduct} from '../../utils/staticData';
@@ -415,6 +416,8 @@ function StockOutTab({ins, outs, plots, prefill}: {ins: WarehouseIn[]; outs: War
 /* ---------------------------------- Tồn ---------------------------------- */
 
 function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
+  const {pending} = useSync();
+  const unsent = pending.filter(p => p.table === 'warehouse_in' || p.table === 'warehouse_out').reduce((s, p) => s + p.pending, 0);
   const [period, setPeriod] = useState<PeriodFilter>({kind: 'all'});
   const [focusId, setFocusId] = useState<string | null>(null);
 
@@ -460,6 +463,11 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
       <PeriodPicker value={period} onChange={setPeriod} style={styles.period} />
 
       <Card style={styles.totals} testID="stock-totals">
+        {unsent > 0 ? (
+          <View style={styles.offlineFlag}>
+            <Badge label={`Offline · ${unsent} phiếu chưa đồng bộ`} tone="yellow" />
+          </View>
+        ) : null}
         <View style={styles.totalsRow}>
           <View>
             <Text style={text('eyebrow', colors.text.muted)}>Tổng tồn</Text>
@@ -687,6 +695,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: space.md,
+  },
+  offlineFlag: {
+    marginBottom: space.sm,
   },
   totalsRight: {
     alignItems: 'flex-end',

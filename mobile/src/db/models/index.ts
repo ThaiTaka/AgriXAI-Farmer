@@ -8,6 +8,7 @@ export {default as WarehouseOut} from './WarehouseOut';
 export {default as Income} from './Income';
 export {default as Expense} from './Expense';
 export {default as TaskHistory} from './TaskHistory';
+export {default as ErrorLogEntry} from './ErrorLogEntry';
 
 export type {PlotStatus} from './Plot';
 export type {GrowthStage} from './CropCycle';

@@ -4,12 +4,15 @@
 tư vấn phân bón, lịch chăm sóc, quản lý kho vật tư và ghi thu chi — kèm trang quản trị web
 cho cán bộ quản lý.
 
-> **Trạng thái:** Giai đoạn 3 đã xong — tính lượng phân (F1), lọc theo ngân sách (F3),
-> kiểm tra kho (F4), quy trình chăm sóc 4 giai đoạn (F5–F6), Kho nhập/xuất/tồn và Thu – Chi
-> chạy offline trên mobile, đồng bộ hai chiều với backend. Xem [ADR 0005](docs/adr/0005-giai-doan-3-tu-van-cham-soc-kho-thu-chi.md).
+> **Trạng thái:** Giai đoạn 4 đã xong — dashboard 3 thẻ (tồn kho · lãi/lỗ tháng · việc
+> chờ), error boundary theo màn hình + nhật ký lỗi, banner offline / trạng thái đồng bộ,
+> xuất báo cáo thu – chi ra PDF (mobile tạo tại chỗ, web tải từ server), ba tài khoản nông hộ
+> cô lập dữ liệu và hộp thoại xử lý xung đột khi một tài khoản dùng hai máy, web-admin có
+> đăng nhập + dashboard responsive. Xem [ADR 0006](docs/adr/0006-giai-doan-4-dashboard-offline-pdf-da-nguoi-dung.md);
+> Giai đoạn 3 ở [ADR 0005](docs/adr/0005-giai-doan-3-tu-van-cham-soc-kho-thu-chi.md).
 > README này sẽ được viết đầy đủ ở Giai đoạn 6; bản hiện tại chỉ đủ để chạy dự án.
 
-![Trang chủ, chọn giống 3 bước và danh mục phân bón](docs/screenshots/01-home.png)
+![Dashboard nông hộ trên điện thoại](docs/screenshots/33-dashboard-home.png)
 
 ## Phạm vi
 
@@ -28,6 +31,10 @@ Bốn mảng nghiệp vụ của dự án:
 
 Nền cho cả bốn mảng: **danh mục giống cây 3 cấp** (loại cây → loại con → giống) với 4 loại
 cây · 17 loại con · 40 giống có nguồn — xem [ADR 0004](docs/adr/0004-he-thiet-ke-phang-va-danh-muc-giong-3-cap.md).
+
+Lớp vận hành (Giai đoạn 4): dashboard, error boundary + `POST /logs`, banner offline và
+trạng thái đồng bộ theo bảng, PDF báo cáo tháng/quý, đồng bộ nhiều tài khoản với hộp thoại
+xung đột, web-admin `/login` → `/dashboard` — xem [ADR 0006](docs/adr/0006-giai-doan-4-dashboard-offline-pdf-da-nguoi-dung.md).
 
 Hệ quả đáng chú ý: app chỉ xin **đúng một quyền** — `INTERNET`. Không còn quyền máy ảnh
 hay quyền đọc thư viện ảnh.
@@ -87,12 +94,22 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | `admin` | `admin123` | Quản trị viên |
 | `thaitaka` | `matkhau123` | Nông dân |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (57 test: smoke, sync hai chiều,
-parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi và 15 ca e2e API của
-Giai đoạn 3; phủ 93 %).
+Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (80 test: smoke, sync hai chiều,
+parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 ca e2e API của
+Giai đoạn 3 và 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e;
+phủ 94 %).
 
-Tài khoản demo Giai đoạn 3 (có sẵn lô PUC-001-HB, hai phiếu nhập, thu-chi tháng 9/2026):
-`nguyenvancuong` / `matkhau123`.
+Ba nông hộ demo (cùng mật khẩu `matkhau123`), mỗi hộ một lô, kho và thu-chi riêng tháng 9/2026:
+
+| Tài khoản | Lô đất | Cây |
+|---|---|---|
+| `nguyenvancuong` | PUC-001-HB, 300 m² | cà chua MV1 |
+| `nguyenvananh` | PUC-002-HB, 500 m² | dưa leo Hunter 1.0 |
+| `nguyenvanhai` | PUC-003-HB, 360 m² | ớt VIFON686 |
+
+Endpoint Giai đoạn 4: `GET /dashboard/summary`, `GET /reports/financials.pdf?year&month|quarter`,
+`POST /logs` (máy đẩy nhật ký lỗi), `GET /logs` và `GET /users` (admin), `GET /users/version`.
+Admin thêm `owner_id=` vào các endpoint danh sách/báo cáo để xem nông hộ bất kỳ.
 
 ## Chạy web-admin
 
@@ -103,7 +120,12 @@ cp .env.example .env.local
 npm run dev        # http://localhost:3000
 ```
 
-Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npm run lint`
+Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npm run lint` · build: `npx next build`
+
+Trang: `/login` (tài khoản của app; admin xem được mọi nông hộ) → `/dashboard` (3 thẻ, bảng
+tồn, báo cáo thu – chi theo tháng/quý, nút **Xuất PDF** tải từ server). Trang kiểm tra design
+token cũ ở `/tokens`. Khi mở bằng trình duyệt, dùng `http://localhost:3000` — Next 16 chặn
+script dev từ origin `127.0.0.1`.
 
 ## Chạy mobile
 
@@ -126,7 +148,12 @@ adb reverse tcp:8000 tcp:8000
 ```
 
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint App.tsx src __tests__` · test:
-`npx jest --coverage` (43 test; logic thuần trong `src/domain/` phủ 97 % dòng).
+`npx jest --coverage` (69 test; `src/domain/`, các component Giai đoạn 4, biểu đồ và
+`utils/` phủ 94 % câu lệnh / 96 % dòng — ngưỡng đặt trong `jest.config.js`).
+
+> Giai đoạn 4 thêm hai module native (`react-native-html-to-pdf`, `react-native-share`):
+> sau khi `npm install` phải build lại app (`./gradlew app:installDebug`), lần đầu cần mạng
+> để Gradle tải `pdfbox-android`.
 
 Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **cả tên đăng nhập lẫn email**
 (`thaitaka` hoặc `thaitaka@agrilog.local`).
@@ -178,14 +205,18 @@ quay lại foreground, và mỗi 60 giây.
 - `POST /sync?last_pulled_at=` — đẩy thay đổi từ máy lên
 
 Mười bảng đồng bộ: `plots`, `crop_varieties`, `crop_cycles`, `change_logs` và sáu bảng
-Giai đoạn 3 `plans`, `warehouse_in`, `warehouse_out`, `income`, `expense`, `tasks_history`
-(schema mobile v5).
+Giai đoạn 3 `plans`, `warehouse_in`, `warehouse_out`, `income`, `expense`, `tasks_history`.
+Bảng `error_logs` (schema mobile v6) chỉ ở máy và đi lên bằng `POST /logs` riêng.
 
 Xung đột giải quyết bằng **last-write-wins theo `updated_at`**; xoá luôn thắng update. Lý do
-và các test bắt buộc ghi ở [ADR 0002](docs/adr/0002-giai-doan-1.md).
+và các test bắt buộc ghi ở [ADR 0002](docs/adr/0002-giai-doan-1.md). Từ Giai đoạn 4, dòng
+bị server từ chối vì bản trên server mới hơn được trả về trong `conflicts[]`; app hiện hộp
+thoại "Thiết bị khác vừa sửa" với hai lựa chọn *Lấy bản mới* / *Giữ bản của tôi*
+([ADR 0006](docs/adr/0006-giai-doan-4-dashboard-offline-pdf-da-nguoi-dung.md) §5).
 
 Mọi thao tác của nông dân ghi vào SQLite trước rồi mới đồng bộ — tắt mạng vẫn dùng được
-toàn bộ ứng dụng.
+toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay đổi sẽ lưu khi online" /
+"Đang đồng bộ…" / "Cập nhật lúc HH:MM"; tab Cài đặt liệt kê trạng thái từng bảng.
 
 ## Màn hình mobile hiện có
 
@@ -209,6 +240,12 @@ toàn bộ ứng dụng.
 | Kho — bảng tồn + biểu đồ | `27-warehouse-stock-chart.png` |
 | Thu – Chi — form, lịch sử, báo cáo, biểu đồ | `28-finance-income-form.png`, `29-finance-expense-history.png`, `30-finance-report.png`, `31-finance-charts.png` |
 | Tab "Chăm sóc" của lô đất (dùng chung lịch sử task) | `32-plot-care-tab.png` |
+| Dashboard 3 thẻ + banner đồng bộ | `33-dashboard-home.png`, `34-dashboard-tools-synced-banner.png` |
+| Error boundary — "Thử lại" / "Báo lỗi" / đã gửi | `35-error-boundary.png`, `36-error-boundary-reported.png`, `42-settings-error-log.png` |
+| Banner offline + trạng thái đồng bộ theo bảng | `37-offline-banner.png`, `38-settings-sync-offline.png` |
+| Xuất PDF — xem trước, bảng chia sẻ, file mẫu | `39-report-pdf-preview.png`, `40-report-pdf-share.png`, `40-report-pdf-sample.pdf` |
+| Hộp thoại xung đột hai thiết bị | `41-conflict-dialog.png` |
+| Web-admin — đăng nhập, dashboard desktop / tablet / điện thoại, admin chọn nông hộ | `43-web-login.png`, `44-web-dashboard-desktop.png`, `45-web-dashboard-tablet.png`, `46-web-dashboard-phone.png`, `47-web-dashboard-admin-picker.png` |
 
 ## Giới hạn hiện tại
 
@@ -218,15 +255,16 @@ toàn bộ ứng dụng.
   calcium nitrat, NPK 5-10-3, NPK 12-12-17 hiện "Chưa có giá" và tổng ghi rõ "Chưa gồm".
 - "Đặt nhắc" lưu ngày nhắc và hiện ở trang chủ; chưa có push notification.
 - Xuất CSV đưa nội dung qua bảng chia sẻ của máy (Share sheet), không ghi file.
-- Trang chủ web-admin vẫn là màn hình kiểm tra design token; các trang quản trị (kể cả sửa
-  giá phân bón, duyệt giống, xem kho/thu-chi của nông hộ) thuộc Giai đoạn 4. API đã sẵn:
-  `/plans`, `/warehouse/{in,out,summary,summary.csv,check}`, `/income`, `/expense`,
-  `/reports/financials[.csv]`, `/care-protocols`, `/tasks-history`.
+- Web-admin mới có đăng nhập và dashboard (xem kho, thu-chi, xuất PDF của từng nông hộ);
+  sửa giá phân bón và duyệt giống trên web vẫn chưa có màn hình (API đã sẵn).
+- "Báo lỗi" gửi thông điệp, stack, màn hình, phiên bản và thời điểm — chưa đính kèm ảnh chụp
+  màn hình.
+- PDF trên web do server tạo (fpdf2) thay vì pdfkit trong trình duyệt; nội dung khớp bản mobile.
 - Bảng `crop_cycles` đã có trong schema nhưng chưa có màn hình nào ghi vào nó, nên tab
   "Chu kỳ canh tác" luôn rỗng; giai đoạn cây ở tab "Chăm sóc" vẫn **ước tính từ ngày trồng**
   theo chu kỳ cà chua (ADR 0002 §7).
-- Schema mobile ở **v5** (v4→v5 thêm sáu bảng). Server tự thêm cột/bảng thiếu lúc khởi động
-  (`app/core/schema_upgrade.py`) thay cho Alembic.
+- Schema mobile ở **v6** (v4→v5 thêm sáu bảng, v5→v6 thêm `error_logs`). Server tự thêm
+  cột/bảng thiếu lúc khởi động (`app/core/schema_upgrade.py`) thay cho Alembic.
 - Test render toàn bộ `App` trong jest đã bỏ (cần mock native module; treo với WatermelonDB);
   thay bằng test render từng component và test logic thuần.
 - Nhận dạng giọng nói chưa có — sẽ dùng `DummyAsrEngine` trước, chọn Vosk hay whisper.cpp

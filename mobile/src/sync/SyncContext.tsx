@@ -1,9 +1,13 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {AppState} from 'react-native';
 
-import type {SyncOutcome} from '../api/sync';
+import {uploadErrorLogs} from '../api/logs';
+import type {SyncConflict, SyncOutcome} from '../api/sync';
 import {runSync} from '../api/sync';
 import {useAuth} from '../auth/AuthContext';
+import type {TableSyncInfo} from '../domain/syncStatus';
+import {keepLocalVersion, takeServerVersion} from './conflicts';
+import {pendingByTable} from './pending';
 
 export type SyncState = 'idle' | 'syncing' | 'offline' | 'error';
 
@@ -11,6 +15,12 @@ interface SyncContextValue {
   state: SyncState;
   lastSyncedAt: number | null;
   sync: () => Promise<SyncOutcome>;
+  /** Rows the server refused on the last push, awaiting the farmer's choice. */
+  conflicts: SyncConflict[];
+  resolveConflict: (conflict: SyncConflict, choice: 'mine' | 'theirs') => Promise<void>;
+  /** Unsent changes per table (refreshed after every sync and on demand). */
+  pending: TableSyncInfo[];
+  refreshPending: () => Promise<void>;
 }
 
 const SyncContext = createContext<SyncContextValue | null>(null);
@@ -30,9 +40,22 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
   const {session, signOut} = useAuth();
   const [state, setState] = useState<SyncState>('idle');
   const [lastSyncedAt, setLastSyncedAt] = useState<number | null>(null);
+  const [conflicts, setConflicts] = useState<SyncConflict[]>([]);
+  const [pending, setPending] = useState<TableSyncInfo[]>([]);
   const token = session?.token ?? null;
+  const userId = session?.user.id ?? null;
   const tokenRef = useRef(token);
   tokenRef.current = token;
+  const userRef = useRef(userId);
+  userRef.current = userId;
+
+  const refreshPending = useCallback(async () => {
+    try {
+      setPending(await pendingByTable());
+    } catch (error) {
+      console.warn('[sync] pending refresh failed', error);
+    }
+  }, []);
 
   const sync = useCallback(async (): Promise<SyncOutcome> => {
     const current = tokenRef.current;
@@ -44,6 +67,16 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
     if (outcome.ok) {
       setState('idle');
       setLastSyncedAt(Date.now());
+      if (outcome.conflicts && outcome.conflicts.length > 0) {
+        setConflicts(prev => {
+          const seen = new Set(prev.map(c => `${c.table}/${c.id}`));
+          return [...prev, ...outcome.conflicts!.filter(c => !seen.has(`${c.table}/${c.id}`))];
+        });
+      }
+      // Online for sure: drain the error-log queue too. Never fatal.
+      if (userRef.current) {
+        uploadErrorLogs(current, userRef.current).catch(error => console.warn('[logs] upload failed', error));
+      }
     } else if (outcome.reason === 'offline') {
       setState('offline');
     } else if (outcome.reason === 'unauthorised') {
@@ -55,11 +88,27 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
       setState('error');
     }
 
+    await refreshPending();
     return outcome;
-  }, [signOut]);
+  }, [signOut, refreshPending]);
+
+  const resolveConflict = useCallback(
+    async (conflict: SyncConflict, choice: 'mine' | 'theirs') => {
+      if (choice === 'theirs') await takeServerVersion(conflict);
+      else await keepLocalVersion(conflict, userRef.current ?? 'device');
+      setConflicts(prev => prev.filter(c => !(c.table === conflict.table && c.id === conflict.id)));
+      // Push the decision straight away; if offline it goes with the next pass.
+      sync().catch(() => {});
+    },
+    [sync],
+  );
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setConflicts([]);
+      setPending([]);
+      return;
+    }
 
     const fire = () => {
       // A failed sync is never surfaced here — `sync` already records the state
@@ -80,8 +129,8 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
   }, [token, sync]);
 
   const value = useMemo<SyncContextValue>(
-    () => ({state, lastSyncedAt, sync}),
-    [state, lastSyncedAt, sync],
+    () => ({state, lastSyncedAt, sync, conflicts, resolveConflict, pending, refreshPending}),
+    [state, lastSyncedAt, sync, conflicts, resolveConflict, pending, refreshPending],
   );
 
   return <SyncContext.Provider value={value}>{children}</SyncContext.Provider>;

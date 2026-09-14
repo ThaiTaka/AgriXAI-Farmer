@@ -5,6 +5,10 @@
  * `pushChanges` sends everything the local `_status` bookkeeping marks as
  * unsynced. The sync NEVER blocks a screen — callers fire it and ignore the
  * outcome; a failure just means the next attempt will carry the same rows.
+ *
+ * Giai đoạn 4: the push reply lists rows the server refused (another device
+ * of the same account wrote a newer version). They come back in
+ * `SyncOutcome.conflicts` so the app can ask the farmer which copy to keep.
  */
 
 import {synchronize} from '@nozbe/watermelondb/sync';
@@ -13,10 +17,20 @@ import {database} from '../db';
 import {SCHEMA_VERSION} from '../db/schema';
 import {API_BASE_URL, NetworkError} from './client';
 
+export interface SyncConflict {
+  table: string;
+  id: string;
+  server_updated_at: number;
+  server_updated_by: string | null;
+  /** The server's current row, column names as in the schema. */
+  server: Record<string, unknown>;
+}
+
 export interface SyncOutcome {
   ok: boolean;
   reason?: 'offline' | 'unauthorised' | 'error';
   detail?: string;
+  conflicts?: SyncConflict[];
 }
 
 let inFlight: Promise<SyncOutcome> | null = null;
@@ -32,6 +46,7 @@ export async function runSync(token: string): Promise<SyncOutcome> {
   if (inFlight) return inFlight;
 
   inFlight = (async (): Promise<SyncOutcome> => {
+    const conflicts: SyncConflict[] = [];
     try {
       await synchronize({
         database,
@@ -67,6 +82,8 @@ export async function runSync(token: string): Promise<SyncOutcome> {
           );
           if (response.status === 401) throw new UnauthorisedError();
           if (!response.ok) throw new Error(`push failed: ${response.status}`);
+          const body = (await response.json()) as {conflicts?: SyncConflict[]};
+          if (Array.isArray(body.conflicts)) conflicts.push(...body.conflicts);
         },
         // Deliberately NOT setting `sendCreatedAsUpdated`: that flag is for
         // servers which cannot tell a create from an update, and WatermelonDB
@@ -75,7 +92,7 @@ export async function runSync(token: string): Promise<SyncOutcome> {
         log: __DEV__ ? {} : undefined,
       });
 
-      return {ok: true};
+      return {ok: true, conflicts};
     } catch (error) {
       if (error instanceof UnauthorisedError) {
         return {ok: false, reason: 'unauthorised'};

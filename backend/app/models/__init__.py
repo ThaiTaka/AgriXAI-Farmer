@@ -22,6 +22,7 @@ from app.models.ledger import (
     WarehouseIn,
     WarehouseOut,
 )
+from app.models.ops import ErrorLog
 from app.models.user import User, UserRole
 
 __all__ = [
@@ -42,4 +43,5 @@ __all__ = [
     "ExpenseKind",
     "StockUnit",
     "TaskHistory",
+    "ErrorLog",
 ]

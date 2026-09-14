@@ -16,6 +16,28 @@ import {
 export const migrations = schemaMigrations({
   migrations: [
     {
+      // v5 -> v6: local-only error log for the screen error boundary.
+      toVersion: 6,
+      steps: [
+        createTable({
+          name: 'error_logs',
+          columns: [
+            {name: 'action', type: 'string'},
+            {name: 'message', type: 'string'},
+            {name: 'stack', type: 'string', isOptional: true},
+            {name: 'app_version', type: 'string', isOptional: true},
+            {name: 'platform', type: 'string', isOptional: true},
+            {name: 'occurred_at', type: 'number', isIndexed: true},
+            {name: 'reported', type: 'boolean'},
+            {name: 'uploaded_at', type: 'number', isOptional: true},
+            {name: 'user_id', type: 'string', isIndexed: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+      ],
+    },
+    {
       // v4 -> v5: Giai đoạn 3 ledgers. Six new tables, nothing changed on the
       // existing ones. Column lists are copied from schema.ts on purpose —
       // a migration must describe the shape at the time it ran, not follow

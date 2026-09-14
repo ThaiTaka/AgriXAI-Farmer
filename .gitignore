@@ -55,3 +55,6 @@ Thumbs.db
 *.log
 coverage/
 dist/
+
+# pytest-cov data file
+.coverage

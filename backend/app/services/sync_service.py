@@ -19,6 +19,10 @@ so nothing is actually lost.
 
 Deletes always win over concurrent updates: an undeleted row reappearing on the
 farmer's phone is more confusing than a deletion they can redo.
+
+A push that loses a race is not silent: the response lists every rejected row
+together with the server's current copy, so the phone can ask the farmer
+"giữ bản của tôi hay lấy bản mới?" instead of quietly diverging (Giai đoạn 4).
 """
 
 import time
@@ -106,8 +110,13 @@ def push_changes(
     user: User,
     changes: dict[str, dict[str, list]],
 ) -> dict[str, Any]:
-    """Applies a batch of client changes. Returns per-table counters for the log."""
-    applied = {"created": 0, "updated": 0, "deleted": 0, "conflicts": 0}
+    """Applies a batch of client changes.
+
+    Returns per-table counters plus `conflict_rows`: the rows the server kept
+    its own version of, each with that version attached.
+    """
+    applied: dict[str, Any] = {"created": 0, "updated": 0, "deleted": 0, "conflicts": 0}
+    conflict_rows: list[dict[str, Any]] = []
     stamp = now_ms()
 
     for table, (model, owned) in SYNC_MODELS.items():
@@ -126,6 +135,7 @@ def push_changes(
                     applied["updated"] += 1
                 else:
                     applied["conflicts"] += 1
+                    conflict_rows.append(_conflict(table, existing, model))
                 continue
             db.add(_build(model, raw, user, owned, stamp))
             applied["created"] += 1
@@ -143,6 +153,7 @@ def push_changes(
                 applied["updated"] += 1
             else:
                 applied["conflicts"] += 1
+                conflict_rows.append(_conflict(table, existing, model))
 
         for record_id in table_changes.get("deleted", []) or []:
             existing = db.get(model, record_id)
@@ -154,7 +165,18 @@ def push_changes(
             applied["deleted"] += 1
 
     db.commit()
+    applied["conflict_rows"] = conflict_rows
     return applied
+
+
+def _conflict(table: str, existing: Any, model: type) -> dict[str, Any]:
+    return {
+        "table": table,
+        "id": existing.id,
+        "server_updated_at": existing.updated_at,
+        "server_updated_by": getattr(existing, "updated_by", None),
+        "server": _serialise(existing, model),
+    }
 
 
 def _build(model: type, raw: dict, user: User, owned: bool, stamp: int):

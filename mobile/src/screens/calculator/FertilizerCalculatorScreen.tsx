@@ -34,6 +34,7 @@ import {citation, conversionFactors, conversionNote, protocolAvailability} from 
 import type {CalcResult} from '../../domain/fertilizerCalc';
 import {calculate, formatRange} from '../../domain/fertilizerCalc';
 import type {PickedVariety, RootStackParamList} from '../../navigation/types';
+import {useSync} from '../../sync/SyncContext';
 import {colors, radius, space, text} from '../../theme';
 import {formatNumber, formatVnd, formatVndRange} from '../../utils/format';
 import {cropNameOf, fertilizerProduct} from '../../utils/staticData';
@@ -57,6 +58,7 @@ export function FertilizerCalculatorScreen() {
   const {params} = useRoute<Route>();
   const user = useCurrentUser();
   const author = useChangeAuthor();
+  const {state: syncState, pending: pendingSync} = useSync();
   const plots = useObservable<Plot[]>(() => observePlots(user.id), [user.id], []);
 
   const [selection, setSelection] = useState<Selection | null>(null);
@@ -366,7 +368,14 @@ export function FertilizerCalculatorScreen() {
 
                 {savedId ? (
                   <Card style={styles.saved} testID="calc-saved">
-                    <Badge label="Đã lưu kế hoạch" tone="green" />
+                    <View style={styles.savedBadges}>
+                      <Badge label="Đã lưu kế hoạch" tone="green" />
+                      {syncState === 'offline' || pendingSync.some(p => p.table === 'plans' && p.pending > 0) ? (
+                        <Badge label="Lưu offline — sẽ đồng bộ" tone="yellow" />
+                      ) : (
+                        <Badge label="Đã đồng bộ" tone="gray" />
+                      )}
+                    </View>
                     <Text style={[text('bodySm', colors.text.secondary), styles.lineMeta]}>
                       Kế hoạch nằm trên máy và sẽ đồng bộ khi có mạng. Kiểm tra kho để biết cần mua thêm gì.
                     </Text>
@@ -511,6 +520,11 @@ const styles = StyleSheet.create({
   },
   saved: {
     marginTop: space.lg,
+  },
+  savedBadges: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.sm,
   },
   savedActions: {
     flexDirection: 'row',

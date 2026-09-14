@@ -20,7 +20,7 @@
 
 import {appSchema, tableSchema} from '@nozbe/watermelondb';
 
-export const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 6;
 
 export const schema = appSchema({
   version: SCHEMA_VERSION,
@@ -237,6 +237,27 @@ export const schema = appSchema({
         {name: 'updated_at', type: 'number'},
       ],
     }),
+
+    // ---- Giai đoạn 4: local-only error log ----
+    // Written by the screen error boundary, uploaded to POST /logs when the
+    // phone is online, never pulled back. Not part of the sync protocol, so
+    // it is listed in LOCAL_ONLY_TABLES and excluded from the parity test.
+    tableSchema({
+      name: 'error_logs',
+      columns: [
+        {name: 'action', type: 'string'},
+        {name: 'message', type: 'string'},
+        {name: 'stack', type: 'string', isOptional: true},
+        {name: 'app_version', type: 'string', isOptional: true},
+        {name: 'platform', type: 'string', isOptional: true},
+        {name: 'occurred_at', type: 'number', isIndexed: true},
+        {name: 'reported', type: 'boolean'},
+        {name: 'uploaded_at', type: 'number', isOptional: true},
+        {name: 'user_id', type: 'string', isIndexed: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
   ],
 });
 
@@ -255,6 +276,6 @@ export const SYNC_TABLES = [
 ] as const;
 
 /** Tables that stay on the device and have no server counterpart. */
-export const LOCAL_ONLY_TABLES = [] as const;
+export const LOCAL_ONLY_TABLES = ['error_logs'] as const;
 
 export type SyncTable = (typeof SYNC_TABLES)[number];

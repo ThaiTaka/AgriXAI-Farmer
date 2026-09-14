@@ -1,12 +1,10 @@
 /**
- * Màn hình 02 — Trang chủ.
+ * Trang chủ — dashboard nông hộ.
  *
- * Greeting + avatar, a row of tools (today: the fertiliser catalogue; Giai đoạn 3
- * adds the calculator, care schedule, stock and finance), then the plot list.
- *
- * Everything renders from a WatermelonDB observable query — with the network
- * off the list still loads, and a plot added offline appears the instant it is
- * written (Điều 1).
+ * Greeting, three summary cards (tồn kho · tháng này · công việc), six tool
+ * buttons, then the plot list. Every number comes from local observables
+ * through useDashboard, so the screen is complete with the network off and
+ * updates the instant a row is written (Điều 1).
  */
 
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +15,7 @@ import {Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native
 import {useAuth, useCurrentUser} from '../auth/AuthContext';
 import {GhostButton} from '../components/buttons';
 import {Card} from '../components/Card';
+import {DashboardCard} from '../components/DashboardCard';
 import {EmptyState} from '../components/EmptyState';
 import {
   BellIcon,
@@ -24,10 +23,9 @@ import {
   ClipboardIcon,
   CoinsIcon,
   PlusIcon,
-  SackIcon,
   ScaleIcon,
+  ShareIcon,
   SproutIcon,
-  TagIcon,
   WarehouseIcon,
 } from '../components/icons';
 import {PlotCard} from '../components/PlotCard';
@@ -35,40 +33,38 @@ import {Screen} from '../components/Screen';
 import {SyncStatus} from '../components/SyncStatus';
 import type Plot from '../db/models/Plot';
 import type TaskHistory from '../db/models/TaskHistory';
-import {observePlots} from '../db/repositories/plotRepository';
 import {observeUpcomingReminders} from '../db/repositories/taskHistoryRepository';
 import {useObservable} from '../db/useObservable';
+import {pendingSubtext, pendingTotal} from '../domain/dashboard';
 import type {RootStackParamList} from '../navigation/types';
+import {useSync} from '../sync/SyncContext';
 import {colors, radius, space, text} from '../theme';
-import {formatDate, formatWeekdayDate} from '../utils/format';
-import {allProtocols, fertilizerProducts} from '../utils/staticData';
+import {formatDate, formatNumber, formatVnd, formatWeekdayDate} from '../utils/format';
+import {useDashboard} from './home/useDashboard';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
-type ToolRoute = 'FertilizerCalculator' | 'FertilizerBudget' | 'StockCheck' | 'CareProtocol' | 'Warehouse' | 'Finance';
+type ToolRoute = 'FertilizerCalculator' | 'FertilizerBudget' | 'CareProtocol' | 'Warehouse' | 'Finance' | 'ReportExport';
 
-/** The six Giai đoạn 3 tools, two per row; the catalogue sits under them. */
+/** The six tools, two per row, in the order the brief lists them. */
 const TOOLS: {route: ToolRoute; title: string; meta: string; icon: React.ReactNode; testID: string}[] = [
-  {route: 'FertilizerCalculator', title: 'Tính lượng phân', meta: 'Theo diện tích & phương án', icon: <CalculatorIcon />, testID: 'home-calculator'},
-  {route: 'FertilizerBudget', title: 'Lọc theo ngân sách', meta: 'Bình dân · Trung bình · Cao cấp', icon: <TagIcon />, testID: 'home-budget'},
-  {route: 'StockCheck', title: 'Kiểm tra kho', meta: 'Đủ hay thiếu trước khi bón', icon: <ScaleIcon />, testID: 'home-stock-check'},
-  {route: 'CareProtocol', title: 'Quy trình chăm sóc', meta: `${allProtocols().length} quy trình có nguồn`, icon: <ClipboardIcon />, testID: 'home-care'},
-  {route: 'Warehouse', title: 'Kho vật tư', meta: 'Nhập · Xuất · Tồn', icon: <WarehouseIcon />, testID: 'home-warehouse'},
-  {route: 'Finance', title: 'Thu – Chi', meta: 'Ghi chép & lãi/lỗ', icon: <CoinsIcon />, testID: 'home-finance'},
+  {route: 'FertilizerCalculator', title: 'F1 · Tính lượng', meta: 'Phân bón theo diện tích', icon: <CalculatorIcon />, testID: 'home-calculator'},
+  {route: 'FertilizerBudget', title: 'F3–F4 · Lọc + kiểm', meta: 'Ngân sách rồi kiểm tra kho', icon: <ScaleIcon />, testID: 'home-budget'},
+  {route: 'CareProtocol', title: 'F5–F6 · Quy trình', meta: '4 giai đoạn, có nguồn', icon: <ClipboardIcon />, testID: 'home-care'},
+  {route: 'Warehouse', title: 'Kho · Nhập/xuất', meta: 'Tồn, FIFO, CSV', icon: <WarehouseIcon />, testID: 'home-warehouse'},
+  {route: 'Finance', title: 'Thu-chi · Ghi', meta: 'Sổ thu, sổ chi', icon: <CoinsIcon />, testID: 'home-finance'},
+  {route: 'ReportExport', title: 'Báo cáo · Xuất PDF', meta: 'Tháng / quý, A4', icon: <ShareIcon size={22} />, testID: 'home-report'},
 ];
 
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const user = useCurrentUser();
   const {signOut} = useAuth();
-
-  const plots = useObservable<Plot[]>(() => observePlots(user.id), [user.id], []);
+  const {pending: pendingSync} = useSync();
+  const data = useDashboard(user.id);
   const reminders = useObservable<TaskHistory[]>(() => observeUpcomingReminders(user.id), [user.id], []);
 
-  const openPlot = useCallback(
-    (plot: Plot) => navigation.navigate('PlotDetail', {plotId: plot.id}),
-    [navigation],
-  );
+  const openPlot = useCallback((plot: Plot) => navigation.navigate('PlotDetail', {plotId: plot.id}), [navigation]);
 
   const confirmSignOut = useCallback(() => {
     Alert.alert('Đăng xuất', 'Bạn có chắc muốn đăng xuất khỏi ứng dụng?', [
@@ -84,9 +80,12 @@ export function HomeScreen() {
   }, [signOut]);
 
   // Vietnamese names put the given name last, so the avatar shows the first
-  // letter of the final word: "Thái Taka" -> "T".
-  const initial =
-    (user.fullName || user.username).trim().split(/\s+/).pop()?.charAt(0).toUpperCase() ?? '?';
+  // letter of the final word: "Nguyễn Văn Cường" -> "C".
+  const initial = (user.fullName || user.username).trim().split(/\s+/).pop()?.charAt(0).toUpperCase() ?? '?';
+  const stockPending = pendingSync.some(p => (p.table === 'warehouse_in' || p.table === 'warehouse_out') && p.pending > 0);
+  const financePending = pendingSync.some(p => (p.table === 'income' || p.table === 'expense') && p.pending > 0);
+  const taskCount = pendingTotal(data.pending);
+  const loss = data.month.profit < 0;
 
   return (
     <Screen>
@@ -94,9 +93,9 @@ export function HomeScreen() {
         <View style={styles.header}>
           <View style={styles.headerText}>
             <Text style={text('heading')} numberOfLines={1}>
-              Chào {user.fullName || user.username}
+              Xin chào {user.fullName || user.username}
             </Text>
-            <Text style={[text('bodySm', colors.text.muted), styles.headerMeta]}>
+            <Text style={[text('bodySm', colors.text.muted), styles.headerMeta]} numberOfLines={2}>
               {formatWeekdayDate()}
               {user.region ? ` · ${user.region}` : ''}
             </Text>
@@ -110,17 +109,48 @@ export function HomeScreen() {
           </Pressable>
         </View>
 
+        <View style={styles.cards}>
+          <DashboardCard
+            testID="card-stock"
+            label="Tồn kho"
+            value={formatVnd(Math.round(data.stock.value))}
+            subtext={
+              data.stock.kinds > 0
+                ? `${data.stock.kinds} loại phân bón, ${formatNumber(data.stock.kg)} kg`
+                : 'Kho trống — nhập phiếu mua đầu tiên ở Kho'
+            }
+            flag={stockPending ? 'Chưa đồng bộ' : null}
+            icon={<WarehouseIcon size={18} />}
+            onPress={() => navigation.navigate('Warehouse', {tab: 'stock'})}
+          />
+          <DashboardCard
+            testID="card-month"
+            label={`Tháng ${data.monthNumber} này`}
+            prefix={loss ? 'Lỗ' : 'Lãi'}
+            value={formatVnd(Math.abs(Math.round(data.month.profit)))}
+            negative={loss}
+            subtext={`Thu ${formatVnd(data.month.income)}, Chi ${formatVnd(data.month.expense)}`}
+            flag={financePending ? 'Chưa đồng bộ' : null}
+            icon={<CoinsIcon size={18} />}
+            onPress={() => navigation.navigate('Finance', {tab: 'report'})}
+          />
+          <DashboardCard
+            testID="card-tasks"
+            label="Công việc"
+            value={String(taskCount)}
+            unit={taskCount > 0 ? 'việc giai đoạn này' : 'việc chờ'}
+            subtext={pendingSubtext(data.pending)}
+            icon={<ClipboardIcon size={18} />}
+            onPress={() => navigation.navigate('CareProtocol', data.pending[0] ? {plotId: data.pending[0].plotId} : undefined)}
+          />
+        </View>
+
         <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Công cụ</Text>
         <View style={styles.toolGrid}>
           {TOOLS.map(tool => (
-            <Card
-              key={tool.route}
-              onPress={() => navigation.navigate(tool.route)}
-              accessibilityLabel={tool.title}
-              style={styles.toolTile}
-              testID={tool.testID}>
+            <Card key={tool.route} onPress={() => navigation.navigate(tool.route)} accessibilityLabel={tool.title} style={styles.toolTile} testID={tool.testID}>
               <View style={styles.toolIcon}>{tool.icon}</View>
-              <Text style={text('cardTitle')} numberOfLines={1}>
+              <Text style={text('bodyStrong')} numberOfLines={1}>
                 {tool.title}
               </Text>
               <Text style={[text('caption', colors.text.muted), styles.toolMeta]} numberOfLines={2}>
@@ -129,21 +159,6 @@ export function HomeScreen() {
             </Card>
           ))}
         </View>
-        <Card
-          onPress={() => navigation.navigate('FertilizerGroups')}
-          accessibilityLabel="Danh mục phân bón"
-          style={styles.tool}
-          testID="home-fertilizers">
-          <View style={styles.toolIconSm}>
-            <SackIcon />
-          </View>
-          <View style={styles.toolBody}>
-            <Text style={text('bodyStrong')}>Danh mục phân bón</Text>
-            <Text style={text('caption', colors.text.muted)} numberOfLines={1}>
-              {fertilizerProducts().length} sản phẩm · giá tham khảo
-            </Text>
-          </View>
-        </Card>
 
         {reminders.length > 0 ? (
           <>
@@ -154,13 +169,9 @@ export function HomeScreen() {
                   key={row.id}
                   accessibilityRole="button"
                   onPress={() => navigation.navigate('CareProtocol', {plotId: row.plotId ?? undefined, protocolId: row.protocolId})}
-                  style={({pressed}) => [
-                    styles.reminderRow,
-                    index === Math.min(reminders.length, 5) - 1 && styles.reminderLast,
-                    pressed && styles.reminderPressed,
-                  ]}>
+                  style={({pressed}) => [styles.reminderRow, index === Math.min(reminders.length, 5) - 1 && styles.reminderLast, pressed && styles.reminderPressed]}>
                   <BellIcon size={18} />
-                  <View style={styles.toolBody}>
+                  <View style={styles.reminderBody}>
                     <Text style={text('bodySm')} numberOfLines={1}>
                       {row.taskTitle}
                     </Text>
@@ -174,15 +185,10 @@ export function HomeScreen() {
 
         <View style={styles.sectionHead}>
           <Text style={text('eyebrow', colors.text.muted)}>Lô đất của bạn</Text>
-          <GhostButton
-            small
-            label="Thêm lô"
-            icon={<PlusIcon size={16} />}
-            onPress={() => navigation.navigate('PlotForm')}
-          />
+          <GhostButton small label="Thêm lô" icon={<PlusIcon size={16} />} onPress={() => navigation.navigate('PlotForm')} />
         </View>
 
-        {plots.length === 0 ? (
+        {data.plots.length === 0 ? (
           <EmptyState
             icon={<SproutIcon color={colors.gray['400']} />}
             title="Chưa có lô đất nào"
@@ -191,7 +197,7 @@ export function HomeScreen() {
           />
         ) : (
           <View style={styles.list}>
-            {plots.map(plot => (
+            {data.plots.map(plot => (
               <PlotCard key={plot.id} plot={plot} onPress={openPlot} />
             ))}
           </View>
@@ -199,9 +205,7 @@ export function HomeScreen() {
 
         <View style={styles.footnote}>
           <SyncStatus />
-          <Text style={text('caption', colors.text.muted)}>
-            Danh sách đọc từ máy — vẫn xem và thêm lô được khi mất mạng.
-          </Text>
+          <Text style={text('caption', colors.text.muted)}>Số liệu đọc từ máy — vẫn xem và ghi được khi mất mạng.</Text>
         </View>
       </ScrollView>
     </Screen>
@@ -240,6 +244,10 @@ const styles = StyleSheet.create({
   avatarPressed: {
     backgroundColor: colors.primary.softStrong,
   },
+  cards: {
+    gap: space.md,
+    marginBottom: space.xl,
+  },
   sectionLabel: {
     marginBottom: space.sm,
   },
@@ -247,40 +255,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: space.lg,
-    marginBottom: space.lg,
+    marginBottom: space.xl,
   },
   toolTile: {
     // Two columns with a 16pt gutter: (100% - 16) / 2.
     width: '47.8%',
-    minHeight: 124,
-  },
-  tool: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.md,
-    marginBottom: space.xl,
-    paddingVertical: space.md,
+    minHeight: 112,
   },
   toolIcon: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     borderRadius: radius.sm,
     backgroundColor: colors.primary.soft,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: space.md,
-  },
-  toolIconSm: {
-    width: 36,
-    height: 36,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primary.soft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  toolBody: {
-    flex: 1,
-    minWidth: 0,
+    marginBottom: space.sm,
   },
   toolMeta: {
     marginTop: 2,
@@ -304,6 +293,10 @@ const styles = StyleSheet.create({
   },
   reminderPressed: {
     backgroundColor: colors.surface.pressed,
+  },
+  reminderBody: {
+    flex: 1,
+    minWidth: 0,
   },
   sectionHead: {
     flexDirection: 'row',
