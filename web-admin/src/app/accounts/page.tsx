@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 /**
  * Trang quản lý tài khoản nông hộ — chỉ admin mới vào được.
@@ -12,7 +12,7 @@
 
 import Link from "next/link";
 import {useRouter} from "next/navigation";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 
 import {api, ApiError, getToken, type SessionUser} from "@/lib/api";
 
@@ -58,6 +58,12 @@ export default function AccountsPage() {
   const [creating, setCreating] = useState(false);
   const usernameRef = useRef<HTMLInputElement>(null);
 
+  // Tải danh sách tài khoản — GET /users trả UserSummary kèm is_active
+  const loadAccounts = useCallback(async () => {
+    const list = await api<AccountRow[]>("/users");
+    setAccounts(list);
+  }, []);
+
   // Load session và danh sách
   useEffect(() => {
     if (!getToken()) {
@@ -77,24 +83,12 @@ export default function AccountsPage() {
         if (e instanceof ApiError && e.status === 401) router.replace("/login");
         else setError(e instanceof Error ? e.message : String(e));
       });
-  }, [router]);
+  }, [router, loadAccounts]);
 
   // Focus vào input username khi mở form
   useEffect(() => {
     if (showForm) setTimeout(() => usernameRef.current?.focus(), 50);
   }, [showForm]);
-
-  async function loadAccounts() {
-    // GET /users trả list[UserSummary] — tất cả tài khoản chưa bị xoá mềm
-    // Để hiển thị is_active, ta cần endpoint trả đầy đủ UserOut.
-    // Hiện GET /users trả UserSummary (thiếu is_active) nên ta gọi thêm
-    // từng user qua /auth/me — không ổn với nhiều user. Thay vào đó ta sử dụng
-    // GET /users (trả UserSummary) và biết is_active qua POST /users/{id}/status
-    // phản hồi. Để đơn giản: ta tin rằng is_active = true trừ khi đã khoá.
-    // Giải pháp tốt hơn: mở rộng GET /users trả thêm is_active (xem README).
-    const list = await api<AccountRow[]>("/users");
-    setAccounts(list);
-  }
 
   async function handleToggleStatus(account: AccountRow) {
     if (busyId) return;
