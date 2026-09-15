@@ -350,6 +350,14 @@ export default function DashboardPage() {
               Duyệt giống cây
             </Link>
           ) : null}
+          {me.role === "admin" ? (
+            <Link className="btn btn-secondary" href="/accounts">
+              Tài khoản
+            </Link>
+          ) : null}
+          <Link className="btn btn-secondary" href="/settings">
+            Cài đặt
+          </Link>
           <button className="btn btn-secondary" type="button" onClick={signOut}>
             Đăng xuất
           </button>
