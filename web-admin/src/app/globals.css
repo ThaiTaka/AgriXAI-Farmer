@@ -320,6 +320,17 @@ textarea {
   box-shadow: var(--shadow-sm);
 }
 
+.btn-danger {
+  background: var(--color-surface-card);
+  color: var(--color-text-danger);
+  border-color: var(--color-border-danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--color-badge-redbg);
+  box-shadow: var(--shadow-sm);
+}
+
 .input {
   width: 100%;
   padding: 0 var(--space-md);
@@ -479,6 +490,11 @@ a:focus-visible {
 .badge-gray {
   background: var(--color-badge-graybg);
   color: var(--color-badge-grayfg);
+}
+
+.badge-yellow {
+  background: var(--color-badge-yellowbg);
+  color: var(--color-badge-yellowfg);
 }
 
 .row-between {
