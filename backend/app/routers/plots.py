@@ -15,13 +15,14 @@ from app.core.database import get_db
 from app.models.farm import CropVariety, Plot
 from app.models.user import User, UserRole
 from app.schemas.farm import (
+    CropVarietyApprove,
     CropVarietyCreate,
     CropVarietyOut,
     PlotCreate,
     PlotOut,
     PlotUpdate,
 )
-from app.services.auth_service import current_user
+from app.services.auth_service import current_admin, current_user
 from app.services.sync_service import now_ms
 
 plots_router = APIRouter(prefix="/plots", tags=["plots"])
@@ -139,4 +140,40 @@ def create_variety(
     db.add(variety)
     db.commit()
     db.refresh(variety)
+    return variety
+
+
+@varieties_router.patch("/{variety_id}", response_model=CropVarietyOut)
+def review_variety(
+    variety_id: str,
+    body: CropVarietyApprove,
+    _: User = Depends(current_admin),
+    db: Session = Depends(get_db),
+) -> CropVariety:
+    variety = _reviewable_variety(db, variety_id)
+    variety.approved = body.approved
+    db.commit()
+    db.refresh(variety)
+    return variety
+
+
+@varieties_router.delete("/{variety_id}", status_code=status.HTTP_204_NO_CONTENT)
+def reject_variety(
+    variety_id: str,
+    _: User = Depends(current_admin),
+    db: Session = Depends(get_db),
+) -> None:
+    variety = _reviewable_variety(db, variety_id)
+    variety.is_deleted = True
+    variety.deleted_at = now_ms()
+    db.commit()
+
+
+def _reviewable_variety(db: Session, variety_id: str) -> CropVariety:
+    variety = db.get(CropVariety, variety_id)
+    if variety is None or variety.is_deleted:
+        raise HTTPException(status_code=404, detail="Không tìm thấy giống cây")
+    if variety.is_seed:
+        # The seed catalogue isn't farmer-submitted, so there is nothing to review.
+        raise HTTPException(status_code=400, detail="Không thể duyệt hoặc xoá giống trong danh mục gốc")
     return variety

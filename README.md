@@ -94,10 +94,10 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | `admin` | `admin123` | Quản trị viên |
 | `thaitaka` | `matkhau123` | Nông dân |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (80 test: smoke, sync hai chiều,
+Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (87 test: smoke, sync hai chiều,
 parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 ca e2e API của
-Giai đoạn 3 và 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e;
-phủ 94 %).
+Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e — và
+7 test duyệt giống cây trồng; phủ 95 %).
 
 Ba nông hộ demo (cùng mật khẩu `matkhau123`), mỗi hộ một lô, kho và thu-chi riêng tháng 9/2026:
 
@@ -123,9 +123,10 @@ npm run dev        # http://localhost:3000
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npm run lint` · build: `npx next build`
 
 Trang: `/login` (tài khoản của app; admin xem được mọi nông hộ) → `/dashboard` (3 thẻ, bảng
-tồn, báo cáo thu – chi theo tháng/quý, nút **Xuất PDF** tải từ server). Trang kiểm tra design
-token cũ ở `/tokens`. Khi mở bằng trình duyệt, dùng `http://localhost:3000` — Next 16 chặn
-script dev từ origin `127.0.0.1`.
+tồn, báo cáo thu – chi theo tháng/quý, nút **Xuất PDF** tải từ server). Admin có thêm
+`/varieties` — duyệt/bỏ duyệt/từ chối giống cây do nông hộ tự thêm (danh mục gốc không hiện
+ở đây vì không có gì để duyệt). Trang kiểm tra design token cũ ở `/tokens`. Khi mở bằng trình
+duyệt, dùng `http://localhost:3000` — Next 16 chặn script dev từ origin `127.0.0.1`.
 
 ## Chạy mobile
 
@@ -255,8 +256,9 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
   calcium nitrat, NPK 5-10-3, NPK 12-12-17 hiện "Chưa có giá" và tổng ghi rõ "Chưa gồm".
 - "Đặt nhắc" lưu ngày nhắc và hiện ở trang chủ; chưa có push notification.
 - Xuất CSV đưa nội dung qua bảng chia sẻ của máy (Share sheet), không ghi file.
-- Web-admin mới có đăng nhập và dashboard (xem kho, thu-chi, xuất PDF của từng nông hộ);
-  sửa giá phân bón và duyệt giống trên web vẫn chưa có màn hình (API đã sẵn).
+- Web-admin có đăng nhập, dashboard (xem kho, thu-chi, xuất PDF của từng nông hộ) và trang
+  duyệt giống cây trồng (`/varieties` — duyệt/bỏ duyệt/từ chối giống nông hộ tự thêm); sửa
+  giá phân bón trên web vẫn chưa có màn hình (API đã sẵn).
 - "Báo lỗi" gửi thông điệp, stack, màn hình, phiên bản và thời điểm — chưa đính kèm ảnh chụp
   màn hình.
 - PDF trên web do server tạo (fpdf2) thay vì pdfkit trong trình duyệt; nội dung khớp bản mobile.

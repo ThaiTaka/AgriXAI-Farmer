@@ -79,3 +79,9 @@ class CropVarietyOut(CropVarietyBase):
     created_by: str | None
     created_at: int
     updated_at: int
+
+
+class CropVarietyApprove(BaseModel):
+    """Admin review of a farmer-submitted variety (web-admin duyệt giống)."""
+
+    approved: bool

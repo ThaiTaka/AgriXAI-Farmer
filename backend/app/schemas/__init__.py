@@ -1,6 +1,7 @@
 from app.schemas.auth import LoginRequest, LoginResponse, UserOut, UserUpdate
 from app.schemas.common import HealthResponse
 from app.schemas.farm import (
+    CropVarietyApprove,
     CropVarietyCreate,
     CropVarietyOut,
     PlotCreate,
@@ -19,4 +20,5 @@ __all__ = [
     "PlotOut",
     "CropVarietyCreate",
     "CropVarietyOut",
+    "CropVarietyApprove",
 ]

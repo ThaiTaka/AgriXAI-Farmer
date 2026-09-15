@@ -9,6 +9,7 @@
  * desktop. Every control is a real button/select, so Tab + Enter works.
  */
 
+import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useCallback, useEffect, useMemo, useState} from "react";
 
@@ -205,6 +206,11 @@ export default function DashboardPage() {
                 ))}
               </select>
             </label>
+          ) : null}
+          {me.role === "admin" ? (
+            <Link className="btn btn-secondary" href="/varieties">
+              Duyệt giống cây
+            </Link>
           ) : null}
           <button className="btn btn-secondary" type="button" onClick={signOut}>
             Đăng xuất
