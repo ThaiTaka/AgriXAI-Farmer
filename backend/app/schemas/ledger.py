@@ -51,6 +51,25 @@ class PlanCreate(BaseModel):
     note: str | None = None
 
 
+class PlanUpdate(BaseModel):
+    plot_id: str | None = Field(default=None, max_length=64)
+    crop_type: str | None = Field(default=None, max_length=48)
+    crop_name: str | None = Field(default=None, max_length=64)
+    category_id: str | None = Field(default=None, max_length=64)
+    variety_id: str | None = Field(default=None, max_length=64)
+    variety_name: str | None = Field(default=None, max_length=128)
+    protocol_id: str | None = Field(default=None, max_length=64)
+    scenario_id: str | None = Field(default=None, max_length=64)
+    scenario_name: str | None = Field(default=None, max_length=160)
+    area_input: float | None = Field(default=None, gt=0)
+    area_unit: str | None = Field(default=None, max_length=16)
+    area_m2: float | None = Field(default=None, gt=0)
+    items: list[PlanItem] | None = Field(default=None, min_length=1)
+    cost_min: float | None = None
+    cost_max: float | None = None
+    note: str | None = None
+
+
 class PlanOut(_Synced):
     plot_id: str | None
     crop_type: str
@@ -103,6 +122,18 @@ class WarehouseInOut(_Synced):
     expense_id: str | None
 
 
+class WarehouseInUpdate(BaseModel):
+    fertilizer_id: str | None = Field(default=None, max_length=64)
+    fertilizer_name: str | None = Field(default=None, min_length=1, max_length=128)
+    category: str | None = Field(default=None, max_length=32)
+    quantity: float | None = Field(default=None, gt=0)
+    unit: StockUnit | None = None
+    price: float | None = Field(default=None, ge=0, description="Tổng tiền của lô nhập (đồng)")
+    occurred_at: int | None = None
+    note: str | None = None
+    plot_id: str | None = Field(default=None, max_length=64)
+
+
 class WarehouseOutCreate(BaseModel):
     id: str | None = Field(default=None, max_length=64)
     fertilizer_id: str = Field(max_length=64)
@@ -126,6 +157,18 @@ class WarehouseOutOut(_Synced):
     note: str | None
     plot_id: str | None
     plan_id: str | None
+
+
+class WarehouseOutUpdate(BaseModel):
+    fertilizer_id: str | None = Field(default=None, max_length=64)
+    fertilizer_name: str | None = Field(default=None, min_length=1, max_length=128)
+    category: str | None = Field(default=None, max_length=32)
+    quantity_kg: float | None = Field(default=None, gt=0)
+    unit_price: float | None = Field(default=None, ge=0)
+    occurred_at: int | None = None
+    note: str | None = None
+    plot_id: str | None = Field(default=None, max_length=64)
+    plan_id: str | None = Field(default=None, max_length=64)
 
 
 class StockLineOut(BaseModel):
@@ -181,6 +224,16 @@ class IncomeOut(_Synced):
     checked: bool
 
 
+class IncomeUpdate(BaseModel):
+    kind: IncomeKind | None = None
+    description: str | None = Field(default=None, min_length=1, max_length=200)
+    amount: float | None = Field(default=None, gt=0)
+    occurred_at: int | None = None
+    note: str | None = None
+    plot_id: str | None = Field(default=None, max_length=64)
+    checked: bool | None = None
+
+
 class ExpenseCreate(BaseModel):
     id: str | None = Field(default=None, max_length=64)
     kind: ExpenseKind = ExpenseKind.OTHER
@@ -202,6 +255,16 @@ class ExpenseOut(_Synced):
     plot_id: str | None
     checked: bool
     warehouse_in_id: str | None
+
+
+class ExpenseUpdate(BaseModel):
+    kind: ExpenseKind | None = None
+    description: str | None = Field(default=None, min_length=1, max_length=200)
+    amount: float | None = Field(default=None, gt=0)
+    occurred_at: int | None = None
+    note: str | None = None
+    plot_id: str | None = Field(default=None, max_length=64)
+    checked: bool | None = None
 
 
 class CheckedUpdate(BaseModel):

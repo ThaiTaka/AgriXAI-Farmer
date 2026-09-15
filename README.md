@@ -94,10 +94,10 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | `admin` | `admin123` | Quản trị viên |
 | `thaitaka` | `matkhau123` | Nông dân |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (80 test: smoke, sync hai chiều,
+Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (100 test: smoke, sync hai chiều,
 parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 ca e2e API của
-Giai đoạn 3 và 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e;
-phủ 94 %).
+Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e — và
+20 test admin sửa/xoá kế hoạch, kho, thu-chi; phủ 94 %).
 
 Ba nông hộ demo (cùng mật khẩu `matkhau123`), mỗi hộ một lô, kho và thu-chi riêng tháng 9/2026:
 
@@ -111,6 +111,11 @@ Endpoint Giai đoạn 4: `GET /dashboard/summary`, `GET /reports/financials.pdf?
 `POST /logs` (máy đẩy nhật ký lỗi), `GET /logs` và `GET /users` (admin), `GET /users/version`.
 Admin thêm `owner_id=` vào các endpoint danh sách/báo cáo để xem nông hộ bất kỳ.
 
+Admin sửa/xoá hộ nông hộ (khiếu nại, nhập nhầm): `PATCH`/`DELETE` trên `/plans/{id}`,
+`/warehouse/in/{id}`, `/warehouse/out/{id}`, `/income/{id}` và `/expense/{id}` — chỉ vai trò
+`admin` gọi được (403 với nông dân), 404 nếu bản ghi không tồn tại; sửa kho tự tính lại
+`quantity_kg`/`unit_price`/`total_cost` từ số liệu mới. Điện thoại vẫn chỉ đồng bộ qua `/sync`.
+
 ## Chạy web-admin
 
 ```bash
@@ -123,9 +128,11 @@ npm run dev        # http://localhost:3000
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npm run lint` · build: `npx next build`
 
 Trang: `/login` (tài khoản của app; admin xem được mọi nông hộ) → `/dashboard` (3 thẻ, bảng
-tồn, báo cáo thu – chi theo tháng/quý, nút **Xuất PDF** tải từ server). Trang kiểm tra design
-token cũ ở `/tokens`. Khi mở bằng trình duyệt, dùng `http://localhost:3000` — Next 16 chặn
-script dev từ origin `127.0.0.1`.
+tồn, báo cáo thu – chi theo tháng/quý, nút **Xuất PDF** tải từ server). Với tài khoản admin,
+dashboard có thêm bảng phiếu nhập – xuất kho và kế hoạch vụ mùa, cùng nút **Sửa** (mở form
+trong hộp thoại) và **Xoá** (kèm xác nhận) trên cả ba bảng thu-chi/kho/kế hoạch. Trang kiểm
+tra design token cũ ở `/tokens`. Khi mở bằng trình duyệt, dùng `http://localhost:3000` —
+Next 16 chặn script dev từ origin `127.0.0.1`.
 
 ## Chạy mobile
 
