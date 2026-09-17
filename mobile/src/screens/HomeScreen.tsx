@@ -9,7 +9,8 @@
 
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
+import type {NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
 import {Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useAuth, useCurrentUser} from '../auth/AuthContext';
@@ -39,7 +40,7 @@ import {useObservable} from '../db/useObservable';
 import {pendingSubtext, pendingTotal} from '../domain/dashboard';
 import type {RootStackParamList} from '../navigation/types';
 import {useSync} from '../sync/SyncContext';
-import {colors, radius, space, text} from '../theme';
+import {colors, radius, shadows, space, text} from '../theme';
 import {formatDate, formatNumber, formatVnd, formatWeekdayDate} from '../utils/format';
 import {useDashboard} from './home/useDashboard';
 
@@ -67,6 +68,13 @@ export function HomeScreen() {
 
   const openPlot = useCallback((plot: Plot) => navigation.navigate('PlotDetail', {plotId: plot.id}), [navigation]);
 
+  // The header earns its hairline + shadow only once content slides under it.
+  const [scrolled, setScrolled] = useState(false);
+  const onScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const past = event.nativeEvent.contentOffset.y > 8;
+    setScrolled(prev => (prev === past ? prev : past));
+  }, []);
+
   const confirmSignOut = useCallback(() => {
     Alert.alert('Đăng xuất', 'Bạn có chắc muốn đăng xuất khỏi ứng dụng?', [
       {text: 'Huỷ', style: 'cancel'},
@@ -89,32 +97,36 @@ export function HomeScreen() {
   const loss = data.month.profit < 0;
 
   return (
-    <Screen>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <View style={styles.headerText}>
-            <Text style={text('heading')} numberOfLines={1}>
-              Xin chào {user.fullName || user.username}
-            </Text>
-            <Text style={[text('bodySm', colors.text.muted), styles.headerMeta]} numberOfLines={2}>
-              {formatWeekdayDate()}
-              {user.region ? ` · ${user.region}` : ''}
-            </Text>
-          </View>
-          <IconButton
-            accessibilityLabel="Cài đặt"
-            onPress={() => navigation.navigate('Main', {screen: 'Settings'})}>
-            <SettingsIcon size={22} color={colors.text.secondary} />
-          </IconButton>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Tài khoản và đăng xuất"
-            onPress={confirmSignOut}
-            style={({pressed}) => [styles.avatar, pressed && styles.avatarPressed]}>
-            <Text style={text('cardTitle', colors.primary.default)}>{initial}</Text>
-          </Pressable>
+    <Screen ground="gradient">
+      <View style={[styles.header, scrolled && styles.headerScrolled]}>
+        <View style={styles.headerText}>
+          <Text style={text('heading')} numberOfLines={1}>
+            Xin chào {user.fullName || user.username}
+          </Text>
+          <Text style={[text('bodySm', colors.text.muted), styles.headerMeta]} numberOfLines={2}>
+            {formatWeekdayDate()}
+            {user.region ? ` · ${user.region}` : ''}
+          </Text>
         </View>
+        <IconButton
+          accessibilityLabel="Cài đặt"
+          onPress={() => navigation.navigate('Main', {screen: 'Settings'})}>
+          <SettingsIcon size={22} color={colors.text.secondary} />
+        </IconButton>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Tài khoản và đăng xuất"
+          onPress={confirmSignOut}
+          style={({pressed}) => [styles.avatar, pressed && styles.avatarPressed]}>
+          <Text style={text('cardTitle', colors.primary.default)}>{initial}</Text>
+        </Pressable>
+      </View>
 
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
+        onScroll={onScroll}>
         <View style={styles.cards}>
           <DashboardCard
             testID="card-stock"
@@ -233,7 +245,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
-    marginBottom: space.xl,
+    paddingHorizontal: space.lg,
+    paddingTop: space.lg,
+    paddingBottom: space.md,
+    backgroundColor: colors.gradient.groundFrom,
+  },
+  headerScrolled: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border.default,
+    ...shadows.sm,
   },
   headerText: {
     flex: 1,
