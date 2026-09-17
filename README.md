@@ -155,9 +155,9 @@ adb reverse tcp:8000 tcp:8000
 ```
 
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint App.tsx src __tests__` · test:
-`npx jest --coverage` (97 test, trong đó 28 ca của hệ thiết kế v6; `src/domain/`, các
-component Giai đoạn 4–5, biểu đồ và `utils/` phủ 94 % câu lệnh / 96 % dòng — ngưỡng đặt
-trong `jest.config.js`).
+`npx jest --coverage` (109 test, trong đó 28 ca của hệ thiết kế v6 và 12 ca chiều sâu v6.1;
+`src/domain/`, các component Giai đoạn 4–5, biểu đồ và `utils/` phủ 94 % câu lệnh / 96 % dòng
+— ngưỡng đặt trong `jest.config.js`).
 
 > Giai đoạn 4 thêm hai module native (`react-native-html-to-pdf`, `react-native-share`):
 > sau khi `npm install` phải build lại app (`./gradlew app:installDebug`), lần đầu cần mạng
@@ -176,6 +176,16 @@ File mock-up v4 trong `docs/design-reference/` chỉ còn là tư liệu.
 v6 giữ nguyên tinh thần v5 và chỉnh lại bảng màu theo spec Giai đoạn 5: thang xám chuyển từ
 ngả xanh sang trung tính (`#1A1A1A` → `#F8F9FA`), semantic dùng bộ Bootstrap (`#DC3545`,
 `#FFC107`, `#0D6EFD`, `#198754`), bo góc về 6 (ô nhập) / 8 (nút) / 12 (thẻ).
+
+**v6.1 — chiều sâu trên Android.** App từng bị chê "phẳng" trên máy thật, nhưng nguyên nhân
+không phải màu: Android bỏ qua `shadowColor/Radius/Opacity` và chỉ vẽ theo `elevation`, mà
+`shadowToRN` lại suy elevation từ mỗi độ lệch dọc nên cả ba mức bóng dồn về 1/2/4 — thẻ trắng
+trên nền xám-50 gần như không có mép, và cú nhấn "nâng shadow" của thẻ dashboard xê dịch đúng
+một nấc không ai thấy. Nay elevation tính cả độ nhoè, cho thang **2 / 4 / 10**. Kèm theo:
+`Card` và các nút nhấn xuống 0.98 + nâng lên shadow-md (trước chỉ đổi màu nền), trang chủ có
+header dính tự hiện hairline + bóng khi cuộn, và nền chuyển sắc mở rộng từ màn đăng nhập sang
+trang chủ qua `Screen ground="gradient"`. Giá trị shadow trong CSS **không đổi**, nên
+web-admin giữ nguyên diện mạo. `__tests__/visualPolish.test.tsx` khoá thang elevation lại.
 
 Ba yêu cầu của spec **không** được áp dụng, lý do ghi ngay trong `$meta.v6Note` của
 tokens.json: chiều cao nút/ô nhập giữ **52/50** thay vì 44/40 (khối `size` là ràng buộc thực
@@ -269,6 +279,7 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | **v6** — Đăng nhập (nền chuyển sắc, thẻ trắng, ô "Lưu thông tin đăng nhập") và lần mở sau đã nhớ tên đăng nhập | `48-v6-login.png`, `49-v6-login-remembered.png` |
 | **v6** — Chọn lô (2 tab, nhãn đồng bộ từng lô) | `50-v6-plot-picker.png` |
 | **v6** — Trang chủ: 3 thẻ tóm tắt, 6 công cụ 2×3, link "Chọn lô" | `51-v6-home.png`, `52-v6-home-tools.png` |
+| **v6.1** — chiều sâu sau khi sửa elevation: đăng nhập, trang chủ, header dính khi cuộn, chọn lô | `53-v61-login-depth.png`, `54-v61-home-depth.png`, `55-v61-home-sticky-header.png`, `56-v61-plot-picker-depth.png` |
 
 ## Giới hạn hiện tại
 

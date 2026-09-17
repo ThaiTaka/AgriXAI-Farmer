@@ -108,7 +108,7 @@ export const shadows = {
     },
     "shadowRadius": 1,
     "shadowOpacity": 0.05,
-    "elevation": 1
+    "elevation": 2
   },
   "md": {
     "shadowColor": "#000000",
@@ -118,7 +118,7 @@ export const shadows = {
     },
     "shadowRadius": 2,
     "shadowOpacity": 0.08,
-    "elevation": 2
+    "elevation": 4
   },
   "lg": {
     "shadowColor": "#000000",
@@ -128,7 +128,7 @@ export const shadows = {
     },
     "shadowRadius": 6,
     "shadowOpacity": 0.1,
-    "elevation": 4
+    "elevation": 10
   }
 } as const;
 

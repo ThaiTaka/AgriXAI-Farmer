@@ -17,8 +17,13 @@ interface Props {
 }
 
 /**
- * White card, 1px gray hairline, shadow-sm, 14pt radius.
- * Selected = green border + soft green ground. No gradients, no heavy shadows.
+ * White card, 1px gray hairline, shadow-sm, 12pt radius.
+ * Selected = green border + soft green ground. No heavy shadows.
+ *
+ * A pressable card answers the touch the way the dashboard cards do: down to
+ * 0.98 and up to shadow-md. The transform is static rather than animated —
+ * these render in lists, and one Animated.Value per row buys nothing the eye
+ * can catch in 150ms.
  */
 export function Card({
   children,
@@ -42,7 +47,7 @@ export function Card({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityState={{selected}}
-      style={({pressed}) => [base, pressed && !selected && styles.pressed]}>
+      style={({pressed}) => [base, pressed && styles.lifted, pressed && !selected && styles.pressed]}>
       {children}
     </Pressable>
   );
@@ -65,5 +70,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     backgroundColor: colors.surface.pressed,
+  },
+  lifted: {
+    ...shadows.md,
+    transform: [{scale: 0.98}],
   },
 });

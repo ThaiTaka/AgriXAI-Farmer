@@ -81,7 +81,7 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface.card,
-    borderRadius: 12,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border.default,
     padding: space.lg,
