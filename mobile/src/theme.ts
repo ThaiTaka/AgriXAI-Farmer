@@ -21,63 +21,73 @@ export const colors = {
     "050": "#F4F8F3"
   },
   "gray": {
-    "50": "#F9FAFB",
-    "100": "#F3F4F6",
-    "200": "#E5E7EB",
-    "300": "#D1D5DB",
-    "400": "#9CA3AF",
-    "500": "#6B7280",
-    "600": "#4B5563",
-    "700": "#374151",
-    "800": "#1F2937",
-    "900": "#111827"
+    "50": "#F8F9FA",
+    "100": "#F0F4F8",
+    "200": "#E5E5E5",
+    "300": "#D0D0D0",
+    "400": "#A0A0A0",
+    "500": "#7A7A7A",
+    "600": "#5E5E5E",
+    "700": "#4A4A4A",
+    "800": "#2B2B2B",
+    "900": "#1A1A1A"
   },
   "amber": {
-    "100": "#FBEDD2",
-    "500": "#F2A104",
-    "800": "#92400E"
+    "100": "#FFF3CD",
+    "500": "#FFC107",
+    "800": "#7A5C0A"
   },
   "red": {
-    "600": "#DC2626",
-    "800": "#991B1B"
+    "600": "#DC3545",
+    "800": "#842029"
+  },
+  "semantic": {
+    "error": "#DC3545",
+    "warning": "#FFC107",
+    "info": "#0D6EFD",
+    "success": "#198754"
+  },
+  "gradient": {
+    "groundFrom": "#F8F9FA",
+    "groundTo": "#F0F4F8"
   },
   "white": "#FFFFFF",
   "text": {
-    "primary": "#111827",
-    "secondary": "#374151",
-    "muted": "#6B7280",
-    "placeholder": "#9CA3AF",
+    "primary": "#1A1A1A",
+    "secondary": "#4A4A4A",
+    "muted": "#7A7A7A",
+    "placeholder": "#A0A0A0",
     "onPrimary": "#FFFFFF",
     "link": "#2E6F40",
-    "danger": "#991B1B"
+    "danger": "#842029"
   },
   "surface": {
-    "page": "#F9FAFB",
+    "page": "#F8F9FA",
     "card": "#FFFFFF",
-    "subtle": "#F3F4F6",
-    "selected": "#F1F6EF",
-    "pressed": "#F3F4F6",
-    "overlay": "rgba(17,24,39,0.35)"
+    "subtle": "#F0F4F8",
+    "selected": "#E8F5EA",
+    "pressed": "#F0F4F8",
+    "overlay": "rgba(26,26,26,0.35)"
   },
   "border": {
-    "default": "#E5E7EB",
-    "strong": "#D1D5DB",
+    "default": "#E5E5E5",
+    "strong": "#D0D0D0",
     "focus": "#2E6F40",
     "selected": "#2E6F40",
-    "danger": "#DC2626"
+    "danger": "#DC3545"
   },
   "primary": {
     "default": "#2E6F40",
-    "pressed": "#245A33",
-    "soft": "#F1F6EF",
+    "pressed": "#1F5227",
+    "soft": "#E8F5EA",
     "softStrong": "#DCE9DD",
     "onPrimary": "#FFFFFF"
   },
   "badge": {
-    "yellowBg": "#FEF3C7",
-    "yellowFg": "#92400E",
-    "greenBg": "#D1FAE5",
-    "greenFg": "#065F46",
+    "yellowBg": "#FFF3CD",
+    "yellowFg": "#7A5C0A",
+    "greenBg": "#E8F5EA",
+    "greenFg": "#1F5227",
     "redBg": "#FEE2E2",
     "redFg": "#991B1B",
     "grayBg": "#F3F4F6",
@@ -104,9 +114,19 @@ export const shadows = {
     "shadowColor": "#000000",
     "shadowOffset": {
       "width": 0,
+      "height": 2
+    },
+    "shadowRadius": 2,
+    "shadowOpacity": 0.08,
+    "elevation": 2
+  },
+  "lg": {
+    "shadowColor": "#000000",
+    "shadowOffset": {
+      "width": 0,
       "height": 4
     },
-    "shadowRadius": 3,
+    "shadowRadius": 6,
     "shadowOpacity": 0.1,
     "elevation": 4
   }
@@ -114,9 +134,9 @@ export const shadows = {
 
 export const radius = {
   "xs": 6,
-  "sm": 10,
-  "md": 14,
-  "lg": 18,
+  "sm": 8,
+  "md": 12,
+  "lg": 16,
   "xl": 24,
   "pill": 999
 } as const;

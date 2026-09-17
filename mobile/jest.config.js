@@ -12,7 +12,7 @@ module.exports = {
   // emulator instead (see README "Kiểm thử").
   collectCoverageFrom: [
     'src/domain/**/*.ts',
-    'src/components/{Badge,DashboardCard,NumberText,OfflineBanner,ScreenErrorBoundary,Tabs}.tsx',
+    'src/components/{Badge,Checkbox,DashboardCard,NumberText,OfflineBanner,ScreenErrorBoundary,SoftGradient,Tabs}.tsx',
     'src/components/charts/*.{ts,tsx}',
     'src/utils/{format,growthStage}.ts',
   ],
