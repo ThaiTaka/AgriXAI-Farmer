@@ -155,8 +155,9 @@ adb reverse tcp:8000 tcp:8000
 ```
 
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint App.tsx src __tests__` · test:
-`npx jest --coverage` (69 test; `src/domain/`, các component Giai đoạn 4, biểu đồ và
-`utils/` phủ 94 % câu lệnh / 96 % dòng — ngưỡng đặt trong `jest.config.js`).
+`npx jest --coverage` (97 test, trong đó 28 ca của hệ thiết kế v6; `src/domain/`, các
+component Giai đoạn 4–5, biểu đồ và `utils/` phủ 94 % câu lệnh / 96 % dòng — ngưỡng đặt
+trong `jest.config.js`).
 
 > Giai đoạn 4 thêm hai module native (`react-native-html-to-pdf`, `react-native-share`):
 > sau khi `npm install` phải build lại app (`./gradlew app:installDebug`), lần đầu cần mạng
@@ -167,11 +168,23 @@ Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **c
 
 ## Design token và font
 
-`shared/design/tokens.json` (v5) là **nguồn sự thật duy nhất** cho màu, font, bo góc, lưới
-8pt và hai mức bóng. Hệ thiết kế phẳng: nền trắng / xám-50, viền xám mảnh, một màu xanh chủ
-đạo `#2E6F40`, nhãn pastel — không gradient, không glassmorphism (`react-native-linear-gradient`
-đã bị gỡ). Không hard-code màu trong component. File mock-up v4 trong `docs/design-reference/`
-chỉ còn là tư liệu.
+`shared/design/tokens.json` (**v6**) là **nguồn sự thật duy nhất** cho màu, font, bo góc, lưới
+8pt và ba mức bóng. Hệ thiết kế phẳng: nền trắng / xám-50, viền xám mảnh, một màu xanh chủ
+đạo `#2E6F40`, nhãn pastel — không glassmorphism. Không hard-code màu trong component.
+File mock-up v4 trong `docs/design-reference/` chỉ còn là tư liệu.
+
+v6 giữ nguyên tinh thần v5 và chỉnh lại bảng màu theo spec Giai đoạn 5: thang xám chuyển từ
+ngả xanh sang trung tính (`#1A1A1A` → `#F8F9FA`), semantic dùng bộ Bootstrap (`#DC3545`,
+`#FFC107`, `#0D6EFD`, `#198754`), bo góc về 6 (ô nhập) / 8 (nút) / 12 (thẻ).
+
+Ba yêu cầu của spec **không** được áp dụng, lý do ghi ngay trong `$meta.v6Note` của
+tokens.json: chiều cao nút/ô nhập giữ **52/50** thay vì 44/40 (khối `size` là ràng buộc thực
+địa cho tay lấm bùn dưới nắng, không phải thẩm mỹ), font giữ **Open Sans nhúng kèm** thay vì
+system stack (app phải hiển thị y hệt khi offline), và cỡ chữ body giữ **15px** cho dễ đọc
+ngoài nắng. Nhượng bộ duy nhất là `color.gradient` — một dải chuyển sắc rất nhẹ, chỉ dùng làm
+nền màn đăng nhập, dựng bằng các dải View nội suy trong `SoftGradient` chứ không thêm lại
+`react-native-linear-gradient` (đã gỡ từ v5). `__tests__/designV6.test.tsx` khoá ba quyết định
+này lại để lần chỉnh token sau không âm thầm hạ chúng xuống.
 
 ```bash
 node shared/design/build-tokens.js     # -> mobile/src/theme.ts, web-admin/src/app/tokens.css
@@ -253,6 +266,9 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | Xuất PDF — xem trước, bảng chia sẻ, file mẫu | `39-report-pdf-preview.png`, `40-report-pdf-share.png`, `40-report-pdf-sample.pdf` |
 | Hộp thoại xung đột hai thiết bị | `41-conflict-dialog.png` |
 | Web-admin — đăng nhập, dashboard desktop / tablet / điện thoại, admin chọn nông hộ | `43-web-login.png`, `44-web-dashboard-desktop.png`, `45-web-dashboard-tablet.png`, `46-web-dashboard-phone.png`, `47-web-dashboard-admin-picker.png` |
+| **v6** — Đăng nhập (nền chuyển sắc, thẻ trắng, ô "Lưu thông tin đăng nhập") và lần mở sau đã nhớ tên đăng nhập | `48-v6-login.png`, `49-v6-login-remembered.png` |
+| **v6** — Chọn lô (2 tab, nhãn đồng bộ từng lô) | `50-v6-plot-picker.png` |
+| **v6** — Trang chủ: 3 thẻ tóm tắt, 6 công cụ 2×3, link "Chọn lô" | `51-v6-home.png`, `52-v6-home-tools.png` |
 
 ## Giới hạn hiện tại
 

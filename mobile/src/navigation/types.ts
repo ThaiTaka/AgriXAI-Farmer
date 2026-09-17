@@ -27,6 +27,8 @@ export type RootStackParamList = {
   /** The tab bar (Trang chủ · Công cụ · Cài đặt). */
   Main: {screen?: keyof MainTabParamList} | undefined;
   PlotDetail: {plotId: string};
+  /** "Chọn lô" — the list you pick a plot from before opening its detail. */
+  PlotPicker: undefined;
   /**
    * No `plotId` => create mode; with one => edit mode with the fields pre-filled.
    * `pickedVariety` is merged in by the picker screens on the way back.

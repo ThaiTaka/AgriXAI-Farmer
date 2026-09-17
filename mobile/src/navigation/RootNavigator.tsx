@@ -19,6 +19,7 @@ import {FinanceScreen} from '../screens/finance/FinanceScreen';
 import {HomeScreen} from '../screens/HomeScreen';
 import {LoginScreen} from '../screens/LoginScreen';
 import {PlotDetailScreen} from '../screens/PlotDetailScreen';
+import {PlotPickerScreen} from '../screens/PlotPickerScreen';
 import {PlotFormScreen} from '../screens/PlotFormScreen';
 import {ReportExportScreen} from '../screens/report/ReportExportScreen';
 import {SettingsScreen} from '../screens/SettingsScreen';
@@ -120,6 +121,7 @@ export function RootNavigator() {
           <>
             <Stack.Screen name="Main" component={MainTabs} />
             <Stack.Screen name="PlotDetail" component={PlotDetailScreen} />
+            <Stack.Screen name="PlotPicker" component={PlotPickerScreen} />
             <Stack.Screen name="PlotForm" component={PlotFormScreen} options={{animation: 'slide_from_bottom'}} />
             <Stack.Screen name="VarietyCropType" component={VarietyCropTypeScreen} />
             <Stack.Screen name="VarietyCategory" component={VarietyCategoryScreen} />

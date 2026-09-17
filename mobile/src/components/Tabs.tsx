@@ -12,7 +12,7 @@ interface Props<K extends string> {
 }
 
 /**
- * Underline tabs: the active one carries a 2pt green rule and dark bold text,
+ * Underline tabs: the active one carries a 3pt green rule and dark bold text,
  * the others gray text and no rule. Used where a screen has 2–3 peer views
  * (Bình dân / Trung bình / Cao cấp, Nhập / Xuất / Tồn, Thu / Chi / Báo cáo).
  */
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: space.sm,
-    borderBottomWidth: 2,
+    borderBottomWidth: 3,
     borderBottomColor: 'transparent',
     marginBottom: -1,
   },

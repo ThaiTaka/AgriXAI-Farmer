@@ -13,7 +13,7 @@ import React, {useCallback} from 'react';
 import {Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useAuth, useCurrentUser} from '../auth/AuthContext';
-import {GhostButton} from '../components/buttons';
+import {GhostButton, IconButton} from '../components/buttons';
 import {Card} from '../components/Card';
 import {DashboardCard} from '../components/DashboardCard';
 import {EmptyState} from '../components/EmptyState';
@@ -24,6 +24,7 @@ import {
   CoinsIcon,
   PlusIcon,
   ScaleIcon,
+  SettingsIcon,
   ShareIcon,
   SproutIcon,
   WarehouseIcon,
@@ -100,6 +101,11 @@ export function HomeScreen() {
               {user.region ? ` · ${user.region}` : ''}
             </Text>
           </View>
+          <IconButton
+            accessibilityLabel="Cài đặt"
+            onPress={() => navigation.navigate('Main', {screen: 'Settings'})}>
+            <SettingsIcon size={22} color={colors.text.secondary} />
+          </IconButton>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Tài khoản và đăng xuất"
@@ -185,7 +191,12 @@ export function HomeScreen() {
 
         <View style={styles.sectionHead}>
           <Text style={text('eyebrow', colors.text.muted)}>Lô đất của bạn</Text>
-          <GhostButton small label="Thêm lô" icon={<PlusIcon size={16} />} onPress={() => navigation.navigate('PlotForm')} />
+          <View style={styles.sectionActions}>
+            {data.plots.length > 0 ? (
+              <GhostButton small label="Chọn lô" onPress={() => navigation.navigate('PlotPicker')} testID="home-plot-picker" />
+            ) : null}
+            <GhostButton small label="Thêm lô" icon={<PlusIcon size={16} />} onPress={() => navigation.navigate('PlotForm')} />
+          </View>
         </View>
 
         {data.plots.length === 0 ? (
@@ -304,6 +315,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: space.sm,
     gap: space.sm,
+  },
+  sectionActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.xs,
   },
   list: {
     gap: space.md,
