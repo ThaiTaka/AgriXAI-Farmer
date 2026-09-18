@@ -93,7 +93,7 @@ export function ChangePasswordSheet({visible, onClose}: Props) {
           />
 
           {loading ? (
-            <ActivityIndicator style={styles.loader} size="large" color={colors.text.default} />
+            <ActivityIndicator style={styles.loader} size="large" color={colors.primary.default} />
           ) : (
             <View style={styles.actions}>
               <GhostButton label="Huỷ" onPress={handleClose} style={styles.cancelBtn} />
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: colors.bg.surface,
+    backgroundColor: colors.surface.card,
     padding: space.lg,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,

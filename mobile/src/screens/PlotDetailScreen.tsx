@@ -433,6 +433,10 @@ const styles = StyleSheet.create({
   rowList: {
     gap: space.md,
   },
+  cyclesHeader: {
+    marginBottom: space.md,
+    alignItems: 'flex-start',
+  },
   cycleHead: {
     flexDirection: 'row',
     alignItems: 'center',
