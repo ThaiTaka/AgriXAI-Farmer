@@ -16,7 +16,7 @@ import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useChangeAuthor} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
 import {Badge} from '../components/Badge';
-import {DangerButton, GhostButton, IconButton} from '../components/buttons';
+import {DangerButton, GhostButton, IconButton, SecondaryButton} from '../components/buttons';
 import {Card} from '../components/Card';
 import {EmptyState} from '../components/EmptyState';
 import {SegmentedControl} from '../components/form';
