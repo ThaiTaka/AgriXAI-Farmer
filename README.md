@@ -155,7 +155,7 @@ adb reverse tcp:8000 tcp:8000
 ```
 
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint App.tsx src __tests__` · test:
-`npx jest --coverage` (134 test, trong đó 28 ca hệ thiết kế v6, 12 ca chiều sâu v6.1 và 25 ca
+`npx jest --coverage` (143 test, trong đó 28 ca hệ thiết kế v6, 12 ca chiều sâu v6.1 và 27 ca
 Phase 1 v6.2;
 `src/domain/`, các component Giai đoạn 4–5, biểu đồ và `utils/` phủ 94 % câu lệnh / 96 % dòng
 — ngưỡng đặt trong `jest.config.js`).
@@ -292,6 +292,7 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | **v6** — Trang chủ: 3 thẻ tóm tắt, 6 công cụ 2×3, link "Chọn lô" | `51-v6-home.png`, `52-v6-home-tools.png` |
 | **v6.1** — chiều sâu sau khi sửa elevation: đăng nhập, trang chủ, header dính khi cuộn, chọn lô | `53-v61-login-depth.png`, `54-v61-home-depth.png`, `55-v61-home-sticky-header.png`, `56-v61-plot-picker-depth.png` |
 | **v6.2** — modern friendly: đăng nhập có minh hoạ, chọn lô, trang chủ 3 tông icon, lưới công cụ | `57-v62-login-friendly.png`, `58-v62-plot-picker-friendly.png`, `59-v62-home-friendly.png`, `60-v62-home-tools-friendly.png` |
+| Sáu tính năng lõi sau khi đã mang thiết kế v6.2 (Cài đặt có mục hỗ trợ, F1, F3, F5–F6, Kho, Thu-chi) | `61-p2-settings-support.png`, `62-p2-f1.png`, `63-p2-f3.png`, `64-p2-f5.png`, `65-p2-kho.png`, `66-p2-thuchi.png` |
 
 ## Giới hạn hiện tại
 

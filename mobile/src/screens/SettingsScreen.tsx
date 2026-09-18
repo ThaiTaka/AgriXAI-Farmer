@@ -5,16 +5,18 @@
  */
 
 import React, {useCallback, useEffect, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useAuth, useCurrentUser} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
 import {Badge} from '../components/Badge';
 import {DangerButton, SecondaryButton} from '../components/buttons';
 import {Card} from '../components/Card';
+import {ChevronRight} from '../components/icons';
 import {Screen} from '../components/Screen';
 import type ErrorLogEntry from '../db/models/ErrorLogEntry';
 import {APP_VERSION, clearUploadedLogs, observeErrorLogs} from '../db/repositories/errorLogRepository';
+import {SUPPORT_EMAIL} from '../utils/version';
 import {useObservable} from '../db/useObservable';
 import {tableStatusLine} from '../domain/syncStatus';
 import {useSync} from '../sync/SyncContext';
@@ -45,6 +47,15 @@ export function SettingsScreen() {
     ]);
   }, [signOut]);
 
+  const openSupportMail = useCallback(() => {
+    // Subject carries the version so a report arrives already saying which
+    // build it came from — the farmer should not have to find that out.
+    const subject = encodeURIComponent(`AgriLog v2 (${APP_VERSION}) — cần hỗ trợ`);
+    Linking.openURL(`mailto:${SUPPORT_EMAIL}?subject=${subject}`).catch(() => {
+      // No mail app configured: the address is on screen either way.
+    });
+  }, []);
+
   const unsent = logs.filter(l => !l.uploadedAt).length;
   const visibleTables = pending.filter(p => p.pending > 0 || ['plans', 'warehouse_in', 'warehouse_out', 'income', 'expense', 'tasks_history', 'plots'].includes(p.table));
 
@@ -60,6 +71,22 @@ export function SettingsScreen() {
             {user.region ? ` · ${user.region}` : ''}
           </Text>
           <Text style={[text('caption', colors.text.muted), styles.version]}>AgriLog v2 · phiên bản {APP_VERSION}</Text>
+        </Card>
+
+        <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Hỗ trợ</Text>
+        <Card flush style={styles.table}>
+          <Pressable
+            testID="support-email"
+            accessibilityRole="link"
+            accessibilityLabel={`Gửi email hỗ trợ tới ${SUPPORT_EMAIL}`}
+            onPress={openSupportMail}
+            style={({pressed}) => [styles.row, styles.rowLast, pressed && styles.rowPressed]}>
+            <View style={styles.rowBody}>
+              <Text style={text('bodyStrong')}>Gửi email hỗ trợ</Text>
+              <Text style={text('caption', colors.text.muted)}>{SUPPORT_EMAIL}</Text>
+            </View>
+            <ChevronRight />
+          </Pressable>
         </Card>
 
         <View style={styles.sectionHead}>
@@ -140,6 +167,13 @@ const styles = StyleSheet.create({
   },
   name: {
     marginTop: space.xs,
+  },
+  sectionLabel: {
+    marginTop: space.xl,
+    marginBottom: space.sm,
+  },
+  rowPressed: {
+    backgroundColor: colors.surface.pressed,
   },
   version: {
     marginTop: space.sm,

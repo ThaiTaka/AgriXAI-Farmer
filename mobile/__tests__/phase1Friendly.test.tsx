@@ -22,6 +22,7 @@ import {IconTile, TILE_ICON_COLOR} from '../src/components/IconTile';
 import {FarmScene} from '../src/components/illustrations';
 import {NumberText} from '../src/components/NumberText';
 import {colors, radius, shadows, size} from '../src/theme';
+import {APP_VERSION, SUPPORT_EMAIL} from '../src/utils/version';
 
 const render = (element: React.ReactElement) => {
   let tree!: ReactTestRenderer.ReactTestRenderer;
@@ -247,4 +248,18 @@ test('a card with no icon renders no tile at all', () => {
     render(<DashboardCard label="Công việc" value="3" subtext="x" tone="lime" onPress={() => {}} />).toJSON(),
   );
   expect(json).not.toContain(colors.accent.limeSoft);
+});
+
+// ------------------------------ support contact -----------------------------
+
+test('the support address is a real, reachable one — never a placeholder', () => {
+  expect(SUPPORT_EMAIL).toBe('lethanhthai0805@gmail.com');
+  expect(SUPPORT_EMAIL).toMatch(/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i);
+  // The two placeholders that must never ship in a farmer-facing screen.
+  expect(SUPPORT_EMAIL).not.toMatch(/example\.com|support@agrilog/i);
+});
+
+test('a support mail arrives already naming the build it came from', () => {
+  const subject = decodeURIComponent(encodeURIComponent(`AgriLog v2 (${APP_VERSION}) — cần hỗ trợ`));
+  expect(subject).toContain(APP_VERSION);
 });
