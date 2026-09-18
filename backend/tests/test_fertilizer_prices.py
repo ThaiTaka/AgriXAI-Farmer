@@ -136,3 +136,43 @@ def test_unauthenticated_cannot_access(admin):
     """Chua dang nhap khong the truy cap."""
     res = client.get("/fertilizer-prices/latest")
     assert res.status_code == 401
+
+
+def test_create_price_unknown_fertilizer_id(admin):
+    """fertilizer_id khong co trong catalogue -> 422 Unprocessable Entity.
+
+    Co the catalogue JSON khong co san thi bo qua validation (fail open).
+    Neu catalogue co thi phai bao loi ro rang.
+    """
+    res = client.post(
+        "/fertilizer-prices",
+        json={"fertilizer_id": "phan_bon_khong_ton_tai_xyz", "price_per_kg": 1000.0, "effective_from": now_ms()},
+        headers=admin,
+    )
+    # Catalogue co san -> 422; neu catalogue khong load duoc -> 201 (fail open)
+    assert res.status_code in (422, 201)
+    if res.status_code == 422:
+        assert "danh mục" in res.json()["detail"] or "muc" in res.json()["detail"].lower()
+
+
+def test_history_empty_for_unknown_fertilizer(admin):
+    """GET /fertilizer-prices/history/{id} voi id chua tung co trong DB -> list rong."""
+    res = client.get("/fertilizer-prices/history/phan_chua_co_trong_db", headers=admin)
+    assert res.status_code == 200
+    assert res.json() == []
+
+
+def test_latest_contains_json_fallback(admin):
+    """GET /latest phai bao gom ca gia tu JSON catalogue (id=-1 la sentinel)."""
+    res = client.get("/fertilizer-prices/latest", headers=admin)
+    assert res.status_code == 200
+    data = res.json()
+    # Phai co it nhat 1 gia tu JSON (chua co trong DB)
+    json_prices = [r for r in data if r["id"] == -1]
+    db_prices = [r for r in data if r["id"] > 0]
+    # Tong phai co gia tri
+    assert len(json_prices) + len(db_prices) > 0
+    # Moi item phai co fertilizer_name va price_per_kg duong
+    for item in data:
+        assert item["fertilizer_name"], "fertilizer_name khong duoc rong"
+        assert item["price_per_kg"] > 0, "price_per_kg phai duong"

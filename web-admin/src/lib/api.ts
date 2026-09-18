@@ -110,3 +110,16 @@ export const formatVnd = (value: number): string =>
 
 export const formatKg = (value: number): string =>
   `${new Intl.NumberFormat("vi-VN", {maximumFractionDigits: 2}).format(value)} kg`;
+
+/**
+ * Format epoch ms → ngày locale vi-VN.
+ * Trả "—" cho giá trị 0 hoặc null (dùng cho giá từ JSON catalogue).
+ */
+export const formatDate = (ms: number | null | undefined): string => {
+  if (!ms) return "—";
+  return new Date(ms).toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
