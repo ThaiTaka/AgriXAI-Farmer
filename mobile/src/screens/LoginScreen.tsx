@@ -29,6 +29,7 @@ import {PrimaryButton} from '../components/buttons';
 import {Checkbox} from '../components/Checkbox';
 import {Field} from '../components/form';
 import {AlertIcon, LeafMark} from '../components/icons';
+import {FarmScene} from '../components/illustrations';
 import {Screen} from '../components/Screen';
 import {colors, radius, shadows, space, text} from '../theme';
 import {APP_VERSION} from '../utils/version';
@@ -102,6 +103,10 @@ export function LoginScreen() {
               <Text style={text('cardTitle')}>AgriXAI Farmer</Text>
               <Text style={text('caption', colors.text.muted)}>Quản lý vật tư nông nghiệp</Text>
             </View>
+          </View>
+
+          <View style={styles.scene}>
+            <FarmScene width={200} />
           </View>
 
           <View style={styles.card} testID="login-card">
@@ -185,7 +190,7 @@ const styles = StyleSheet.create({
   brandMark: {
     width: 40,
     height: 40,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     backgroundColor: colors.primary.default,
     alignItems: 'center',
     justifyContent: 'center',
@@ -194,16 +199,20 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  scene: {
+    alignItems: 'center',
+    marginBottom: space.lg,
+  },
   card: {
     width: '100%',
     maxWidth: 360,
     alignSelf: 'center',
     padding: space.xl,
     backgroundColor: colors.surface.card,
-    borderRadius: radius.md,
+    borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.border.default,
-    ...shadows.md,
+    ...shadows.raised,
   },
   cardTitle: {
     marginBottom: space.xs,
@@ -223,7 +232,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
     padding: space.md,
     marginBottom: space.md,
-    borderRadius: radius.xs,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border.danger,
     backgroundColor: colors.badge.redBg,

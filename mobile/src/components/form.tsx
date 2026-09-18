@@ -207,9 +207,11 @@ const styles = StyleSheet.create({
   },
   inputWrap: {
     minHeight: size.inputMinHeight,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    borderColor: colors.border.strong,
+    borderRadius: radius.md,
+    // 2pt at rest: a hairline box disappears against a white card in sunlight,
+    // and the focus ring then has nothing to thicken from.
+    borderWidth: 2,
+    borderColor: colors.border.default,
     backgroundColor: colors.surface.card,
     justifyContent: 'center',
   },
@@ -222,6 +224,7 @@ const styles = StyleSheet.create({
   inputWrapFocused: {
     borderColor: colors.border.focus,
   },
+  // Chips and segments keep the old hairline; only the text box got heavier.
   inputWrapError: {
     borderColor: colors.border.danger,
   },
@@ -259,7 +262,7 @@ const styles = StyleSheet.create({
   chip: {
     flex: 1,
     minHeight: size.chipMinHeight,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',

@@ -18,6 +18,7 @@ import {GhostButton, IconButton} from '../components/buttons';
 import {Card} from '../components/Card';
 import {DashboardCard} from '../components/DashboardCard';
 import {EmptyState} from '../components/EmptyState';
+import {IconTile} from '../components/IconTile';
 import {
   BellIcon,
   CalculatorIcon,
@@ -138,7 +139,8 @@ export function HomeScreen() {
                 : 'Kho trống — nhập phiếu mua đầu tiên ở Kho'
             }
             flag={stockPending ? 'Chưa đồng bộ' : null}
-            icon={<WarehouseIcon size={18} />}
+            icon={<WarehouseIcon size={24} />}
+            tone="green"
             onPress={() => navigation.navigate('Warehouse', {tab: 'stock'})}
           />
           <DashboardCard
@@ -149,7 +151,8 @@ export function HomeScreen() {
             negative={loss}
             subtext={`Thu ${formatVnd(data.month.income)}, Chi ${formatVnd(data.month.expense)}`}
             flag={financePending ? 'Chưa đồng bộ' : null}
-            icon={<CoinsIcon size={18} />}
+            icon={<CoinsIcon size={24} color={colors.green['800']} />}
+            tone="lime"
             onPress={() => navigation.navigate('Finance', {tab: 'report'})}
           />
           <DashboardCard
@@ -158,7 +161,8 @@ export function HomeScreen() {
             value={String(taskCount)}
             unit={taskCount > 0 ? 'việc giai đoạn này' : 'việc chờ'}
             subtext={pendingSubtext(data.pending)}
-            icon={<ClipboardIcon size={18} />}
+            icon={<ClipboardIcon size={24} color={colors.badge.yellowFg} />}
+            tone="amber"
             onPress={() => navigation.navigate('CareProtocol', data.pending[0] ? {plotId: data.pending[0].plotId} : undefined)}
           />
         </View>
@@ -167,7 +171,9 @@ export function HomeScreen() {
         <View style={styles.toolGrid}>
           {TOOLS.map(tool => (
             <Card key={tool.route} onPress={() => navigation.navigate(tool.route)} accessibilityLabel={tool.title} style={styles.toolTile} testID={tool.testID}>
-              <View style={styles.toolIcon}>{tool.icon}</View>
+              <IconTile size={44} style={styles.toolIcon}>
+                {tool.icon}
+              </IconTile>
               <Text style={text('bodyStrong')} numberOfLines={1}>
                 {tool.title}
               </Text>
@@ -294,13 +300,7 @@ const styles = StyleSheet.create({
     minHeight: 112,
   },
   toolIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primary.soft,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: space.sm,
+    marginBottom: space.md,
   },
   toolMeta: {
     marginTop: 2,

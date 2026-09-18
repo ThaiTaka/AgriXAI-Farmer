@@ -26,7 +26,7 @@ interface Props {
 export function Badge({label, tone = 'gray', icon, style}: Props) {
   const t = TONES[tone];
   return (
-    <View style={[styles.badge, {backgroundColor: t.bg}, style]}>
+    <View style={[styles.badge, {backgroundColor: t.bg, borderColor: t.fg}, style]}>
       {icon}
       <Text style={text('badge', t.fg)} numberOfLines={1}>
         {label}
@@ -44,6 +44,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: space.md,
     paddingVertical: space.xs,
     borderRadius: radius.pill,
+    // A hairline of the text colour at 1pt: enough to define the pill on a
+    // white card without turning the soft fill into a loud chip.
+    borderWidth: 1,
     maxWidth: '100%',
   },
 });
