@@ -17,7 +17,7 @@ interface Props {
 }
 
 /**
- * White card, 1px gray hairline, shadow-sm, 12pt radius.
+ * White card, 1px gray hairline, shadow-card, 16pt radius.
  * Selected = green border + soft green ground. No heavy shadows.
  *
  * A pressable card answers the touch the way the dashboard cards do: down to
@@ -56,13 +56,13 @@ export function Card({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface.card,
-    borderRadius: radius.md,
+    borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.border.default,
-    ...shadows.sm,
+    ...shadows.card,
   },
   padded: {
-    padding: space.lg,
+    padding: space.xl,
   },
   selected: {
     borderColor: colors.border.selected,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface.pressed,
   },
   lifted: {
-    ...shadows.md,
+    ...shadows.raised,
     transform: [{scale: 0.98}],
   },
 });

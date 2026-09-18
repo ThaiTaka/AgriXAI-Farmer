@@ -6,8 +6,8 @@ import {colors} from '../theme';
 
 interface Props {
   children: React.ReactNode;
-  /** `lg` for the headline figure of a card, `md` for row values, `sm` for captions. */
-  size?: 'sm' | 'md' | 'lg';
+  /** `xl`/`lg` for the headline figure of a card, `md` for row values, `sm` for captions. */
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   color?: string;
   style?: StyleProp<TextStyle>;
   numberOfLines?: number;
@@ -46,5 +46,9 @@ const styles = StyleSheet.create({
   lg: {
     fontSize: 24,
     lineHeight: 30,
+  },
+  xl: {
+    fontSize: 28,
+    lineHeight: 34,
   },
 });

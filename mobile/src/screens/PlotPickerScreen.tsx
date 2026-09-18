@@ -18,6 +18,7 @@ import {useCurrentUser} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
 import {Badge} from '../components/Badge';
 import {PrimaryButton, SecondaryButton} from '../components/buttons';
+import {IconTile} from '../components/IconTile';
 import {Card} from '../components/Card';
 import {EmptyState} from '../components/EmptyState';
 import {ChevronRight, CropIcon, PlusIcon, SproutIcon} from '../components/icons';
@@ -54,7 +55,8 @@ export function PlotPickerScreen() {
 
   return (
     <Screen>
-      <AppHeader title="Chọn lô" eyebrow={plotsSummary(plots)} onBack={() => navigation.goBack()} />
+      <AppHeader title="Lô của tôi" eyebrow="Chọn lô để quản lý" onBack={() => navigation.goBack()} />
+      <Text style={[text('bodySm', colors.text.muted), styles.summary]}>{plotsSummary(plots)}</Text>
       <Tabs items={TABS} value={tab} onChange={setTab} />
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -74,9 +76,6 @@ export function PlotPickerScreen() {
                 return (
                   <Card key={plot.id} style={styles.card} testID={`plot-${plot.code}`}>
                     <View style={styles.cardHead}>
-                      <View style={styles.iconBox}>
-                        <CropIcon name={cropTypeById(plot.cropType)?.icon ?? 'other'} size={24} />
-                      </View>
                       <View style={styles.cardText}>
                         <Text style={text('cardTitle')} numberOfLines={1}>
                           {plot.code}
@@ -88,13 +87,16 @@ export function PlotPickerScreen() {
                           {formatArea(plot.area, plot.areaUnit)}
                         </Text>
                       </View>
+                      <IconTile size={40} tone={badge.state === 'pending' ? 'amber' : 'green'}>
+                        <CropIcon name={cropTypeById(plot.cropType)?.icon ?? 'other'} size={22} />
+                      </IconTile>
                     </View>
 
                     <View style={styles.cardFoot}>
                       <Badge label={badge.label} tone={badge.tone} />
                       <SecondaryButton
                         small
-                        label="Chọn lô"
+                        label="Chọn"
                         onPress={() => choose(plot)}
                         testID={`choose-${plot.code}`}
                       />
@@ -103,14 +105,12 @@ export function PlotPickerScreen() {
                 );
               })}
 
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Thêm lô đất"
+              <PrimaryButton
+                label="Thêm lô"
+                icon={<PlusIcon size={18} color={colors.primary.onPrimary} />}
                 onPress={() => navigation.navigate('PlotForm')}
-                style={({pressed}) => [styles.addRow, pressed && styles.addRowPressed]}>
-                <PlusIcon size={18} />
-                <Text style={text('bodyStrong', colors.primary.default)}>Thêm lô đất</Text>
-              </Pressable>
+                style={styles.addButton}
+              />
             </View>
           )
         ) : (
@@ -152,18 +152,14 @@ const styles = StyleSheet.create({
   card: {
     gap: space.md,
   },
+  summary: {
+    paddingHorizontal: space.lg,
+    paddingTop: space.md,
+  },
   cardHead: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: space.md,
-  },
-  iconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primary.soft,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   cardText: {
     flex: 1,
@@ -178,16 +174,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: space.sm,
   },
-  addRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: space.sm,
-    minHeight: 52,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    borderStyle: 'dashed',
-    borderColor: colors.border.strong,
+  addButton: {
+    marginTop: space.sm,
   },
   addRowPressed: {
     backgroundColor: colors.surface.pressed,
@@ -199,7 +187,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
     minHeight: 52,
     paddingHorizontal: space.lg,
-    borderRadius: radius.md,
+    borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.border.default,
     backgroundColor: colors.surface.card,
