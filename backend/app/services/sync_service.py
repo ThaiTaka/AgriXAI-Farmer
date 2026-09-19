@@ -55,6 +55,12 @@ SYNC_MODELS: dict[str, tuple[type, bool]] = {
 # separately; everything else is copied straight across.
 _SKIP_ON_WRITE = {"id", "created_at", "updated_at", "deleted_at", "is_deleted"}
 
+# Fields on crop_varieties that only an admin may set (via PATCH /crop-varieties/{id}/approve).
+# A malicious phone client must not be able to self-approve its own variety submission
+# by embedding approved=true in a /sync push payload — we strip these silently so
+# the rest of the variety data still syncs normally.
+_CROP_VARIETY_READONLY = {"approved", "is_seed", "source"}
+
 
 def now_ms() -> int:
     return int(time.time() * 1000)
@@ -180,10 +186,12 @@ def _conflict(table: str, existing: Any, model: type) -> dict[str, Any]:
 
 
 def _build(model: type, raw: dict, user: User, owned: bool, stamp: int):
+    # Determine which fields this client is not allowed to write.
+    extra_skip = _CROP_VARIETY_READONLY if model is CropVariety else set()
     values = {
         key: value
         for key, value in raw.items()
-        if key in set(_columns(model)) and key not in _SKIP_ON_WRITE
+        if key in set(_columns(model)) and key not in _SKIP_ON_WRITE and key not in extra_skip
     }
     values["id"] = raw["id"]
     values["created_at"] = raw.get("created_at") or stamp
@@ -201,11 +209,15 @@ def _apply_if_newer(existing: Any, raw: dict, model: type, stamp: int) -> bool:
     if existing.updated_at is not None and existing.updated_at > incoming_updated:
         return False
 
+    # Fields the client is not allowed to overwrite on this model.
+    extra_skip = _CROP_VARIETY_READONLY if model is CropVariety else set()
     for key, value in raw.items():
         if key in _SKIP_ON_WRITE or key not in set(_columns(model)):
             continue
         if key == "owner_id":
             continue
+        if key in extra_skip:
+            continue  # silently ignore — do not let client overwrite admin-controlled fields
         setattr(existing, key, value)
     existing.updated_at = max(incoming_updated, stamp)
     return True

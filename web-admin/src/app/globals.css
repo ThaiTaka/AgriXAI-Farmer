@@ -320,6 +320,17 @@ textarea {
   box-shadow: var(--shadow-sm);
 }
 
+.btn-danger {
+  background: var(--color-surface-card);
+  color: var(--color-text-danger);
+  border-color: var(--color-border-danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--color-badge-redbg);
+  box-shadow: var(--shadow-sm);
+}
+
 .input {
   width: 100%;
   padding: 0 var(--space-md);
@@ -481,6 +492,11 @@ a:focus-visible {
   color: var(--color-badge-grayfg);
 }
 
+.badge-yellow {
+  background: var(--color-badge-yellowbg);
+  color: var(--color-badge-yellowfg);
+}
+
 .row-between {
   display: flex;
   flex-wrap: wrap;
@@ -529,4 +545,162 @@ a:focus-visible {
 
 .pdf-row {
   margin-top: var(--space-sm);
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-sm);
+}
+
+.row-actions .btn {
+  min-height: 36px;
+  padding: 0 var(--space-md);
+  font-size: 13px;
+}
+
+/* ---- modal ---- */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  z-index: 100;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - 2 * var(--space-lg));
+  overflow-y: auto;
+  padding: var(--space-xl);
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.modal .form {
+  margin-top: 0;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+@media (max-width: 639px) {
+  .field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ── Trang Quản lý Tài khoản (Task 4) ─────────────────────────────── */
+
+.h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm) var(--space-md);
+}
+
+@media (max-width: 639px) {
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  margin-top: var(--space-sm);
+}
+
+.create-form {
+  border-top: 1px solid var(--color-border-default);
+  padding-top: var(--space-md);
+  margin-top: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* Badge xanh dương cho admin */
+.badge-blue {
+  background: #dbeafe;
+  color: #1d4ed8;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Nút nhỏ trong ô hành động bảng */
+.btn-danger-sm {
+  padding: 2px 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: #dc2626;
+  border: 1px solid #dc2626;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-danger-sm:hover:not(:disabled) {
+  background: #dc2626;
+  color: #fff;
+}
+
+.btn-danger-sm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary-sm {
+  padding: 2px 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-default);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-secondary-sm:hover:not(:disabled) {
+  background: var(--color-surface-subtle);
+}
+
+.btn-secondary-sm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Thông báo thành công */
+.success {
+  color: var(--color-green-700);
+  background: var(--color-green-075, #f0fdf4);
+  border: 1px solid var(--color-green-100);
+  border-radius: var(--radius-control);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-sm);
 }
