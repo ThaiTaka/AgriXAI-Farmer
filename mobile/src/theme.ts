@@ -47,9 +47,15 @@ export const colors = {
     "info": "#0D6EFD",
     "success": "#198754"
   },
+  "accent": {
+    "lime": "#C3D24A",
+    "coral": "#FF6B6B",
+    "limeSoft": "#F4F7DC",
+    "coralSoft": "#FFE9E9"
+  },
   "gradient": {
-    "groundFrom": "#F8F9FA",
-    "groundTo": "#F0F4F8"
+    "groundFrom": "#F0F4F8",
+    "groundTo": "#E8F5EA"
   },
   "white": "#FFFFFF",
   "text": {
@@ -96,6 +102,10 @@ export const colors = {
     "blueFg": "#1E40AF",
     "purpleBg": "#EDE9FE",
     "purpleFg": "#5B21B6"
+  },
+  "banner": {
+    "offlineBg": "#F59E0B",
+    "offlineFg": "#1A1A1A"
   }
 } as const;
 
@@ -108,7 +118,7 @@ export const shadows = {
     },
     "shadowRadius": 1,
     "shadowOpacity": 0.05,
-    "elevation": 1
+    "elevation": 2
   },
   "md": {
     "shadowColor": "#000000",
@@ -118,7 +128,7 @@ export const shadows = {
     },
     "shadowRadius": 2,
     "shadowOpacity": 0.08,
-    "elevation": 2
+    "elevation": 4
   },
   "lg": {
     "shadowColor": "#000000",
@@ -128,7 +138,37 @@ export const shadows = {
     },
     "shadowRadius": 6,
     "shadowOpacity": 0.1,
-    "elevation": 4
+    "elevation": 10
+  },
+  "card": {
+    "shadowColor": "#000000",
+    "shadowOffset": {
+      "width": 0,
+      "height": 2
+    },
+    "shadowRadius": 4,
+    "shadowOpacity": 0.08,
+    "elevation": 6
+  },
+  "raised": {
+    "shadowColor": "#000000",
+    "shadowOffset": {
+      "width": 0,
+      "height": 4
+    },
+    "shadowRadius": 8,
+    "shadowOpacity": 0.1,
+    "elevation": 12
+  },
+  "brand": {
+    "shadowColor": "#2E6F40",
+    "shadowOffset": {
+      "width": 0,
+      "height": 4
+    },
+    "shadowRadius": 6,
+    "shadowOpacity": 0.2,
+    "elevation": 10
   }
 } as const;
 
@@ -138,6 +178,7 @@ export const radius = {
   "md": 12,
   "lg": 16,
   "xl": 24,
+  "card": 16,
   "pill": 999
 } as const;
 

@@ -2,7 +2,7 @@ import React from 'react';
 import type {StyleProp, ViewStyle} from 'react-native';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 
-import {colors, space, text} from '../theme';
+import {colors, size, space, text} from '../theme';
 
 interface Props<K extends string> {
   items: ReadonlyArray<{key: K; label: string; count?: number}>;
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    minHeight: 44,
+    minHeight: size.minTouchTarget,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: space.sm,

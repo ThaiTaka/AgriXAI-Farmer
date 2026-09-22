@@ -2,7 +2,7 @@
  * Danh mục phân bón — bước 2: sản phẩm trong một nhóm.
  *
  * One card per product: name, NPK ratio, the market price range per pack and
- * per kg, a soft budget-tier badge, region + source + date. A segmented filter
+ * per kg, a soft budget-tier badge, region + source + date. A row of chips
  * narrows the list to one budget tier (Bình dân / Trung bình / Cao cấp) —
  * tiers are the percentile bands defined in the data file, not fixed amounts.
  *
@@ -20,10 +20,11 @@ import type {BadgeTone} from '../../components/Badge';
 import {Badge} from '../../components/Badge';
 import {Card} from '../../components/Card';
 import {EmptyState} from '../../components/EmptyState';
-import {SegmentedControl} from '../../components/form';
+import {SelectChip} from '../../components/form';
+import {NumberText} from '../../components/NumberText';
 import {Screen} from '../../components/Screen';
 import type {RootStackParamList} from '../../navigation/types';
-import {colors, space, text} from '../../theme';
+import {colors, size, space, text} from '../../theme';
 import {formatVnd, formatVndRange} from '../../utils/format';
 import type {BudgetTierCode} from '../../utils/staticData';
 import {
@@ -68,7 +69,7 @@ export function FertilizerProductsScreen() {
   return (
     <Screen>
       <AppHeader
-        eyebrow="Danh mục phân bón"
+        eyebrow="Bảng giá phân bón"
         title={category?.name ?? params.categoryCode}
         onBack={() => navigation.goBack()}
       />
@@ -88,7 +89,18 @@ export function FertilizerProductsScreen() {
           />
         ) : (
           <>
-            <SegmentedControl items={segments} value={filter} onChange={setFilter} style={styles.filter} />
+            {/* Chip xuống dòng thay vì segment chia đều: nhãn "Trung bình" không bị cắt. */}
+            <View style={styles.filter}>
+              {segments.map(segment => (
+                <SelectChip
+                  key={segment.key}
+                  label={segment.label}
+                  selected={filter === segment.key}
+                  onPress={() => setFilter(segment.key)}
+                  style={styles.filterChip}
+                />
+              ))}
+            </View>
 
             {products.length === 0 ? (
               <EmptyState
@@ -112,10 +124,10 @@ export function FertilizerProductsScreen() {
                     <Text style={text('caption', colors.text.muted)}>{product.unit}</Text>
                   </View>
 
-                  <Text style={[text('subheading'), styles.price]}>
+                  <NumberText size="lg" numberOfLines={1} style={styles.price}>
                     {formatVndRange(product.price_min, product.price_max)}
-                    <Text style={text('bodySm', colors.text.muted)}> / {product.unit}</Text>
-                  </Text>
+                  </NumberText>
+                  <Text style={text('caption', colors.text.muted)}>mỗi {product.unit}</Text>
                   {product.price_per_kg_min !== null && product.price_per_kg_max !== null ? (
                     <Text style={text('bodySm', colors.text.secondary)}>
                       ≈ {formatVndRange(product.price_per_kg_min, product.price_per_kg_max)}/kg
@@ -159,7 +171,15 @@ const styles = StyleSheet.create({
     marginBottom: space.lg,
   },
   filter: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: space.sm,
     marginBottom: space.lg,
+  },
+  filterChip: {
+    flex: 0,
+    minHeight: size.minTouchTarget,
+    paddingHorizontal: space.md,
   },
   item: {
     marginBottom: space.md,
@@ -186,6 +206,6 @@ const styles = StyleSheet.create({
     marginTop: space.sm,
   },
   footnote: {
-    marginTop: space.sm,
+    marginTop: space.xl,
   },
 });

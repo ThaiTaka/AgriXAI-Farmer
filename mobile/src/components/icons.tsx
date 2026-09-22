@@ -435,6 +435,16 @@ export function AlertIcon({size = 20, color = colors.badge.yellowFg}: IconProps)
   );
 }
 
+export function InfoIcon({size = 20, color = colors.text.secondary}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Circle cx={12} cy={12} r={9} stroke={color} strokeWidth={STROKE} />
+      <Path d="M12 11v5" stroke={color} strokeWidth={2.4} strokeLinecap="round" />
+      <Path d="M12 7.5h.01" stroke={color} strokeWidth={2.4} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
 export function CheckCircleIcon({size = 20, color = colors.badge.greenFg}: IconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -444,15 +454,7 @@ export function CheckCircleIcon({size = 20, color = colors.badge.greenFg}: IconP
   );
 }
 
-/* ------------------------------ tab bar icons ------------------------------ */
-
-export function HomeIcon({size = 24, color = colors.text.muted}: IconProps) {
-  return (
-    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      <Path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
-    </Svg>
-  );
-}
+/* -------------------------- navigation entry icons -------------------------- */
 
 export function ToolsIcon({size = 24, color = colors.text.muted}: IconProps) {
   return (

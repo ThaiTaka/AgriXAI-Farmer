@@ -29,8 +29,8 @@ import {PrimaryButton} from '../components/buttons';
 import {Checkbox} from '../components/Checkbox';
 import {Field} from '../components/form';
 import {AlertIcon, LeafMark} from '../components/icons';
+import {FarmScene} from '../components/illustrations';
 import {Screen} from '../components/Screen';
-import {SoftGradient} from '../components/SoftGradient';
 import {colors, radius, shadows, space, text} from '../theme';
 import {APP_VERSION} from '../utils/version';
 
@@ -87,81 +87,83 @@ export function LoginScreen() {
   }, [busy, identifier, password, remember, signIn]);
 
   return (
-    <Screen ground="page" edges={['top', 'bottom']}>
-      <SoftGradient>
-        <KeyboardAvoidingView
-          style={styles.root}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <ScrollView
-            contentContainerStyle={styles.scroll}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}>
-            <View style={styles.header}>
-              <View style={styles.brandMark}>
-                <LeafMark size={22} />
-              </View>
-              <View style={styles.brandText}>
-                <Text style={text('cardTitle')}>AgriXAI Farmer</Text>
-                <Text style={text('caption', colors.text.muted)}>Quản lý vật tư nông nghiệp</Text>
-              </View>
+    <Screen ground="gradient" edges={['top', 'bottom']}>
+      <KeyboardAvoidingView
+        style={styles.root}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <View style={styles.brandMark}>
+              <LeafMark size={22} />
             </View>
-
-            <View style={styles.card} testID="login-card">
-              <Text style={[text('heading'), styles.cardTitle]}>Đăng nhập</Text>
-              <Text style={[text('bodySm', colors.text.muted), styles.cardLead]}>
-                Chỉ lần đầu cần mạng. Sau đó mọi ghi chép lưu trên máy và tự đồng bộ.
-              </Text>
-
-              <Field
-                testID="login-identifier"
-                label="Tên đăng nhập"
-                value={identifier}
-                onChangeText={value => {
-                  setIdentifier(value);
-                  if (error) setError(null);
-                }}
-                placeholder="nguyenvancuong hoặc email"
-                autoCapitalize="none"
-                style={styles.field}
-              />
-              <Field
-                testID="login-password"
-                label="Mật khẩu"
-                value={password}
-                onChangeText={value => {
-                  setPassword(value);
-                  if (error) setError(null);
-                }}
-                placeholder="••••••••"
-                secureTextEntry
-                autoCapitalize="none"
-                style={styles.field}
-              />
-
-              <Checkbox
-                testID="login-remember"
-                label="Lưu thông tin đăng nhập"
-                checked={remember}
-                onChange={setRemember}
-                style={styles.remember}
-              />
-
-              {error ? (
-                <View style={styles.error} testID="login-error">
-                  <AlertIcon size={18} color={colors.semantic.error} />
-                  <Text style={[text('bodySm', colors.text.danger), styles.errorText]}>{error}</Text>
-                </View>
-              ) : null}
-
-              <PrimaryButton label="Đăng nhập" onPress={onSubmit} withArrow loading={busy} />
+            <View style={styles.brandText}>
+              <Text style={text('cardTitle')}>AgriXAI Farmer</Text>
+              <Text style={text('caption', colors.text.muted)}>Quản lý vật tư nông nghiệp</Text>
             </View>
+          </View>
 
-            <Text style={[text('caption', colors.text.muted), styles.footer]}>
-              AgriLog v{APP_VERSION} · Số liệu lưu trên máy, dùng được khi mất mạng
+          <View style={styles.scene}>
+            <FarmScene width={200} />
+          </View>
+
+          <View style={styles.card} testID="login-card">
+            <Text style={[text('heading'), styles.cardTitle]}>Đăng nhập</Text>
+            <Text style={[text('bodySm', colors.text.muted), styles.cardLead]}>
+              Chỉ lần đầu cần mạng. Sau đó mọi ghi chép lưu trên máy và tự đồng bộ.
             </Text>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SoftGradient>
+
+            <Field
+              testID="login-identifier"
+              label="Tên đăng nhập"
+              value={identifier}
+              onChangeText={value => {
+                setIdentifier(value);
+                if (error) setError(null);
+              }}
+              placeholder="nguyenvancuong hoặc email"
+              autoCapitalize="none"
+              style={styles.field}
+            />
+            <Field
+              testID="login-password"
+              label="Mật khẩu"
+              value={password}
+              onChangeText={value => {
+                setPassword(value);
+                if (error) setError(null);
+              }}
+              placeholder="••••••••"
+              secureTextEntry
+              autoCapitalize="none"
+              style={styles.field}
+            />
+
+            <Checkbox
+              testID="login-remember"
+              label="Lưu thông tin đăng nhập"
+              checked={remember}
+              onChange={setRemember}
+              style={styles.remember}
+            />
+
+            {error ? (
+              <View style={styles.error} testID="login-error">
+                <AlertIcon size={18} color={colors.semantic.error} />
+                <Text style={[text('bodySm', colors.text.danger), styles.errorText]}>{error}</Text>
+              </View>
+            ) : null}
+
+            <PrimaryButton label="Đăng nhập" onPress={onSubmit} withArrow loading={busy} />
+          </View>
+
+          <Text style={[text('caption', colors.text.muted), styles.footer]}>
+            AgriLog v{APP_VERSION} · Số liệu lưu trên máy, dùng được khi mất mạng
+          </Text>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
   brandMark: {
     width: 40,
     height: 40,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     backgroundColor: colors.primary.default,
     alignItems: 'center',
     justifyContent: 'center',
@@ -197,16 +199,20 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  scene: {
+    alignItems: 'center',
+    marginBottom: space.lg,
+  },
   card: {
     width: '100%',
     maxWidth: 360,
     alignSelf: 'center',
     padding: space.xl,
     backgroundColor: colors.surface.card,
-    borderRadius: radius.md,
+    borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.border.default,
-    ...shadows.md,
+    ...shadows.raised,
   },
   cardTitle: {
     marginBottom: space.xs,
@@ -226,7 +232,7 @@ const styles = StyleSheet.create({
     gap: space.sm,
     padding: space.md,
     marginBottom: space.md,
-    borderRadius: radius.xs,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border.danger,
     backgroundColor: colors.badge.redBg,

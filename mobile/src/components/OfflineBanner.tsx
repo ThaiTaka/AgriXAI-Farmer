@@ -1,5 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
 
 import type {BannerMessage} from '../domain/syncStatus';
 import {bannerFor} from '../domain/syncStatus';
@@ -16,6 +17,10 @@ import {CheckCircleIcon, CloseIcon, OfflineIcon} from './icons';
  */
 export function OfflineBanner() {
   const {state, lastSyncedAt} = useSync();
+  // The banner renders above every SafeAreaView, so it pads past the notch
+  // itself. Read the context rather than useSafeAreaInsets(), which throws
+  // when no provider is mounted.
+  const insets = useContext(SafeAreaInsetsContext);
   const [message, setMessage] = useState<BannerMessage | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const first = useRef(true);
@@ -42,7 +47,10 @@ export function OfflineBanner() {
 
   const tone = TONES[message.kind];
   return (
-    <View style={[styles.banner, {backgroundColor: tone.bg}]} accessibilityLiveRegion="polite" testID={`banner-${message.kind}`}>
+    <View
+      style={[styles.banner, {backgroundColor: tone.bg, paddingTop: space.sm + (insets?.top ?? 0)}]}
+      accessibilityLiveRegion="polite"
+      testID={`banner-${message.kind}`}>
       {message.kind === 'offline' || message.kind === 'error' ? <OfflineIcon size={16} color={tone.fg} /> : null}
       {message.kind === 'synced' ? <CheckCircleIcon size={16} color={tone.fg} /> : null}
       <Text style={[text('meta', tone.fg), styles.text]} numberOfLines={2}>
@@ -58,8 +66,7 @@ export function OfflineBanner() {
 }
 
 const TONES: Record<BannerMessage['kind'], {bg: string; fg: string}> = {
-  // Amber ground, dark text — the brief's #F59E0B with #111827 on top.
-  offline: {bg: '#F59E0B', fg: colors.text.primary},
+  offline: {bg: colors.banner.offlineBg, fg: colors.banner.offlineFg},
   error: {bg: colors.badge.redBg, fg: colors.badge.redFg},
   syncing: {bg: colors.badge.blueBg, fg: colors.badge.blueFg},
   synced: {bg: colors.badge.greenBg, fg: colors.badge.greenFg},

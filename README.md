@@ -155,9 +155,10 @@ adb reverse tcp:8000 tcp:8000
 ```
 
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint App.tsx src __tests__` · test:
-`npx jest --coverage` (97 test, trong đó 28 ca của hệ thiết kế v6; `src/domain/`, các
-component Giai đoạn 4–5, biểu đồ và `utils/` phủ 94 % câu lệnh / 96 % dòng — ngưỡng đặt
-trong `jest.config.js`).
+`npx jest --coverage` (143 test, trong đó 28 ca hệ thiết kế v6, 12 ca chiều sâu v6.1 và 27 ca
+Phase 1 v6.2;
+`src/domain/`, các component Giai đoạn 4–5, biểu đồ và `utils/` phủ 94 % câu lệnh / 96 % dòng
+— ngưỡng đặt trong `jest.config.js`).
 
 > Giai đoạn 4 thêm hai module native (`react-native-html-to-pdf`, `react-native-share`):
 > sau khi `npm install` phải build lại app (`./gradlew app:installDebug`), lần đầu cần mạng
@@ -176,6 +177,26 @@ File mock-up v4 trong `docs/design-reference/` chỉ còn là tư liệu.
 v6 giữ nguyên tinh thần v5 và chỉnh lại bảng màu theo spec Giai đoạn 5: thang xám chuyển từ
 ngả xanh sang trung tính (`#1A1A1A` → `#F8F9FA`), semantic dùng bộ Bootstrap (`#DC3545`,
 `#FFC107`, `#0D6EFD`, `#198754`), bo góc về 6 (ô nhập) / 8 (nút) / 12 (thẻ).
+
+**v6.2 — modern friendly (Phase 1 mobile).** Bảng màu mở rộng bằng **accent** `#C3D24A` /
+`#FF6B6B` (chỉ dùng làm nền ô icon, không bao giờ làm chữ — cả hai đều không đạt AA trên nền
+trắng), nền chuyển sắc ngả về xanh thương hiệu (`#F0F4F8` → `#E8F5EA`), thẻ bo **16** với
+đệm 20 và bộ bóng mềm hơn, ô nhập viền **2pt**, badge có viền, số tổng quan **28px**. Icon
+tách khỏi dòng chữ thành `IconTile` 48pt bo góc với bốn tông, và màn đăng nhập có hình minh
+hoạ `FarmScene` vẽ bằng chính palette. Quan trọng: token mới là **thêm** (`radius.card`,
+`shadow.card/raised/brand`, `color.accent.*`) chứ không sửa `radius.sm/md/lg` hay
+`shadow.sm/md` — đó là những giá trị CSS của web-admin đang đọc, nên **web-admin không đổi
+một pixel nào**. `__tests__/phase1Friendly.test.tsx` khoá đúng ranh giới đó.
+
+**v6.1 — chiều sâu trên Android.** App từng bị chê "phẳng" trên máy thật, nhưng nguyên nhân
+không phải màu: Android bỏ qua `shadowColor/Radius/Opacity` và chỉ vẽ theo `elevation`, mà
+`shadowToRN` lại suy elevation từ mỗi độ lệch dọc nên cả ba mức bóng dồn về 1/2/4 — thẻ trắng
+trên nền xám-50 gần như không có mép, và cú nhấn "nâng shadow" của thẻ dashboard xê dịch đúng
+một nấc không ai thấy. Nay elevation tính cả độ nhoè, cho thang **2 / 4 / 10**. Kèm theo:
+`Card` và các nút nhấn xuống 0.98 + nâng lên shadow-md (trước chỉ đổi màu nền), trang chủ có
+header dính tự hiện hairline + bóng khi cuộn, và nền chuyển sắc mở rộng từ màn đăng nhập sang
+trang chủ qua `Screen ground="gradient"`. Giá trị shadow trong CSS **không đổi**, nên
+web-admin giữ nguyên diện mạo. `__tests__/visualPolish.test.tsx` khoá thang elevation lại.
 
 Ba yêu cầu của spec **không** được áp dụng, lý do ghi ngay trong `$meta.v6Note` của
 tokens.json: chiều cao nút/ô nhập giữ **52/50** thay vì 44/40 (khối `size` là ràng buộc thực
@@ -269,6 +290,9 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | **v6** — Đăng nhập (nền chuyển sắc, thẻ trắng, ô "Lưu thông tin đăng nhập") và lần mở sau đã nhớ tên đăng nhập | `48-v6-login.png`, `49-v6-login-remembered.png` |
 | **v6** — Chọn lô (2 tab, nhãn đồng bộ từng lô) | `50-v6-plot-picker.png` |
 | **v6** — Trang chủ: 3 thẻ tóm tắt, 6 công cụ 2×3, link "Chọn lô" | `51-v6-home.png`, `52-v6-home-tools.png` |
+| **v6.1** — chiều sâu sau khi sửa elevation: đăng nhập, trang chủ, header dính khi cuộn, chọn lô | `53-v61-login-depth.png`, `54-v61-home-depth.png`, `55-v61-home-sticky-header.png`, `56-v61-plot-picker-depth.png` |
+| **v6.2** — modern friendly: đăng nhập có minh hoạ, chọn lô, trang chủ 3 tông icon, lưới công cụ | `57-v62-login-friendly.png`, `58-v62-plot-picker-friendly.png`, `59-v62-home-friendly.png`, `60-v62-home-tools-friendly.png` |
+| Sáu tính năng lõi sau khi đã mang thiết kế v6.2 (Cài đặt có mục hỗ trợ, F1, F3, F5–F6, Kho, Thu-chi) | `61-p2-settings-support.png`, `62-p2-f1.png`, `63-p2-f3.png`, `64-p2-f5.png`, `65-p2-kho.png`, `66-p2-thuchi.png` |
 
 ## Giới hạn hiện tại
 

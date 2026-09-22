@@ -12,7 +12,7 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
@@ -68,13 +68,15 @@ export function FinanceScreen() {
 
   return (
     <Screen>
-      <AppHeader eyebrow="Tài chính nông hộ" title="Thu – Chi" onBack={() => navigation.goBack()} />
-      <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        {tab === 'income' ? <EntryTab side="income" rows={incomes} plots={plots} /> : null}
-        {tab === 'expense' ? <EntryTab side="expense" rows={expenses} plots={plots} onOpenPurchase={id => navigation.navigate('Warehouse', {tab: 'in', prefill: {fertilizerId: id}})} /> : null}
-        {tab === 'report' ? <ReportTab incomes={incomes} expenses={expenses} /> : null}
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <AppHeader eyebrow="Tài chính nông hộ" title="Thu – Chi" onBack={() => navigation.goBack()} />
+        <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          {tab === 'income' ? <EntryTab side="income" rows={incomes} plots={plots} /> : null}
+          {tab === 'expense' ? <EntryTab side="expense" rows={expenses} plots={plots} onOpenPurchase={id => navigation.navigate('Warehouse', {tab: 'in', prefill: {fertilizerId: id}})} /> : null}
+          {tab === 'report' ? <ReportTab incomes={incomes} expenses={expenses} /> : null}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
@@ -151,8 +153,9 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
             setAmount(v);
             setErrors(e => ({...e, amount: undefined}));
           }}
-          placeholder="1500000"
+          placeholder="1.500.000"
           keyboardType="numeric"
+          money
           error={errors.amount}
           hint={amountValue > 0 ? `= ${formatVnd(amountValue)}` : undefined}
           style={styles.field}
@@ -191,12 +194,12 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
                   accessibilityRole="checkbox"
                   accessibilityState={{checked: row.checked}}
                   accessibilityLabel={row.checked ? 'Đã kiểm tra' : 'Chưa kiểm tra'}
-                  hitSlop={8}
+                  hitSlop={12}
                   onPress={() => setChecked(row, !row.checked, author).catch(e => console.warn('[finance] check failed', e))}>
                   <CheckboxIcon checked={row.checked} />
                 </Pressable>
                 <View style={styles.entryBody}>
-                  <Text style={text('bodyStrong')} numberOfLines={1}>
+                  <Text style={text('bodyStrong')} numberOfLines={2}>
                     {row.description}
                   </Text>
                   <View style={styles.entryMeta}>
@@ -213,7 +216,10 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
                   ) : null}
                 </View>
                 <View style={styles.entryValue}>
-                  <NumberText size="md" color={side === 'income' ? colors.primary.default : colors.text.secondary}>
+                  <NumberText
+                    size="md"
+                    numberOfLines={1}
+                    color={side === 'income' ? colors.primary.default : colors.text.secondary}>
                     {side === 'income' ? '+' : '−'}
                     {formatVnd(row.amount)}
                   </NumberText>
@@ -335,6 +341,9 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   tabs: {
     marginHorizontal: space.lg,
     marginBottom: space.lg,
@@ -405,6 +414,8 @@ const styles = StyleSheet.create({
   },
   entryValue: {
     alignItems: 'flex-end',
+    flexShrink: 0,
+    maxWidth: 140,
   },
   trash: {
     width: 40,

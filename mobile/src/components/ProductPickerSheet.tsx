@@ -6,6 +6,7 @@ import {colors, radius, size, space, text} from '../theme';
 import {formatVndRange} from '../utils/format';
 import {fertilizerCategories, fertilizerProducts} from '../utils/staticData';
 import {IconButton} from './buttons';
+import {EmptyState} from './EmptyState';
 import {CloseIcon, RadioIcon} from './icons';
 import {ListRow} from './ListRow';
 
@@ -109,6 +110,17 @@ export function ProductPickerSheet({visible, selectedId, inStock = [], allowCust
             </View>
           ))}
 
+          {stock.length === 0 && groups.length === 0 ? (
+            <EmptyState
+              title="Không tìm thấy phân bón"
+              body={
+                needle.length > 0
+                  ? `Không có sản phẩm nào khớp "${query.trim()}". Thử gõ ngắn hơn, ví dụ "NPK" hay "Kali".`
+                  : 'Danh mục đang trống.'
+              }
+            />
+          ) : null}
+
           {allowCustom && needle.length >= 2 ? (
             <Pressable
               testID="pick-custom"
@@ -159,14 +171,12 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     minHeight: size.inputMinHeight,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    borderColor: colors.border.strong,
+    borderRadius: radius.md,
+    borderWidth: 2,
+    borderColor: colors.border.default,
     backgroundColor: colors.surface.card,
     paddingHorizontal: space.lg,
-    fontFamily: 'OpenSans-Medium',
-    fontSize: 16,
-    color: colors.text.primary,
+    ...text('input'),
   },
   scroll: {
     paddingHorizontal: space.lg,
