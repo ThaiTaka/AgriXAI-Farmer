@@ -188,9 +188,40 @@ def test_every_crop_category_is_covered_or_declared_unavailable():
             assert covered != declared, f"{crop}/{cat}: phải hoặc có quy trình, hoặc khai báo 'Chưa có dữ liệu' (không cả hai, không thiếu)"
 
 
-def test_known_gaps_are_exactly_liberica_excelsa_and_ornamental_chili():
+def test_the_declared_gaps_are_exactly_the_ones_we_know_about():
+    """Khoảng trống phải được liệt kê ra, không được âm thầm mọc thêm.
+
+    Cà phê mít / cà phê excelsa và ớt kiểng: có giống trong danh mục nhưng
+    không có quy trình chính thức. Năm cây thêm ngày 23/09/2026 (cà rốt, rau
+    muống, bắp cải, ngô, lúa) cũng vậy — giống đều có nguồn, định mức bón thì
+    chưa, nên mọi loại con của chúng đều nằm ở đây thay vì được bịa ra.
+    """
     data = static_data.load("care_protocols")
-    assert {u["category_id"] for u in data["unavailable"]} == {"coffee_liberica", "coffee_excelsa", "chili_ornamental"}
+    assert {u["category_id"] for u in data["unavailable"]} == {
+        "coffee_liberica",
+        "coffee_excelsa",
+        "chili_ornamental",
+        "carrot_cu_dai",
+        "water_spinach_la_tre",
+        "cabbage_tron",
+        "cabbage_trai_tim",
+        "corn_nep",
+        "rice_thuan",
+    }
+
+
+def test_crops_without_a_protocol_still_carry_sourced_varieties():
+    """Một cây chưa có quy trình vẫn phải chọn được giống — nếu không, thêm
+    nó vào danh mục chỉ tạo ra một ngõ cụt cho bà con."""
+    data = static_data.load("care_protocols")
+    with_protocol = {p["crop_type"] for p in data["protocols"]}
+    for crop in static_data.load("crop_varieties")["crop_types"]:
+        if crop["id"] in with_protocol:
+            continue
+        varieties = [v for cat in crop["categories"] for v in cat["varieties"]]
+        assert varieties, f"{crop['id']} không có quy trình mà cũng không có giống nào"
+        for variety in varieties:
+            assert variety["source"].startswith("http"), f"{variety['id']} không có nguồn"
 
 
 def test_tomato_scenario_scales_linearly_with_area():

@@ -20,6 +20,13 @@ SEED_FILES = [
     "care_protocol_coffee_seed.json",
     "care_protocol_cucumber_seed.json",
     "care_protocol_pepper_seed.json",
+    # Cây có danh mục giống nhưng CHƯA có quy trình định mức: các file này chỉ
+    # khai báo khoảng trống, không mang protocol nào.
+    "care_protocol_carrot_seed.json",
+    "care_protocol_water_spinach_seed.json",
+    "care_protocol_cabbage_seed.json",
+    "care_protocol_corn_seed.json",
+    "care_protocol_rice_seed.json",
 ]
 
 STAGE_CODES = ["seedling", "vegetative", "flowering", "fruiting", "harvesting"]

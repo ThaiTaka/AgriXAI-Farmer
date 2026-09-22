@@ -36,6 +36,12 @@ DEMO_PLOT2_ID = "demo-plot-puc-004-hb"
 # mới mà tài khoản cũ vẫn nằm lại, rỗng, và admin vẫn nhìn thấy.
 LEGACY_USERNAMES = ("nguyenvancuong",)
 
+# Máy đã đồng bộ chỉ kéo về bản ghi có updated_at MỚI HƠN lần pull gần nhất.
+# Đổi nội dung một dòng seed mà để nguyên mốc thời gian cũ thì thay đổi đó
+# nằm lại trên máy chủ mãi mãi — điện thoại vẫn hiện tên cũ. Nên mỗi lần sửa
+# nội dung hộ demo, đóng dấu lại ngày sửa ở đây.
+DEMO_REVISION = "2026-09-23"
+
 
 def ms(day: str, hour: int = 8) -> int:
     return int(datetime.fromisoformat(f"{day}T{hour:02d}:00:00").replace(tzinfo=VN_TZ).timestamp() * 1000)
@@ -94,7 +100,7 @@ def seed_demo_farm(db) -> None:
         owner_id=owner,
         updated_by=owner,
         created_at=ms("2026-08-20"),
-        updated_at=ms("2026-08-20"),
+        updated_at=ms(DEMO_REVISION),
     )
 
     created += _upsert(
@@ -116,7 +122,7 @@ def seed_demo_farm(db) -> None:
         owner_id=owner,
         updated_by=owner,
         created_at=ms("2026-09-15"),
-        updated_at=ms("2026-09-15"),
+        updated_at=ms(DEMO_REVISION),
     )
 
     # Nhập kho 10/09/2026 — the two purchases in the brief, each with its

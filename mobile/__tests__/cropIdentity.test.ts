@@ -7,7 +7,7 @@
  */
 
 import {humanizeCropSlug, slugifyCropName} from '../src/utils/cropSlug';
-import {canonicalCropType, cropNameOf, cropTypeByName} from '../src/utils/staticData';
+import {allCropTypes, canonicalCropType, cropNameOf, cropTypeByName} from '../src/utils/staticData';
 
 describe('slug cây trồng', () => {
   test('bỏ dấu, hạ chữ thường, nối bằng gạch dưới', () => {
@@ -35,6 +35,44 @@ describe('khớp cây trong danh mục theo tên', () => {
   test('cây thật sự chưa có trong danh mục thì vẫn là chưa có', () => {
     expect(cropTypeByName('Sầu riêng')).toBeUndefined();
     expect(cropTypeByName('')).toBeUndefined();
+  });
+
+  test('năm cây thêm ngày 23/09/2026 cũng chặn được trùng tên', () => {
+    expect(cropTypeByName('Cà rốt')?.id).toBe('carrot');
+    expect(cropTypeByName('rau muong')?.id).toBe('water_spinach');
+    expect(cropTypeByName('Bắp cải')?.id).toBe('cabbage');
+    expect(cropTypeByName('NGÔ')?.id).toBe('corn');
+    expect(cropTypeByName('lúa')?.id).toBe('rice');
+  });
+});
+
+describe('danh mục sau khi thêm cây', () => {
+  test('đủ tám loài giáo viên yêu cầu, cộng cà phê sẵn có', () => {
+    const names = allCropTypes().map(c => c.name);
+    for (const wanted of ['Cà chua', 'Ớt', 'Dưa leo', 'Cà rốt', 'Rau muống', 'Bắp cải', 'Lúa', 'Ngô']) {
+      expect(names).toContain(wanted);
+    }
+  });
+
+  test('không có tên nào mất dấu hay trùng nhau', () => {
+    const crops = allCropTypes();
+    const slugs = crops.map(c => slugifyCropName(c.name));
+    expect(new Set(slugs).size).toBe(crops.length);
+    for (const crop of crops) {
+      // Tên hiện lên màn phải là tiếng Việt có dấu, không phải mã ASCII.
+      expect(crop.name).not.toMatch(/_/);
+      expect(crop.name).toBe(crop.name.trim());
+    }
+  });
+
+  test('mọi cây đều chọn được giống, và giống nào cũng có nguồn', () => {
+    for (const crop of allCropTypes()) {
+      const varieties = crop.categories.flatMap(c => c.varieties);
+      expect(varieties.length).toBeGreaterThan(0);
+      for (const variety of varieties) {
+        expect(variety.source).toMatch(/^https?:\/\//);
+      }
+    }
   });
 });
 

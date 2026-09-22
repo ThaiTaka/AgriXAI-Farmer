@@ -45,7 +45,17 @@ describe('protocol lookup', () => {
       expect(unavailable?.reason).toMatch(/Chưa tìm được/);
       expect(unavailable?.suggested_sources.length).toBeGreaterThan(0);
     }
-    expect(unavailableEntries().map(u => u.category_id).sort()).toEqual(['chili_ornamental', 'coffee_excelsa', 'coffee_liberica']);
+    expect(unavailableEntries().map(u => u.category_id).sort()).toEqual([
+      'cabbage_trai_tim',
+      'cabbage_tron',
+      'carrot_cu_dai',
+      'chili_ornamental',
+      'coffee_excelsa',
+      'coffee_liberica',
+      'corn_nep',
+      'rice_thuan',
+      'water_spinach_la_tre',
+    ]);
     expect(unavailableEntries('chili')).toHaveLength(1);
   });
 

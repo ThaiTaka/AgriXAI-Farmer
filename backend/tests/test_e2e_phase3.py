@@ -370,4 +370,6 @@ def test_e2e_15_care_protocols_endpoint_serves_the_merged_file(farmer):
     body = res.json()
     ids = {p["id"] for p in body["protocols"]}
     assert {"tomato_default", "coffee_robusta_ctt_2010", "cucumber_laichau_2025", "chili_hot_lamdong"} <= ids
-    assert {u["category_id"] for u in body["unavailable"]} == {"coffee_liberica", "coffee_excelsa", "chili_ornamental"}
+    # Tập khoảng trống đầy đủ được khoá ở test_static_data; ở đây chỉ cần biết
+    # endpoint có trả phần "unavailable" của file đã gộp.
+    assert {"coffee_liberica", "coffee_excelsa", "chili_ornamental"} <= {u["category_id"] for u in body["unavailable"]}

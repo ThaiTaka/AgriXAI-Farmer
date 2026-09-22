@@ -6,7 +6,12 @@
       "care_protocol_tomato_seed.json",
       "care_protocol_coffee_seed.json",
       "care_protocol_cucumber_seed.json",
-      "care_protocol_pepper_seed.json"
+      "care_protocol_pepper_seed.json",
+      "care_protocol_carrot_seed.json",
+      "care_protocol_water_spinach_seed.json",
+      "care_protocol_cabbage_seed.json",
+      "care_protocol_corn_seed.json",
+      "care_protocol_rice_seed.json"
     ],
     "generated_by": "shared/data/build_care_protocols.py",
     "stage_codes": [
@@ -2405,6 +2410,108 @@
         {
           "title": "Công ty Giống cây trồng Rạng Đông",
           "url": "https://rado.com.vn/"
+        }
+      ]
+    },
+    {
+      "crop_type": "carrot",
+      "crop_name": "Cà rốt",
+      "category_id": "carrot_cu_dai",
+      "category_name": "Cà rốt củ dài",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho cà rốt từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Không mượn định mức của cây lấy củ khác.",
+      "suggested_sources": [
+        {
+          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
+          "url": "https://khuyennongvn.gov.vn/"
+        },
+        {
+          "title": "Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia",
+          "url": "https://phanbonquocgia.gov.vn/"
+        }
+      ]
+    },
+    {
+      "crop_type": "water_spinach",
+      "crop_name": "Rau muống",
+      "category_id": "water_spinach_la_tre",
+      "category_name": "Rau muống lá tre",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho rau muống từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Rau ăn lá thu nhiều lứa nên định mức tính theo lứa cắt, không quy về một vụ như cây lấy quả được.",
+      "suggested_sources": [
+        {
+          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
+          "url": "https://khuyennongvn.gov.vn/"
+        },
+        {
+          "title": "Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia",
+          "url": "https://phanbonquocgia.gov.vn/"
+        }
+      ]
+    },
+    {
+      "crop_type": "cabbage",
+      "crop_name": "Bắp cải",
+      "category_id": "cabbage_tron",
+      "category_name": "Bắp cải tròn",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho bắp cải từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Không suy diễn từ quy trình rau ăn lá khác.",
+      "suggested_sources": [
+        {
+          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
+          "url": "https://khuyennongvn.gov.vn/"
+        },
+        {
+          "title": "Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia",
+          "url": "https://phanbonquocgia.gov.vn/"
+        }
+      ]
+    },
+    {
+      "crop_type": "cabbage",
+      "crop_name": "Bắp cải",
+      "category_id": "cabbage_trai_tim",
+      "category_name": "Bắp cải trái tim",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho bắp cải trái tim từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Dạng này chín sớm hơn bắp cải tròn (50–55 ngày so với 75–85 ngày) nên cũng không mượn được định mức của dạng tròn.",
+      "suggested_sources": [
+        {
+          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
+          "url": "https://khuyennongvn.gov.vn/"
+        },
+        {
+          "title": "Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia",
+          "url": "https://phanbonquocgia.gov.vn/"
+        }
+      ]
+    },
+    {
+      "crop_type": "corn",
+      "crop_name": "Ngô",
+      "category_id": "corn_nep",
+      "category_name": "Ngô nếp",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho ngô nếp ăn tươi từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Ngô nếp thu khi bắp còn sữa, khác hẳn ngô lấy hạt khô, nên không dùng chung định mức.",
+      "suggested_sources": [
+        {
+          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
+          "url": "https://khuyennongvn.gov.vn/"
+        },
+        {
+          "title": "Viện Khoa học Nông nghiệp Việt Nam (VAAS)",
+          "url": "https://vaas.vn/"
+        }
+      ]
+    },
+    {
+      "crop_type": "rice",
+      "crop_name": "Lúa",
+      "category_id": "rice_thuan",
+      "category_name": "Lúa thuần",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho lúa từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Định mức cho lúa thay đổi theo vụ, chân đất và vùng miền; đưa một con số chung vào ứng dụng sẽ sai ở phần lớn các vùng.",
+      "suggested_sources": [
+        {
+          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
+          "url": "https://khuyennongvn.gov.vn/"
+        },
+        {
+          "title": "Viện Khoa học Nông nghiệp Việt Nam (VAAS)",
+          "url": "https://vaas.vn/"
         }
       ]
     }
