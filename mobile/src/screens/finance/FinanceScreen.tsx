@@ -12,7 +12,7 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
@@ -68,13 +68,15 @@ export function FinanceScreen() {
 
   return (
     <Screen>
-      <AppHeader eyebrow="Tài chính nông hộ" title="Thu – Chi" onBack={() => navigation.goBack()} />
-      <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        {tab === 'income' ? <EntryTab side="income" rows={incomes} plots={plots} /> : null}
-        {tab === 'expense' ? <EntryTab side="expense" rows={expenses} plots={plots} onOpenPurchase={id => navigation.navigate('Warehouse', {tab: 'in', prefill: {fertilizerId: id}})} /> : null}
-        {tab === 'report' ? <ReportTab incomes={incomes} expenses={expenses} /> : null}
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <AppHeader eyebrow="Tài chính nông hộ" title="Thu – Chi" onBack={() => navigation.goBack()} />
+        <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          {tab === 'income' ? <EntryTab side="income" rows={incomes} plots={plots} /> : null}
+          {tab === 'expense' ? <EntryTab side="expense" rows={expenses} plots={plots} onOpenPurchase={id => navigation.navigate('Warehouse', {tab: 'in', prefill: {fertilizerId: id}})} /> : null}
+          {tab === 'report' ? <ReportTab incomes={incomes} expenses={expenses} /> : null}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
@@ -335,6 +337,9 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   tabs: {
     marginHorizontal: space.lg,
     marginBottom: space.lg,

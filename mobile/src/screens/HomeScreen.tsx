@@ -41,7 +41,7 @@ import {useObservable} from '../db/useObservable';
 import {pendingSubtext, pendingTotal} from '../domain/dashboard';
 import type {RootStackParamList} from '../navigation/types';
 import {useSync} from '../sync/SyncContext';
-import {colors, radius, shadows, space, text} from '../theme';
+import {colors, radius, shadows, size, space, text} from '../theme';
 import {formatDate, formatNumber, formatVnd, formatWeekdayDate} from '../utils/format';
 import {useDashboard} from './home/useDashboard';
 
@@ -101,7 +101,7 @@ export function HomeScreen() {
     <Screen ground="gradient">
       <View style={[styles.header, scrolled && styles.headerScrolled]}>
         <View style={styles.headerText}>
-          <Text style={text('heading')} numberOfLines={1}>
+          <Text style={text('heading')} numberOfLines={2}>
             Xin chào {user.fullName || user.username}
           </Text>
           <Text style={[text('bodySm', colors.text.muted), styles.headerMeta]} numberOfLines={2}>
@@ -174,7 +174,7 @@ export function HomeScreen() {
               <IconTile size={44} style={styles.toolIcon}>
                 {tool.icon}
               </IconTile>
-              <Text style={text('bodyStrong')} numberOfLines={1}>
+              <Text style={text('bodyStrong')} numberOfLines={2}>
                 {tool.title}
               </Text>
               <Text style={[text('caption', colors.text.muted), styles.toolMeta]} numberOfLines={2}>
@@ -196,7 +196,7 @@ export function HomeScreen() {
                   style={({pressed}) => [styles.reminderRow, index === Math.min(reminders.length, 5) - 1 && styles.reminderLast, pressed && styles.reminderPressed]}>
                   <BellIcon size={18} />
                   <View style={styles.reminderBody}>
-                    <Text style={text('bodySm')} numberOfLines={1}>
+                    <Text style={text('bodySm')} numberOfLines={2}>
                       {row.taskTitle}
                     </Text>
                     <Text style={text('caption', colors.text.muted)}>{formatDate(row.remindAt)}</Text>
@@ -269,8 +269,8 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   avatar: {
-    width: 44,
-    height: 44,
+    width: size.minTouchTarget,
+    height: size.minTouchTarget,
     borderRadius: radius.pill,
     backgroundColor: colors.primary.soft,
     borderWidth: 1,
@@ -291,13 +291,16 @@ const styles = StyleSheet.create({
   toolGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: space.lg,
+    justifyContent: 'space-between',
+    rowGap: space.lg,
     marginBottom: space.xl,
   },
   toolTile: {
-    // Two columns with a 16pt gutter: (100% - 16) / 2.
-    width: '47.8%',
-    minHeight: 112,
+    // space-between supplies the gutter: a fixed percentage cannot express
+    // "half the row minus a gap" and collapses to one column under ~396pt.
+    width: '48%',
+    minHeight: 140,
+    padding: space.lg,
   },
   toolIcon: {
     marginBottom: space.md,
@@ -311,7 +314,7 @@ const styles = StyleSheet.create({
   },
   reminderRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: space.md,
     paddingHorizontal: space.lg,
     paddingVertical: space.md,

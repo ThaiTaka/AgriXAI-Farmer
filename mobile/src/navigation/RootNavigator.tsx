@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {useAuth} from '../auth/AuthContext';
 import {ConflictDialog} from '../components/ConflictDialog';
@@ -29,7 +30,10 @@ import {VarietyCategoryScreen} from '../screens/variety/VarietyCategoryScreen';
 import {VarietyCropTypeScreen} from '../screens/variety/VarietyCropTypeScreen';
 import {VarietyPickScreen} from '../screens/variety/VarietyPickScreen';
 import {WarehouseScreen} from '../screens/warehouse/WarehouseScreen';
-import {colors, text} from '../theme';
+import {colors, space, text} from '../theme';
+
+// text() always bakes in a color; keeping it would beat tabBarActiveTintColor.
+const {color: _tabLabelColor, ...tabLabelStyle} = text('caption');
 import type {MainTabParamList, RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -61,6 +65,7 @@ function useScreenLayout() {
 
 function MainTabs() {
   const layout = useScreenLayout();
+  const insets = useSafeAreaInsets();
   return (
     <Tabs.Navigator
       screenLayout={layout}
@@ -68,8 +73,10 @@ function MainTabs() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary.default,
         tabBarInactiveTintColor: colors.text.muted,
-        tabBarStyle: styles.tabBar,
-        tabBarLabelStyle: text('caption'),
+        // tabBarStyle is merged after the library's own {height, paddingBottom:
+        // insets.bottom}, so a bare height here would sit on the home indicator.
+        tabBarStyle: [styles.tabBar, {height: 64 + insets.bottom, paddingBottom: space.sm + insets.bottom}],
+        tabBarLabelStyle: tabLabelStyle,
         sceneStyle: {backgroundColor: colors.surface.page},
       }}>
       <Tabs.Screen
@@ -152,8 +159,6 @@ const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: colors.surface.card,
     borderTopColor: colors.border.default,
-    height: 64,
-    paddingTop: 6,
-    paddingBottom: 8,
+    paddingTop: space.sm,
   },
 });

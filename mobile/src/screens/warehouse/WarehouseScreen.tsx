@@ -14,7 +14,7 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
@@ -52,7 +52,7 @@ import type {PeriodFilter, StockUnit} from '../../domain/warehouse';
 import {fifoCost, inPeriod, periodBounds, stockCsv, stockOf, stockSummary, stockTimeline, toKg} from '../../domain/warehouse';
 import type {RootStackParamList, WarehouseTab} from '../../navigation/types';
 import {useSync} from '../../sync/SyncContext';
-import {colors, radius, space, text} from '../../theme';
+import {colors, radius, size, space, text} from '../../theme';
 import {formatDate, formatNumber, formatVnd} from '../../utils/format';
 import {fertilizerProduct} from '../../utils/staticData';
 
@@ -81,13 +81,15 @@ export function WarehouseScreen() {
 
   return (
     <Screen>
-      <AppHeader eyebrow="Vật tư" title="Kho phân bón" onBack={() => navigation.goBack()} />
-      <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        {tab === 'in' ? <StockInTab ins={ins} plots={plots} prefill={params?.prefill} /> : null}
-        {tab === 'out' ? <StockOutTab ins={ins} outs={outs} plots={plots} prefill={params?.prefill} /> : null}
-        {tab === 'stock' ? <StockTab ins={ins} outs={outs} /> : null}
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <AppHeader eyebrow="Vật tư" title="Kho phân bón" onBack={() => navigation.goBack()} />
+        <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          {tab === 'in' ? <StockInTab ins={ins} plots={plots} prefill={params?.prefill} /> : null}
+          {tab === 'out' ? <StockOutTab ins={ins} outs={outs} plots={plots} prefill={params?.prefill} /> : null}
+          {tab === 'stock' ? <StockTab ins={ins} outs={outs} /> : null}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
@@ -594,6 +596,9 @@ function HistoryList({rows, kind, author}: {rows: (WarehouseIn | WarehouseOut)[]
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   tabs: {
     marginHorizontal: space.lg,
     marginBottom: space.lg,
@@ -638,7 +643,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.md,
     marginBottom: space.lg,
-    minHeight: 40,
+    minHeight: size.minTouchTarget,
+    paddingVertical: space.sm,
   },
   checkLabel: {
     flex: 1,

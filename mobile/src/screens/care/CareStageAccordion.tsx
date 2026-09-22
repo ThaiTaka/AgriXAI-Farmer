@@ -16,7 +16,7 @@ import {
 import {useObservable} from '../../db/useObservable';
 import type {CareProtocol, CareStage} from '../../domain/careProtocol';
 import {TASK_TYPE_LABELS} from '../../domain/careProtocol';
-import {colors, radius, space, text} from '../../theme';
+import {colors, radius, size, space, text} from '../../theme';
 import {formatDate} from '../../utils/format';
 
 interface Props {
@@ -273,7 +273,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface.page,
   },
   checkbox: {
-    paddingTop: 2,
+    width: size.minTouchTarget,
+    height: size.minTouchTarget,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: -space.md,
   },
   taskBody: {
     flex: 1,
@@ -305,7 +309,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.xs,
-    minHeight: 32,
+    minHeight: size.minTouchTarget,
     paddingHorizontal: space.sm,
     borderRadius: radius.xs,
   },

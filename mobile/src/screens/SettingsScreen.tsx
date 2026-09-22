@@ -109,7 +109,14 @@ export function SettingsScreen() {
             </View>
           ))}
         </Card>
-        <SecondaryButton small label="Đồng bộ ngay" onPress={() => sync().catch(() => {})} style={styles.syncNow} />
+        <SecondaryButton
+          small
+          label="Đồng bộ ngay"
+          loading={state === 'syncing'}
+          disabled={state === 'syncing'}
+          onPress={() => sync().catch(() => {})}
+          style={styles.syncNow}
+        />
 
         <View style={styles.sectionHead}>
           <Text style={text('eyebrow', colors.text.muted)}>Nhật ký lỗi</Text>
@@ -182,11 +189,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    // Same top rhythm as sectionLabel; RN has no margin collapsing.
+    marginTop: space.xl,
     marginBottom: space.sm,
     gap: space.sm,
   },
   table: {
     overflow: 'hidden',
+    marginBottom: space.xl,
   },
   row: {
     flexDirection: 'row',

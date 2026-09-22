@@ -11,7 +11,7 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
@@ -156,9 +156,10 @@ export function StockCheckScreen() {
 
   return (
     <Screen>
-      <AppHeader eyebrow="Tư vấn phân bón" title="Kiểm tra kho" onBack={() => navigation.goBack()} />
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <AppHeader eyebrow="Tư vấn phân bón" title="Kiểm tra kho" onBack={() => navigation.goBack()} />
 
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <PickerField
           testID="check-product"
           label="Phân bón"
@@ -261,7 +262,8 @@ export function StockCheckScreen() {
           Tồn = tổng nhập − tổng xuất trên máy này. Giá nhập gần nhất lấy từ phiếu nhập; chưa có phiếu thì dùng giá trung
           bình trong danh mục.
         </Text>
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <ProductPickerSheet
         visible={picking}
@@ -278,6 +280,9 @@ export function StockCheckScreen() {
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   scroll: {
     paddingHorizontal: space.lg,
     paddingBottom: space['3xl'],

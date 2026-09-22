@@ -100,10 +100,11 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: space.lg,
+    justifyContent: 'space-between',
+    rowGap: space.lg,
   },
   tile: {
-    width: '47.8%',
+    width: '48%',
     minHeight: 140,
   },
   tileIcon: {
