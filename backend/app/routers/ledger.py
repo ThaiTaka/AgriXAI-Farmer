@@ -21,22 +21,27 @@ from app.schemas.ledger import (
     CheckedUpdate,
     ExpenseCreate,
     ExpenseOut,
+    ExpenseUpdate,
     FinancialReportOut,
     IncomeCreate,
     IncomeOut,
+    IncomeUpdate,
     PlanCreate,
     PlanOut,
+    PlanUpdate,
     StockCheckOut,
     StockLineOut,
     StockSummaryOut,
     WarehouseInCreate,
     WarehouseInOut,
+    WarehouseInUpdate,
     WarehouseOutCreate,
     WarehouseOutOut,
+    WarehouseOutUpdate,
 )
 from app.services import ledger_service as ledger
 from app.services import static_data
-from app.services.auth_service import current_user
+from app.services.auth_service import current_admin, current_user
 from app.services.sync_service import now_ms
 
 plans_router = APIRouter(prefix="/plans", tags=["plans"])
@@ -66,6 +71,16 @@ def _viewer(db: Session, user: User, owner_id: str | None) -> User:
     return target
 
 
+def _admin_row(db: Session, model, row_id: str, not_found: str):
+    """Looks up any farm's row by id for the admin-only edit/delete endpoints
+    below — an admin may correct any farm's ledger, so there is no owner
+    check here (unlike `_viewer`, which scopes read access)."""
+    row = db.get(model, row_id)
+    if row is None or row.is_deleted:
+        raise HTTPException(status_code=404, detail=not_found)
+    return row
+
+
 # --------------------------------- plans ---------------------------------
 
 
@@ -92,6 +107,33 @@ def create_plan(body: PlanCreate, user: User = Depends(current_user), db: Sessio
     db.commit()
     db.refresh(plan)
     return plan
+
+
+@plans_router.patch("/{plan_id}", response_model=PlanOut)
+def update_plan(
+    plan_id: str,
+    body: PlanUpdate,
+    admin: User = Depends(current_admin),
+    db: Session = Depends(get_db),
+) -> Plan:
+    plan = _admin_row(db, Plan, plan_id, "Không tìm thấy kế hoạch")
+    for field, value in body.model_dump(exclude_unset=True, exclude={"items"}).items():
+        setattr(plan, field, value)
+    if body.items is not None:
+        plan.items_json = json.dumps([item.model_dump() for item in body.items], ensure_ascii=False)
+    plan.updated_by = admin.id
+    db.commit()
+    db.refresh(plan)
+    return plan
+
+
+@plans_router.delete("/{plan_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_plan(plan_id: str, admin: User = Depends(current_admin), db: Session = Depends(get_db)) -> None:
+    plan = _admin_row(db, Plan, plan_id, "Không tìm thấy kế hoạch")
+    plan.is_deleted = True
+    plan.deleted_at = now_ms()
+    plan.updated_by = admin.id
+    db.commit()
 
 
 # ------------------------------- warehouse -------------------------------
@@ -154,6 +196,38 @@ def create_warehouse_in(
     return row
 
 
+@warehouse_router.patch("/in/{row_id}", response_model=WarehouseInOut)
+def update_warehouse_in(
+    row_id: str,
+    body: WarehouseInUpdate,
+    admin: User = Depends(current_admin),
+    db: Session = Depends(get_db),
+) -> WarehouseIn:
+    row = _admin_row(db, WarehouseIn, row_id, "Không tìm thấy phiếu nhập kho")
+    data = body.model_dump(exclude_unset=True)
+    if "unit" in data:
+        data["unit"] = data["unit"].value
+    for field, value in data.items():
+        setattr(row, field, value)
+    # quantity_kg / unit_price are derived, never set directly by the caller —
+    # recompute them from whichever of quantity/unit/price just changed.
+    row.quantity_kg = ledger.to_kg(row.quantity, row.unit)
+    row.unit_price = row.price / row.quantity_kg if row.quantity_kg else 0.0
+    row.updated_by = admin.id
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@warehouse_router.delete("/in/{row_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_warehouse_in(row_id: str, admin: User = Depends(current_admin), db: Session = Depends(get_db)) -> None:
+    row = _admin_row(db, WarehouseIn, row_id, "Không tìm thấy phiếu nhập kho")
+    row.is_deleted = True
+    row.deleted_at = now_ms()
+    row.updated_by = admin.id
+    db.commit()
+
+
 @warehouse_router.get("/out", response_model=list[WarehouseOutOut])
 def list_warehouse_out(
     owner_id: str | None = Query(default=None),
@@ -206,6 +280,34 @@ def create_warehouse_out(
     db.commit()
     db.refresh(row)
     return row
+
+
+@warehouse_router.patch("/out/{row_id}", response_model=WarehouseOutOut)
+def update_warehouse_out(
+    row_id: str,
+    body: WarehouseOutUpdate,
+    admin: User = Depends(current_admin),
+    db: Session = Depends(get_db),
+) -> WarehouseOut:
+    row = _admin_row(db, WarehouseOut, row_id, "Không tìm thấy phiếu xuất kho")
+    for field, value in body.model_dump(exclude_unset=True).items():
+        setattr(row, field, value)
+    # total_cost is quantity_kg × unit_price, fixed at issue time; recompute it
+    # whenever either factor is corrected so the two never drift apart.
+    row.total_cost = row.quantity_kg * row.unit_price
+    row.updated_by = admin.id
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@warehouse_router.delete("/out/{row_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_warehouse_out(row_id: str, admin: User = Depends(current_admin), db: Session = Depends(get_db)) -> None:
+    row = _admin_row(db, WarehouseOut, row_id, "Không tìm thấy phiếu xuất kho")
+    row.is_deleted = True
+    row.deleted_at = now_ms()
+    row.updated_by = admin.id
+    db.commit()
 
 
 @warehouse_router.get("/summary", response_model=StockSummaryOut)
@@ -308,6 +410,34 @@ def create_income(body: IncomeCreate, user: User = Depends(current_user), db: Se
     return row
 
 
+@income_router.patch("/{row_id}", response_model=IncomeOut)
+def update_income(
+    row_id: str,
+    body: IncomeUpdate,
+    admin: User = Depends(current_admin),
+    db: Session = Depends(get_db),
+) -> Income:
+    row = _admin_row(db, Income, row_id, "Không tìm thấy khoản thu")
+    data = body.model_dump(exclude_unset=True)
+    if "kind" in data:
+        data["kind"] = data["kind"].value
+    for field, value in data.items():
+        setattr(row, field, value)
+    row.updated_by = admin.id
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@income_router.delete("/{row_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_income(row_id: str, admin: User = Depends(current_admin), db: Session = Depends(get_db)) -> None:
+    row = _admin_row(db, Income, row_id, "Không tìm thấy khoản thu")
+    row.is_deleted = True
+    row.deleted_at = now_ms()
+    row.updated_by = admin.id
+    db.commit()
+
+
 @income_router.patch("/{row_id}/checked", response_model=IncomeOut)
 def set_income_checked(
     row_id: str, body: CheckedUpdate, user: User = Depends(current_user), db: Session = Depends(get_db)
@@ -345,6 +475,34 @@ def create_expense(body: ExpenseCreate, user: User = Depends(current_user), db: 
     db.commit()
     db.refresh(row)
     return row
+
+
+@expense_router.patch("/{row_id}", response_model=ExpenseOut)
+def update_expense(
+    row_id: str,
+    body: ExpenseUpdate,
+    admin: User = Depends(current_admin),
+    db: Session = Depends(get_db),
+) -> Expense:
+    row = _admin_row(db, Expense, row_id, "Không tìm thấy khoản chi")
+    data = body.model_dump(exclude_unset=True)
+    if "kind" in data:
+        data["kind"] = data["kind"].value
+    for field, value in data.items():
+        setattr(row, field, value)
+    row.updated_by = admin.id
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@expense_router.delete("/{row_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_expense(row_id: str, admin: User = Depends(current_admin), db: Session = Depends(get_db)) -> None:
+    row = _admin_row(db, Expense, row_id, "Không tìm thấy khoản chi")
+    row.is_deleted = True
+    row.deleted_at = now_ms()
+    row.updated_by = admin.id
+    db.commit()
 
 
 @expense_router.patch("/{row_id}/checked", response_model=ExpenseOut)

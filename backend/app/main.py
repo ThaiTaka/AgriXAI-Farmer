@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import engine
 from app.core.schema_upgrade import upgrade
-from app.routers import auth, health, ledger, ops, plots, sync
+from app.routers import auth, fertilizer_prices, health, ledger, ops, plots, sync
 
 
 @asynccontextmanager
@@ -53,6 +53,7 @@ app.include_router(ops.logs_router)
 app.include_router(ops.dashboard_router)
 app.include_router(ops.reports_pdf_router)
 app.include_router(ops.users_router)
+app.include_router(fertilizer_prices.router)
 
 
 @app.get("/", include_in_schema=False)

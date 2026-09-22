@@ -33,3 +33,27 @@ class UserUpdate(BaseModel):
     full_name: str | None = Field(default=None, max_length=128)
     phone: str | None = Field(default=None, max_length=32)
     region: str | None = Field(default=None, max_length=128)
+
+
+class UserCreate(BaseModel):
+    """Admin tạo tài khoản nông hộ mới — password được hash phía backend."""
+
+    username: str = Field(min_length=3, max_length=64)
+    password: str = Field(min_length=6, max_length=128)
+    full_name: str = Field(min_length=1, max_length=128)
+    phone: str | None = Field(default=None, max_length=32)
+    region: str | None = Field(default=None, max_length=128)
+    role: UserRole = UserRole.FARMER
+
+
+class UserStatusUpdate(BaseModel):
+    """Admin khoá hoặc mở khoá tài khoản nông hộ."""
+
+    is_active: bool
+
+
+class PasswordChange(BaseModel):
+    """Đổi mật khẩu — người dùng phải xác nhận mật khẩu cũ trước."""
+
+    current_password: str = Field(min_length=1, max_length=128)
+    new_password: str = Field(min_length=6, max_length=128)

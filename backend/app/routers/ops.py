@@ -10,13 +10,16 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from pydantic import BaseModel, Field
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
+from app.core.security import hash_password
 from app.models.ledger import Expense, Income, WarehouseIn, WarehouseOut
 from app.models.ops import ErrorLog
 from app.models.user import User, UserRole
+from app.schemas.auth import UserCreate, UserOut, UserStatusUpdate
 from app.services import dashboard_service, ledger_service as ledger, report_pdf
 from app.services.auth_service import current_admin, current_user
 
@@ -216,14 +219,75 @@ class UserSummary(BaseModel):
     full_name: str
     region: str | None
     role: str
+    is_active: bool
 
 
 @users_router.get("", response_model=list[UserSummary])
 def list_users(_: User = Depends(current_admin), db: Session = Depends(get_db)) -> list[UserSummary]:
     rows = db.scalars(select(User).where(User.is_deleted.is_(False)).order_by(User.full_name))
-    return [UserSummary(id=u.id, username=u.username, full_name=u.full_name, region=u.region, role=u.role.value) for u in rows]
+    return [
+        UserSummary(id=u.id, username=u.username, full_name=u.full_name, region=u.region, role=u.role.value, is_active=u.is_active)
+        for u in rows
+    ]
 
 
 @users_router.get("/version")
 def app_version(_: User = Depends(current_user)) -> dict[str, str]:
     return {"app": settings.app_name, "version": settings.app_version}
+
+
+@users_router.post("", response_model=UserOut, status_code=status.HTTP_201_CREATED)
+def create_user(body: UserCreate, admin: User = Depends(current_admin), db: Session = Depends(get_db)) -> User:
+    """Admin tạo tài khoản nông hộ mới.
+
+    - Password được hash bằng bcrypt trước khi lưu — không bao giờ lưu plaintext.
+    - Trả 409 khi username đã tồn tại thay vì để lộ 500.
+    - ID tạo bằng UUID v4 (theo convention toàn dự án).
+    """
+    new_user = User(
+        id=str(uuid.uuid4()),
+        username=body.username,
+        password_hash=hash_password(body.password),
+        full_name=body.full_name,
+        phone=body.phone,
+        region=body.region,
+        role=body.role,
+        is_active=True,
+    )
+    db.add(new_user)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Tên đăng nhập '{body.username}' đã tồn tại",
+        )
+    db.refresh(new_user)
+    return new_user
+
+
+@users_router.patch("/{user_id}/status", response_model=UserOut)
+def update_user_status(
+    user_id: str,
+    body: UserStatusUpdate,
+    admin: User = Depends(current_admin),
+    db: Session = Depends(get_db),
+) -> User:
+    """Admin khoá hoặc mở khoá tài khoản nông hộ.
+
+    - Admin không thể tự khoá chính mình (tránh mất quyền quản trị).
+    - Trả 404 nếu id không tồn tại hoặc đã bị xoá mềm.
+    """
+    if user_id == admin.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Không thể khoá chính tài khoản đang đăng nhập",
+        )
+    target = db.get(User, user_id)
+    if target is None or target.is_deleted:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Không tìm thấy tài khoản")
+    target.is_active = body.is_active
+    db.commit()
+    db.refresh(target)
+    return target

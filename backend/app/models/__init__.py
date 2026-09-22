@@ -11,6 +11,7 @@ from app.models.farm import (
     Plot,
     PlotStatus,
 )
+from app.models.fertilizer import FertilizerPrice
 from app.models.ledger import (
     Expense,
     ExpenseKind,
@@ -44,4 +45,6 @@ __all__ = [
     "StockUnit",
     "TaskHistory",
     "ErrorLog",
+    "FertilizerPrice",
 ]
+
