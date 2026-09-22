@@ -34,6 +34,7 @@ import {
   WarehouseIcon,
 } from '../components/icons';
 import {PlotCard} from '../components/PlotCard';
+import {QuickAddFab} from '../components/QuickAddFab';
 import {Screen} from '../components/Screen';
 import {SyncStatus} from '../components/SyncStatus';
 import type Plot from '../db/models/Plot';
@@ -269,6 +270,11 @@ export function HomeScreen() {
           <Text style={text('caption', colors.text.secondary)}>Số liệu đọc từ máy — vẫn xem và ghi được khi mất mạng.</Text>
         </View>
       </ScrollView>
+
+      <QuickAddFab
+        onRecordMoney={() => navigation.navigate('Finance', {tab: 'income'})}
+        onRecordStock={() => navigation.navigate('Warehouse', {tab: 'in'})}
+      />
     </Screen>
   );
 }
@@ -277,7 +283,8 @@ const styles = StyleSheet.create({
   scroll: {
     paddingHorizontal: space.lg,
     paddingTop: space.lg,
-    paddingBottom: space['3xl'],
+    // Chừa chỗ cho nút tròn góc phải dưới (60 + lề) để dòng cuối không bị che.
+    paddingBottom: space['3xl'] + 60,
   },
   header: {
     flexDirection: 'row',
