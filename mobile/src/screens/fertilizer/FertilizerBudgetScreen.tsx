@@ -14,7 +14,7 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {AppHeader} from '../../components/AppHeader';
 import {Badge} from '../../components/Badge';
-import {SecondaryButton} from '../../components/buttons';
+import {PrimaryButton} from '../../components/buttons';
 import {Card} from '../../components/Card';
 import {EmptyState} from '../../components/EmptyState';
 import {InfoTooltip} from '../../components/InfoTooltip';
@@ -90,13 +90,13 @@ export function FertilizerBudgetScreen() {
                     <FertilizerGroupIcon code={product.category} size={22} />
                   </View>
                   <View style={styles.body}>
-                    <Text style={text('caption', colors.text.muted)} numberOfLines={1}>
+                    <Text style={text('bodySm', colors.text.secondary)} numberOfLines={1}>
                       {group?.name ?? product.category} · {product.npk_ratio}
                     </Text>
                     <Text style={[text('cardTitle'), styles.title]} numberOfLines={2}>
                       {product.name}
                     </Text>
-                    <Text style={[text('caption', colors.text.muted), styles.meta]} numberOfLines={2}>
+                    <Text style={[text('bodySm', colors.text.secondary), styles.meta]} numberOfLines={2}>
                       {product.region} · {product.source}
                     </Text>
                   </View>
@@ -107,16 +107,18 @@ export function FertilizerBudgetScreen() {
                     <NumberText size="lg" numberOfLines={1}>
                       {formatVndRange(product.price_min, product.price_max)}
                     </NumberText>
-                    <Text style={text('caption', colors.text.muted)}>
+                    {/* Giá mỗi ký là con số bà con so sánh nhiều nhất: 14px, xám
+                        đậm (8.8:1 trên nền trắng) thay cho 12px xám nhạt. */}
+                    <Text style={[text('bodySm', colors.text.secondary), styles.perKg]}>
                       ≈ {formatVnd(product.price_per_kg_avg ?? 0)}/kg trung bình
                     </Text>
                   </View>
-                  <Badge label={packLabel(product.unit)} tone="gray" />
+                  <Badge label={packLabel(product.unit)} tone="gray" variant="quiet" />
                 </View>
 
-                <SecondaryButton
+                <PrimaryButton
                   small
-                  label="Chọn"
+                  label="Chọn phân này"
                   testID={`budget-pick-${product.id}`}
                   onPress={() => navigation.navigate('StockCheck', {fertilizerId: product.id})}
                   style={styles.pick}
@@ -194,9 +196,13 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  perKg: {
+    marginTop: space.xs,
+  },
+  // Nút chiếm cả bề ngang thẻ: chỉ có một hành động ở đây, và một khối xanh
+  // đặc thì không thể nhầm với nhãn "Bao 50 kg" bên trên.
   pick: {
     marginTop: space.md,
-    alignSelf: 'flex-start',
-    minWidth: 120,
+    alignSelf: 'stretch',
   },
 });

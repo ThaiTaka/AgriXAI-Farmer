@@ -130,7 +130,7 @@ export class ScreenErrorBoundary extends React.Component<Props, State> {
               disabled={reportState === 'sent' || reportState === 'queued' || !this.state.entry}
               style={styles.action}
             />
-            <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+            <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
               Báo lỗi gửi thông điệp lỗi, màn hình đang mở và thời điểm — không gửi dữ liệu nông hộ.
             </Text>
           </Card>

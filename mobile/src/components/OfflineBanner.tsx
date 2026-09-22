@@ -7,6 +7,7 @@ import {bannerFor} from '../domain/syncStatus';
 import {useSync} from '../sync/SyncContext';
 import {colors, space, text} from '../theme';
 import {CheckCircleIcon, CloseIcon, OfflineIcon} from './icons';
+import {useClaimTopInset} from './TopInset';
 
 /**
  * One line at the top of the app that says where the data stands:
@@ -42,6 +43,10 @@ export function OfflineBanner() {
       if (timer.current) clearTimeout(timer.current);
     };
   }, [state, lastSyncedAt]);
+
+  // Dải này tự phủ nền lên dưới đồng hồ/pin, nên nó "nhận" phần tai thỏ:
+  // các màn hình bên dưới sẽ không cộng inset lần thứ hai.
+  useClaimTopInset(message !== null);
 
   if (!message) return null;
 

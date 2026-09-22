@@ -82,7 +82,7 @@ export function VarietyCategoryScreen() {
           </Card>
         )}
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
           Cách gom "loại" là để dễ chọn trong ứng dụng, không phải phân loại thực vật học.
         </Text>
       </ScrollView>

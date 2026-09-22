@@ -234,7 +234,15 @@ function StockInTab({ins, plots, prefill}: {ins: WarehouseIn[]; plots: Plot[]; p
           </View>
         ) : null}
 
-        <Field testID="in-note" label="Ghi chú" value={note} onChangeText={setNote} placeholder="Nơi mua, người bán, số hoá đơn…" style={styles.field} />
+        <Field
+          testID="in-note"
+          label="Ghi chú"
+          value={note}
+          onChangeText={setNote}
+          placeholder="Nơi mua, người bán, số hoá đơn…"
+          multiline
+          style={styles.field}
+        />
 
         <Pressable
           accessibilityRole="checkbox"
@@ -387,7 +395,15 @@ function StockOutTab({ins, outs, plots, prefill}: {ins: WarehouseIn[]; outs: War
             </ScrollView>
           </View>
         ) : null}
-        <Field testID="out-note" label="Ghi chú" value={note} onChangeText={setNote} placeholder="Bón thúc đợt mấy, ai làm…" style={styles.field} />
+        <Field
+          testID="out-note"
+          label="Ghi chú"
+          value={note}
+          onChangeText={setNote}
+          placeholder="Bón thúc đợt mấy, ai làm…"
+          multiline
+          style={styles.field}
+        />
         <PrimaryButton testID="out-save" label="Lưu xuất" onPress={onSave} loading={saving} disabled={product !== null && quantityKg > 0 && !enough} />
       </Card>
 
@@ -539,7 +555,7 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
           );
         })}
       </Card>
-      <Text style={[text('caption', colors.text.muted), styles.tableNote]}>
+      <Text style={[text('bodySm', colors.text.secondary), styles.tableNote]}>
         Đơn vị kg. {period.kind === 'all' ? 'Toàn bộ lịch sử.' : 'Nhập/Xuất trong kỳ, Tồn tính đến cuối kỳ.'} Chạm một dòng để vẽ riêng loại đó.
       </Text>
 
@@ -553,13 +569,13 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
           series={[{key: 'stock', label: 'Tồn (kg)', color: SERIES[0], points: timeline.map(p => ({x: p.day, y: p.stockKg}))}]}
           formatY={v => `${formatNumber(Math.round(v))} kg`}
           formatX={formatDate}
-          interpolation="step"
+          interpolation="smooth"
           emptyText="Chưa có biến động trong kỳ."
         />
       </Card>
 
       <SecondaryButton testID="stock-export" label="Xuất CSV" icon={<ShareIcon />} onPress={exportCsv} style={styles.export} />
-      <Text style={[text('caption', colors.text.muted), styles.tableNote]}>
+      <Text style={[text('bodySm', colors.text.secondary), styles.tableNote]}>
         CSV gửi qua bảng chia sẻ của máy (Zalo, Gmail, Drive…). Cột: phân bón, nhập, xuất, tồn, giá TB, tổng tiền.
       </Text>
     </>

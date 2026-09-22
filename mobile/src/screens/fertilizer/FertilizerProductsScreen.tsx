@@ -144,7 +144,7 @@ export function FertilizerProductsScreen() {
               ))
             )}
 
-            <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+            <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
               Mức giá chia theo phân vị giá quy đổi đồng/kg của chính danh mục này:{' '}
               {tiers
                 .map(t =>

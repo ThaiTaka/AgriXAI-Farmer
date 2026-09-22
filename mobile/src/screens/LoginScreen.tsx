@@ -159,7 +159,7 @@ export function LoginScreen() {
             <PrimaryButton label="Đăng nhập" onPress={onSubmit} withArrow loading={busy} />
           </View>
 
-          <Text style={[text('caption', colors.text.muted), styles.footer]}>
+          <Text style={[text('bodySm', colors.text.secondary), styles.footer]}>
             AgriLog v{APP_VERSION} · Số liệu lưu trên máy, dùng được khi mất mạng
           </Text>
         </ScrollView>

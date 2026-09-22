@@ -25,6 +25,8 @@ interface FieldProps {
   secureTextEntry?: boolean;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   multiline?: boolean;
+  /** Số dòng thấy được khi multiline. Mặc định 4 — đủ một câu ghi chú. */
+  numberOfLines?: number;
   editable?: boolean;
   style?: StyleProp<ViewStyle>;
   testID?: string;
@@ -49,6 +51,7 @@ export function Field({
   secureTextEntry,
   autoCapitalize = 'sentences',
   multiline = false,
+  numberOfLines = 4,
   editable = true,
   style,
   testID,
@@ -79,6 +82,7 @@ export function Field({
           autoCapitalize={autoCapitalize}
           autoCorrect={false}
           multiline={multiline}
+          numberOfLines={multiline ? numberOfLines : undefined}
           editable={editable}
           style={[styles.input, multiline && styles.inputMultiline]}
         />

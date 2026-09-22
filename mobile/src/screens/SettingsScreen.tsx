@@ -166,7 +166,7 @@ export function SettingsScreen() {
         ) : null}
 
         <DangerButton label="Đăng xuất" onPress={confirmSignOut} style={styles.signOut} />
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
           Đăng xuất không xoá dữ liệu trên máy; thay đổi chưa đồng bộ sẽ được gửi khi bạn đăng nhập lại và có mạng.
         </Text>
       </ScrollView>

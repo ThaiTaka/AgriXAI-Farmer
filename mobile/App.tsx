@@ -9,6 +9,7 @@ import React from 'react';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {AuthProvider} from './src/auth/AuthContext';
+import {TopInsetProvider} from './src/components/TopInset';
 import {RootNavigator} from './src/navigation/RootNavigator';
 import {SyncProvider} from './src/sync/SyncContext';
 
@@ -17,7 +18,9 @@ export default function App() {
     <SafeAreaProvider>
       <AuthProvider>
         <SyncProvider>
-          <RootNavigator />
+          <TopInsetProvider>
+            <RootNavigator />
+          </TopInsetProvider>
         </SyncProvider>
       </AuthProvider>
     </SafeAreaProvider>

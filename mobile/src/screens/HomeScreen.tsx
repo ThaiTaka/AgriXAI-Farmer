@@ -10,8 +10,7 @@
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback} from 'react';
-import {ActivityIndicator, Alert, Pressable, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useAuth, useCurrentUser} from '../auth/AuthContext';
 import {GhostButton, IconButton} from '../components/buttons';
@@ -37,6 +36,7 @@ import {PlotCard} from '../components/PlotCard';
 import {QuickAddFab} from '../components/QuickAddFab';
 import {Screen} from '../components/Screen';
 import {SyncStatus} from '../components/SyncStatus';
+import {useTopInset} from '../components/TopInset';
 import type Plot from '../db/models/Plot';
 import type TaskHistory from '../db/models/TaskHistory';
 import {observeUpcomingReminders} from '../db/repositories/taskHistoryRepository';
@@ -72,7 +72,8 @@ export function HomeScreen() {
 
   const openPlot = useCallback((plot: Plot) => navigation.navigate('PlotDetail', {plotId: plot.id}), [navigation]);
 
-  const insets = useSafeAreaInsets();
+  // 0 khi dải đồng bộ đã phủ sẵn phần tai thỏ, tránh chừa trống hai lần.
+  const topInset = useTopInset();
 
   const confirmSignOut = useCallback(() => {
     Alert.alert('Đăng xuất', 'Bạn có chắc muốn đăng xuất khỏi ứng dụng?', [
@@ -97,10 +98,10 @@ export function HomeScreen() {
 
   return (
     // edges bỏ 'top': dải xanh phải chạy lên sát mép trên, nên header tự cộng
-    // inset thay vì để SafeAreaView đẩy xuống.
-    <Screen ground="gradient" edges={['bottom']}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.primary.default} />
-      <View style={[styles.header, {paddingTop: insets.top + space.lg}]}>
+    // inset thay vì để SafeAreaView đẩy xuống. statusBar='light' để đồng hồ,
+    // pin, sóng thành màu trắng trên dải xanh đậm.
+    <Screen ground="gradient" edges={['bottom']} statusBar="light" statusBarColor={colors.primary.default}>
+      <View style={[styles.header, {paddingTop: topInset + space.lg}]}>
         <View style={styles.headerText}>
           {/* "Xin chào" tách khỏi tên: gộp một dòng thì trên màn 320pt cột chữ
               chỉ còn 172pt, đủ cho "Xin chào" rồi cắt mất tên ở dòng hai. */}
@@ -267,7 +268,7 @@ export function HomeScreen() {
 
         <View style={styles.footnote}>
           <SyncStatus />
-          <Text style={text('caption', colors.text.secondary)}>Số liệu đọc từ máy — vẫn xem và ghi được khi mất mạng.</Text>
+          <Text style={text('bodySm', colors.text.secondary)}>Số liệu đọc từ máy — vẫn xem và ghi được khi mất mạng.</Text>
         </View>
       </ScrollView>
 

@@ -123,7 +123,7 @@ export function VarietyCropTypeScreen() {
           </Card>
         </View>
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
           Danh mục giống lấy từ Viện Eakmat (WASI), công ty giống Rạng Đông, East-West Seed, Phú
           Điền, Chánh Phong, Rijk Zwaan và các nguồn nông nghiệp công khai. Số liệu chép đúng theo
           nguồn — chỗ chưa có dữ liệu được ghi rõ.

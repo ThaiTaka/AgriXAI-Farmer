@@ -172,7 +172,17 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
             </ScrollView>
           </View>
         ) : null}
-        <Field testID={`${side}-note`} label="Ghi chú" value={note} onChangeText={setNote} placeholder={side === 'income' ? 'Bán cho ai, giá bao nhiêu một kg…' : 'Thuê ai, mua ở đâu…'} style={styles.field} />
+        {/* Ghi chú là một câu chứ không phải một từ: ô một dòng thì gõ vài
+            chữ là chữ trôi mất, bà con không đọc lại được mình vừa ghi gì. */}
+        <Field
+          testID={`${side}-note`}
+          label="Ghi chú"
+          value={note}
+          onChangeText={setNote}
+          placeholder={side === 'income' ? 'Bán cho ai, giá bao nhiêu một kg…' : 'Thuê ai, mua ở đâu…'}
+          multiline
+          style={styles.field}
+        />
         <PrimaryButton testID={`${side}-save`} label={side === 'income' ? 'Lưu khoản thu' : 'Lưu khoản chi'} onPress={onSave} loading={saving} />
       </Card>
 
@@ -241,7 +251,7 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
         </Card>
       )}
       {onOpenPurchase ? (
-        <Text style={[text('caption', colors.text.muted), styles.note]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.note]}>
           Khoản chi "Từ kho" được ghi tự động khi nhập kho; xoá phiếu nhập không xoá khoản chi và ngược lại.
         </Text>
       ) : null}
@@ -290,7 +300,7 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
         <View style={styles.profitRow}>
           <View>
             <Text style={text('eyebrow', colors.text.muted)}>{report.profit >= 0 ? 'Lãi' : 'Lỗ'} — {report.label}</Text>
-            <Text style={[text('caption', colors.text.muted), styles.formula]}>= Tổng thu − Tổng chi</Text>
+            <Text style={[text('bodySm', colors.text.secondary), styles.formula]}>= Tổng thu − Tổng chi</Text>
           </View>
           <NumberText size="lg" color={profitColor} numberOfLines={1}>
             {formatVnd(report.profit)}
@@ -312,6 +322,7 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
               ]}
               formatY={v => formatVnd(Math.round(v))}
               formatX={formatDate}
+              interpolation="smooth"
             />
           </Card>
 
@@ -333,7 +344,7 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
       )}
 
       <SecondaryButton testID="report-export" label="Xuất CSV" icon={<ShareIcon />} onPress={exportCsv} style={styles.export} />
-      <Text style={[text('caption', colors.text.muted), styles.note]}>
+      <Text style={[text('bodySm', colors.text.secondary), styles.note]}>
         CSV: dòng 1 kỳ báo cáo · dòng 2 Thu, Chi, Lãi lỗ · từng giao dịch · dòng cuối tổng. Gửi qua bảng chia sẻ của máy.
       </Text>
     </>

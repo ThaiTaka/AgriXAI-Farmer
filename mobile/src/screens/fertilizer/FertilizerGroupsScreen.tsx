@@ -83,7 +83,7 @@ export function FertilizerGroupsScreen() {
           ))}
         </View>
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
           Giá tham khảo thu thập ngày {fertilizerCollectedAt()} từ sfarm.vn và giacaphe.com (qua
           vietnambiz.vn); thay đổi theo vùng và thời điểm. Nguồn sự thật khi vận hành là bảng giá do
           quản trị viên cập nhật.

@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {colors} from '../theme';
 import {SoftGradient} from './SoftGradient';
+import {useTopEdge} from './TopInset';
 
 interface Props {
   children: React.ReactNode;
@@ -17,11 +18,30 @@ interface Props {
    */
   ground?: 'page' | 'card' | 'gradient';
   edges?: Edge[];
+  /**
+   * Màu chữ/biểu tượng của thanh trạng thái hệ thống. `light` cho màn hình tự
+   * phủ một dải tối lên tận mép trên (trang chủ) — để `dark` thì đồng hồ, pin,
+   * sóng màu đen chìm nghỉm trong dải xanh đậm.
+   */
+  statusBar?: 'dark' | 'light';
+  /**
+   * Nền thanh trạng thái trên Android dưới 15. Từ Android 15 hệ điều hành ép
+   * edge-to-edge và bỏ qua giá trị này — lúc đó chính dải màu của màn hình vẽ
+   * lên dưới thanh trạng thái, nên chỉ còn `statusBar` có tác dụng.
+   */
+  statusBarColor?: string;
   style?: StyleProp<ViewStyle>;
 }
 
-/** The screen shell: a ground, safe-area padding, dark status icons. */
-export function Screen({children, ground = 'page', edges = ['top'], style}: Props) {
+/** The screen shell: a ground, safe-area padding, one status-bar declaration. */
+export function Screen({
+  children,
+  ground = 'page',
+  edges = ['top'],
+  statusBar = 'dark',
+  statusBarColor,
+  style,
+}: Props) {
   const backgroundColor =
     ground === 'card'
       ? colors.surface.card
@@ -29,15 +49,22 @@ export function Screen({children, ground = 'page', edges = ['top'], style}: Prop
         ? colors.gradient.groundFrom
         : colors.surface.page;
 
+  // Dải đồng bộ phía trên đã bù tai thỏ thì màn hình không bù lần thứ hai.
+  const topEdge = useTopEdge();
+  const safeEdges = topEdge ? edges : edges.filter(edge => edge !== 'top');
+
   const body = (
-    <SafeAreaView style={[styles.root, style]} edges={edges}>
+    <SafeAreaView style={[styles.root, style]} edges={safeEdges}>
       {children}
     </SafeAreaView>
   );
 
   return (
     <View style={[styles.root, {backgroundColor}]}>
-      <StatusBar barStyle="dark-content" backgroundColor={backgroundColor} />
+      <StatusBar
+        barStyle={statusBar === 'light' ? 'light-content' : 'dark-content'}
+        backgroundColor={statusBarColor ?? backgroundColor}
+      />
       {ground === 'gradient' ? <SoftGradient>{body}</SoftGradient> : body}
     </View>
   );

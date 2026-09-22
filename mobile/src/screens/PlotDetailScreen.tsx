@@ -22,6 +22,7 @@ import {EmptyState} from '../components/EmptyState';
 import {SegmentedControl} from '../components/form';
 import {CalculatorIcon, ClockIcon, PencilIcon} from '../components/icons';
 import {Screen} from '../components/Screen';
+import {SourceLink} from '../components/SourceLink';
 import type ChangeLog from '../db/models/ChangeLog';
 import type CropCycle from '../db/models/CropCycle';
 import type Plot from '../db/models/Plot';
@@ -298,10 +299,13 @@ function CareTab({plot}: {plot: Plot}) {
         />
       )}
 
-      <Text style={[text('caption', colors.text.muted), styles.disclaimer]}>
+      {/* Không dán địa chỉ web vào giữa câu: chỉ nêu cơ quan ban hành, còn
+          trang gốc mở bằng dòng dẫn ngay dưới. */}
+      <Text style={[text('bodySm', colors.text.secondary), styles.disclaimer]}>
         {protocol.disclaimer}
-        {'\n'}Nguồn: {citation(protocol)} — {protocol.source.url}
+        {'\n'}Nguồn: {citation(protocol)}
       </Text>
+      <SourceLink url={protocol.source.url} />
     </>
   );
 }

@@ -339,7 +339,7 @@ export function PlotFormScreen() {
           />
           <SecondaryButton label="Huỷ" onPress={() => navigation.goBack()} style={styles.cancel} />
 
-          <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+          <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
             Lưu vào máy ngay cả khi không có mạng. Dữ liệu tự đồng bộ lên hệ thống khi có mạng
             trở lại.
           </Text>
