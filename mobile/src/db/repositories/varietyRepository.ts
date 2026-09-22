@@ -1,6 +1,7 @@
 import {Q} from '@nozbe/watermelondb';
 
-import {allCropTypes, flatSeedVarieties} from '../../utils/staticData';
+import {slugifyCropName} from '../../utils/cropSlug';
+import {allCropTypes, canonicalCropType, cropNameOf, flatSeedVarieties} from '../../utils/staticData';
 import type {CropIcon} from '../../utils/staticData';
 import {collections, database} from '..';
 import type CropVariety from '../models/CropVariety';
@@ -71,11 +72,16 @@ export function observeAllVarieties() {
 }
 
 function rowToOption(row: CropVariety): VarietyOption {
+  // Bà con gõ "Ớt" thì mã tự sinh là `ot`, không khớp mã danh mục `chili`,
+  // nên trước đây bước 1 hiện hai cây "Ớt" cạnh nhau. Quy về mã danh mục ngay
+  // lúc đọc: giống tự thêm nằm chung với giống chuẩn, và bản ghi cũ đã lỡ lưu
+  // cũng tự hết trùng mà không cần chạy migration.
+  const cropType = canonicalCropType(row.cropType, row.cropName);
   return {
     id: row.id,
     name: row.name,
-    cropType: row.cropType,
-    cropName: row.cropName,
+    cropType,
+    cropName: cropNameOf(cropType, cropType === row.cropType ? row.cropName : null),
     categoryId: row.categoryId ?? USER_CATEGORY_ID,
     categoryName: row.categoryName ?? USER_CATEGORY_NAME,
     description: row.description,
@@ -216,25 +222,7 @@ export interface NewVarietyInput {
   description: string | null;
 }
 
-// U+0300–U+036F: the combining marks NFD splits off Vietnamese letters. Built
-// from char codes so the source stays plain ASCII.
-const COMBINING_MARKS = new RegExp(
-  `[${String.fromCharCode(0x0300)}-${String.fromCharCode(0x036f)}]`,
-  'g',
-);
-
-/** 'Sầu riêng Ri6' -> 'sau_rieng_ri6' — a stable crop id for a farmer-added crop. */
-export function slugifyCropName(name: string): string {
-  const stripped = name
-    .normalize('NFD')
-    .replace(COMBINING_MARKS, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '_')
-    .replace(/^_+|_+$/g, '');
-  return stripped || 'khac';
-}
+export {slugifyCropName};
 
 /**
  * Adds a variety the farmer typed in. Written locally first (Điều 1); it reaches

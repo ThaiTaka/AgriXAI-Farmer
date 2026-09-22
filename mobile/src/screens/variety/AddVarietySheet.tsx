@@ -22,7 +22,7 @@ import {
   USER_CATEGORY_NAME,
 } from '../../db/repositories/varietyRepository';
 import {colors, radius, shadows, space, text} from '../../theme';
-import {cropTypeById} from '../../utils/staticData';
+import {cropTypeByName} from '../../utils/staticData';
 
 interface Props {
   visible: boolean;
@@ -69,9 +69,13 @@ export function AddVarietySheet({visible, crop, existing, onClose, onCreated}: P
     const varietyName = name.trim();
     if (!varietyName) next.name = 'Nhập tên giống.';
 
-    const cropId = crop ? crop.id : slugifyCropName(cropLabel);
-    if (!crop && cropTypeById(cropId)) {
-      next.cropName = `"${cropLabel}" đã có trong danh mục — quay lại và chọn ở bước 1.`;
+    // So bằng TÊN chứ không bằng mã. Mã danh mục là tiếng Anh (`chili`), bà con
+    // gõ tiếng Việt ("Ớt"), nên so bằng mã thì lời nhắc này không bao giờ hiện —
+    // và ứng dụng lặng lẽ đẻ ra một loại cây thứ hai trùng tên.
+    const existingCrop = crop ? undefined : cropTypeByName(cropLabel);
+    const cropId = crop ? crop.id : (existingCrop?.id ?? slugifyCropName(cropLabel));
+    if (existingCrop) {
+      next.cropName = `"${existingCrop.name}" đã có trong danh mục — quay lại và chọn ở bước 1.`;
     }
     if (
       varietyName &&

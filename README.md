@@ -99,11 +99,11 @@ parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 
 Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e — và
 20 test admin sửa/xoá kế hoạch, kho, thu-chi; phủ 94 %).
 
-Ba nông hộ demo (cùng mật khẩu `matkhau123`), mỗi hộ một lô, kho và thu-chi riêng tháng 9/2026:
+Ba nông hộ demo (cùng mật khẩu `matkhau123`), mỗi hộ có lô, kho và thu-chi riêng tháng 9/2026:
 
 | Tài khoản | Lô đất | Cây |
 |---|---|---|
-| `nguyenvancuong` | PUC-001-HB, 300 m² | cà chua MV1 |
+| `lethanhthai` | PUC-001-HB, 300 m² · PUC-004-HB, 250 m² | cà chua MV1 · dưa leo Hunter 1.0 |
 | `nguyenvananh` | PUC-002-HB, 500 m² | dưa leo Hunter 1.0 |
 | `nguyenvanhai` | PUC-003-HB, 360 m² | ớt VIFON686 |
 

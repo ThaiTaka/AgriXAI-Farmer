@@ -35,46 +35,33 @@ export function stepPath(points: Point[]): string {
 }
 
 /**
- * Cubic Hermite đơn điệu (Fritsch–Carlson, 1980).
+ * Bezier bậc ba với tiếp tuyến ngang tại mỗi mốc.
  *
- * Cong mượt nhưng KHÔNG vọt quá dữ liệu: giữa hai mốc, đường không bao giờ
- * cao hơn mốc cao hơn hay thấp hơn mốc thấp hơn. Với biểu đồ tồn kho điều đó
- * quan trọng — một đường Bezier thường có thể vẽ ra số tồn âm ở khúc giữa
- * trong khi kho chưa bao giờ âm.
+ * Mỗi đoạn có hai điểm điều khiển đặt ở 1/3 và 2/3 bề ngang, giữ nguyên
+ * chiều cao của hai đầu đoạn. Hai hệ quả:
+ *
+ *  - Đường KHÔNG vọt quá dữ liệu. Bao lồi của bốn điểm điều khiển nằm gọn
+ *    giữa hai mốc, nên khúc giữa không bao giờ cao hơn mốc cao hơn hay thấp
+ *    hơn mốc thấp hơn — biểu đồ tồn kho không vẽ ra số âm trong khi kho
+ *    chưa bao giờ âm.
+ *  - Đường đi ngang đúng ngay tại mỗi mốc rồi mới chuyển hướng. Với số liệu
+ *    ghi theo phiếu (tồn kho, thu chi từng ngày) đó là cách đọc đúng: mức
+ *    giữ nguyên tới lúc có phiếu kế tiếp, chỉ là bo tròn chỗ chuyển thay vì
+ *    gãy vuông góc.
  */
 export function smoothPath(points: Point[]): string {
-  const n = points.length;
-  if (n < 3) return linearPath(points);
-
-  const dx: number[] = [];
-  const slope: number[] = [];
-  for (let i = 0; i < n - 1; i += 1) {
-    const h = points[i + 1].x - points[i].x;
-    dx.push(h);
-    slope.push(h === 0 ? 0 : (points[i + 1].y - points[i].y) / h);
-  }
-
-  const m: number[] = new Array(n);
-  m[0] = slope[0];
-  m[n - 1] = slope[n - 2];
-  for (let i = 1; i < n - 1; i += 1) {
-    if (slope[i - 1] * slope[i] <= 0) {
-      // Đổi chiều hoặc đi ngang: tiếp tuyến phẳng, không vẽ bướu.
-      m[i] = 0;
-    } else {
-      const w1 = 2 * dx[i] + dx[i - 1];
-      const w2 = dx[i] + 2 * dx[i - 1];
-      m[i] = (w1 + w2) / (w1 / slope[i - 1] + w2 / slope[i]);
-    }
-  }
+  if (points.length === 0) return '';
+  if (points.length === 1) return `M ${r(points[0].x)} ${r(points[0].y)}`;
 
   let d = `M ${r(points[0].x)} ${r(points[0].y)}`;
-  for (let i = 0; i < n - 1; i += 1) {
-    const h = dx[i] / 3;
+  for (let i = 0; i < points.length - 1; i += 1) {
+    const from = points[i];
+    const to = points[i + 1];
+    const third = (to.x - from.x) / 3;
     d +=
-      ` C ${r(points[i].x + h)} ${r(points[i].y + m[i] * h)}` +
-      ` ${r(points[i + 1].x - h)} ${r(points[i + 1].y - m[i + 1] * h)}` +
-      ` ${r(points[i + 1].x)} ${r(points[i + 1].y)}`;
+      ` C ${r(from.x + third)} ${r(from.y)}` +
+      ` ${r(to.x - third)} ${r(to.y)}` +
+      ` ${r(to.x)} ${r(to.y)}`;
   }
   return d;
 }

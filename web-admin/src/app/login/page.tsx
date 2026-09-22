@@ -82,7 +82,7 @@ export default function LoginPage() {
             {busy ? "Đang đăng nhập…" : "Đăng nhập"}
           </button>
         </form>
-        <p className="muted small">Demo: nguyenvancuong / matkhau123 · admin / admin123</p>
+        <p className="muted small">Demo: lethanhthai / matkhau123 · admin / admin123</p>
       </div>
     </main>
   );

@@ -123,7 +123,7 @@ export function LoginScreen() {
                 setIdentifier(value);
                 if (error) setError(null);
               }}
-              placeholder="nguyenvancuong hoặc email"
+              placeholder="lethanhthai hoặc email"
               autoCapitalize="none"
               style={styles.field}
             />

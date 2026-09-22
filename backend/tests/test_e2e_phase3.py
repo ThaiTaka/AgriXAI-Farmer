@@ -1,6 +1,6 @@
 """End-to-end API cases for Giai đoạn 3, run through the real FastAPI app.
 
-Scenario: nông hộ Nguyễn Văn Cường (xã Hòa Bình, Thanh Trì, Hà Nội), lô
+Scenario: nông hộ Lê Thành Thái (xã Hòa Bình, Thanh Trì, Hà Nội), lô
 PUC-001-HB, 300 m² cà chua MV1 — the mock-up farm from the brief. Each test
 is one user story from the acceptance list; together they walk the full loop
 plan → purchase → stock check → issue → report → CSV.
@@ -51,7 +51,7 @@ def plot(farmer) -> dict:
         headers=farmer,
         json={
             "code": "PUC-001-HB",
-            "name": "Ruộng cà chua nhà ông Cường",
+            "name": "Ruộng cà chua nhà ông Lê Thành Thái",
             "region": "Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
             "area": 300,
             "area_unit": "m2",

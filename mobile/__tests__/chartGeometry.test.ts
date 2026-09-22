@@ -57,11 +57,21 @@ describe('dựng đường', () => {
     expect(linePath(pts, 'linear')).toBe(linearPath(pts));
   });
 
-  test('smooth dùng Bezier và dưới ba điểm thì rơi về đường thẳng', () => {
+  test('smooth dựng Bezier bậc ba, điểm điều khiển ở 1/3 và 2/3 bề ngang', () => {
+    // Một đoạn: C <1/3 x, y đầu> <2/3 x, y cuối> <x cuối, y cuối>.
+    expect(smoothPath([pts[0], pts[1]])).toBe('M 0 100 C 16.67 100 33.33 60 50 60');
     expect(smoothPath(pts)).toContain(' C ');
-    expect(smoothPath(pts).startsWith('M 0 100')).toBe(true);
-    expect(smoothPath([pts[0], pts[1]])).toBe(linearPath([pts[0], pts[1]]));
+    expect(smoothPath([{x: 7, y: 7}])).toBe('M 7 7');
     expect(smoothPath([])).toBe('');
+  });
+
+  test('tiếp tuyến ngang tại mỗi mốc: điểm điều khiển giữ đúng chiều cao hai đầu', () => {
+    const segments = smoothPath(pts).split(' C ').slice(1);
+    segments.forEach((segment, i) => {
+      const [, cp1y, , cp2y] = segment.trim().split(/\s+/).map(Number);
+      expect(cp1y).toBe(pts[i].y);
+      expect(cp2y).toBe(pts[i + 1].y);
+    });
   });
 
   test('smooth không vọt quá dữ liệu — tồn kho không bị vẽ thành số âm', () => {

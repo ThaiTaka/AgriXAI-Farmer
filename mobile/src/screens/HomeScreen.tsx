@@ -89,7 +89,7 @@ export function HomeScreen() {
   }, [signOut]);
 
   // Vietnamese names put the given name last, so the avatar shows the first
-  // letter of the final word: "Nguyễn Văn Cường" -> "C".
+  // letter of the final word: "Lê Thành Thái" -> "T".
   const initial = (user.fullName || user.username).trim().split(/\s+/).pop()?.charAt(0).toUpperCase() ?? '?';
   const stockPending = pendingSync.some(p => (p.table === 'warehouse_in' || p.table === 'warehouse_out') && p.pending > 0);
   const financePending = pendingSync.some(p => (p.table === 'income' || p.table === 'expense') && p.pending > 0);
