@@ -89,13 +89,16 @@ export function VarietyPickScreen() {
   return (
     <Screen>
       <AppHeader
-        eyebrow={`Bước 3 / 3 · ${cropName} › ${categoryName}`}
+        eyebrow="Bước 3 / 3"
         title="Chọn giống"
         onBack={() => navigation.goBack()}
         action={{label: 'Huỷ', onPress: cancel}}
       />
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Text style={[text('bodySm', colors.text.muted), styles.intro]} numberOfLines={2}>
+          {cropName} › {categoryName}
+        </Text>
         {varieties.length === 0 ? (
           <EmptyState
             title="Chưa có dữ liệu"
@@ -191,6 +194,9 @@ const styles = StyleSheet.create({
   scroll: {
     paddingHorizontal: space.lg,
     paddingBottom: space['3xl'],
+  },
+  intro: {
+    marginBottom: space.md,
   },
   item: {
     marginBottom: space.md,

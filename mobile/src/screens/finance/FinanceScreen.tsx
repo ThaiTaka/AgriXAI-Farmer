@@ -193,12 +193,12 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
                   accessibilityRole="checkbox"
                   accessibilityState={{checked: row.checked}}
                   accessibilityLabel={row.checked ? 'Đã kiểm tra' : 'Chưa kiểm tra'}
-                  hitSlop={8}
+                  hitSlop={12}
                   onPress={() => setChecked(row, !row.checked, author).catch(e => console.warn('[finance] check failed', e))}>
                   <CheckboxIcon checked={row.checked} />
                 </Pressable>
                 <View style={styles.entryBody}>
-                  <Text style={text('bodyStrong')} numberOfLines={1}>
+                  <Text style={text('bodyStrong')} numberOfLines={2}>
                     {row.description}
                   </Text>
                   <View style={styles.entryMeta}>
@@ -215,7 +215,10 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
                   ) : null}
                 </View>
                 <View style={styles.entryValue}>
-                  <NumberText size="md" color={side === 'income' ? colors.primary.default : colors.text.secondary}>
+                  <NumberText
+                    size="md"
+                    numberOfLines={1}
+                    color={side === 'income' ? colors.primary.default : colors.text.secondary}>
                     {side === 'income' ? '+' : '−'}
                     {formatVnd(row.amount)}
                   </NumberText>
@@ -410,6 +413,8 @@ const styles = StyleSheet.create({
   },
   entryValue: {
     alignItems: 'flex-end',
+    flexShrink: 0,
+    maxWidth: 140,
   },
   trash: {
     width: 40,

@@ -32,7 +32,7 @@ import {
   updatePlot,
 } from '../db/repositories/plotRepository';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, space, text} from '../theme';
+import {colors, size, space, text} from '../theme';
 import {formatDate} from '../utils/format';
 import {isWellFormedPlotCode} from '../utils/plotCode';
 import {cropNameOf} from '../utils/staticData';
@@ -267,11 +267,13 @@ export function PlotFormScreen() {
                   label="m²"
                   selected={form.areaUnit === 'm2'}
                   onPress={() => set('areaUnit', 'm2')}
+                  style={styles.unitChip}
                 />
                 <SelectChip
                   label="ha"
                   selected={form.areaUnit === 'ha'}
                   onPress={() => set('areaUnit', 'ha')}
+                  style={styles.unitChip}
                 />
               </View>
             </View>
@@ -313,6 +315,7 @@ export function PlotFormScreen() {
                   label={PLOT_STATUS_LABELS[status]}
                   selected={form.status === status}
                   onPress={() => set('status', status)}
+                  style={styles.statusChip}
                 />
               ))}
             </View>
@@ -388,9 +391,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: space.sm,
   },
+  // Cao bằng ô Diện tích cùng hàng, đồng thời đủ vùng chạm 48.
+  unitChip: {
+    minHeight: size.inputMinHeight,
+  },
   statusRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: space.sm,
+  },
+  statusChip: {
+    flex: 0,
+    minHeight: size.minTouchTarget,
+    paddingHorizontal: space.md,
   },
   save: {
     marginTop: space.sm,

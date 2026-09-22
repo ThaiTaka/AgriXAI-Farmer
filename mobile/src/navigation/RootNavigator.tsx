@@ -33,7 +33,8 @@ import {WarehouseScreen} from '../screens/warehouse/WarehouseScreen';
 import {colors, space, text} from '../theme';
 
 // text() always bakes in a color; keeping it would beat tabBarActiveTintColor.
-const {color: _tabLabelColor, ...tabLabelStyle} = text('caption');
+const {fontFamily, fontSize, fontWeight, lineHeight, letterSpacing} = text('caption');
+const tabLabelStyle = {fontFamily, fontSize, fontWeight, lineHeight, letterSpacing};
 import type {MainTabParamList, RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

@@ -59,7 +59,11 @@ export function FertilizerGroupsScreen() {
             <Card
               key={group.code}
               testID={`fert-group-${group.code}`}
-              accessibilityLabel={`${group.name}, ${group.products} sản phẩm`}
+              accessibilityLabel={
+                group.missingPrice
+                  ? `${group.name}, ${group.products} sản phẩm, chưa có dữ liệu giá`
+                  : `${group.name}, ${group.products} sản phẩm`
+              }
               onPress={() => navigation.navigate('FertilizerProducts', {categoryCode: group.code})}
               style={styles.tile}>
               <View style={styles.tileIcon}>
@@ -69,7 +73,7 @@ export function FertilizerGroupsScreen() {
                 {group.name}
               </Text>
               {group.missingPrice ? (
-                <Badge label="Chưa có dữ liệu giá" tone="yellow" style={styles.tileBadge} />
+                <Badge label="Chưa có giá" tone="yellow" style={styles.tileBadge} />
               ) : (
                 <Text style={[text('caption', colors.text.muted), styles.tileMeta]}>
                   {group.products} sản phẩm

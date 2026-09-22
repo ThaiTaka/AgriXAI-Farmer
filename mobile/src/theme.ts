@@ -102,6 +102,10 @@ export const colors = {
     "blueFg": "#1E40AF",
     "purpleBg": "#EDE9FE",
     "purpleFg": "#5B21B6"
+  },
+  "banner": {
+    "offlineBg": "#F59E0B",
+    "offlineFg": "#1A1A1A"
   }
 } as const;
 

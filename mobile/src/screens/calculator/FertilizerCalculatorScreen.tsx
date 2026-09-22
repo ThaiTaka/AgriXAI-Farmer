@@ -35,7 +35,7 @@ import type {CalcResult} from '../../domain/fertilizerCalc';
 import {calculate, formatRange} from '../../domain/fertilizerCalc';
 import type {PickedVariety, RootStackParamList} from '../../navigation/types';
 import {useSync} from '../../sync/SyncContext';
-import {colors, radius, space, text} from '../../theme';
+import {colors, radius, size, space, text} from '../../theme';
 import {formatNumber, formatVnd, formatVndRange} from '../../utils/format';
 import {cropNameOf, fertilizerProduct} from '../../utils/staticData';
 import {ProtocolUnavailable} from '../care/ProtocolUnavailable';
@@ -405,6 +405,7 @@ export function FertilizerCalculatorScreen() {
                 <Pressable
                   accessibilityRole="link"
                   onPress={() => Linking.openURL(protocol.source.url).catch(() => {})}
+                  hitSlop={8}
                   style={({pressed}) => [styles.sourceLink, pressed && styles.sourceLinkPressed]}>
                   <Text style={[text('caption', colors.primary.default), styles.sourceLinkText]} numberOfLines={2}>
                     Nguồn: {citation(protocol)} — {protocol.source.url}
@@ -437,6 +438,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     flex: 0,
+    minHeight: size.minTouchTarget,
     paddingHorizontal: space.md,
   },
   unitRow: {
@@ -445,9 +447,11 @@ const styles = StyleSheet.create({
     gap: space.sm,
     marginTop: space.sm,
   },
+  // Chọn nhầm m²/sào/ha là sai toàn bộ lượng phân — giữ đủ vùng chạm 48.
   unitChip: {
     flex: 0,
     minWidth: 64,
+    minHeight: size.minTouchTarget,
     paddingHorizontal: space.md,
   },
   scenarios: {
@@ -459,7 +463,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border.strong,
     backgroundColor: colors.surface.card,
     padding: space.md,
-    minHeight: 48,
+    minHeight: size.minTouchTarget,
     justifyContent: 'center',
   },
   scenarioSelected: {
@@ -538,7 +542,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.sm,
     marginTop: space.sm,
-    minHeight: 32,
+    minHeight: size.minTouchTarget,
+    paddingVertical: space.sm,
   },
   sourceLinkPressed: {
     opacity: 0.7,

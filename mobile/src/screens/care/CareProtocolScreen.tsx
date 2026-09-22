@@ -19,7 +19,7 @@ import {AppHeader} from '../../components/AppHeader';
 import {Badge} from '../../components/Badge';
 import {Card} from '../../components/Card';
 import {EmptyState} from '../../components/EmptyState';
-import {PickerField, SegmentedControl, SelectChip} from '../../components/form';
+import {PickerField, SelectChip} from '../../components/form';
 import {ChevronRight, ClipboardIcon, ExternalLinkIcon} from '../../components/icons';
 import {Screen} from '../../components/Screen';
 import type Plot from '../../db/models/Plot';
@@ -28,7 +28,7 @@ import {useObservable} from '../../db/useObservable';
 import type {CareProtocol} from '../../domain/careProtocol';
 import {citation, protocolAvailability, stageForGrowth, stageForMonth} from '../../domain/careProtocol';
 import type {PickedVariety, RootStackParamList} from '../../navigation/types';
-import {colors, space, text} from '../../theme';
+import {colors, size, space, text} from '../../theme';
 import {inferGrowthStage} from '../../utils/growthStage';
 import {cropNameOf, cropTypeById} from '../../utils/staticData';
 import {CareStageAccordion} from './CareStageAccordion';
@@ -156,12 +156,21 @@ export function CareProtocolScreen() {
         ) : (
           <>
             {protocols.length > 1 ? (
-              <SegmentedControl
-                items={protocols.map(p => ({key: p.id, label: shortName(p)}))}
-                value={protocol.id}
-                onChange={setProtocolId}
-                style={styles.field}
-              />
+              // Chip cuộn ngang thay vì segment chia đều: tên cơ quan ban hành
+              // quá dài để cắt đều ba phần mà còn đọc được.
+              <View style={styles.field}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+                  {protocols.map(p => (
+                    <SelectChip
+                      key={p.id}
+                      label={shortName(p)}
+                      selected={protocol.id === p.id}
+                      onPress={() => setProtocolId(p.id)}
+                      style={styles.chip}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
             ) : null}
 
             <Card style={styles.sourceCard} testID="care-source">
@@ -254,7 +263,8 @@ function shortName(protocol: CareProtocol): string {
   const crop = cropTypeById(protocol.crop_type)?.name ?? protocol.crop_name;
   const publisher = protocol.source.publisher.split(/[—(,]/)[0].trim();
   const words = publisher.split(/\s+/);
-  const short = words.length > 4 ? words.slice(0, 4).join(' ') : publisher;
+  // Cắt 4 từ hay để lại từ nối treo ("Báo Nông nghiệp và") — bỏ nó đi.
+  const short = words.length > 4 ? words.slice(0, 4).join(' ').replace(/\s+(và|các|của|thuộc|tại)$/i, '') : publisher;
   return year ? `${short} ${year}` : `${crop} · ${short}`;
 }
 
@@ -296,7 +306,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.sm,
     marginTop: space.sm,
-    minHeight: 32,
+    minHeight: size.minTouchTarget,
+    paddingVertical: space.sm,
   },
   sourceLinkPressed: {
     opacity: 0.7,

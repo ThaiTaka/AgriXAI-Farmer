@@ -20,7 +20,7 @@ import {SUPPORT_EMAIL} from '../utils/version';
 import {useObservable} from '../db/useObservable';
 import {tableStatusLine} from '../domain/syncStatus';
 import {useSync} from '../sync/SyncContext';
-import {colors, space, text} from '../theme';
+import {colors, size, space, text} from '../theme';
 import {formatDateTime} from '../utils/format';
 
 export function SettingsScreen() {
@@ -64,7 +64,7 @@ export function SettingsScreen() {
       <AppHeader title="Cài đặt" />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <Card style={styles.card}>
-          <Text style={text('eyebrow', colors.text.muted)}>Tài khoản</Text>
+          <Text style={text('eyebrow', colors.text.secondary)}>Tài khoản</Text>
           <Text style={[text('subheading'), styles.name]}>{user.fullName || user.username}</Text>
           <Text style={text('bodySm', colors.text.muted)}>
             {user.username}
@@ -73,7 +73,7 @@ export function SettingsScreen() {
           <Text style={[text('caption', colors.text.muted), styles.version]}>AgriLog v2 · phiên bản {APP_VERSION}</Text>
         </Card>
 
-        <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Hỗ trợ</Text>
+        <Text style={[text('eyebrow', colors.text.secondary), styles.sectionLabel]}>Hỗ trợ</Text>
         <Card flush style={styles.table}>
           <Pressable
             testID="support-email"
@@ -90,25 +90,33 @@ export function SettingsScreen() {
         </Card>
 
         <View style={styles.sectionHead}>
-          <Text style={text('eyebrow', colors.text.muted)}>Đồng bộ theo bảng</Text>
+          <Text style={text('eyebrow', colors.text.secondary)}>Đồng bộ theo bảng</Text>
           <Badge
             label={state === 'syncing' ? 'Đang đồng bộ' : state === 'offline' ? 'Offline' : state === 'error' ? 'Lỗi' : 'Online'}
             tone={state === 'idle' ? 'green' : state === 'syncing' ? 'blue' : 'yellow'}
           />
         </View>
-        <Card flush style={styles.table} testID="sync-tables">
-          {visibleTables.map((info, index) => (
-            <View key={info.table} style={[styles.row, index === visibleTables.length - 1 && styles.rowLast]} testID={`sync-${info.table}`}>
-              <View style={styles.rowBody}>
-                <Text style={text('bodyStrong')}>{info.label}</Text>
-                <Text style={text('caption', info.pending > 0 ? colors.badge.yellowFg : colors.text.muted)}>
-                  {tableStatusLine(info, lastSyncedAt, now, formatDateTime)}
-                </Text>
+        {visibleTables.length === 0 ? (
+          <Card style={styles.table} testID="sync-tables">
+            <Text style={text('bodySm', colors.text.muted)}>
+              Chưa đọc được trạng thái đồng bộ. Bấm "Đồng bộ ngay" để thử lại.
+            </Text>
+          </Card>
+        ) : (
+          <Card flush style={styles.table} testID="sync-tables">
+            {visibleTables.map((info, index) => (
+              <View key={info.table} style={[styles.row, index === visibleTables.length - 1 && styles.rowLast]} testID={`sync-${info.table}`}>
+                <View style={styles.rowBody}>
+                  <Text style={text('bodyStrong')}>{info.label}</Text>
+                  <Text style={text('caption', info.pending > 0 ? colors.badge.yellowFg : colors.text.muted)}>
+                    {tableStatusLine(info, lastSyncedAt, now, formatDateTime)}
+                  </Text>
+                </View>
+                {info.pending > 0 ? <Badge label={`${info.pending}`} tone="yellow" /> : null}
               </View>
-              {info.pending > 0 ? <Badge label={`${info.pending}`} tone="yellow" /> : null}
-            </View>
-          ))}
-        </Card>
+            ))}
+          </Card>
+        )}
         <SecondaryButton
           small
           label="Đồng bộ ngay"
@@ -119,7 +127,7 @@ export function SettingsScreen() {
         />
 
         <View style={styles.sectionHead}>
-          <Text style={text('eyebrow', colors.text.muted)}>Nhật ký lỗi</Text>
+          <Text style={text('eyebrow', colors.text.secondary)}>Nhật ký lỗi</Text>
           {unsent > 0 ? <Badge label={`${unsent} chưa gửi`} tone="yellow" /> : null}
         </View>
         {logs.length === 0 ? (
@@ -204,7 +212,7 @@ const styles = StyleSheet.create({
     gap: space.md,
     paddingHorizontal: space.lg,
     paddingVertical: space.md,
-    minHeight: 52,
+    minHeight: size.buttonMinHeight,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border.default,
   },

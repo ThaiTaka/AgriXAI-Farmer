@@ -20,10 +20,11 @@ import {
   TagIcon,
   WarehouseIcon,
 } from '../components/icons';
+import {IconTile} from '../components/IconTile';
 import {ListRow} from '../components/ListRow';
 import {Screen} from '../components/Screen';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, radius, space, text} from '../theme';
+import {colors, space, text} from '../theme';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -66,7 +67,7 @@ export function ToolsScreen() {
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {GROUPS.map(group => (
           <View key={group.label} style={styles.group}>
-            <Text style={[text('eyebrow', colors.text.muted), styles.label]}>{group.label}</Text>
+            <Text style={[text('eyebrow', colors.text.secondary), styles.label]}>{group.label}</Text>
             <Card flush style={styles.card}>
               {group.tools.map((tool, index) => (
                 <ListRow
@@ -75,7 +76,7 @@ export function ToolsScreen() {
                   title={tool.title}
                   subtitle={tool.subtitle}
                   last={index === group.tools.length - 1}
-                  leading={<View style={styles.icon}>{tool.icon}</View>}
+                  leading={<IconTile size={40}>{tool.icon}</IconTile>}
                   onPress={() => navigation.navigate(tool.route as never)}
                 />
               ))}
@@ -100,13 +101,5 @@ const styles = StyleSheet.create({
   },
   card: {
     overflow: 'hidden',
-  },
-  icon: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primary.soft,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

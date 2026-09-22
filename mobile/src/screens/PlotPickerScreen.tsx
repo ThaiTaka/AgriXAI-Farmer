@@ -17,7 +17,7 @@ import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useCurrentUser} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
 import {Badge} from '../components/Badge';
-import {PrimaryButton, SecondaryButton} from '../components/buttons';
+import {PrimaryButton} from '../components/buttons';
 import {IconTile} from '../components/IconTile';
 import {Card} from '../components/Card';
 import {EmptyState} from '../components/EmptyState';
@@ -30,7 +30,7 @@ import {observePlots} from '../db/repositories/plotRepository';
 import {useObservable} from '../db/useObservable';
 import {plotsSummary, syncBadgeOf} from '../domain/plotSync';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, radius, space, text} from '../theme';
+import {colors, radius, size, space, text} from '../theme';
 import {formatArea} from '../utils/format';
 import {cropNameOf, cropTypeById} from '../utils/staticData';
 
@@ -74,7 +74,12 @@ export function PlotPickerScreen() {
                 const badge = syncBadgeOf(plot.syncStatus);
                 const cropName = cropNameOf(plot.cropType, plot.cropName);
                 return (
-                  <Card key={plot.id} style={styles.card} testID={`plot-${plot.code}`}>
+                  <Card
+                    key={plot.id}
+                    style={styles.card}
+                    onPress={() => choose(plot)}
+                    accessibilityLabel={`Lô ${plot.code}`}
+                    testID={`plot-${plot.code}`}>
                     <View style={styles.cardHead}>
                       <View style={styles.cardText}>
                         <Text style={text('cardTitle')} numberOfLines={1}>
@@ -94,12 +99,7 @@ export function PlotPickerScreen() {
 
                     <View style={styles.cardFoot}>
                       <Badge label={badge.label} tone={badge.tone} />
-                      <SecondaryButton
-                        small
-                        label="Chọn"
-                        onPress={() => choose(plot)}
-                        testID={`choose-${plot.code}`}
-                      />
+                      <ChevronRight />
                     </View>
                   </Card>
                 );
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: space.sm,
-    minHeight: 52,
+    minHeight: size.buttonMinHeight,
     paddingHorizontal: space.lg,
     borderRadius: radius.card,
     borderWidth: 1,

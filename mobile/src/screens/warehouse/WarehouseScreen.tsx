@@ -473,11 +473,15 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
         <View style={styles.totalsRow}>
           <View>
             <Text style={text('eyebrow', colors.text.muted)}>Tổng tồn</Text>
-            <NumberText size="lg">{formatNumber(totalStock)} kg</NumberText>
+            <NumberText size="lg" numberOfLines={1}>
+              {formatNumber(totalStock)} kg
+            </NumberText>
           </View>
-          <View style={styles.totalsRight}>
+          <View>
             <Text style={text('eyebrow', colors.text.muted)}>Giá trị tồn</Text>
-            <NumberText size="lg">{formatVnd(Math.round(totalValue))}</NumberText>
+            <NumberText size="lg" numberOfLines={1}>
+              {formatVnd(Math.round(totalValue))}
+            </NumberText>
           </View>
         </View>
         <Text style={[text('caption', colors.text.muted), styles.totalsNote]}>
@@ -505,10 +509,10 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
               onPress={() => setFocusId(selected ? null : line.fertilizerId)}
               style={({pressed}) => [styles.tr, index === summary.length - 1 && styles.trLast, selected && styles.trSelected, pressed && styles.trPressed]}>
               <View style={styles.tdName}>
-                <Text style={text('bodySm')} numberOfLines={1}>
+                <Text style={text('bodySm')} numberOfLines={2}>
                   {line.fertilizerName}
                 </Text>
-                <Text style={text('caption', colors.text.muted)} numberOfLines={1}>
+                <Text style={text('caption', colors.text.muted)} numberOfLines={2}>
                   TB {formatVnd(Math.round(line.avgPrice))}/kg · {formatVnd(Math.round(line.stockValue))}
                 </Text>
               </View>
@@ -659,9 +663,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.sm,
-    paddingHorizontal: space.lg,
+    // Ba cột số cố định ăn hết bề ngang; nới chỗ cho cột tên phân bón.
+    paddingHorizontal: space.md,
     paddingVertical: space.md,
-    minHeight: 52,
+    minHeight: size.buttonMinHeight,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border.default,
   },
@@ -684,7 +689,8 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   tdNum: {
-    width: 56,
+    width: 48,
+    flexShrink: 0,
     textAlign: 'right',
   },
   tableNote: {
@@ -704,9 +710,6 @@ const styles = StyleSheet.create({
   },
   offlineFlag: {
     marginBottom: space.sm,
-  },
-  totalsRight: {
-    alignItems: 'flex-end',
   },
   totalsNote: {
     marginTop: space.md,

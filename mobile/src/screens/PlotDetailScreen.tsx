@@ -29,7 +29,7 @@ import {observeChangeLogs} from '../db/repositories/changeLogRepository';
 import {deletePlot, observePlot, PLOT_STATUS_LABELS} from '../db/repositories/plotRepository';
 import {useObservable} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, space, text} from '../theme';
+import {colors, size, space, text} from '../theme';
 import {formatArea, formatDate, formatDateTime, formatRelative} from '../utils/format';
 import {inferGrowthStage} from '../utils/growthStage';
 import {
@@ -372,13 +372,15 @@ const styles = StyleSheet.create({
     paddingVertical: space.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border.default,
-    minHeight: 48,
+    minHeight: size.minTouchTarget,
   },
   factRowLast: {
     borderBottomWidth: 0,
   },
   factLabel: {
-    width: 128,
+    // Nhãn dài ("Cập nhật lần cuối") co lại thay vì đẩy cột giá trị.
+    flexBasis: 128,
+    flexShrink: 1,
   },
   factValue: {
     flex: 1,

@@ -66,8 +66,7 @@ export function OfflineBanner() {
 }
 
 const TONES: Record<BannerMessage['kind'], {bg: string; fg: string}> = {
-  // Amber ground, dark text — the brief's #F59E0B with #111827 on top.
-  offline: {bg: '#F59E0B', fg: colors.text.primary},
+  offline: {bg: colors.banner.offlineBg, fg: colors.banner.offlineFg},
   error: {bg: colors.badge.redBg, fg: colors.badge.redFg},
   syncing: {bg: colors.badge.blueBg, fg: colors.badge.blueFg},
   synced: {bg: colors.badge.greenBg, fg: colors.badge.greenFg},

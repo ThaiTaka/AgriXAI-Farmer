@@ -167,7 +167,7 @@ export function HomeScreen() {
           />
         </View>
 
-        <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Công cụ</Text>
+        <Text style={[text('eyebrow', colors.text.secondary), styles.sectionLabel]}>Công cụ</Text>
         <View style={styles.toolGrid}>
           {TOOLS.map(tool => (
             <Card key={tool.route} onPress={() => navigation.navigate(tool.route)} accessibilityLabel={tool.title} style={styles.toolTile} testID={tool.testID}>
@@ -186,7 +186,7 @@ export function HomeScreen() {
 
         {reminders.length > 0 ? (
           <>
-            <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Nhắc việc sắp tới</Text>
+            <Text style={[text('eyebrow', colors.text.secondary), styles.sectionLabel]}>Nhắc việc sắp tới</Text>
             <Card flush style={styles.reminders}>
               {reminders.slice(0, 5).map((row, index) => (
                 <Pressable
@@ -208,7 +208,7 @@ export function HomeScreen() {
         ) : null}
 
         <View style={styles.sectionHead}>
-          <Text style={text('eyebrow', colors.text.muted)}>Lô đất của bạn</Text>
+          <Text style={text('eyebrow', colors.text.secondary)}>Lô đất của bạn</Text>
           <View style={styles.sectionActions}>
             {data.plots.length > 0 ? (
               <GhostButton small label="Chọn lô" onPress={() => navigation.navigate('PlotPicker')} testID="home-plot-picker" />
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   headerMeta: {
-    marginTop: 2,
+    marginTop: space.xs,
   },
   avatar: {
     width: size.minTouchTarget,
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
     marginBottom: space.md,
   },
   toolMeta: {
-    marginTop: 2,
+    marginTop: space.xs,
   },
   reminders: {
     overflow: 'hidden',
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     paddingVertical: space.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border.default,
-    minHeight: 52,
+    minHeight: size.buttonMinHeight,
   },
   reminderLast: {
     borderBottomWidth: 0,

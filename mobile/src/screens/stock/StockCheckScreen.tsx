@@ -217,8 +217,10 @@ export function StockCheckScreen() {
             {check ? (
               <>
                 <View style={styles.afterRow}>
-                  <Text style={text('bodySm', colors.text.muted)}>Sau khi bón {formatNumber(check.neededKg)} kg</Text>
-                  <NumberText size="md" color={colors.text.muted}>
+                  <Text style={[text('bodySm', colors.text.muted), styles.rowLabel]} numberOfLines={2}>
+                    Sau khi bón {formatNumber(check.neededKg)} kg
+                  </Text>
+                  <NumberText size="md" color={colors.text.muted} numberOfLines={1}>
                     {check.enough ? `${formatNumber(check.remainingKg)} kg` : '0 kg'}
                   </NumberText>
                 </View>
@@ -233,10 +235,12 @@ export function StockCheckScreen() {
             )}
 
             <View style={styles.priceRow}>
-              <Text style={text('bodySm', colors.text.muted)}>
+              <Text style={[text('bodySm', colors.text.muted), styles.rowLabel]} numberOfLines={2}>
                 {line?.latestUnitPrice ? 'Giá nhập gần nhất' : 'Giá tham khảo danh mục'}
               </Text>
-              <NumberText size="md">{latestPrice !== null ? `${formatVnd(latestPrice)}/kg` : 'Chưa có giá'}</NumberText>
+              <NumberText size="md" numberOfLines={1}>
+                {latestPrice !== null ? `${formatVnd(latestPrice)}/kg` : 'Chưa có giá'}
+              </NumberText>
             </View>
             {check && !check.enough && latestPrice !== null ? (
               <Text style={[text('caption', colors.text.muted), styles.estimate]}>
@@ -310,6 +314,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: space.sm,
     marginTop: space.xs,
+  },
+  rowLabel: {
+    flex: 1,
+    minWidth: 0,
   },
   afterRow: {
     flexDirection: 'row',

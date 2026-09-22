@@ -121,7 +121,7 @@ export function PickerField({
           error ? styles.inputWrapError : null,
         ]}>
         <Text
-          numberOfLines={1}
+          numberOfLines={2}
           style={[
             text('input', empty ? colors.text.placeholder : colors.text.primary),
             styles.pickerValue,
@@ -249,6 +249,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.sm,
     paddingHorizontal: space.lg,
+    // Chừa chỗ cho giá trị dài xuống 2 dòng mà không chạm viền.
+    paddingVertical: space.sm,
   },
   pickerPressed: {
     backgroundColor: colors.surface.pressed,
@@ -283,13 +285,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.surface.subtle,
     borderRadius: radius.sm,
-    padding: 3,
+    padding: space.xs,
     gap: 2,
   },
   segment: {
     flex: 1,
-    minHeight: size.chipMinHeight - 4,
-    borderRadius: radius.sm - 3,
+    minHeight: size.minTouchTarget,
+    borderRadius: radius.sm - space.xs,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: space.sm,

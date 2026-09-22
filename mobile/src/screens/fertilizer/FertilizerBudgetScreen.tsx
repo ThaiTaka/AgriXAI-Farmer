@@ -53,8 +53,9 @@ export function FertilizerBudgetScreen() {
     <Screen>
       <AppHeader eyebrow="Tư vấn phân bón" title="Lọc theo ngân sách" onBack={() => navigation.goBack()} />
 
+      {/* Không gắn count vào nhãn tab: "Trung bình (12)" bị cắt trong 1/3 bề ngang. */}
       <Tabs
-        items={tiers.map(t => ({key: t.code, label: t.name, count: grouped[t.code].length}))}
+        items={tiers.map(t => ({key: t.code, label: t.name}))}
         value={tier}
         onChange={setTier}
         style={styles.tabs}
@@ -62,8 +63,8 @@ export function FertilizerBudgetScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <Text style={[text('bodySm', colors.text.muted), styles.intro]}>
-          {current.name}: {tierBandLabel(current, tiers, formatVnd)} — giá bao chia cho số kg mỗi bao. Giá tham
-          khảo thu thập {fertilizerCollectedAt()}.
+          {current.name}: {tierBandLabel(current, tiers, formatVnd)} — {products.length} sản phẩm ở mức này.
+          Giá bao chia cho số kg mỗi bao. Giá tham khảo thu thập {fertilizerCollectedAt()}.
         </Text>
 
         {products.length === 0 ? (
@@ -81,10 +82,10 @@ export function FertilizerBudgetScreen() {
                     <Text style={text('caption', colors.text.muted)} numberOfLines={1}>
                       {group?.name ?? product.category} · {product.npk_ratio}
                     </Text>
-                    <Text style={[text('cardTitle'), styles.title]} numberOfLines={1}>
+                    <Text style={[text('cardTitle'), styles.title]} numberOfLines={2}>
                       {product.name}
                     </Text>
-                    <Text style={[text('caption', colors.text.muted), styles.meta]} numberOfLines={1}>
+                    <Text style={[text('caption', colors.text.muted), styles.meta]} numberOfLines={2}>
                       {product.region} · {product.source}
                     </Text>
                   </View>
@@ -158,10 +159,10 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   title: {
-    marginTop: 2,
+    marginTop: space.xs,
   },
   meta: {
-    marginTop: 2,
+    marginTop: space.xs,
   },
   priceRow: {
     flexDirection: 'row',
