@@ -4,6 +4,7 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {Badge} from '../../components/Badge';
+import {ProgressBar} from '../../components/ProgressBar';
 import {Card} from '../../components/Card';
 import {BellIcon, CheckboxIcon, ChevronRight} from '../../components/icons';
 import type TaskHistory from '../../db/models/TaskHistory';
@@ -98,11 +99,16 @@ export function CareStageAccordion({protocol, plotId, currentStageCode, onlyStag
                   </Text>
                   {isCurrent ? <Badge label="Hiện tại" tone="green" /> : null}
                 </View>
-                <Text style={[text('bodySm', colors.text.muted), styles.headerMeta]} numberOfLines={2}>
+                <Text style={[text('bodySm', colors.text.secondary), styles.headerMeta]} numberOfLines={2}>
                   {headline}
                   {stage.duration_days ? ` · ${stage.duration_days} ngày` : ''}
-                  {` · ${doneCount}/${stage.tasks.length} đã làm`}
                 </Text>
+                <ProgressBar
+                  testID={`stage-progress-${stage.stage_code}`}
+                  label={stage.stage_name_vi}
+                  done={doneCount}
+                  total={stage.tasks.length}
+                />
               </View>
               {!onlyStage ? (
                 <View style={[styles.chevron, expanded && styles.chevronOpen]}>
@@ -243,7 +249,8 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   headerMeta: {
-    marginTop: 2,
+    marginTop: space.xs,
+    marginBottom: space.md,
   },
   chevron: {
     transform: [{rotate: '0deg'}],

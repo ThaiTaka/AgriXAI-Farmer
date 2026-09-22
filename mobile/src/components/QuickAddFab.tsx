@@ -1,6 +1,6 @@
-import React, {useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {AccessibilityInfo, Animated, Easing, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
 
 import {colors, radius, shadows, size, space, text} from '../theme';
 import {CoinsIcon, PlusIcon, WarehouseIcon} from './icons';
@@ -18,7 +18,7 @@ interface Props {
  * Nền mờ cũng là thứ chặn chạm nhầm vào nội dung phía sau.
  */
 export function QuickAddFab({onRecordMoney, onRecordStock}: Props) {
-  const insets = useSafeAreaInsets();
+  const insets = useContext(SafeAreaInsetsContext);
   const [open, setOpen] = useState(false);
   const spin = useRef(new Animated.Value(0)).current;
 
@@ -53,7 +53,7 @@ export function QuickAddFab({onRecordMoney, onRecordStock}: Props) {
         accessibilityLabel="Ghi nhanh"
         accessibilityState={{expanded: open}}
         onPress={() => toggle(!open)}
-        style={({pressed}) => [styles.fab, {bottom: insets.bottom + space.lg}, pressed && styles.fabPressed]}>
+        style={({pressed}) => [styles.fab, {bottom: (insets?.bottom ?? 0) + space.lg}, pressed && styles.fabPressed]}>
         <Animated.View style={{transform: [{rotate}]}}>
           <PlusIcon size={26} color={colors.primary.onPrimary} />
         </Animated.View>
@@ -61,7 +61,7 @@ export function QuickAddFab({onRecordMoney, onRecordStock}: Props) {
 
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => toggle(false)}>
         <Pressable style={styles.scrim} accessibilityLabel="Đóng" onPress={() => toggle(false)}>
-          <View style={[styles.menu, {bottom: insets.bottom + space.lg + size.minTouchTarget + space.xl}]}>
+          <View style={[styles.menu, {bottom: (insets?.bottom ?? 0) + space.lg + size.minTouchTarget + space.xl}]}>
             <MenuItem
               testID="quick-add-money"
               label="Ghi thu chi"

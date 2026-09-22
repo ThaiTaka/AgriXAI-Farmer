@@ -18,6 +18,7 @@ import {AppHeader} from '../../components/AppHeader';
 import {Badge} from '../../components/Badge';
 import {PrimaryButton, SecondaryButton} from '../../components/buttons';
 import {Card} from '../../components/Card';
+import {InfoTooltip} from '../../components/InfoTooltip';
 import {Field, PickerField, SelectChip} from '../../components/form';
 import {AlertIcon, CheckCircleIcon, ChevronRight} from '../../components/icons';
 import {NumberText} from '../../components/NumberText';
@@ -262,10 +263,16 @@ export function StockCheckScreen() {
           <PrimaryButton testID="check-plan" label="Lên kế hoạch bón" onPress={onPlan} loading={saving} style={styles.action} />
         ) : null}
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
-          Tồn kho = đã nhập − đã dùng, tính trên máy này. Giá lấy từ phiếu nhập gần nhất; chưa có phiếu thì lấy giá
-          trung bình trong danh mục.
-        </Text>
+        <View style={styles.footnote}>
+          <InfoTooltip
+            testID="check-info"
+            title="Số tồn và giá lấy từ đâu?"
+            body={
+              'Tồn kho = tổng đã nhập − tổng đã dùng, tính trên chính máy này, nên vẫn đúng khi mất mạng.\n\n' +
+              'Giá ưu tiên lấy từ phiếu nhập gần nhất của bạn — đó là giá bạn thực sự trả. Chưa có phiếu nào thì mới lấy giá trung bình trong bảng giá tham khảo.'
+            }
+          />
+        </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -347,5 +354,6 @@ const styles = StyleSheet.create({
   },
   footnote: {
     marginTop: space.sm,
+    alignItems: 'flex-start',
   },
 });

@@ -435,6 +435,16 @@ export function AlertIcon({size = 20, color = colors.badge.yellowFg}: IconProps)
   );
 }
 
+export function InfoIcon({size = 20, color = colors.text.secondary}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Circle cx={12} cy={12} r={9} stroke={color} strokeWidth={STROKE} />
+      <Path d="M12 11v5" stroke={color} strokeWidth={2.4} strokeLinecap="round" />
+      <Path d="M12 7.5h.01" stroke={color} strokeWidth={2.4} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
 export function CheckCircleIcon({size = 20, color = colors.badge.greenFg}: IconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">

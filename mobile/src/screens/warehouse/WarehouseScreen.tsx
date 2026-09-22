@@ -21,6 +21,7 @@ import {AppHeader} from '../../components/AppHeader';
 import {Badge} from '../../components/Badge';
 import {IconButton, PrimaryButton, SecondaryButton} from '../../components/buttons';
 import {Card} from '../../components/Card';
+import {InfoTooltip} from '../../components/InfoTooltip';
 import {LineChart} from '../../components/charts/LineChart';
 import {SERIES} from '../../components/charts/palette';
 import {DateField} from '../../components/DateField';
@@ -485,12 +486,20 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
             </NumberText>
           </View>
         </View>
-        <Text style={[text('caption', colors.text.muted), styles.totalsNote]}>
-          Tồn kho = đã nhập − đã dùng. Giá trị tính theo giá trung bình các lần nhập.
-        </Text>
       </Card>
 
-      <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Bảng tồn</Text>
+      <View style={styles.sectionHead}>
+        <Text style={text('eyebrow', colors.text.secondary)}>Bảng tồn</Text>
+        <InfoTooltip
+          testID="stock-info"
+          title="Con số tồn kho tính thế nào?"
+          body={
+            'Tồn kho = tổng đã nhập − tổng đã dùng, tính trên chính máy này.\n\n' +
+            'Giá trị tồn lấy theo giá trung bình các lần nhập: cộng tiền của mọi phiếu nhập rồi chia cho tổng số ký, sau đó nhân với số ký còn lại.\n\n' +
+            'Phiếu chưa đồng bộ vẫn được tính, nên số ở đây luôn khớp với những gì bạn đã ghi, kể cả khi mất mạng.'
+          }
+        />
+      </View>
       <Card flush style={styles.table}>
         <View style={[styles.tr, styles.th]}>
           <Text style={[text('caption', colors.text.muted), styles.tdName]}>Phân bón</Text>
@@ -712,8 +721,11 @@ const styles = StyleSheet.create({
   offlineFlag: {
     marginBottom: space.sm,
   },
-  totalsNote: {
-    marginTop: space.md,
+  sectionHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: space.sm,
   },
   chartCard: {
     marginBottom: space.lg,
