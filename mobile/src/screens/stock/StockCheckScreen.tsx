@@ -263,8 +263,8 @@ export function StockCheckScreen() {
         ) : null}
 
         <Text style={[text('caption', colors.text.muted), styles.footnote]}>
-          Tồn = tổng nhập − tổng xuất trên máy này. Giá nhập gần nhất lấy từ phiếu nhập; chưa có phiếu thì dùng giá trung
-          bình trong danh mục.
+          Tồn kho = đã nhập − đã dùng, tính trên máy này. Giá lấy từ phiếu nhập gần nhất; chưa có phiếu thì lấy giá
+          trung bình trong danh mục.
         </Text>
         </ScrollView>
       </KeyboardAvoidingView>

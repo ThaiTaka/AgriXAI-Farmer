@@ -153,8 +153,9 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
             setAmount(v);
             setErrors(e => ({...e, amount: undefined}));
           }}
-          placeholder="1500000"
+          placeholder="1.500.000"
           keyboardType="numeric"
+          money
           error={errors.amount}
           hint={amountValue > 0 ? `= ${formatVnd(amountValue)}` : undefined}
           style={styles.field}

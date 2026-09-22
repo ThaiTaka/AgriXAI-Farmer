@@ -69,7 +69,7 @@ export function FertilizerProductsScreen() {
   return (
     <Screen>
       <AppHeader
-        eyebrow="Danh mục phân bón"
+        eyebrow="Bảng giá phân bón"
         title={category?.name ?? params.categoryCode}
         onBack={() => navigation.goBack()}
       />

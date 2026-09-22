@@ -44,7 +44,7 @@ export function FertilizerGroupsScreen() {
     <Screen>
       <AppHeader
         eyebrow="Tư vấn phân bón"
-        title="Danh mục phân bón"
+        title="Bảng giá phân bón"
         onBack={() => navigation.goBack()}
       />
 

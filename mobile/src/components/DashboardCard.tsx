@@ -56,7 +56,7 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
         setPressed(false);
         animate(1);
       }}>
-      <Animated.View style={[styles.card, pressed ? shadows.raised : shadows.card, {transform: [{scale}]}]}>
+      <Animated.View style={[styles.card, pressed && shadows.raised, {transform: [{scale}]}]}>
         <View style={styles.body}>
           <View style={styles.column}>
             <View style={styles.head}>
@@ -76,7 +76,7 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
               </NumberText>
               {unit ? <Text style={[text('subheading', figureColor), styles.word]}>{unit}</Text> : null}
             </View>
-            <Text style={[text('caption', colors.text.secondary), styles.subtext]} numberOfLines={2}>
+            <Text style={[text('bodySm', colors.text.secondary), styles.subtext]} numberOfLines={2}>
               {subtext}
             </Text>
           </View>
@@ -91,8 +91,9 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface.card,
     borderRadius: radius.card,
+    // Cùng ngôn ngữ với Card: viền sắc, nghỉ thì phẳng, nhấn mới nhô.
     borderWidth: 1,
-    borderColor: colors.border.default,
+    borderColor: colors.border.strong,
     padding: space.xl,
   },
   body: {

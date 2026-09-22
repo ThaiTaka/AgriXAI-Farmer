@@ -213,8 +213,9 @@ function StockInTab({ins, plots, prefill}: {ins: WarehouseIn[]; plots: Plot[]; p
             setPrice(v);
             setErrors(e => ({...e, price: undefined}));
           }}
-          placeholder="680000"
+          placeholder="680.000"
           keyboardType="numeric"
+          money
           error={errors.price}
           hint={perKg !== null ? `= ${formatVnd(Math.round(perKg))}/kg` : 'Để 0 nếu là phân tự có (không mua).'}
           style={styles.field}
@@ -485,7 +486,7 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
           </View>
         </View>
         <Text style={[text('caption', colors.text.muted), styles.totalsNote]}>
-          Tồn = Σ nhập − Σ xuất · giá TB = Σ(kg × giá) / Σ kg · giá trị = tồn × giá TB
+          Tồn kho = đã nhập − đã dùng. Giá trị tính theo giá trung bình các lần nhập.
         </Text>
       </Card>
 

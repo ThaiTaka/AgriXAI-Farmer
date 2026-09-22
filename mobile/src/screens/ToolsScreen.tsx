@@ -55,21 +55,21 @@ const GROUPS: {label: string; tools: Tool[]}[] = [
   {
     label: 'Tư vấn phân bón',
     tools: [
-      {route: 'FertilizerCalculator', title: 'F1 · Tính lượng phân bón', subtitle: 'Theo diện tích và phương án của quy trình có nguồn', icon: <CalculatorIcon />},
-      {route: 'FertilizerBudget', title: 'F3 · Lọc theo ngân sách', subtitle: 'Bình dân · Trung bình · Cao cấp', icon: <TagIcon />},
-      {route: 'StockCheck', title: 'F4 · Kiểm tra kho', subtitle: 'Đủ hay thiếu trước khi bón', icon: <ScaleIcon />},
-      {route: 'FertilizerGroups', title: 'Danh mục phân bón', subtitle: '6 nhóm, giá tham khảo', icon: <SackIcon />},
+      {route: 'FertilizerCalculator', title: 'Tính lượng phân bón', subtitle: 'Cần bón bao nhiêu cho ruộng của bạn', icon: <CalculatorIcon />},
+      {route: 'FertilizerBudget', title: 'Chọn phân theo túi tiền', subtitle: 'Bình dân, trung bình hay cao cấp', icon: <TagIcon />},
+      {route: 'StockCheck', title: 'Kiểm tra kho trước khi bón', subtitle: 'Xem kho còn đủ hay thiếu bao nhiêu', icon: <ScaleIcon />},
+      {route: 'FertilizerGroups', title: 'Bảng giá phân bón', subtitle: 'Sáu nhóm phân, giá tham khảo thị trường', icon: <SackIcon />},
     ],
   },
   {
     label: 'Chăm sóc',
-    tools: [{route: 'CareProtocol', title: 'F5–F6 · Quy trình chăm sóc', subtitle: '4 giai đoạn, đánh dấu đã làm, đặt nhắc', icon: <ClipboardIcon />}],
+    tools: [{route: 'CareProtocol', title: 'Quy trình chăm sóc', subtitle: 'Bón gì, làm gì ở từng giai đoạn cây', icon: <ClipboardIcon />}],
   },
   {
     label: 'Kho và tài chính',
     tools: [
-      {route: 'Warehouse', title: 'Kho vật tư', subtitle: 'Nhập · Xuất (FIFO) · Tồn · CSV', icon: <WarehouseIcon />},
-      {route: 'Finance', title: 'Thu – Chi', subtitle: 'Ghi chép, báo cáo lãi/lỗ, CSV', icon: <CoinsIcon />},
+      {route: 'Warehouse', title: 'Kho phân bón', subtitle: 'Ghi phiếu nhập, xuất và xem tồn', icon: <WarehouseIcon />},
+      {route: 'Finance', title: 'Thu và chi', subtitle: 'Ghi tiền vào, tiền ra, xem lãi lỗ', icon: <CoinsIcon />},
       {route: 'ReportExport', title: 'Báo cáo PDF', subtitle: 'Tháng / quý, khổ A4, chia sẻ', icon: <ShareIcon size={22} />},
     ],
   },

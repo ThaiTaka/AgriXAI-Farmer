@@ -53,12 +53,12 @@ type ToolRoute = 'FertilizerCalculator' | 'FertilizerBudget' | 'CareProtocol' | 
 
 /** The six tools, two per row, in the order the brief lists them. */
 const TOOLS: {route: ToolRoute; title: string; meta: string; icon: React.ReactNode; testID: string}[] = [
-  {route: 'FertilizerCalculator', title: 'F1 · Tính lượng', meta: 'Phân bón theo diện tích', icon: <CalculatorIcon />, testID: 'home-calculator'},
-  {route: 'FertilizerBudget', title: 'F3–F4 · Lọc + kiểm', meta: 'Ngân sách rồi kiểm tra kho', icon: <ScaleIcon />, testID: 'home-budget'},
-  {route: 'CareProtocol', title: 'F5–F6 · Quy trình', meta: '4 giai đoạn, có nguồn', icon: <ClipboardIcon />, testID: 'home-care'},
-  {route: 'Warehouse', title: 'Kho · Nhập/xuất', meta: 'Tồn, FIFO, CSV', icon: <WarehouseIcon />, testID: 'home-warehouse'},
-  {route: 'Finance', title: 'Thu-chi · Ghi', meta: 'Sổ thu, sổ chi', icon: <CoinsIcon />, testID: 'home-finance'},
-  {route: 'ReportExport', title: 'Báo cáo · Xuất PDF', meta: 'Tháng / quý, A4', icon: <ShareIcon size={22} />, testID: 'home-report'},
+  {route: 'FertilizerCalculator', title: 'Tính lượng phân bón', meta: 'Cần bón bao nhiêu cho ruộng của bạn', icon: <CalculatorIcon />, testID: 'home-calculator'},
+  {route: 'FertilizerBudget', title: 'Chọn phân theo túi tiền', meta: 'Bình dân, trung bình hay cao cấp', icon: <ScaleIcon />, testID: 'home-budget'},
+  {route: 'CareProtocol', title: 'Quy trình chăm sóc', meta: 'Bón gì, làm gì ở từng giai đoạn', icon: <ClipboardIcon />, testID: 'home-care'},
+  {route: 'Warehouse', title: 'Kho phân bón', meta: 'Ghi phiếu nhập, xuất và xem tồn', icon: <WarehouseIcon />, testID: 'home-warehouse'},
+  {route: 'Finance', title: 'Thu và chi', meta: 'Ghi tiền vào, tiền ra, xem lãi lỗ', icon: <CoinsIcon />, testID: 'home-finance'},
+  {route: 'ReportExport', title: 'Xuất báo cáo', meta: 'Tạo file PDF để in hoặc gửi đi', icon: <ShareIcon size={22} />, testID: 'home-report'},
 ];
 
 export function HomeScreen() {
@@ -205,7 +205,7 @@ export function HomeScreen() {
                 Tất cả công cụ
               </Text>
               <Text style={[text('caption', colors.text.secondary), styles.toolMeta]} numberOfLines={2}>
-                Danh mục phân bón, F4 kiểm tra kho và các mục khác
+                Bảng giá phân bón, kiểm tra kho và các mục khác
               </Text>
             </View>
             <ChevronRight color={colors.text.secondary} />

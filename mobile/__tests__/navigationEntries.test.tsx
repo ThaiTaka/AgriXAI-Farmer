@@ -30,14 +30,14 @@ beforeEach(() => mockNavigate.mockClear());
 
 test('màn Công cụ vẫn là lối vào của hai màn không có ô ở Trang chủ', () => {
   const json = JSON.stringify(render(<ToolsScreen />).toJSON());
-  expect(json).toContain('Danh mục phân bón');
-  expect(json).toContain('F4 · Kiểm tra kho');
+  expect(json).toContain('Bảng giá phân bón');
+  expect(json).toContain('Kiểm tra kho trước khi bón');
 });
 
 test('bấm một hàng thì điều hướng đúng tên route', () => {
   const tree = render(<ToolsScreen />);
   const rows = tree.root.findAll(
-    node => typeof node.props.accessibilityLabel === 'string' && node.props.accessibilityLabel.includes('Danh mục phân bón'),
+    node => typeof node.props.accessibilityLabel === 'string' && node.props.accessibilityLabel.includes('Bảng giá phân bón'),
   );
   const pressable = rows.find(node => typeof node.props.onPress === 'function');
   expect(pressable).toBeDefined();

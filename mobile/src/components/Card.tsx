@@ -17,13 +17,13 @@ interface Props {
 }
 
 /**
- * White card, 1px gray hairline, shadow-card, 16pt radius.
- * Selected = green border + soft green ground. No heavy shadows.
+ * White card, 1px border in border-strong, 16pt radius, no resting shadow.
+ * Selected = green border + soft green ground.
  *
  * A pressable card answers the touch the way the dashboard cards do: down to
- * 0.98 and up to shadow-md. The transform is static rather than animated —
- * these render in lists, and one Animated.Value per row buys nothing the eye
- * can catch in 150ms.
+ * 0.98 and up to a shadow — which reads as a lift precisely because the card
+ * rests flat. The transform is static rather than animated — these render in
+ * lists, and one Animated.Value per row buys nothing the eye can catch in 150ms.
  */
 export function Card({
   children,
@@ -57,9 +57,10 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface.card,
     borderRadius: radius.card,
+    // Viền sắc thay đổ bóng: ngoài nắng, bóng mờ gần như biến mất còn viền
+    // đậm vẫn tách được thẻ khỏi nền. Token shadow vẫn giữ cho web-admin.
     borderWidth: 1,
-    borderColor: colors.border.default,
-    ...shadows.card,
+    borderColor: colors.border.strong,
   },
   padded: {
     padding: space.xl,

@@ -4,6 +4,11 @@ import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {colors, radius, size, space, text} from '../theme';
 
+/** "680000" → "680.000". Chuỗi rỗng giữ nguyên để placeholder còn hiện. */
+function groupThousands(digits: string): string {
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
 interface FieldProps {
   label: string;
   value: string;
@@ -12,6 +17,11 @@ interface FieldProps {
   hint?: string;
   error?: string | null;
   keyboardType?: KeyboardTypeOptions;
+  /**
+   * Ô tiền: hiện "680.000" trong khi state của màn vẫn là "680000".
+   * Bảy chữ số liền nhau không đếm được bằng mắt ngoài đồng.
+   */
+  money?: boolean;
   secureTextEntry?: boolean;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   multiline?: boolean;
@@ -35,6 +45,7 @@ export function Field({
   hint,
   error,
   keyboardType,
+  money = false,
   secureTextEntry,
   autoCapitalize = 'sentences',
   multiline = false,
@@ -57,8 +68,8 @@ export function Field({
         ]}>
         <TextInput
           testID={testID}
-          value={value}
-          onChangeText={onChangeText}
+          value={money ? groupThousands(value) : value}
+          onChangeText={onChangeText && (next => onChangeText(money ? next.replace(/\D/g, '') : next))}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           placeholder={placeholder}
@@ -75,7 +86,7 @@ export function Field({
       {error ? (
         <Text style={[text('caption', colors.text.danger), styles.hint]}>{error}</Text>
       ) : hint ? (
-        <Text style={[text('caption', colors.text.muted), styles.hint]}>{hint}</Text>
+        <Text style={[text('bodySm', colors.text.secondary), styles.hint]}>{hint}</Text>
       ) : null}
     </View>
   );
@@ -133,7 +144,7 @@ export function PickerField({
       {error ? (
         <Text style={[text('caption', colors.text.danger), styles.hint]}>{error}</Text>
       ) : hint ? (
-        <Text style={[text('caption', colors.text.muted), styles.hint]}>{hint}</Text>
+        <Text style={[text('bodySm', colors.text.secondary), styles.hint]}>{hint}</Text>
       ) : null}
     </View>
   );
@@ -263,7 +274,9 @@ const styles = StyleSheet.create({
   },
   chip: {
     flex: 1,
-    minHeight: size.chipMinHeight,
+    // Chọn nhầm đơn vị (kg/tấn) là sai cả phiếu, nên chip này ăn đủ 48 chứ
+    // không dùng chipMinHeight 40 như chip lọc.
+    minHeight: size.minTouchTarget,
     borderRadius: radius.md,
     borderWidth: 1,
     alignItems: 'center',
