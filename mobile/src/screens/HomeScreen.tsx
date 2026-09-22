@@ -9,9 +9,9 @@
 
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {useCallback, useState} from 'react';
-import type {NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
-import {ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {ActivityIndicator, Alert, Pressable, ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {useAuth, useCurrentUser} from '../auth/AuthContext';
 import {GhostButton, IconButton} from '../components/buttons';
@@ -43,7 +43,7 @@ import {useObservable} from '../db/useObservable';
 import {pendingSubtext, pendingTotal} from '../domain/dashboard';
 import type {RootStackParamList} from '../navigation/types';
 import {useSync} from '../sync/SyncContext';
-import {colors, radius, shadows, size, space, text} from '../theme';
+import {colors, radius, size, space, text} from '../theme';
 import {formatDate, formatNumber, formatVnd, formatWeekdayDate} from '../utils/format';
 import {useDashboard} from './home/useDashboard';
 
@@ -71,12 +71,7 @@ export function HomeScreen() {
 
   const openPlot = useCallback((plot: Plot) => navigation.navigate('PlotDetail', {plotId: plot.id}), [navigation]);
 
-  // The header earns its hairline + shadow only once content slides under it.
-  const [scrolled, setScrolled] = useState(false);
-  const onScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const past = event.nativeEvent.contentOffset.y > 8;
-    setScrolled(prev => (prev === past ? prev : past));
-  }, []);
+  const insets = useSafeAreaInsets();
 
   const confirmSignOut = useCallback(() => {
     Alert.alert('Đăng xuất', 'Bạn có chắc muốn đăng xuất khỏi ứng dụng?', [
@@ -100,16 +95,19 @@ export function HomeScreen() {
   const loss = data.month.profit < 0;
 
   return (
-    <Screen ground="gradient" edges={['top', 'bottom']}>
-      <View style={[styles.header, scrolled && styles.headerScrolled]}>
+    // edges bỏ 'top': dải xanh phải chạy lên sát mép trên, nên header tự cộng
+    // inset thay vì để SafeAreaView đẩy xuống.
+    <Screen ground="gradient" edges={['bottom']}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.primary.default} />
+      <View style={[styles.header, {paddingTop: insets.top + space.lg}]}>
         <View style={styles.headerText}>
           {/* "Xin chào" tách khỏi tên: gộp một dòng thì trên màn 320pt cột chữ
               chỉ còn 172pt, đủ cho "Xin chào" rồi cắt mất tên ở dòng hai. */}
-          <Text style={text('eyebrow', colors.text.secondary)}>Xin chào</Text>
-          <Text style={[text('heading'), styles.headerName]} numberOfLines={2}>
+          <Text style={text('eyebrow', colors.primary.onPrimary)}>Xin chào</Text>
+          <Text style={[text('heading', colors.primary.onPrimary), styles.headerName]} numberOfLines={2}>
             {user.fullName || user.username}
           </Text>
-          <Text style={[text('body', colors.text.secondary), styles.headerMeta]} numberOfLines={2}>
+          <Text style={[text('body', colors.primary.onPrimary), styles.headerMeta]} numberOfLines={2}>
             {formatWeekdayDate()}
             {user.region ? ` · ${user.region}` : ''}
           </Text>
@@ -117,27 +115,25 @@ export function HomeScreen() {
         <IconButton
           accessibilityLabel="Cài đặt"
           onPress={() => navigation.navigate('Settings')}>
-          <SettingsIcon size={22} color={colors.text.secondary} />
+          <SettingsIcon size={22} color={colors.primary.onPrimary} />
         </IconButton>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Tài khoản và đăng xuất"
           onPress={confirmSignOut}
           style={({pressed}) => [styles.avatar, pressed && styles.avatarPressed]}>
-          <Text style={text('cardTitle', colors.primary.default)}>{initial}</Text>
+          <Text style={text('cardTitle', colors.primary.onPrimary)}>{initial}</Text>
         </Pressable>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScroll={onScroll}>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.cards}>
           <DashboardCard
             testID="card-stock"
             label="Tồn kho"
             value={formatVnd(Math.round(data.stock.value))}
+            countTo={Math.round(data.stock.value)}
+            countFormat={formatVnd}
             subtext={
               data.stock.kinds > 0
                 ? `${data.stock.kinds} loại phân bón, ${formatNumber(data.stock.kg)} kg`
@@ -153,11 +149,13 @@ export function HomeScreen() {
             label={`Tháng ${data.monthNumber} này`}
             prefix={loss ? 'Lỗ' : 'Lãi'}
             value={formatVnd(Math.abs(Math.round(data.month.profit)))}
+            countTo={Math.abs(Math.round(data.month.profit))}
+            countFormat={formatVnd}
             negative={loss}
             subtext={`Thu ${formatVnd(data.month.income)}, Chi ${formatVnd(data.month.expense)}`}
             flag={financePending ? 'Chưa đồng bộ' : null}
-            icon={<CoinsIcon size={24} color={colors.green['800']} />}
-            tone="lime"
+            icon={<CoinsIcon size={24} color={loss ? colors.badge.redFg : colors.green['800']} />}
+            tone={loss ? 'coral' : 'lime'}
             onPress={() => navigation.navigate('Finance', {tab: 'report'})}
           />
           <DashboardCard
@@ -286,14 +284,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.md,
     paddingHorizontal: space.lg,
-    paddingTop: space.lg,
-    paddingBottom: space.md,
-    backgroundColor: colors.gradient.groundFrom,
-  },
-  headerScrolled: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.border.default,
-    ...shadows.sm,
+    paddingBottom: space.xl,
+    backgroundColor: colors.primary.default,
   },
   headerText: {
     flex: 1,
@@ -309,14 +301,15 @@ const styles = StyleSheet.create({
     width: size.minTouchTarget,
     height: size.minTouchTarget,
     borderRadius: radius.pill,
-    backgroundColor: colors.primary.soft,
+    // Trên nền xanh đậm: viền trắng mỏng thay vì nền xanh nhạt.
+    backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: colors.border.default,
+    borderColor: colors.primary.onPrimary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarPressed: {
-    backgroundColor: colors.primary.softStrong,
+    backgroundColor: colors.primary.pressed,
   },
   cards: {
     gap: space.md,

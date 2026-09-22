@@ -4,12 +4,19 @@ import {Animated, Pressable, StyleSheet, Text, View} from 'react-native';
 import {colors, radius, shadows, space, text} from '../theme';
 import type {TileTone} from './IconTile';
 import {IconTile} from './IconTile';
-import {NumberText} from './NumberText';
+import {CountUpNumber, NumberText} from './NumberText';
 
 interface Props {
   label: string;
-  /** The headline figure, already formatted ("1.508.000₫", "4"). */
+  /**
+   * The headline figure, already formatted ("1.508.000₫", "4"). Vẫn bắt buộc:
+   * accessibilityLabel đọc chuỗi này, nên máy đọc màn hình luôn nghe số cuối
+   * chứ không nghe số đang chạy.
+   */
   value: string;
+  /** Kèm `countFormat` thì số chạy từ 0 lên; thiếu một trong hai thì hiện thẳng `value`. */
+  countTo?: number;
+  countFormat?: (value: number) => string;
   /** Word set before the figure in body type, e.g. "Lỗ". */
   prefix?: string;
   /** Word set after the figure in body type, e.g. "việc giai đoạn này". */
@@ -34,7 +41,7 @@ interface Props {
  * figure is monospace 28pt in green, or red for a loss. Pressing scales to
  * 0.98 and lifts the shadow.
  */
-export function DashboardCard({label, value, prefix, unit, negative = false, subtext, onPress, icon, flag, tone = 'green', testID}: Props) {
+export function DashboardCard({label, value, countTo, countFormat, prefix, unit, negative = false, subtext, onPress, icon, flag, tone = 'green', testID}: Props) {
   const scale = React.useRef(new Animated.Value(1)).current;
   const figureColor = negative ? colors.text.danger : colors.primary.default;
   const [pressed, setPressed] = React.useState(false);
@@ -56,11 +63,11 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
         setPressed(false);
         animate(1);
       }}>
-      <Animated.View style={[styles.card, pressed && shadows.raised, {transform: [{scale}]}]}>
+      <Animated.View style={[styles.card, negative && styles.cardAlert, pressed && shadows.raised, {transform: [{scale}]}]}>
         <View style={styles.body}>
           <View style={styles.column}>
             <View style={styles.head}>
-              <Text style={[text('eyebrow', colors.text.secondary), styles.label]} numberOfLines={1}>
+              <Text style={[text('eyebrow', negative ? colors.badge.redFg : colors.text.secondary), styles.label]} numberOfLines={1}>
                 {label}
               </Text>
               {flag ? (
@@ -71,16 +78,21 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
             </View>
             <View style={styles.value}>
               {prefix ? <Text style={[text('subheading', figureColor), styles.word]}>{prefix}</Text> : null}
-              <NumberText size="xl" color={figureColor} numberOfLines={1}>
-                {value}
-              </NumberText>
+              {countTo !== undefined && countFormat ? (
+                <CountUpNumber to={countTo} format={countFormat} size="xl" color={figureColor} numberOfLines={1} />
+              ) : (
+                <NumberText size="xl" color={figureColor} numberOfLines={1}>
+                  {value}
+                </NumberText>
+              )}
               {unit ? <Text style={[text('subheading', figureColor), styles.word]}>{unit}</Text> : null}
             </View>
-            <Text style={[text('bodySm', colors.text.secondary), styles.subtext]} numberOfLines={2}>
+            <Text style={[text('bodySm', negative ? colors.badge.redFg : colors.text.secondary), styles.subtext]} numberOfLines={2}>
               {subtext}
             </Text>
           </View>
-          {icon ? <IconTile tone={tone}>{icon}</IconTile> : null}
+          {/* Nền tile màu nhạt sẽ chìm vào thẻ cảnh báo đỏ nhạt — cho trắng để icon còn nổi. */}
+          {icon ? <IconTile tone={tone} style={negative ? styles.alertTile : undefined}>{icon}</IconTile> : null}
         </View>
       </Animated.View>
     </Pressable>
@@ -95,6 +107,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border.strong,
     padding: space.xl,
+  },
+  /** Đang lỗ: nền đỏ nhạt để nhận ra là cảnh báo trước cả khi đọc con số. */
+  cardAlert: {
+    backgroundColor: colors.badge.redBg,
+    borderColor: colors.badge.redFg,
+  },
+  alertTile: {
+    backgroundColor: colors.surface.card,
   },
   body: {
     flexDirection: 'row',
