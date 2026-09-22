@@ -60,7 +60,7 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
         <View style={styles.body}>
           <View style={styles.column}>
             <View style={styles.head}>
-              <Text style={[text('eyebrow', colors.text.muted), styles.label]} numberOfLines={1}>
+              <Text style={[text('eyebrow', colors.text.secondary), styles.label]} numberOfLines={1}>
                 {label}
               </Text>
               {flag ? (
@@ -76,7 +76,7 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
               </NumberText>
               {unit ? <Text style={[text('subheading', figureColor), styles.word]}>{unit}</Text> : null}
             </View>
-            <Text style={[text('caption', colors.text.muted), styles.subtext]} numberOfLines={2}>
+            <Text style={[text('caption', colors.text.secondary), styles.subtext]} numberOfLines={2}>
               {subtext}
             </Text>
           </View>
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   flag: {
     paddingHorizontal: space.sm,
-    paddingVertical: 2,
+    paddingVertical: space.xs,
     borderRadius: radius.pill,
     backgroundColor: colors.badge.yellowBg,
   },
@@ -129,6 +129,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   subtext: {
-    marginTop: 2,
+    marginTop: space.xs,
   },
 });

@@ -22,6 +22,7 @@ import {IconTile} from '../components/IconTile';
 import {
   BellIcon,
   CalculatorIcon,
+  ChevronRight,
   ClipboardIcon,
   CoinsIcon,
   PlusIcon,
@@ -29,6 +30,7 @@ import {
   SettingsIcon,
   ShareIcon,
   SproutIcon,
+  ToolsIcon,
   WarehouseIcon,
 } from '../components/icons';
 import {PlotCard} from '../components/PlotCard';
@@ -98,20 +100,23 @@ export function HomeScreen() {
   const loss = data.month.profit < 0;
 
   return (
-    <Screen ground="gradient">
+    <Screen ground="gradient" edges={['top', 'bottom']}>
       <View style={[styles.header, scrolled && styles.headerScrolled]}>
         <View style={styles.headerText}>
-          <Text style={text('heading')} numberOfLines={2}>
-            Xin chào {user.fullName || user.username}
+          {/* "Xin chào" tách khỏi tên: gộp một dòng thì trên màn 320pt cột chữ
+              chỉ còn 172pt, đủ cho "Xin chào" rồi cắt mất tên ở dòng hai. */}
+          <Text style={text('eyebrow', colors.text.secondary)}>Xin chào</Text>
+          <Text style={[text('heading'), styles.headerName]} numberOfLines={2}>
+            {user.fullName || user.username}
           </Text>
-          <Text style={[text('bodySm', colors.text.muted), styles.headerMeta]} numberOfLines={2}>
+          <Text style={[text('body', colors.text.secondary), styles.headerMeta]} numberOfLines={2}>
             {formatWeekdayDate()}
             {user.region ? ` · ${user.region}` : ''}
           </Text>
         </View>
         <IconButton
           accessibilityLabel="Cài đặt"
-          onPress={() => navigation.navigate('Main', {screen: 'Settings'})}>
+          onPress={() => navigation.navigate('Settings')}>
           <SettingsIcon size={22} color={colors.text.secondary} />
         </IconButton>
         <Pressable
@@ -177,12 +182,35 @@ export function HomeScreen() {
               <Text style={text('bodyStrong')} numberOfLines={2}>
                 {tool.title}
               </Text>
-              <Text style={[text('caption', colors.text.muted), styles.toolMeta]} numberOfLines={2}>
+              <Text style={[text('caption', colors.text.secondary), styles.toolMeta]} numberOfLines={2}>
                 {tool.meta}
               </Text>
             </Card>
           ))}
         </View>
+
+        {/* Không còn thanh tab, nên đây là lối duy nhất vào danh mục phân bón
+            và F4 kiểm tra kho — hai công cụ không có ô riêng ở lưới trên. */}
+        <Card
+          onPress={() => navigation.navigate('Tools')}
+          accessibilityLabel="Xem tất cả công cụ"
+          style={styles.allTools}
+          testID="home-all-tools">
+          <View style={styles.allToolsBody}>
+            <IconTile size={44}>
+              <ToolsIcon color={colors.primary.default} />
+            </IconTile>
+            <View style={styles.allToolsText}>
+              <Text style={text('bodyStrong')} numberOfLines={1}>
+                Tất cả công cụ
+              </Text>
+              <Text style={[text('caption', colors.text.secondary), styles.toolMeta]} numberOfLines={2}>
+                Danh mục phân bón, F4 kiểm tra kho và các mục khác
+              </Text>
+            </View>
+            <ChevronRight color={colors.text.secondary} />
+          </View>
+        </Card>
 
         {reminders.length > 0 ? (
           <>
@@ -199,7 +227,7 @@ export function HomeScreen() {
                     <Text style={text('bodySm')} numberOfLines={2}>
                       {row.taskTitle}
                     </Text>
-                    <Text style={text('caption', colors.text.muted)}>{formatDate(row.remindAt)}</Text>
+                    <Text style={text('caption', colors.text.secondary)}>{formatDate(row.remindAt)}</Text>
                   </View>
                 </Pressable>
               ))}
@@ -234,7 +262,7 @@ export function HomeScreen() {
 
         <View style={styles.footnote}>
           <SyncStatus />
-          <Text style={text('caption', colors.text.muted)}>Số liệu đọc từ máy — vẫn xem và ghi được khi mất mạng.</Text>
+          <Text style={text('caption', colors.text.secondary)}>Số liệu đọc từ máy — vẫn xem và ghi được khi mất mạng.</Text>
         </View>
       </ScrollView>
     </Screen>
@@ -264,6 +292,9 @@ const styles = StyleSheet.create({
   headerText: {
     flex: 1,
     minWidth: 0,
+  },
+  headerName: {
+    marginTop: space.xs,
   },
   headerMeta: {
     marginTop: space.xs,
@@ -304,6 +335,20 @@ const styles = StyleSheet.create({
   },
   toolIcon: {
     marginBottom: space.md,
+  },
+  allTools: {
+    marginBottom: space.xl,
+    padding: space.lg,
+  },
+  allToolsBody: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
+    minHeight: size.minTouchTarget,
+  },
+  allToolsText: {
+    flex: 1,
+    minWidth: 0,
   },
   toolMeta: {
     marginTop: space.xs,

@@ -126,7 +126,7 @@ export function PlotPickerScreen() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Mở cài đặt đầy đủ"
-              onPress={() => navigation.navigate('Main', {screen: 'Settings'})}
+              onPress={() => navigation.navigate('Settings')}
               style={({pressed}) => [styles.linkRow, pressed && styles.addRowPressed]}>
               <Text style={text('bodyStrong')}>Cài đặt đầy đủ</Text>
               <ChevronRight />

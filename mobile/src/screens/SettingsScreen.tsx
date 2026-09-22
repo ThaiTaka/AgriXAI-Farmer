@@ -1,9 +1,10 @@
 /**
- * Tab "Cài đặt" — who is signed in, where the data stands per table, the
+ * "Cài đặt" — who is signed in, where the data stands per table, the
  * local error log, and sign-out. This is where "Offline 3 giờ · 2 thay đổi
  * chờ" lives, so a farmer can see exactly what has not reached the server.
  */
 
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 
@@ -24,6 +25,7 @@ import {colors, size, space, text} from '../theme';
 import {formatDateTime} from '../utils/format';
 
 export function SettingsScreen() {
+  const navigation = useNavigation();
   const user = useCurrentUser();
   const {signOut} = useAuth();
   const {state, lastSyncedAt, pending, refreshPending, sync} = useSync();
@@ -60,8 +62,8 @@ export function SettingsScreen() {
   const visibleTables = pending.filter(p => p.pending > 0 || ['plans', 'warehouse_in', 'warehouse_out', 'income', 'expense', 'tasks_history', 'plots'].includes(p.table));
 
   return (
-    <Screen>
-      <AppHeader title="Cài đặt" />
+    <Screen edges={['top', 'bottom']}>
+      <AppHeader title="Cài đặt" onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <Card style={styles.card}>
           <Text style={text('eyebrow', colors.text.secondary)}>Tài khoản</Text>

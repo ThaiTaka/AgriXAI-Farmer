@@ -1,6 +1,7 @@
 /**
- * Tab "Công cụ" — every feature as a full-width row, for farmers who prefer
- * a list to the dashboard tiles. Same routes, nothing new.
+ * "Công cụ" — every feature as a full-width row, for farmers who prefer a list
+ * to the dashboard tiles. Reached from the home screen; it is the only way in
+ * to the fertiliser catalogue and F4, which have no tile of their own.
  */
 
 import {useNavigation} from '@react-navigation/native';
@@ -28,8 +29,23 @@ import {colors, space, text} from '../theme';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
+/**
+ * Chỉ những route mở được mà không cần tham số. Liệt kê tường minh thay vì
+ * `keyof RootStackParamList` để đổi tên route thành lỗi biên dịch — màn hình
+ * này là lối vào duy nhất của FertilizerGroups và StockCheck.
+ */
+type ToolRoute =
+  | 'FertilizerCalculator'
+  | 'FertilizerBudget'
+  | 'StockCheck'
+  | 'FertilizerGroups'
+  | 'CareProtocol'
+  | 'Warehouse'
+  | 'Finance'
+  | 'ReportExport';
+
 interface Tool {
-  route: keyof RootStackParamList;
+  route: ToolRoute;
   title: string;
   subtitle: string;
   icon: React.ReactNode;
@@ -62,8 +78,8 @@ const GROUPS: {label: string; tools: Tool[]}[] = [
 export function ToolsScreen() {
   const navigation = useNavigation<Nav>();
   return (
-    <Screen>
-      <AppHeader title="Công cụ" />
+    <Screen edges={['top', 'bottom']}>
+      <AppHeader title="Công cụ" onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {GROUPS.map(group => (
           <View key={group.label} style={styles.group}>
@@ -77,7 +93,7 @@ export function ToolsScreen() {
                   subtitle={tool.subtitle}
                   last={index === group.tools.length - 1}
                   leading={<IconTile size={40}>{tool.icon}</IconTile>}
-                  onPress={() => navigation.navigate(tool.route as never)}
+                  onPress={() => navigation.navigate(tool.route)}
                 />
               ))}
             </Card>
