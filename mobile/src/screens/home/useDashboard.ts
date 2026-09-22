@@ -10,7 +10,7 @@ import {observeExpense, observeIncome, toEntries} from '../../db/repositories/fi
 import {observePlots} from '../../db/repositories/plotRepository';
 import {observeDoneTasks} from '../../db/repositories/taskHistoryRepository';
 import {observeWarehouseIn, observeWarehouseOut, toInRows, toOutRows} from '../../db/repositories/warehouseRepository';
-import {useObservable} from '../../db/useObservable';
+import {useObservable, useObservableReady} from '../../db/useObservable';
 import type {MonthOverview, PendingGroup, StockOverview} from '../../domain/dashboard';
 import {monthOverview, pendingTasks, stockOverview} from '../../domain/dashboard';
 import {stockSummary} from '../../domain/warehouse';
@@ -23,6 +23,8 @@ export interface DashboardData {
   month: MonthOverview;
   pending: PendingGroup[];
   plots: Plot[];
+  /** False cho tới emission đầu tiên — phân biệt "chưa tải" với "không có lô". */
+  plotsReady: boolean;
   year: number;
   monthNumber: number;
 }
@@ -32,7 +34,7 @@ export interface DashboardData {
  * moment a purchase, a sale or a tick is written, online or not.
  */
 export function useDashboard(userId: string, now: number = Date.now()): DashboardData {
-  const plots = useObservable<Plot[]>(() => observePlots(userId), [userId], []);
+  const {value: plots, ready: plotsReady} = useObservableReady<Plot[]>(() => observePlots(userId), [userId], []);
   const ins = useObservable<WarehouseIn[]>(() => observeWarehouseIn(userId), [userId], []);
   const outs = useObservable<WarehouseOut[]>(() => observeWarehouseOut(userId), [userId], []);
   const incomes = useObservable<Income[]>(() => observeIncome(userId), [userId], []);
@@ -68,5 +70,5 @@ export function useDashboard(userId: string, now: number = Date.now()): Dashboar
     [plots, done, catalogue, now],
   );
 
-  return {stock, month, pending, plots, year, monthNumber};
+  return {stock, month, pending, plots, plotsReady, year, monthNumber};
 }

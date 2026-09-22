@@ -11,7 +11,7 @@ import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useState} from 'react';
 import type {NativeScrollEvent, NativeSyntheticEvent} from 'react-native';
-import {Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useAuth, useCurrentUser} from '../auth/AuthContext';
 import {GhostButton, IconButton} from '../components/buttons';
@@ -245,9 +245,15 @@ export function HomeScreen() {
           </View>
         </View>
 
-        {data.plots.length === 0 ? (
+        {!data.plotsReady ? (
+          // SQLite trả về bất đồng bộ; hiện EmptyState ngay sẽ báo "chưa có lô
+          // đất" cho cả nông hộ đang có lô, mỗi lần mở app.
+          <View style={styles.loading}>
+            <ActivityIndicator color={colors.primary.default} />
+          </View>
+        ) : data.plots.length === 0 ? (
           <EmptyState
-            icon={<SproutIcon color={colors.gray['400']} />}
+            icon={<SproutIcon color={colors.text.secondary} />}
             title="Chưa có lô đất nào"
             body="Thêm lô đất đầu tiên để bắt đầu ghi chép vật tư và chi phí cho vườn của bạn."
             action={{label: 'Thêm lô đất', onPress: () => navigation.navigate('PlotForm')}}
@@ -391,6 +397,10 @@ const styles = StyleSheet.create({
   },
   list: {
     gap: space.md,
+  },
+  loading: {
+    alignItems: 'center',
+    paddingVertical: space['2xl'],
   },
   footnote: {
     marginTop: space.xl,
