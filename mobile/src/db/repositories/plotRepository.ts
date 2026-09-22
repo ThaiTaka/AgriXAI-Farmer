@@ -1,7 +1,6 @@
 import {Q} from '@nozbe/watermelondb';
 
 import {formatArea, formatDate} from '../../utils/format';
-import {generateUniquePlotCode} from '../../utils/plotCode';
 import {collections, database} from '..';
 import type Plot from '../models/Plot';
 import type {PlotStatus} from '../models/Plot';
@@ -55,53 +54,14 @@ export function observePlot(plotId: string) {
   return collections.plots.findAndObserve(plotId);
 }
 
-export async function existingPlotCodes(): Promise<string[]> {
-  const rows = await collections.plots.query().fetch();
-  return rows.map(p => p.code);
-}
-
-/** Resolves the code to save: what the farmer typed, or a fresh generated one. */
-export async function resolvePlotCode(typed: string): Promise<string> {
-  const trimmed = typed.trim().toUpperCase();
-  if (trimmed) return trimmed;
-  return generateUniquePlotCode(await existingPlotCodes());
-}
 
 /**
- * Creates a plot LOCALLY and returns immediately (Điều 1).
- * Nothing here touches the network — the sync adapter picks the row up later.
+ * Không có hàm tạo lô.
+ *
+ * Lô đất do bên quản lý đất chia và gán; ứng dụng chỉ nhận lô về qua đồng bộ
+ * rồi cho nông hộ sửa thông tin canh tác. Bỏ hẳn đường tạo ở đây để không màn
+ * nào lỡ dựng lại nút "Thêm lô".
  */
-export async function createPlot(input: PlotInput, author: ChangeAuthor): Promise<Plot> {
-  let created!: Plot;
-
-  await database.write(async () => {
-    created = collections.plots.prepareCreate(plot => {
-      plot.code = input.code;
-      plot.name = input.name;
-      plot.region = input.region;
-      plot.area = input.area;
-      plot.areaUnit = input.areaUnit;
-      plot.cropType = input.cropType;
-      plot.cropName = input.cropName;
-      plot.varietyId = input.varietyId;
-      plot.varietyName = input.varietyName;
-      plot.plantedAt = input.plantedAt;
-      plot.status = input.status;
-      plot.notes = input.notes;
-      plot.ownerId = author.id;
-      plot.updatedBy = author.id;
-    });
-
-    const logs = prepareChangeLogs('plots', created.id, 'create', author, [
-      {field: 'name', label: FIELD_LABELS.name, oldValue: null, newValue: input.name},
-    ]);
-
-    await database.batch(created, ...logs);
-  });
-
-  return created;
-}
-
 /** Updates a plot locally and records one audit row per changed field. */
 export async function updatePlot(
   plot: Plot,

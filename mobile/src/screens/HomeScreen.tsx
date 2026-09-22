@@ -24,7 +24,6 @@ import {
   ChevronRight,
   ClipboardIcon,
   CoinsIcon,
-  PlusIcon,
   ScaleIcon,
   SettingsIcon,
   ShareIcon,
@@ -237,11 +236,12 @@ export function HomeScreen() {
 
         <View style={styles.sectionHead}>
           <Text style={text('eyebrow', colors.text.secondary)}>Lô đất của bạn</Text>
+          {/* Không có nút thêm lô: lô đất do bên quản lý đất chia và gán,
+              app chỉ hiện những lô đã được giao cho nông hộ này. */}
           <View style={styles.sectionActions}>
             {data.plots.length > 0 ? (
               <GhostButton small label="Chọn lô" onPress={() => navigation.navigate('PlotPicker')} testID="home-plot-picker" />
             ) : null}
-            <GhostButton small label="Thêm lô" icon={<PlusIcon size={16} />} onPress={() => navigation.navigate('PlotForm')} />
           </View>
         </View>
 
@@ -254,9 +254,8 @@ export function HomeScreen() {
         ) : data.plots.length === 0 ? (
           <EmptyState
             icon={<SproutIcon color={colors.text.secondary} />}
-            title="Chưa có lô đất nào"
-            body="Thêm lô đất đầu tiên để bắt đầu ghi chép vật tư và chi phí cho vườn của bạn."
-            action={{label: 'Thêm lô đất', onPress: () => navigation.navigate('PlotForm')}}
+            title="Chưa có lô đất nào được giao"
+            body="Lô đất do bên quản lý đất chia và gán cho bạn. Khi đã được giao, mở ứng dụng lúc có mạng là lô hiện ra ở đây."
           />
         ) : (
           <View style={styles.list}>

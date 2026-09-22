@@ -19,6 +19,7 @@ import {CropIcon, PlusIcon} from '../../components/icons';
 import {Screen} from '../../components/Screen';
 import type {VarietyOption} from '../../db/repositories/varietyRepository';
 import {cropTypeOptions, USER_CATEGORY_ID} from '../../db/repositories/varietyRepository';
+import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
 import {colors, radius, space, text} from '../../theme';
 import {AddVarietySheet} from './AddVarietySheet';
@@ -37,26 +38,20 @@ export function VarietyCropTypeScreen() {
   const returnTo = params.returnTo ?? 'PlotForm';
 
   const cancel = useCallback(
-    () => navigation.popTo(returnTo, undefined, {merge: true}),
+    () => popToPicker(navigation, returnTo),
     [navigation, returnTo],
   );
 
   const onCreated = useCallback(
     (variety: VarietyOption) => {
       setAdding(false);
-      navigation.popTo(
-        returnTo,
-        {
-          pickedVariety: {
-            cropType: variety.cropType,
-            cropName: variety.cropName,
-            categoryId: variety.categoryId === USER_CATEGORY_ID ? null : variety.categoryId,
-            varietyId: variety.id,
-            varietyName: variety.name,
-          },
-        },
-        {merge: true},
-      );
+      popToPicker(navigation, returnTo, {
+        cropType: variety.cropType,
+        cropName: variety.cropName,
+        categoryId: variety.categoryId === USER_CATEGORY_ID ? null : variety.categoryId,
+        varietyId: variety.id,
+        varietyName: variety.name,
+      });
     },
     [navigation, returnTo],
   );

@@ -26,10 +26,11 @@ export type RootStackParamList = {
   /** "Chọn lô" — the list you pick a plot from before opening its detail. */
   PlotPicker: undefined;
   /**
-   * No `plotId` => create mode; with one => edit mode with the fields pre-filled.
-   * `pickedVariety` is merged in by the picker screens on the way back.
+   * SỬA một lô đã được giao. `plotId` là bắt buộc: lô đất do bên quản lý đất
+   * chia và gán, nông hộ không tự lập lô mới, nên không còn chế độ "tạo".
+   * `pickedVariety` được picker gộp vào params trên đường quay lại.
    */
-  PlotForm: {plotId?: string; pickedVariety?: PickedVariety} | undefined;
+  PlotForm: {plotId: string; pickedVariety?: PickedVariety};
 
   /** Variety picker, one route per step so the native back gesture steps back. */
   VarietyCropType: {selectedId: string | null; returnTo?: PickerReturnRoute};

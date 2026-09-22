@@ -294,6 +294,7 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | **v6.2** — modern friendly: đăng nhập có minh hoạ, chọn lô, trang chủ 3 tông icon, lưới công cụ | `57-v62-login-friendly.png`, `58-v62-plot-picker-friendly.png`, `59-v62-home-friendly.png`, `60-v62-home-tools-friendly.png` |
 | Sáu tính năng lõi sau khi đã mang thiết kế v6.2 (Cài đặt có mục hỗ trợ, F1, F3, F5–F6, Kho, Thu-chi) | `61-p2-settings-support.png`, `62-p2-f1.png`, `63-p2-f3.png`, `64-p2-f5.png`, `65-p2-kho.png`, `66-p2-thuchi.png` |
 | Ba điểm sửa 23/09/2026: dải đơn vị cuộn ngang (không vỡ dòng), biểu đồ tồn cong mượt có mảng tô và trục Y mốc tròn, danh mục 9 loại cây đủ dấu | `67-p3-calculator-unit-chips.png`, `68-p3-stock-area-chart.png`, `69-p3-crop-picker-9-crops.png` |
+| Lô của tôi sau khi bỏ nút "Thêm lô" — chỉ xem và chọn, lô do bên quản lý đất giao | `70-p3-my-lots-no-add-button.png` |
 
 ## Giới hạn hiện tại
 

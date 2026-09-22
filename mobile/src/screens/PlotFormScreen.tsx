@@ -25,12 +25,7 @@ import {Screen} from '../components/Screen';
 import {collections} from '../db';
 import type Plot from '../db/models/Plot';
 import type {PlotStatus} from '../db/models/Plot';
-import {
-  createPlot,
-  PLOT_STATUS_LABELS,
-  resolvePlotCode,
-  updatePlot,
-} from '../db/repositories/plotRepository';
+import {PLOT_STATUS_LABELS, updatePlot} from '../db/repositories/plotRepository';
 import type {RootStackParamList} from '../navigation/types';
 import {colors, size, space, text} from '../theme';
 import {formatDate} from '../utils/format';
@@ -76,7 +71,7 @@ export function PlotFormScreen() {
   const navigation = useNavigation<Nav>();
   const {params} = useRoute<Route>();
   const author = useChangeAuthor();
-  const editingId = params?.plotId;
+  const editingId = params.plotId;
   const picked = params?.pickedVariety;
 
   const [form, setForm] = useState<FormState>(EMPTY);
@@ -167,8 +162,10 @@ export function PlotFormScreen() {
     if (saving || !validate()) return;
     setSaving(true);
     try {
+      if (!existing) throw new Error(`Không tìm thấy lô ${editingId} để sửa.`);
+
       const input = {
-        code: await resolvePlotCode(form.code),
+        code: form.code.trim() || existing.code,
         name: form.name.trim(),
         region: form.region.trim() || null,
         area: Number(form.area.replace(',', '.')),
@@ -182,11 +179,7 @@ export function PlotFormScreen() {
         notes: form.notes.trim() || null,
       };
 
-      if (existing) {
-        await updatePlot(existing, input, author);
-      } else {
-        await createPlot(input, author);
-      }
+      await updatePlot(existing, input, author);
       navigation.goBack();
     } catch (error) {
       console.error('[plotForm] save failed', error);
@@ -194,13 +187,15 @@ export function PlotFormScreen() {
     } finally {
       setSaving(false);
     }
-  }, [saving, validate, form, existing, author, navigation]);
+  }, [saving, validate, form, existing, editingId, author, navigation]);
 
   const openPicker = useCallback(() => {
     navigation.navigate('VarietyCropType', {selectedId: form.varietyId});
   }, [navigation, form.varietyId]);
 
-  const title = editingId ? 'Sửa lô đất' : 'Thêm lô đất';
+  // Chỉ còn một chế độ: sửa lô đã được giao. Lô mới do bên quản lý đất lập,
+  // nông hộ không tự tạo, nên màn này không bao giờ mở ở trạng thái rỗng.
+  const title = 'Sửa lô đất';
   const maxDate = useMemo(() => new Date(), []);
   const cropValue = form.cropName
     ? form.varietyName

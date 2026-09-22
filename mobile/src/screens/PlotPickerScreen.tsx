@@ -17,11 +17,10 @@ import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {useCurrentUser} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
 import {Badge} from '../components/Badge';
-import {PrimaryButton} from '../components/buttons';
 import {IconTile} from '../components/IconTile';
 import {Card} from '../components/Card';
 import {EmptyState} from '../components/EmptyState';
-import {ChevronRight, CropIcon, PlusIcon, SproutIcon} from '../components/icons';
+import {ChevronRight, CropIcon, SproutIcon} from '../components/icons';
 import {Screen} from '../components/Screen';
 import {SyncStatus} from '../components/SyncStatus';
 import {Tabs} from '../components/Tabs';
@@ -64,9 +63,8 @@ export function PlotPickerScreen() {
           plots.length === 0 ? (
             <EmptyState
               icon={<SproutIcon color={colors.gray['400']} />}
-              title="Chưa có lô nào"
-              body="Thêm lô đất đầu tiên để bắt đầu ghi chép vật tư và chi phí cho vườn của bạn."
-              action={{label: 'Thêm lô', onPress: () => navigation.navigate('PlotForm')}}
+              title="Chưa có lô nào được giao"
+              body="Lô đất do bên quản lý đất chia và gán cho bạn. Khi đã được giao, mở ứng dụng lúc có mạng là lô hiện ra ở đây."
             />
           ) : (
             <View style={styles.list}>
@@ -105,12 +103,6 @@ export function PlotPickerScreen() {
                 );
               })}
 
-              <PrimaryButton
-                label="Thêm lô"
-                icon={<PlusIcon size={18} color={colors.primary.onPrimary} />}
-                onPress={() => navigation.navigate('PlotForm')}
-                style={styles.addButton}
-              />
             </View>
           )
         ) : (
@@ -132,7 +124,6 @@ export function PlotPickerScreen() {
               <ChevronRight />
             </Pressable>
 
-            <PrimaryButton label="Thêm lô đất" onPress={() => navigation.navigate('PlotForm')} />
           </View>
         )}
       </ScrollView>
@@ -173,9 +164,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: space.sm,
-  },
-  addButton: {
-    marginTop: space.sm,
   },
   addRowPressed: {
     backgroundColor: colors.surface.pressed,

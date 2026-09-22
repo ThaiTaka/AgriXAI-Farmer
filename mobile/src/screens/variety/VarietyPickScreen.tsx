@@ -27,6 +27,7 @@ import {
   USER_CATEGORY_NAME,
   varietyOptions,
 } from '../../db/repositories/varietyRepository';
+import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
 import {colors, space, text} from '../../theme';
 import {cropCategory, cropTypeById, VARIETY_BADGE_LABELS} from '../../utils/staticData';
@@ -64,25 +65,19 @@ export function VarietyPickScreen() {
 
   const finish = useCallback(
     (variety: VarietyOption | null) => {
-      navigation.popTo(
-        returnTo,
-        {
-          pickedVariety: {
-            cropType: params.cropTypeId,
-            cropName,
-            categoryId: params.categoryId === USER_CATEGORY_ID ? null : params.categoryId,
-            varietyId: variety?.id ?? null,
-            varietyName: variety?.name ?? null,
-          },
-        },
-        {merge: true},
-      );
+      popToPicker(navigation, returnTo, {
+        cropType: params.cropTypeId,
+        cropName,
+        categoryId: params.categoryId === USER_CATEGORY_ID ? null : params.categoryId,
+        varietyId: variety?.id ?? null,
+        varietyName: variety?.name ?? null,
+      });
     },
     [navigation, returnTo, params.cropTypeId, params.categoryId, cropName],
   );
 
   const cancel = useCallback(
-    () => navigation.popTo(returnTo, undefined, {merge: true}),
+    () => popToPicker(navigation, returnTo),
     [navigation, returnTo],
   );
 
