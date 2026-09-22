@@ -2,13 +2,21 @@ import React from 'react';
 import {Animated, Pressable, StyleSheet, Text, View} from 'react-native';
 
 import {colors, radius, shadows, space, text} from '../theme';
-import {ChevronRight} from './icons';
-import {NumberText} from './NumberText';
+import type {TileTone} from './IconTile';
+import {IconTile} from './IconTile';
+import {CountUpNumber, NumberText} from './NumberText';
 
 interface Props {
   label: string;
-  /** The headline figure, already formatted ("1.508.000₫", "4"). */
+  /**
+   * The headline figure, already formatted ("1.508.000₫", "4"). Vẫn bắt buộc:
+   * accessibilityLabel đọc chuỗi này, nên máy đọc màn hình luôn nghe số cuối
+   * chứ không nghe số đang chạy.
+   */
   value: string;
+  /** Kèm `countFormat` thì số chạy từ 0 lên; thiếu một trong hai thì hiện thẳng `value`. */
+  countTo?: number;
+  countFormat?: (value: number) => string;
   /** Word set before the figure in body type, e.g. "Lỗ". */
   prefix?: string;
   /** Word set after the figure in body type, e.g. "việc giai đoạn này". */
@@ -20,15 +28,20 @@ interface Props {
   icon?: React.ReactNode;
   /** Small badge text next to the label, e.g. "Chưa đồng bộ". */
   flag?: string | null;
+  /** Ground of the icon tile. Three green tiles in a column all look alike. */
+  tone?: TileTone;
   testID?: string;
 }
 
 /**
- * Dashboard summary card: white, hairline, 12pt radius, 16pt padding. The
- * figure is monospace 24pt in green, or red for a loss; the caption under it
- * is 12pt gray. Pressing scales to 0.98 and lifts the shadow to md.
+ * Dashboard summary card: white, hairline, 16pt radius, 20pt padding.
+ *
+ * The icon sits in its own tinted tile on the right rather than inline with
+ * the label, so the eye finds the card by its shape before reading a word; the
+ * figure is monospace 28pt in green, or red for a loss. Pressing scales to
+ * 0.98 and lifts the shadow.
  */
-export function DashboardCard({label, value, prefix, unit, negative = false, subtext, onPress, icon, flag, testID}: Props) {
+export function DashboardCard({label, value, countTo, countFormat, prefix, unit, negative = false, subtext, onPress, icon, flag, tone = 'green', testID}: Props) {
   const scale = React.useRef(new Animated.Value(1)).current;
   const figureColor = negative ? colors.text.danger : colors.primary.default;
   const [pressed, setPressed] = React.useState(false);
@@ -50,29 +63,37 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
         setPressed(false);
         animate(1);
       }}>
-      <Animated.View style={[styles.card, pressed ? shadows.md : shadows.sm, {transform: [{scale}]}]}>
-        <View style={styles.head}>
-          {icon ? <View style={styles.icon}>{icon}</View> : null}
-          <Text style={[text('eyebrow', colors.text.muted), styles.label]} numberOfLines={1}>
-            {label}
-          </Text>
-          {flag ? (
-            <View style={styles.flag}>
-              <Text style={text('badge', colors.badge.yellowFg)}>{flag}</Text>
+      <Animated.View style={[styles.card, negative && styles.cardAlert, pressed && shadows.raised, {transform: [{scale}]}]}>
+        <View style={styles.body}>
+          <View style={styles.column}>
+            <View style={styles.head}>
+              <Text style={[text('eyebrow', negative ? colors.badge.redFg : colors.text.secondary), styles.label]} numberOfLines={1}>
+                {label}
+              </Text>
+              {flag ? (
+                <View style={styles.flag}>
+                  <Text style={text('badge', colors.badge.yellowFg)}>{flag}</Text>
+                </View>
+              ) : null}
             </View>
-          ) : null}
-          <ChevronRight />
+            <View style={styles.value}>
+              {prefix ? <Text style={[text('subheading', figureColor), styles.word]}>{prefix}</Text> : null}
+              {countTo !== undefined && countFormat ? (
+                <CountUpNumber to={countTo} format={countFormat} size="xl" color={figureColor} numberOfLines={1} />
+              ) : (
+                <NumberText size="xl" color={figureColor} numberOfLines={1}>
+                  {value}
+                </NumberText>
+              )}
+              {unit ? <Text style={[text('subheading', figureColor), styles.word]}>{unit}</Text> : null}
+            </View>
+            <Text style={[text('bodySm', negative ? colors.badge.redFg : colors.text.secondary), styles.subtext]} numberOfLines={2}>
+              {subtext}
+            </Text>
+          </View>
+          {/* Nền tile màu nhạt sẽ chìm vào thẻ cảnh báo đỏ nhạt — cho trắng để icon còn nổi. */}
+          {icon ? <IconTile tone={tone} style={negative ? styles.alertTile : undefined}>{icon}</IconTile> : null}
         </View>
-        <View style={styles.value}>
-          {prefix ? <Text style={[text('subheading', figureColor), styles.word]}>{prefix}</Text> : null}
-          <NumberText size="lg" color={figureColor} numberOfLines={1}>
-            {value}
-          </NumberText>
-          {unit ? <Text style={[text('subheading', figureColor), styles.word]}>{unit}</Text> : null}
-        </View>
-        <Text style={[text('caption', colors.text.muted), styles.subtext]} numberOfLines={2}>
-          {subtext}
-        </Text>
       </Animated.View>
     </Pressable>
   );
@@ -81,30 +102,40 @@ export function DashboardCard({label, value, prefix, unit, negative = false, sub
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface.card,
-    borderRadius: radius.md,
+    borderRadius: radius.card,
+    // Cùng ngôn ngữ với Card: viền sắc, nghỉ thì phẳng, nhấn mới nhô.
     borderWidth: 1,
-    borderColor: colors.border.default,
-    padding: space.lg,
+    borderColor: colors.border.strong,
+    padding: space.xl,
+  },
+  /** Đang lỗ: nền đỏ nhạt để nhận ra là cảnh báo trước cả khi đọc con số. */
+  cardAlert: {
+    backgroundColor: colors.badge.redBg,
+    borderColor: colors.badge.redFg,
+  },
+  alertTile: {
+    backgroundColor: colors.surface.card,
+  },
+  body: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: space.lg,
+  },
+  column: {
+    flex: 1,
+    minWidth: 0,
   },
   head: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.sm,
   },
-  icon: {
-    width: 28,
-    height: 28,
-    borderRadius: radius.xs,
-    backgroundColor: colors.primary.soft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   label: {
-    flex: 1,
+    flexShrink: 1,
   },
   flag: {
     paddingHorizontal: space.sm,
-    paddingVertical: 2,
+    paddingVertical: space.xs,
     borderRadius: radius.pill,
     backgroundColor: colors.badge.yellowBg,
   },
@@ -119,6 +150,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   subtext: {
-    marginTop: 2,
+    marginTop: space.xs,
   },
 });

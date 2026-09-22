@@ -14,13 +14,14 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
 import {Badge} from '../../components/Badge';
 import {IconButton, PrimaryButton, SecondaryButton} from '../../components/buttons';
 import {Card} from '../../components/Card';
+import {InfoTooltip} from '../../components/InfoTooltip';
 import {LineChart} from '../../components/charts/LineChart';
 import {SERIES} from '../../components/charts/palette';
 import {DateField} from '../../components/DateField';
@@ -52,7 +53,7 @@ import type {PeriodFilter, StockUnit} from '../../domain/warehouse';
 import {fifoCost, inPeriod, periodBounds, stockCsv, stockOf, stockSummary, stockTimeline, toKg} from '../../domain/warehouse';
 import type {RootStackParamList, WarehouseTab} from '../../navigation/types';
 import {useSync} from '../../sync/SyncContext';
-import {colors, radius, space, text} from '../../theme';
+import {colors, radius, size, space, text} from '../../theme';
 import {formatDate, formatNumber, formatVnd} from '../../utils/format';
 import {fertilizerProduct} from '../../utils/staticData';
 
@@ -81,13 +82,15 @@ export function WarehouseScreen() {
 
   return (
     <Screen>
-      <AppHeader eyebrow="Vật tư" title="Kho phân bón" onBack={() => navigation.goBack()} />
-      <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        {tab === 'in' ? <StockInTab ins={ins} plots={plots} prefill={params?.prefill} /> : null}
-        {tab === 'out' ? <StockOutTab ins={ins} outs={outs} plots={plots} prefill={params?.prefill} /> : null}
-        {tab === 'stock' ? <StockTab ins={ins} outs={outs} /> : null}
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <AppHeader eyebrow="Vật tư" title="Kho phân bón" onBack={() => navigation.goBack()} />
+        <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          {tab === 'in' ? <StockInTab ins={ins} plots={plots} prefill={params?.prefill} /> : null}
+          {tab === 'out' ? <StockOutTab ins={ins} outs={outs} plots={plots} prefill={params?.prefill} /> : null}
+          {tab === 'stock' ? <StockTab ins={ins} outs={outs} /> : null}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
@@ -211,8 +214,9 @@ function StockInTab({ins, plots, prefill}: {ins: WarehouseIn[]; plots: Plot[]; p
             setPrice(v);
             setErrors(e => ({...e, price: undefined}));
           }}
-          placeholder="680000"
+          placeholder="680.000"
           keyboardType="numeric"
+          money
           error={errors.price}
           hint={perKg !== null ? `= ${formatVnd(Math.round(perKg))}/kg` : 'Để 0 nếu là phân tự có (không mua).'}
           style={styles.field}
@@ -471,19 +475,31 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
         <View style={styles.totalsRow}>
           <View>
             <Text style={text('eyebrow', colors.text.muted)}>Tổng tồn</Text>
-            <NumberText size="lg">{formatNumber(totalStock)} kg</NumberText>
+            <NumberText size="lg" numberOfLines={1}>
+              {formatNumber(totalStock)} kg
+            </NumberText>
           </View>
-          <View style={styles.totalsRight}>
+          <View>
             <Text style={text('eyebrow', colors.text.muted)}>Giá trị tồn</Text>
-            <NumberText size="lg">{formatVnd(Math.round(totalValue))}</NumberText>
+            <NumberText size="lg" numberOfLines={1}>
+              {formatVnd(Math.round(totalValue))}
+            </NumberText>
           </View>
         </View>
-        <Text style={[text('caption', colors.text.muted), styles.totalsNote]}>
-          Tồn = Σ nhập − Σ xuất · giá TB = Σ(kg × giá) / Σ kg · giá trị = tồn × giá TB
-        </Text>
       </Card>
 
-      <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>Bảng tồn</Text>
+      <View style={styles.sectionHead}>
+        <Text style={text('eyebrow', colors.text.secondary)}>Bảng tồn</Text>
+        <InfoTooltip
+          testID="stock-info"
+          title="Con số tồn kho tính thế nào?"
+          body={
+            'Tồn kho = tổng đã nhập − tổng đã dùng, tính trên chính máy này.\n\n' +
+            'Giá trị tồn lấy theo giá trung bình các lần nhập: cộng tiền của mọi phiếu nhập rồi chia cho tổng số ký, sau đó nhân với số ký còn lại.\n\n' +
+            'Phiếu chưa đồng bộ vẫn được tính, nên số ở đây luôn khớp với những gì bạn đã ghi, kể cả khi mất mạng.'
+          }
+        />
+      </View>
       <Card flush style={styles.table}>
         <View style={[styles.tr, styles.th]}>
           <Text style={[text('caption', colors.text.muted), styles.tdName]}>Phân bón</Text>
@@ -503,10 +519,10 @@ function StockTab({ins, outs}: {ins: WarehouseIn[]; outs: WarehouseOut[]}) {
               onPress={() => setFocusId(selected ? null : line.fertilizerId)}
               style={({pressed}) => [styles.tr, index === summary.length - 1 && styles.trLast, selected && styles.trSelected, pressed && styles.trPressed]}>
               <View style={styles.tdName}>
-                <Text style={text('bodySm')} numberOfLines={1}>
+                <Text style={text('bodySm')} numberOfLines={2}>
                   {line.fertilizerName}
                 </Text>
-                <Text style={text('caption', colors.text.muted)} numberOfLines={1}>
+                <Text style={text('caption', colors.text.muted)} numberOfLines={2}>
                   TB {formatVnd(Math.round(line.avgPrice))}/kg · {formatVnd(Math.round(line.stockValue))}
                 </Text>
               </View>
@@ -594,6 +610,9 @@ function HistoryList({rows, kind, author}: {rows: (WarehouseIn | WarehouseOut)[]
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   tabs: {
     marginHorizontal: space.lg,
     marginBottom: space.lg,
@@ -638,7 +657,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.md,
     marginBottom: space.lg,
-    minHeight: 40,
+    minHeight: size.minTouchTarget,
+    paddingVertical: space.sm,
   },
   checkLabel: {
     flex: 1,
@@ -653,9 +673,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.sm,
-    paddingHorizontal: space.lg,
+    // Ba cột số cố định ăn hết bề ngang; nới chỗ cho cột tên phân bón.
+    paddingHorizontal: space.md,
     paddingVertical: space.md,
-    minHeight: 52,
+    minHeight: size.buttonMinHeight,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border.default,
   },
@@ -678,7 +699,8 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   tdNum: {
-    width: 56,
+    width: 48,
+    flexShrink: 0,
     textAlign: 'right',
   },
   tableNote: {
@@ -699,11 +721,11 @@ const styles = StyleSheet.create({
   offlineFlag: {
     marginBottom: space.sm,
   },
-  totalsRight: {
-    alignItems: 'flex-end',
-  },
-  totalsNote: {
-    marginTop: space.md,
+  sectionHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: space.sm,
   },
   chartCard: {
     marginBottom: space.lg,

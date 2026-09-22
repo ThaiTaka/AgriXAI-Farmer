@@ -4,6 +4,11 @@ import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {colors, radius, size, space, text} from '../theme';
 
+/** "680000" → "680.000". Chuỗi rỗng giữ nguyên để placeholder còn hiện. */
+function groupThousands(digits: string): string {
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
 interface FieldProps {
   label: string;
   value: string;
@@ -12,6 +17,11 @@ interface FieldProps {
   hint?: string;
   error?: string | null;
   keyboardType?: KeyboardTypeOptions;
+  /**
+   * Ô tiền: hiện "680.000" trong khi state của màn vẫn là "680000".
+   * Bảy chữ số liền nhau không đếm được bằng mắt ngoài đồng.
+   */
+  money?: boolean;
   secureTextEntry?: boolean;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   multiline?: boolean;
@@ -35,6 +45,7 @@ export function Field({
   hint,
   error,
   keyboardType,
+  money = false,
   secureTextEntry,
   autoCapitalize = 'sentences',
   multiline = false,
@@ -57,8 +68,8 @@ export function Field({
         ]}>
         <TextInput
           testID={testID}
-          value={value}
-          onChangeText={onChangeText}
+          value={money ? groupThousands(value) : value}
+          onChangeText={onChangeText && (next => onChangeText(money ? next.replace(/\D/g, '') : next))}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           placeholder={placeholder}
@@ -75,7 +86,7 @@ export function Field({
       {error ? (
         <Text style={[text('caption', colors.text.danger), styles.hint]}>{error}</Text>
       ) : hint ? (
-        <Text style={[text('caption', colors.text.muted), styles.hint]}>{hint}</Text>
+        <Text style={[text('bodySm', colors.text.secondary), styles.hint]}>{hint}</Text>
       ) : null}
     </View>
   );
@@ -121,7 +132,7 @@ export function PickerField({
           error ? styles.inputWrapError : null,
         ]}>
         <Text
-          numberOfLines={1}
+          numberOfLines={2}
           style={[
             text('input', empty ? colors.text.placeholder : colors.text.primary),
             styles.pickerValue,
@@ -133,7 +144,7 @@ export function PickerField({
       {error ? (
         <Text style={[text('caption', colors.text.danger), styles.hint]}>{error}</Text>
       ) : hint ? (
-        <Text style={[text('caption', colors.text.muted), styles.hint]}>{hint}</Text>
+        <Text style={[text('bodySm', colors.text.secondary), styles.hint]}>{hint}</Text>
       ) : null}
     </View>
   );
@@ -207,9 +218,11 @@ const styles = StyleSheet.create({
   },
   inputWrap: {
     minHeight: size.inputMinHeight,
-    borderRadius: radius.sm,
-    borderWidth: 1,
-    borderColor: colors.border.strong,
+    borderRadius: radius.md,
+    // 2pt at rest: a hairline box disappears against a white card in sunlight,
+    // and the focus ring then has nothing to thicken from.
+    borderWidth: 2,
+    borderColor: colors.border.default,
     backgroundColor: colors.surface.card,
     justifyContent: 'center',
   },
@@ -222,6 +235,7 @@ const styles = StyleSheet.create({
   inputWrapFocused: {
     borderColor: colors.border.focus,
   },
+  // Chips and segments keep the old hairline; only the text box got heavier.
   inputWrapError: {
     borderColor: colors.border.danger,
   },
@@ -246,6 +260,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.sm,
     paddingHorizontal: space.lg,
+    // Chừa chỗ cho giá trị dài xuống 2 dòng mà không chạm viền.
+    paddingVertical: space.sm,
   },
   pickerPressed: {
     backgroundColor: colors.surface.pressed,
@@ -258,8 +274,10 @@ const styles = StyleSheet.create({
   },
   chip: {
     flex: 1,
-    minHeight: size.chipMinHeight,
-    borderRadius: radius.sm,
+    // Chọn nhầm đơn vị (kg/tấn) là sai cả phiếu, nên chip này ăn đủ 48 chứ
+    // không dùng chipMinHeight 40 như chip lọc.
+    minHeight: size.minTouchTarget,
+    borderRadius: radius.md,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -280,13 +298,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.surface.subtle,
     borderRadius: radius.sm,
-    padding: 3,
+    padding: space.xs,
     gap: 2,
   },
   segment: {
     flex: 1,
-    minHeight: size.chipMinHeight - 4,
-    borderRadius: radius.sm - 3,
+    minHeight: size.minTouchTarget,
+    borderRadius: radius.sm - space.xs,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: space.sm,

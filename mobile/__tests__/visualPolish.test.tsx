@@ -68,7 +68,7 @@ test('the iOS side of the token is untouched by the elevation fix', () => {
 
 // ------------------------------ press feedback ----------------------------
 
-test('a pressable Card dips to 0.98 and lifts to shadow-md', () => {
+test('a pressable Card dips to 0.98 and lifts to the raised shadow', () => {
   const tree = render(
     <Card onPress={() => {}} accessibilityLabel="Lô đất">
       <></>
@@ -76,10 +76,10 @@ test('a pressable Card dips to 0.98 and lifts to shadow-md', () => {
   );
   const pressed = styleWhenPressed(tree, true);
   expect(pressed.transform).toEqual([{scale: 0.98}]);
-  expect(pressed.elevation).toBe(shadows.md.elevation);
+  expect(pressed.elevation).toBe(shadows.raised.elevation);
 });
 
-test('a Card at rest neither dips nor lifts', () => {
+test('a Card at rest neither dips nor lifts — it sits flat on its border', () => {
   const tree = render(
     <Card onPress={() => {}} accessibilityLabel="Lô đất">
       <></>
@@ -87,7 +87,11 @@ test('a Card at rest neither dips nor lifts', () => {
   );
   const resting = styleWhenPressed(tree, false);
   expect(resting.transform).toBeUndefined();
-  expect(resting.elevation).toBe(shadows.sm.elevation);
+  // Không đổ bóng khi nghỉ: ngoài nắng bóng mờ gần như vô hình, viền
+  // border-strong mới là thứ tách thẻ khỏi nền. Nhờ vậy bóng lúc nhấn mới đọc
+  // được thành "nhô lên".
+  expect(resting.elevation).toBeUndefined();
+  expect(resting.borderColor).toBe(colors.border.strong);
 });
 
 test('a Card with no onPress stays a plain View — nothing to press, nothing to dip', () => {
@@ -103,7 +107,7 @@ test('the primary button dips and lifts on press', () => {
   const tree = render(<PrimaryButton label="Đăng nhập" onPress={() => {}} />);
   const pressed = styleWhenPressed(tree, true);
   expect(pressed.transform).toEqual([{scale: 0.98}]);
-  expect(pressed.elevation).toBe(shadows.md.elevation);
+  expect(pressed.elevation).toBe(shadows.raised.elevation);
   expect(pressed.backgroundColor).toBe(colors.primary.pressed);
 });
 

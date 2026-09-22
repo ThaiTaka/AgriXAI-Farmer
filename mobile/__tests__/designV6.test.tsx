@@ -92,9 +92,15 @@ test('the 8pt grid is intact', () => {
   expect([space.sm, space.lg, space.xl, space['2xl'], space['3xl'], space['4xl']]).toEqual([8, 16, 24, 32, 40, 48]);
 });
 
-test('exactly one gradient exists, and it is one ramp step wide', () => {
-  expect(colors.gradient.groundFrom).toBe(colors.gray['50']);
-  expect(colors.gradient.groundTo).toBe(colors.gray['100']);
+test('the ground gradient stays a tint — close stops, never a stripe', () => {
+  // v6.2 warmed the far stop from gray-100 to the brand's soft green. What has
+  // to hold is not the exact pair but that the two stops stay near enough to
+  // read as one ground: a wide delta turns the page into a banner.
+  expect(colors.gradient.groundFrom).toBe(colors.gray['100']);
+  expect(colors.gradient.groundTo).toBe(colors.primary.soft);
+  const [from, to] = [colors.gradient.groundFrom, colors.gradient.groundTo].map(parseHex);
+  const widest = Math.max(...from.map((channel, i) => Math.abs(channel - to[i])));
+  expect(widest).toBeLessThanOrEqual(24);
 });
 
 // ----------------------------- SoftGradient ------------------------------
@@ -148,8 +154,8 @@ test('SoftGradient renders its bands and its children', () => {
     </SoftGradient>,
   );
   const json = JSON.stringify(tree.toJSON());
-  expect(json).toContain('#F8F9FA');
-  expect(json).toContain('#F0F4F8');
+  expect(json).toContain(colors.gradient.groundFrom);
+  expect(json).toContain(colors.gradient.groundTo);
 });
 
 // -------------------------------- Checkbox --------------------------------

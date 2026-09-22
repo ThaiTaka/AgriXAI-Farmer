@@ -15,12 +15,31 @@ export function useObservable<T>(
   deps: DependencyList,
   initial: T,
 ): T {
-  const [value, setValue] = useState<T>(initial);
+  return useObservableReady(factory, deps, initial).value;
+}
+
+/**
+ * Như `useObservable` nhưng nói thêm đã nhận được emission đầu tiên chưa.
+ *
+ * SQLite trả về bất đồng bộ, nên tới lúc đó giá trị vẫn là `initial` — mảng
+ * rỗng. Màn nào phân biệt "chưa tải xong" với "thật sự không có gì" phải dùng
+ * hook này, nếu không nông hộ đang có lô đất sẽ thấy chớp "Chưa có lô đất nào"
+ * mỗi lần mở app. Lỗi cũng bật `ready` để không kẹt ở vòng quay vĩnh viễn.
+ */
+export function useObservableReady<T>(
+  factory: () => Observable<T>,
+  deps: DependencyList,
+  initial: T,
+): {value: T; ready: boolean} {
+  const [state, setState] = useState<{value: T; ready: boolean}>({value: initial, ready: false});
 
   useEffect(() => {
     const subscription = factory().subscribe({
-      next: setValue,
-      error: error => console.warn('[db] observable failed', error),
+      next: value => setState({value, ready: true}),
+      error: error => {
+        console.warn('[db] observable failed', error);
+        setState(prev => ({value: prev.value, ready: true}));
+      },
     });
     return () => subscription.unsubscribe();
     // `factory` is intentionally not a dependency — callers pass an inline
@@ -28,5 +47,5 @@ export function useObservable<T>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
-  return value;
+  return state;
 }

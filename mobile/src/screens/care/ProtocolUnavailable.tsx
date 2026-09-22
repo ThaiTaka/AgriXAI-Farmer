@@ -5,7 +5,7 @@ import {Badge} from '../../components/Badge';
 import {Card} from '../../components/Card';
 import {ExternalLinkIcon} from '../../components/icons';
 import type {UnavailableEntry} from '../../domain/careProtocol';
-import {colors, space, text} from '../../theme';
+import {colors, radius, space, text} from '../../theme';
 
 interface Props {
   cropName: string;
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     marginTop: space.md,
     paddingVertical: space.md,
     paddingHorizontal: space.lg,
-    borderRadius: 10,
+    borderRadius: radius.md,
     borderWidth: 1,
     borderColor: colors.border.default,
     backgroundColor: colors.surface.page,

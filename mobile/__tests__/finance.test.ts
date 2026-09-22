@@ -1,6 +1,12 @@
 /** Thu – Chi: totals, profit/loss, grouping and the CSV layout. */
 
-import {financialCsv, financialReport, type LedgerEntry} from '../src/domain/finance';
+import {
+  expenseKindLabel,
+  financialCsv,
+  financialReport,
+  incomeKindLabel,
+  type LedgerEntry,
+} from '../src/domain/finance';
 import {formatDate, formatVnd} from '../src/utils/format';
 
 const day = (iso: string) => new Date(`${iso}T08:00:00+07:00`).getTime();
@@ -53,4 +59,63 @@ test('CSV: line 1 period, line 2 Thu/Chi/Lãi lỗ, details, totals', () => {
   expect(lines).toContain('Thu,01/09/2026,Sản phẩm,Bán cà chua MV1 50kg,1.500.000₫,Bán cho cửa hàng Kim Hạnh,x');
   expect(lines).toContain('Chi,05/09/2026,Công nhân,Công bón phân (3 công),300.000₫,,');
   expect(lines[lines.length - 1]).toBe('Tổng,,,,Thu 1.500.000₫,Chi 2.200.000₫,Lãi lỗ -700.000₫');
+});
+
+// --- Phase 2: các nhánh của sổ thu-chi mà bộ test cũ chưa chạm tới ----------
+
+test('nhãn loại thu và loại chi dịch đúng, mã lạ thì trả lại chính nó', () => {
+  expect(incomeKindLabel('product')).toBe('Sản phẩm');
+  expect(incomeKindLabel('service')).toBe('Dịch vụ');
+  expect(expenseKindLabel('fertilizer')).toBe('Phân bón');
+  expect(expenseKindLabel('labor')).toBe('Công nhân');
+  // Một mã chưa biết không được làm vỡ màn hình — hiện nguyên mã là đủ.
+  expect(expenseKindLabel('khong-ro')).toBe('khong-ro');
+});
+
+test('chi gộp theo loại và xếp loại tốn nhiều nhất lên đầu', () => {
+  const report = financialReport(INCOMES, EXPENSES, {kind: 'month', year: 2026, month: 9});
+  expect(report.expenseByKind[0]).toEqual({kind: 'fertilizer', amount: 1_780_000});
+  expect(report.expenseByKind.map(k => k.kind)).toEqual(['fertilizer', 'labor', 'utilities']);
+});
+
+test('nhiều khoản trong cùng một ngày gộp về một điểm của biểu đồ', () => {
+  const report = financialReport(INCOMES, EXPENSES, {kind: 'month', year: 2026, month: 9});
+  // 10/09 có ba khoản chi: 120k + 680k + 1.100k.
+  const tenth = report.daily.find(p => p.expense === 1_900_000);
+  expect(tenth).toBeDefined();
+  expect(tenth?.income).toBe(0);
+  // Mỗi ngày đúng một điểm, và các điểm tăng dần theo thời gian.
+  expect(report.daily.map(p => p.day)).toEqual([...report.daily.map(p => p.day)].sort((a, b) => a - b));
+});
+
+test('tháng không có khoản nào: mọi số về 0, không phải NaN', () => {
+  const report = financialReport(INCOMES, EXPENSES, {kind: 'month', year: 2026, month: 12});
+  expect(report.totalIncome).toBe(0);
+  expect(report.totalExpense).toBe(0);
+  expect(report.profit).toBe(0);
+  expect(report.daily).toEqual([]);
+  expect(report.incomeByKind).toEqual([]);
+});
+
+test('lãi khi thu vượt chi', () => {
+  const income: LedgerEntry[] = [
+    {kind: 'product', description: 'Bán ớt', amount: 5_400_000, occurredAt: day('2026-09-02')},
+  ];
+  const report = financialReport(income, EXPENSES, {kind: 'month', year: 2026, month: 9});
+  expect(report.profit).toBe(5_400_000 - 2_200_000);
+  expect(report.profit).toBeGreaterThan(0);
+});
+
+test('khoản đã kiểm và chưa kiểm đều vào báo cáo — "đã kiểm" không phải bộ lọc', () => {
+  const report = financialReport(INCOMES, EXPENSES, {kind: 'month', year: 2026, month: 9});
+  expect(report.incomes.every(r => r.checked)).toBe(true);
+  expect(report.expenses.some(r => !r.checked)).toBe(true);
+  expect(report.totalExpense).toBe(2_200_000);
+});
+
+test('các khoản trong kỳ được xếp theo ngày dù đưa vào lộn xộn', () => {
+  const shuffled = [...EXPENSES].reverse();
+  const report = financialReport([], shuffled, {kind: 'month', year: 2026, month: 9});
+  const days = report.expenses.map(r => r.occurredAt);
+  expect(days).toEqual([...days].sort((a, b) => a - b));
 });

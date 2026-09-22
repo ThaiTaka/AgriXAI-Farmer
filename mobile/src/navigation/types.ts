@@ -15,17 +15,13 @@ export type PickerReturnRoute = 'PlotForm' | 'FertilizerCalculator' | 'CareProto
 export type WarehouseTab = 'in' | 'out' | 'stock';
 export type FinanceTab = 'income' | 'expense' | 'report';
 
-/** Bottom tabs inside the signed-in stack. */
-export type MainTabParamList = {
-  Home: undefined;
-  Tools: undefined;
-  Settings: undefined;
-};
-
 export type RootStackParamList = {
   Login: undefined;
-  /** The tab bar (Trang chủ · Công cụ · Cài đặt). */
-  Main: {screen?: keyof MainTabParamList} | undefined;
+  /** Trang chủ — the one screen a farmer lands on; everything else is pushed. */
+  Home: undefined;
+  /** Công cụ — the full grouped tool list, incl. the two not on the home grid. */
+  Tools: undefined;
+  Settings: undefined;
   PlotDetail: {plotId: string};
   /** "Chọn lô" — the list you pick a plot from before opening its detail. */
   PlotPicker: undefined;

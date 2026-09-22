@@ -186,7 +186,7 @@ export function IconButton({onPress, children, accessibilityLabel, style, testID
 const styles = StyleSheet.create({
   base: {
     minHeight: size.buttonMinHeight,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -206,11 +206,13 @@ const styles = StyleSheet.create({
   },
   primary: {
     backgroundColor: colors.primary.default,
-    ...shadows.sm,
+    // A green-tinted lift rather than a gray one: under the button the ground
+    // is already soft green, and a neutral shadow there reads as grime.
+    ...shadows.brand,
   },
   primaryPressed: {
     backgroundColor: colors.primary.pressed,
-    ...shadows.md,
+    ...shadows.raised,
   },
   arrow: {
     marginLeft: space.xs,
@@ -238,7 +240,7 @@ const styles = StyleSheet.create({
   iconButton: {
     width: size.iconButton,
     height: size.iconButton,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',

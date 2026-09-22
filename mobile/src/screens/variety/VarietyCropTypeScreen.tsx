@@ -148,11 +148,11 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: space.lg,
+    justifyContent: 'space-between',
+    rowGap: space.lg,
   },
   tile: {
-    // Two columns with a 16pt gutter: (100% - 16) / 2.
-    width: '47.8%',
+    width: '48%',
     minHeight: 132,
   },
   tileOther: {
