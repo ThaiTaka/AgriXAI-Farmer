@@ -1,18 +1,90 @@
 # AgriLog v2
 
-Ứng dụng ghi chép vật tư và chi phí cho nông hộ: quản lý lô đất theo cây trồng và giống,
-tư vấn phân bón, lịch chăm sóc, quản lý kho vật tư và ghi thu chi — kèm trang quản trị web
-cho cán bộ quản lý.
+**Ứng dụng ghi chép cho nông hộ, dùng được ngoài đồng khi không có sóng.**
 
-> **Trạng thái:** Giai đoạn 4 đã xong — dashboard 3 thẻ (tồn kho · lãi/lỗ tháng · việc
-> chờ), error boundary theo màn hình + nhật ký lỗi, banner offline / trạng thái đồng bộ,
-> xuất báo cáo thu – chi ra PDF (mobile tạo tại chỗ, web tải từ server), ba tài khoản nông hộ
-> cô lập dữ liệu và hộp thoại xử lý xung đột khi một tài khoản dùng hai máy, web-admin có
-> đăng nhập + dashboard responsive. Xem [ADR 0006](docs/adr/0006-giai-doan-4-dashboard-offline-pdf-da-nguoi-dung.md);
-> Giai đoạn 3 ở [ADR 0005](docs/adr/0005-giai-doan-3-tu-van-cham-soc-kho-thu-chi.md).
-> README này sẽ được viết đầy đủ ở Giai đoạn 6; bản hiện tại chỉ đủ để chạy dự án.
+Nông hộ ghi vật tư, công việc và tiền nong vào sổ giấy hoặc vào trí nhớ. Cuối vụ, câu hỏi
+"vụ này lãi hay lỗ" thường không có câu trả lời. AgriLog v2 thay quyển sổ đó: lô đất, cây
+trồng và giống, quy trình chăm sóc theo giai đoạn, kho phân bón, thu và chi — ghi trên điện
+thoại, lưu ngay vào máy, tự đồng bộ lên máy chủ khi có mạng. Cán bộ quản lý xem cùng dữ liệu
+đó trên trang web.
 
-![Dashboard nông hộ trên điện thoại](docs/screenshots/33-dashboard-home.png)
+| | |
+|---|---|
+| **Người dùng** | Nông hộ (ghi trên điện thoại) và cán bộ quản lý (xem trên web) |
+| **Nền tảng** | React Native 0.81 (Android/iOS) · FastAPI + PostgreSQL · Next.js 16 |
+| **Trạng thái** | Giai đoạn 5 — backend sẵn sàng production; mobile đã qua 198 test |
+| **Kiểm thử** | 198 test mobile (91 % câu lệnh) · 153 test backend (95 %, chạy trên cả SQLite lẫn PostgreSQL 16) |
+| **Báo cáo đầy đủ** | [AGRILOG_V2_FINAL_REPORT.md](AGRILOG_V2_FINAL_REPORT.md) |
+
+![Trang chủ AgriLog trên điện thoại: ba thẻ tồn kho, lãi lỗ tháng và công việc](docs/screenshots/71-p5-home-dashboard.png)
+
+> Ảnh trong README này chụp từ **emulator Pixel 6a đang chạy thật** ngày 23/09/2026, với dữ
+> liệu của tài khoản demo — không phải bản dựng thiết kế.
+
+## Tính năng chính
+
+### 1. Lô đất — nhận từ bên quản lý, không tự tạo
+
+Lô đất là mảnh ruộng đã được đo, đánh mã và giao. Nông hộ **nhận** lô chứ không tự nghĩ ra
+lô, nên ứng dụng không có nút "thêm lô", và máy chủ cũng từ chối (`POST /plots` → 403 với
+nông hộ, và đường đồng bộ chặn y như vậy). Nông hộ vẫn sửa được thông tin canh tác trên lô
+của mình — họ mới là người biết ruộng trồng gì, trồng từ bao giờ.
+
+Nút tròn xanh góc dưới phải là **"Ghi nhanh"** (ghi tiền / ghi kho), không phải nút thêm lô.
+
+![Danh sách lô đất, không có nút thêm lô](docs/screenshots/73-p5-my-lots-no-add-button.png)
+
+### 2. Cây trồng, giống và quy trình chăm sóc — mọi con số đều có nguồn
+
+Danh mục giống ba cấp (loại cây → loại con → giống): **9 loại cây · 23 loại con · 46 giống**,
+mỗi giống ghi rõ trang đã tra cứu. Nông hộ thêm được cây và giống của riêng mình (trong ảnh:
+"Sau rieng · 1 giống tự thêm" do chính người dùng nhập), quản trị viên duyệt sau.
+
+Quy trình chăm sóc chia 4 giai đoạn, mỗi việc tick được và có thanh tiến độ. Chỗ nào chưa có
+nguồn chính thức thì ghi "Chưa có dữ liệu" kèm nơi tra cứu — **không bịa liều lượng**.
+
+| Danh mục giống | Nguồn ghi ngay trong màn hình | Quy trình + nguồn |
+|---|---|---|
+| ![Chọn loại cây](docs/screenshots/81-p5-crop-picker.png) | ![Cây tự thêm và nguồn danh mục](docs/screenshots/82-p5-crop-picker-user-added-and-sources.png) | ![Quy trình chăm sóc với link nguồn](docs/screenshots/83-p5-care-protocol-source-link.png) |
+
+### 3. Kho phân bón và thu – chi
+
+Nhập kho tự sinh khoản chi tương ứng; xuất kho tính giá FIFO; bảng tồn và biểu đồ tồn theo
+thời gian; báo cáo thu – chi theo tháng/quý kèm biểu đồ và xuất CSV/PDF.
+
+| Ghi phiếu nhập | Bảng tồn | Biểu đồ tồn theo thời gian |
+|---|---|---|
+| ![Form nhập kho](docs/screenshots/75-p5-warehouse-form-textarea-chips.png) | ![Bảng tồn kho](docs/screenshots/76-p5-stock-summary.png) | ![Biểu đồ tồn kho](docs/screenshots/77-p5-stock-chart-bezier.png) |
+
+| Ghi khoản thu | Báo cáo thu – chi |
+|---|---|
+| ![Form ghi thu](docs/screenshots/78-p5-income-form-chip-vs-button.png) | ![Biểu đồ thu chi và chi theo loại](docs/screenshots/79-p5-finance-report-charts.png) |
+
+Ba thẻ trên trang chủ là tổng của chính những bảng này: ảnh bìa hiện *Tồn kho 1.508.000đ* và
+màn hình kho hiện *Giá trị tồn 1.508.000đ* — cùng một phép tính, viết hai lần (một ở
+`mobile/src/domain/dashboard.ts`, một ở `backend/app/services/dashboard_service.py`) và có
+test so khớp.
+
+### 4. Offline-first: mất mạng vẫn ghi được
+
+Mọi thao tác ghi vào SQLite trên máy trước, đồng bộ sau. Ảnh dưới chụp khi **máy chủ đã tắt
+hẳn** — ứng dụng vẫn hiện đủ số liệu và vẫn ghi tiếp được:
+
+![Ứng dụng chạy bình thường khi máy chủ đã tắt](docs/screenshots/84-p5-works-with-backend-down.png)
+
+Khi có mạng trở lại, dải trên cùng báo trạng thái và lùi xuống dưới thanh hệ thống (không che
+đồng hồ, pin, sóng):
+
+![Dải đồng bộ nằm dưới thanh trạng thái](docs/screenshots/72-p5-sync-banner-safe-area.png)
+
+### 5. Giao diện đọc được ngoài nắng
+
+Một màu xanh chủ đạo `#2E6F40`, chữ giải thích 14px `#4A4A4A` (8.8:1 trên nền trắng — WCAG
+AAA), nhãn và nút phân biệt rõ, dải chip cuộn ngang thay vì vỡ dòng.
+
+| Công cụ | Chip đơn vị cuộn ngang |
+|---|---|
+| ![Danh sách công cụ](docs/screenshots/74-p5-tools-menu.png) | ![Chip đơn vị diện tích cuộn ngang](docs/screenshots/80-p5-calculator-unit-chips-scroll.png) |
 
 ## Phạm vi
 
@@ -29,8 +101,10 @@ Bốn mảng nghiệp vụ của dự án:
 | 3 | Nhập – Xuất kho | ✅ Nhập (tự ghi khoản chi), xuất giá FIFO, bảng tồn, biểu đồ tồn theo thời gian, lọc tháng/quý, xuất CSV |
 | 4 | Thu – Chi | ✅ Ghi thu/chi, đánh dấu đã kiểm tra, báo cáo tháng/quý (lãi/lỗ, thu-chi theo ngày, chi theo loại), xuất CSV |
 
-Nền cho cả bốn mảng: **danh mục giống cây 3 cấp** (loại cây → loại con → giống) với 4 loại
-cây · 17 loại con · 40 giống có nguồn — xem [ADR 0004](docs/adr/0004-he-thiet-ke-phang-va-danh-muc-giong-3-cap.md).
+Nền cho cả bốn mảng: **danh mục giống cây 3 cấp** (loại cây → loại con → giống) với 9 loại
+cây · 23 loại con · 46 giống có nguồn (đếm từ `shared/data/crop_varieties.json`) — xem
+[ADR 0004](docs/adr/0004-he-thiet-ke-phang-va-danh-muc-giong-3-cap.md). Nông hộ thêm được
+cây/giống riêng; quản trị viên duyệt.
 
 Lớp vận hành (Giai đoạn 4): dashboard, error boundary + `POST /logs`, banner offline và
 trạng thái đồng bộ theo bảng, PDF báo cáo tháng/quý, đồng bộ nhiều tài khoản với hộp thoại
@@ -41,6 +115,7 @@ hay quyền đọc thư viện ảnh.
 
 ## Mục lục
 
+- [Tính năng chính](#tính-năng-chính)
 - [Phạm vi](#phạm-vi)
 - [Kiến trúc thư mục](#kiến-trúc-thư-mục)
 - [Yêu cầu môi trường](#yêu-cầu-môi-trường)
@@ -94,7 +169,7 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | `admin` | `admin123` | Quản trị viên |
 | `thaitaka` | `matkhau123` | Nông dân |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (153 test: smoke, sync hai chiều,
+Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` — **153 test, phủ 95 %** (smoke, sync hai chiều,
 parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 ca e2e API của
 Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e —
 20 test admin sửa/xoá kế hoạch, kho, thu-chi, và 23 test Giai đoạn 5: quyền trên lô đất,
@@ -175,11 +250,12 @@ adb reverse tcp:8081 tcp:8081
 adb reverse tcp:8000 tcp:8000
 ```
 
-Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint App.tsx src __tests__` · test:
-`npx jest --coverage` (143 test, trong đó 28 ca hệ thiết kế v6, 12 ca chiều sâu v6.1 và 27 ca
-Phase 1 v6.2;
-`src/domain/`, các component Giai đoạn 4–5, biểu đồ và `utils/` phủ 94 % câu lệnh / 96 % dòng
-— ngưỡng đặt trong `jest.config.js`).
+Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint .` · test: `npx jest --coverage`.
+
+Trạng thái đo ngày 23/09/2026: **198 test / 20 bộ, phủ 91,0 % câu lệnh và 92,3 % dòng**;
+`tsc` sạch, `eslint` 0 lỗi (4 cảnh báo). Ngưỡng phủ đặt trong `jest.config.js`. Trong đó có
+28 ca hệ thiết kế v6, 12 ca chiều sâu v6.1, 27 ca Phase 1 v6.2 và bộ `uiFixes` +
+`chartGeometry` kiểm chứng tám điểm sửa giao diện.
 
 > Giai đoạn 4 thêm hai module native (`react-native-html-to-pdf`, `react-native-share`):
 > sau khi `npm install` phải build lại app (`./gradlew app:installDebug`), lần đầu cần mạng
@@ -316,6 +392,10 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | Sáu tính năng lõi sau khi đã mang thiết kế v6.2 (Cài đặt có mục hỗ trợ, F1, F3, F5–F6, Kho, Thu-chi) | `61-p2-settings-support.png`, `62-p2-f1.png`, `63-p2-f3.png`, `64-p2-f5.png`, `65-p2-kho.png`, `66-p2-thuchi.png` |
 | Ba điểm sửa 23/09/2026: dải đơn vị cuộn ngang (không vỡ dòng), biểu đồ tồn cong mượt có mảng tô và trục Y mốc tròn, danh mục 9 loại cây đủ dấu | `67-p3-calculator-unit-chips.png`, `68-p3-stock-area-chart.png`, `69-p3-crop-picker-9-crops.png` |
 | Lô của tôi sau khi bỏ nút "Thêm lô" — chỉ xem và chọn, lô do bên quản lý đất giao | `70-p3-my-lots-no-add-button.png` |
+| **Giai đoạn 5 (23/09/2026)** — chụp lại toàn bộ trên emulator đang chạy, có backend thật: trang chủ 3 thẻ, dải đồng bộ dưới thanh trạng thái, lô đất không nút thêm, danh sách công cụ | `71-p5-home-dashboard.png`, `72-p5-sync-banner-safe-area.png`, `73-p5-my-lots-no-add-button.png`, `74-p5-tools-menu.png` |
+| **Giai đoạn 5** — kho (form nhập, bảng tồn, biểu đồ) và thu-chi (form, báo cáo) | `75-p5-warehouse-form-textarea-chips.png`, `76-p5-stock-summary.png`, `77-p5-stock-chart-bezier.png`, `78-p5-income-form-chip-vs-button.png`, `79-p5-finance-report-charts.png` |
+| **Giai đoạn 5** — chip đơn vị cuộn ngang, danh mục cây (có cây nông hộ tự thêm + ghi nguồn), quy trình chăm sóc với link nguồn | `80-p5-calculator-unit-chips-scroll.png`, `81-p5-crop-picker.png`, `82-p5-crop-picker-user-added-and-sources.png`, `83-p5-care-protocol-source-link.png` |
+| **Giai đoạn 5** — ứng dụng chạy đủ chức năng khi **máy chủ đã tắt** (offline-first) | `84-p5-works-with-backend-down.png` |
 
 ## Giới hạn hiện tại
 
