@@ -83,7 +83,7 @@ không khai gian được tác giả.
 - `add_missing_indexes` tạo chỉ mục mà `create_all` bỏ sót trên cơ sở dữ liệu đã tồn tại.
 - Sửa một lỗi chỉ lộ ra trên PostgreSQL: `ALTER TABLE ... DEFAULT 1` trên cột boolean —
   SQLite chấp nhận, PostgreSQL từ chối thẳng.
-- **153 test chạy xanh trên cả SQLite lẫn PostgreSQL 16.**
+- **163 test chạy xanh trên cả SQLite lẫn PostgreSQL 16.**
 
 ### 4. Chỉ mục ghép cho truy vấn đồng bộ
 

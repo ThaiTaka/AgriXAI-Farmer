@@ -30,7 +30,7 @@ thức WatermelonDB với chiến lược giải quyết xung đột *last-write
 `updated_at`, và mọi bản ghi bị máy chủ giữ lại đều được trả về cho máy khách thay vì bị bỏ
 qua trong im lặng.
 
-Kết quả kiểm chứng: 198 test phía di động (phủ 91,0 % câu lệnh) và 153 test phía máy chủ (phủ
+Kết quả kiểm chứng: 198 test phía di động (phủ 91,0 % câu lệnh) và 163 test phía máy chủ (phủ
 95 %, chạy xanh trên cả SQLite lẫn PostgreSQL 16). Quá trình rà soát phát hiện và sửa bốn lỗi
 thực chất, trong đó có một lỗi rò rỉ dữ liệu giữa các nông hộ và một lỗ hổng cho phép vượt
 quyền qua đường đồng bộ. Kiểm tải với 25, 50 và 100 người dùng đồng thời không ghi nhận lỗi
@@ -147,8 +147,8 @@ màn hình rỗng chỉ tạo ra ngõ cụt cho người dùng.
 | Lớp | Công cụ | Số lượng | Phạm vi |
 |---|---|---|---|
 | Di động | Jest + react-test-renderer | 198 test / 20 bộ | Logic nghiệp vụ thuần, hình học biểu đồ, kết xuất từng component, điều hướng |
-| Máy chủ | pytest + TestClient | 153 test | Đơn vị, tích hợp qua HTTP thật, và các kịch bản đầu-cuối |
-| Đối chiếu lược đồ | pytest | trong 153 test trên | Bảo đảm lược đồ SQLite trên máy và lược đồ máy chủ không lệch nhau |
+| Máy chủ | pytest + TestClient | 163 test | Đơn vị, tích hợp qua HTTP thật, và các kịch bản đầu-cuối |
+| Đối chiếu lược đồ | pytest | trong 163 test trên | Bảo đảm lược đồ SQLite trên máy và lược đồ máy chủ không lệch nhau |
 | Kiểm tải | Kịch bản riêng (`scripts/loadtest.py`) | 3 mức tải | Thời gian phản hồi và toàn vẹn dữ liệu khi nhiều người dùng đồng thời |
 
 Bộ test máy chủ chạy được trên cả hai hệ quản trị cơ sở dữ liệu bằng cách đổi một biến môi
@@ -218,8 +218,8 @@ Dải này nằm **dưới** thanh trạng thái hệ thống, không che đồn
 | Lớp | Số test | Độ phủ | Ghi chú |
 |---|---|---|---|
 | Di động | 198 (20 bộ) | 91,0 % câu lệnh · 92,3 % dòng | `tsc` không lỗi; `eslint` 0 lỗi, 4 cảnh báo |
-| Máy chủ trên SQLite | 153 | 95 % | Môi trường phát triển |
-| Máy chủ trên PostgreSQL 16 | 153 | — | Cùng bộ test, đổi biến môi trường `TEST_DATABASE_URL` |
+| Máy chủ trên SQLite | 163 | 95 % | Môi trường phát triển |
+| Máy chủ trên PostgreSQL 16 | 163 | — | Cùng bộ test, đổi biến môi trường `TEST_DATABASE_URL` |
 
 Bộ test máy chủ bao gồm các nhóm kịch bản: xác thực và đổi mật khẩu; đồng bộ hai chiều kèm
 tình huống hai thiết bị sửa cùng một bản ghi; đối chiếu lược đồ giữa máy và máy chủ; toàn vẹn
@@ -532,10 +532,10 @@ thật, dữ liệu của tài khoản demo. Tệp gốc nằm trong `docs/scree
 # 198 test di động + độ phủ
 cd mobile && npx jest --coverage
 
-# 153 test máy chủ trên SQLite, kèm độ phủ
+# 163 test máy chủ trên SQLite, kèm độ phủ
 cd backend && ./.venv/Scripts/python.exe -m pytest -q --cov=app
 
-# 153 test máy chủ trên PostgreSQL (cơ sở dữ liệu đích sẽ bị xoá sạch)
+# 163 test máy chủ trên PostgreSQL (cơ sở dữ liệu đích sẽ bị xoá sạch)
 docker run -d --name agrilog-pg -e POSTGRES_USER=agrilog -e POSTGRES_PASSWORD=agrilog \
   -e POSTGRES_DB=agrilog -p 5443:5432 postgres:16-alpine
 cd backend && TEST_DATABASE_URL="postgresql+psycopg://agrilog:agrilog@127.0.0.1:5443/agrilog" \

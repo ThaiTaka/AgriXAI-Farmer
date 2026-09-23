@@ -16,7 +16,7 @@ import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {FormEvent, useCallback, useEffect, useState} from "react";
 
-import {api, ApiError, formatVnd, getToken, type SessionUser} from "@/lib/api";
+import {api, ApiError, formatDate, formatVnd, getToken, type SessionUser} from "@/lib/api";
 
 interface FertilizerPriceRow {
   id: number;
@@ -44,10 +44,6 @@ const EMPTY_FORM: PriceForm = {
   effective_from: new Date().toISOString().slice(0, 10),
 };
 
-function formatDate(ms: number): string {
-  if (!ms) return "Catalogue JSON";
-  return new Date(ms).toLocaleDateString("vi-VN");
-}
 
 export default function FertilizerPricesPage() {
   const router = useRouter();

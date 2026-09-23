@@ -50,3 +50,14 @@ export async function fetchMe(token: string): Promise<StoredSession['user']> {
     region: body.region,
   };
 }
+
+export async function changePassword(token: string, currentPassword: string, newPassword: string): Promise<void> {
+  await request('/auth/change-password', {
+    method: 'POST',
+    body: {
+      current_password: currentPassword,
+      new_password: newPassword,
+    },
+    token,
+  });
+}

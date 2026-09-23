@@ -23,6 +23,7 @@ import {tableStatusLine} from '../domain/syncStatus';
 import {useSync} from '../sync/SyncContext';
 import {colors, size, space, text} from '../theme';
 import {formatDateTime} from '../utils/format';
+import {ChangePasswordSheet} from './settings/ChangePasswordSheet';
 
 export function SettingsScreen() {
   const navigation = useNavigation();
@@ -31,6 +32,7 @@ export function SettingsScreen() {
   const {state, lastSyncedAt, pending, refreshPending, sync} = useSync();
   const logs = useObservable<ErrorLogEntry[]>(() => observeErrorLogs(user.id), [user.id], []);
   const [now, setNow] = useState(Date.now());
+  const [isChangePasswordVisible, setChangePasswordVisible] = useState(false);
   // Dev-only switch that makes this screen throw, to exercise the per-screen
   // error boundary ("Thử lại" / "Báo lỗi") on a device. Never shown in release.
   const [blowUp, setBlowUp] = useState(false);
@@ -90,6 +92,11 @@ export function SettingsScreen() {
             <ChevronRight />
           </Pressable>
         </Card>
+
+        <View style={styles.sectionHead}>
+          <Text style={text('eyebrow', colors.text.secondary)}>Bảo mật</Text>
+        </View>
+        <SecondaryButton small label="Đổi mật khẩu" onPress={() => setChangePasswordVisible(true)} style={styles.syncNow} />
 
         <View style={styles.sectionHead}>
           <Text style={text('eyebrow', colors.text.secondary)}>Đồng bộ theo bảng</Text>
@@ -170,6 +177,11 @@ export function SettingsScreen() {
           Đăng xuất không xoá dữ liệu trên máy; thay đổi chưa đồng bộ sẽ được gửi khi bạn đăng nhập lại và có mạng.
         </Text>
       </ScrollView>
+
+      <ChangePasswordSheet
+        visible={isChangePasswordVisible}
+        onClose={() => setChangePasswordVisible(false)}
+      />
     </Screen>
   );
 }

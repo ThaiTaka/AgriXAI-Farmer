@@ -16,7 +16,7 @@ import {ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View} from 'reac
 import {useChangeAuthor} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
 import {Badge} from '../components/Badge';
-import {DangerButton, GhostButton, IconButton} from '../components/buttons';
+import {DangerButton, GhostButton, IconButton, SecondaryButton} from '../components/buttons';
 import {Card} from '../components/Card';
 import {EmptyState} from '../components/EmptyState';
 import {SegmentedControl} from '../components/form';
@@ -27,9 +27,11 @@ import type ChangeLog from '../db/models/ChangeLog';
 import type CropCycle from '../db/models/CropCycle';
 import type Plot from '../db/models/Plot';
 import {observeChangeLogs} from '../db/repositories/changeLogRepository';
+import {observeCycles} from '../db/repositories/cropCycleRepository';
 import {deletePlot, observePlot, PLOT_STATUS_LABELS} from '../db/repositories/plotRepository';
 import {useObservable, useObservableReady} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
+import {CropCycleFormSheet} from './cycle/CropCycleFormSheet';
 import {colors, size, space, text} from '../theme';
 import {formatArea, formatDate, formatDateTime, formatRelative} from '../utils/format';
 import {inferGrowthStage} from '../utils/growthStage';
@@ -181,39 +183,77 @@ function InfoTab({plot}: {plot: Plot}) {
 /* ----------------------------- tab 2: cycles ------------------------------ */
 
 function CyclesTab({plot}: {plot: Plot}) {
-  const rows = useObservable<CropCycle[]>(() => plot.cycles.observe(), [plot.id], []);
+  const rows = useObservable<CropCycle[]>(() => observeCycles(plot.id), [plot.id], []);
+  const activeCycle = rows.find(c => !c.endedAt);
 
-  if (rows.length === 0) {
-    return (
-      <EmptyState
-        title="Chưa có chu kỳ canh tác"
-        body="Chu kỳ canh tác ghi lại từng vụ trên lô: ngày xuống giống, giai đoạn hiện tại và sản lượng thu được."
-      />
-    );
-  }
+  const [sheetVisible, setSheetVisible] = useState(false);
+  const [sheetMode, setSheetMode] = useState<'create' | 'end'>('create');
+  const [selectedCycle, setSelectedCycle] = useState<CropCycle | undefined>(undefined);
+
+  const handleCreate = () => {
+    setSheetMode('create');
+    setSelectedCycle(undefined);
+    setSheetVisible(true);
+  };
+
+  const handleEnd = (cycle: CropCycle) => {
+    setSheetMode('end');
+    setSelectedCycle(cycle);
+    setSheetVisible(true);
+  };
 
   return (
-    <View style={styles.rowList}>
-      {rows.map(cycle => (
-        <Card key={cycle.id}>
-          <View style={styles.cycleHead}>
-            <Text style={[text('cardTitle'), styles.cycleTitle]} numberOfLines={1}>
-              {cycle.name}
-            </Text>
-            <Badge label={STAGE_LABELS[cycle.stage]} tone="green" />
-          </View>
-          <Text style={[text('bodySm', colors.text.muted), styles.cycleLine]}>
-            {formatDate(cycle.startedAt)} → {cycle.endedAt ? formatDate(cycle.endedAt) : 'đang canh tác'}
-          </Text>
-          {cycle.varietyName ? (
-            <Text style={text('caption', colors.text.muted)}>Giống: {cycle.varietyName}</Text>
-          ) : null}
-          {cycle.yieldKg ? (
-            <Text style={text('caption', colors.text.muted)}>Sản lượng: {cycle.yieldKg} kg</Text>
-          ) : null}
-        </Card>
-      ))}
-    </View>
+    <>
+      <View style={styles.rowList}>
+        {!activeCycle ? (
+          <GhostButton label="+ Bắt đầu vụ mới" onPress={handleCreate} style={{marginBottom: space.md}} />
+        ) : null}
+
+        {rows.length === 0 ? (
+          <EmptyState
+            title="Chưa có chu kỳ canh tác"
+            body="Chu kỳ canh tác ghi lại từng vụ trên lô: ngày xuống giống, giai đoạn hiện tại và sản lượng thu được."
+          />
+        ) : (
+          rows.map(cycle => (
+            <Card key={cycle.id}>
+              <View style={styles.cycleHead}>
+                <Text style={[text('cardTitle'), styles.cycleTitle]} numberOfLines={1}>
+                  {cycle.name}
+                </Text>
+                <Badge label={STAGE_LABELS[cycle.stage]} tone="green" />
+              </View>
+              <Text style={[text('bodySm', colors.text.muted), styles.cycleLine]}>
+                {formatDate(cycle.startedAt)} → {cycle.endedAt ? formatDate(cycle.endedAt) : 'đang canh tác'}
+              </Text>
+              {cycle.varietyName ? (
+                <Text style={text('caption', colors.text.muted)}>Giống: {cycle.varietyName}</Text>
+              ) : null}
+              {cycle.yieldKg ? (
+                <Text style={text('caption', colors.text.muted)}>Sản lượng: {cycle.yieldKg} kg</Text>
+              ) : null}
+              
+              {!cycle.endedAt ? (
+                <SecondaryButton
+                  small
+                  label="Kết thúc vụ"
+                  onPress={() => handleEnd(cycle)}
+                  style={{marginTop: space.md}}
+                />
+              ) : null}
+            </Card>
+          ))
+        )}
+      </View>
+      
+      <CropCycleFormSheet
+        visible={sheetVisible}
+        onClose={() => setSheetVisible(false)}
+        plot={plot}
+        cycle={selectedCycle}
+        mode={sheetMode}
+      />
+    </>
   );
 }
 
@@ -403,6 +443,10 @@ const styles = StyleSheet.create({
   },
   rowList: {
     gap: space.md,
+  },
+  cyclesHeader: {
+    marginBottom: space.md,
+    alignItems: 'flex-start',
   },
   cycleHead: {
     flexDirection: 'row',

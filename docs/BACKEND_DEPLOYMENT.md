@@ -120,7 +120,7 @@ trỏ vào cơ sở dữ liệu dùng một lần):
 ```bash
 cd backend
 TEST_DATABASE_URL="postgresql+psycopg://agrilog:...@host:5432/agrilog_test" python -m pytest -q
-# 153 passed
+# 163 passed
 ```
 
 ---

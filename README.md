@@ -13,7 +13,7 @@ thoại, lưu ngay vào máy, tự đồng bộ lên máy chủ khi có mạng. 
 | **Người dùng** | Nông hộ (ghi trên điện thoại) và cán bộ quản lý (xem trên web) |
 | **Nền tảng** | React Native 0.81 (Android/iOS) · FastAPI + PostgreSQL · Next.js 16 |
 | **Trạng thái** | Giai đoạn 5 — backend sẵn sàng production; mobile đã qua 198 test |
-| **Kiểm thử** | 198 test mobile (91 % câu lệnh) · 153 test backend (95 %, chạy trên cả SQLite lẫn PostgreSQL 16) |
+| **Kiểm thử** | 198 test mobile (91 % câu lệnh) · 163 test backend (95 %, chạy trên cả SQLite lẫn PostgreSQL 16) |
 | **Báo cáo đầy đủ** | [AGRILOG_V2_FINAL_REPORT.md](AGRILOG_V2_FINAL_REPORT.md) |
 
 ![Trang chủ AgriLog trên điện thoại: ba thẻ tồn kho, lãi lỗ tháng và công việc](docs/screenshots/71-p5-home-dashboard.png)
@@ -169,7 +169,7 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | `admin` | `admin123` | Quản trị viên |
 | `thaitaka` | `matkhau123` | Nông dân |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` — **153 test, phủ 95 %** (smoke, sync hai chiều,
+Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` — **163 test, phủ 95 %** (smoke, sync hai chiều,
 parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 ca e2e API của
 Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e —
 20 test admin sửa/xoá kế hoạch, kho, thu-chi, và 23 test Giai đoạn 5: quyền trên lô đất,

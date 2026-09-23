@@ -11,7 +11,6 @@ Bảng fertilizer_prices KHÔNG tham gia /sync: mobile dùng giá từ JSON tĩn
 endpoint GET /fertilizer-prices/latest phản ánh điều đó cho web-admin.
 """
 
-import time
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -36,7 +35,7 @@ class FertilizerPriceIn(BaseModel):
 
     fertilizer_id: str = Field(min_length=1, max_length=64)
     price_per_kg: float = Field(gt=0, description="Giá VNĐ/kg, phải dương")
-    effective_from: int = Field(description="Thời điểm hiệu lực (epoch ms)")
+    effective_from: int = Field(gt=0, description="Thời điểm hiệu lực (epoch ms, phải dương)")
 
 
 class FertilizerPriceOut(BaseModel):
