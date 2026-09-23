@@ -1,12 +1,14 @@
 /**
- * Màn hình 01 — Đăng nhập.
+ * Màn hình 01 — Đăng nhập (thiết kế v6).
  *
- * White ground, brand mark + headline at the top, the form pushed to the
- * bottom with `marginTop: auto`. Login is the one action that genuinely needs
- * the network, so a network failure is explained in plain words.
+ * Nền chuyển sắc rất nhẹ (#F8F9FA → #F0F4F8, dựng bằng dải nội suy — xem
+ * SoftGradient), form nằm trong một thẻ trắng rộng tối đa 360pt căn giữa, có ô
+ * "Lưu thông tin đăng nhập" nhớ tên đăng nhập (không bao giờ nhớ mật khẩu).
+ * Đăng nhập là thao tác duy nhất thật sự cần mạng, nên lỗi mạng được nói rõ
+ * bằng tiếng Việt thường ngày.
  */
 
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -18,18 +20,45 @@ import {
 
 import {ApiError, NetworkError} from '../api/client';
 import {useAuth} from '../auth/AuthContext';
+import {
+  clearRememberedIdentifier,
+  loadRememberedIdentifier,
+  saveRememberedIdentifier,
+} from '../auth/rememberStore';
 import {PrimaryButton} from '../components/buttons';
+import {Checkbox} from '../components/Checkbox';
 import {Field} from '../components/form';
-import {LeafMark} from '../components/icons';
+import {AlertIcon, LeafMark} from '../components/icons';
+import {FarmScene} from '../components/illustrations';
 import {Screen} from '../components/Screen';
-import {colors, radius, space, text} from '../theme';
+import {colors, radius, shadows, space, text} from '../theme';
+import {APP_VERSION} from '../utils/version';
 
 export function LoginScreen() {
   const {signIn} = useAuth();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  // Pre-fill from the last "remember me" login. A missing entry just means the
+  // farmer never ticked the box.
+  useEffect(() => {
+    let cancelled = false;
+    loadRememberedIdentifier()
+      .then(saved => {
+        if (cancelled || !saved) return;
+        setIdentifier(saved);
+        setRemember(true);
+      })
+      .catch(() => {
+        // rememberStore already logs; an unreadable entry is not worth a banner.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const onSubmit = useCallback(async () => {
     if (busy) return;
@@ -42,6 +71,8 @@ export function LoginScreen() {
     setError(null);
     try {
       await signIn(identifier, password);
+      // Only after a login that actually worked — otherwise a typo gets remembered.
+      await (remember ? saveRememberedIdentifier(identifier) : clearRememberedIdentifier());
     } catch (e) {
       if (e instanceof NetworkError) {
         setError('Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.');
@@ -53,10 +84,10 @@ export function LoginScreen() {
     } finally {
       setBusy(false);
     }
-  }, [busy, identifier, password, signIn]);
+  }, [busy, identifier, password, remember, signIn]);
 
   return (
-    <Screen ground="card" edges={['top', 'bottom']}>
+    <Screen ground="gradient" edges={['top', 'bottom']}>
       <KeyboardAvoidingView
         style={styles.root}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -65,31 +96,34 @@ export function LoginScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <View style={styles.brandRow}>
-              <View style={styles.brandMark}>
-                <LeafMark size={22} />
-              </View>
-              <Text style={text('subheading')}>AgriXAI</Text>
+            <View style={styles.brandMark}>
+              <LeafMark size={22} />
             </View>
-
-            <Text style={[text('display'), styles.headline]}>
-              Ghi chép vật tư{'\n'}và chi phí nhà nông
-            </Text>
-            <Text style={[text('body', colors.text.muted), styles.tagline]}>
-              Lô đất, giống cây, phân bón, kho và thu-chi — ghi ngay tại ruộng, không cần mạng.
-            </Text>
+            <View style={styles.brandText}>
+              <Text style={text('cardTitle')}>AgriXAI Farmer</Text>
+              <Text style={text('caption', colors.text.muted)}>Quản lý vật tư nông nghiệp</Text>
+            </View>
           </View>
 
-          <View style={styles.bottom}>
+          <View style={styles.scene}>
+            <FarmScene width={200} />
+          </View>
+
+          <View style={styles.card} testID="login-card">
+            <Text style={[text('heading'), styles.cardTitle]}>Đăng nhập</Text>
+            <Text style={[text('bodySm', colors.text.muted), styles.cardLead]}>
+              Chỉ lần đầu cần mạng. Sau đó mọi ghi chép lưu trên máy và tự đồng bộ.
+            </Text>
+
             <Field
               testID="login-identifier"
-              label="Tài khoản"
+              label="Tên đăng nhập"
               value={identifier}
               onChangeText={value => {
                 setIdentifier(value);
                 if (error) setError(null);
               }}
-              placeholder="Tên đăng nhập hoặc email"
+              placeholder="lethanhthai hoặc email"
               autoCapitalize="none"
               style={styles.field}
             />
@@ -101,19 +135,33 @@ export function LoginScreen() {
                 setPassword(value);
                 if (error) setError(null);
               }}
-              placeholder="Mật khẩu"
+              placeholder="••••••••"
               secureTextEntry
               autoCapitalize="none"
-              error={error}
-              style={styles.fieldLast}
+              style={styles.field}
             />
 
-            <PrimaryButton label="Đăng nhập" onPress={onSubmit} withArrow loading={busy} />
+            <Checkbox
+              testID="login-remember"
+              label="Lưu thông tin đăng nhập"
+              checked={remember}
+              onChange={setRemember}
+              style={styles.remember}
+            />
 
-            <Text style={[text('caption', colors.text.muted), styles.footnote]}>
-              Chỉ lần đăng nhập đầu cần mạng. Sau đó mọi ghi chép được lưu trên máy và tự đồng bộ.
-            </Text>
+            {error ? (
+              <View style={styles.error} testID="login-error">
+                <AlertIcon size={18} color={colors.semantic.error} />
+                <Text style={[text('bodySm', colors.text.danger), styles.errorText]}>{error}</Text>
+              </View>
+            ) : null}
+
+            <PrimaryButton label="Đăng nhập" onPress={onSubmit} withArrow loading={busy} />
           </View>
+
+          <Text style={[text('bodySm', colors.text.secondary), styles.footer]}>
+            AgriLog v{APP_VERSION} · Số liệu lưu trên máy, dùng được khi mất mạng
+          </Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </Screen>
@@ -126,44 +174,74 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flexGrow: 1,
-    paddingHorizontal: space.xl,
-    paddingTop: space['2xl'],
-    paddingBottom: space.xl,
+    justifyContent: 'center',
+    paddingHorizontal: space.lg,
+    paddingVertical: space['2xl'],
   },
   header: {
-    marginBottom: space['2xl'],
-  },
-  brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
-    marginBottom: space['2xl'],
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 360,
+    marginBottom: space.xl,
   },
   brandMark: {
     width: 40,
     height: 40,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     backgroundColor: colors.primary.default,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headline: {
-    marginBottom: space.md,
+  brandText: {
+    flex: 1,
+    minWidth: 0,
   },
-  tagline: {
-    maxWidth: 320,
+  scene: {
+    alignItems: 'center',
+    marginBottom: space.lg,
   },
-  bottom: {
-    marginTop: 'auto',
+  card: {
+    width: '100%',
+    maxWidth: 360,
+    alignSelf: 'center',
+    padding: space.xl,
+    backgroundColor: colors.surface.card,
+    borderRadius: radius.card,
+    borderWidth: 1,
+    borderColor: colors.border.default,
+    ...shadows.raised,
+  },
+  cardTitle: {
+    marginBottom: space.xs,
+  },
+  cardLead: {
+    marginBottom: space.xl,
   },
   field: {
     marginBottom: space.lg,
   },
-  fieldLast: {
-    marginBottom: space.xl,
+  remember: {
+    marginBottom: space.md,
   },
-  footnote: {
-    marginTop: space.lg,
+  error: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: space.sm,
+    padding: space.md,
+    marginBottom: space.md,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border.danger,
+    backgroundColor: colors.badge.redBg,
+  },
+  errorText: {
+    flex: 1,
+  },
+  footer: {
+    marginTop: space.xl,
     textAlign: 'center',
   },
 });

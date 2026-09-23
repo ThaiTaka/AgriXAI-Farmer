@@ -12,16 +12,17 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Linking, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
 import {Badge} from '../../components/Badge';
 import {Card} from '../../components/Card';
 import {EmptyState} from '../../components/EmptyState';
-import {PickerField, SegmentedControl, SelectChip} from '../../components/form';
-import {ChevronRight, ClipboardIcon, ExternalLinkIcon} from '../../components/icons';
+import {PickerField, SelectChip} from '../../components/form';
+import {ChevronRight, ClipboardIcon} from '../../components/icons';
 import {Screen} from '../../components/Screen';
+import {SourceLink} from '../../components/SourceLink';
 import type Plot from '../../db/models/Plot';
 import {observePlots} from '../../db/repositories/plotRepository';
 import {useObservable} from '../../db/useObservable';
@@ -156,12 +157,21 @@ export function CareProtocolScreen() {
         ) : (
           <>
             {protocols.length > 1 ? (
-              <SegmentedControl
-                items={protocols.map(p => ({key: p.id, label: shortName(p)}))}
-                value={protocol.id}
-                onChange={setProtocolId}
-                style={styles.field}
-              />
+              // Chip cuộn ngang thay vì segment chia đều: tên cơ quan ban hành
+              // quá dài để cắt đều ba phần mà còn đọc được.
+              <View style={styles.field}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+                  {protocols.map(p => (
+                    <SelectChip
+                      key={p.id}
+                      label={shortName(p)}
+                      selected={protocol.id === p.id}
+                      onPress={() => setProtocolId(p.id)}
+                      style={styles.chip}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
             ) : null}
 
             <Card style={styles.sourceCard} testID="care-source">
@@ -183,16 +193,7 @@ export function CareProtocolScreen() {
                   Nhập ngày trồng cho lô để ứng dụng đánh dấu giai đoạn hiện tại.
                 </Text>
               ) : null}
-              <Pressable
-                accessibilityRole="link"
-                accessibilityLabel="Mở nguồn"
-                onPress={() => Linking.openURL(protocol.source.url).catch(() => {})}
-                style={({pressed}) => [styles.sourceLink, pressed && styles.sourceLinkPressed]}>
-                <Text style={[text('bodySm', colors.primary.default), styles.sourceLinkText]} numberOfLines={1}>
-                  {protocol.source.url}
-                </Text>
-                <ExternalLinkIcon />
-              </Pressable>
+              <SourceLink testID="care-source-link" url={protocol.source.url} style={styles.sourceLink} />
             </Card>
 
             <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>
@@ -224,8 +225,8 @@ export function CareProtocolScreen() {
               </Card>
             ) : null}
 
-            <Text style={[text('caption', colors.text.muted), styles.disclaimer]}>{protocol.disclaimer}</Text>
-            <Text style={[text('caption', colors.text.muted), styles.disclaimer]}>
+            <Text style={[text('bodySm', colors.text.secondary), styles.disclaimer]}>{protocol.disclaimer}</Text>
+            <Text style={[text('bodySm', colors.text.secondary), styles.disclaimer]}>
               Công việc gợi ý chỉ để bạn đối chiếu; đánh dấu "Đã làm" là xác nhận của bạn — ứng dụng không
               tự ghi nhật ký. Lưu trên máy, đồng bộ khi có mạng.
             </Text>
@@ -254,7 +255,8 @@ function shortName(protocol: CareProtocol): string {
   const crop = cropTypeById(protocol.crop_type)?.name ?? protocol.crop_name;
   const publisher = protocol.source.publisher.split(/[—(,]/)[0].trim();
   const words = publisher.split(/\s+/);
-  const short = words.length > 4 ? words.slice(0, 4).join(' ') : publisher;
+  // Cắt 4 từ hay để lại từ nối treo ("Báo Nông nghiệp và") — bỏ nó đi.
+  const short = words.length > 4 ? words.slice(0, 4).join(' ').replace(/\s+(và|các|của|thuộc|tại)$/i, '') : publisher;
   return year ? `${short} ${year}` : `${crop} · ${short}`;
 }
 
@@ -292,17 +294,7 @@ const styles = StyleSheet.create({
     marginTop: space.sm,
   },
   sourceLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.sm,
     marginTop: space.sm,
-    minHeight: 32,
-  },
-  sourceLinkPressed: {
-    opacity: 0.7,
-  },
-  sourceLinkText: {
-    flex: 1,
   },
   sectionLabel: {
     marginBottom: space.sm,

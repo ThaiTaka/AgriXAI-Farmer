@@ -143,14 +143,14 @@ export function ReportExportScreen() {
 
             <PrimaryButton testID="report-pdf" label="Xuất PDF" icon={<ShareIcon color={colors.white} />} onPress={exportPdf} loading={busy} />
             {lastFile ? (
-              <Text style={[text('caption', colors.text.muted), styles.footnote]} numberOfLines={2}>
+              <Text style={[text('bodySm', colors.text.secondary), styles.footnote]} numberOfLines={2}>
                 Đã tạo {lastFile} trong thư mục {REPORT_DIR} của ứng dụng
               </Text>
             ) : null}
           </>
         )}
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
           Khổ A4, lề 20 mm, chỉ chữ và số. File tạo ngay trên máy{state === 'offline' ? ' (đang offline — vẫn xuất được)' : ''} và
           mở bảng chia sẻ để gửi Zalo, Gmail, Drive… Cùng nội dung với PDF tải từ trang quản trị.
         </Text>

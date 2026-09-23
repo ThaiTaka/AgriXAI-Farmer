@@ -15,23 +15,22 @@ export type PickerReturnRoute = 'PlotForm' | 'FertilizerCalculator' | 'CareProto
 export type WarehouseTab = 'in' | 'out' | 'stock';
 export type FinanceTab = 'income' | 'expense' | 'report';
 
-/** Bottom tabs inside the signed-in stack. */
-export type MainTabParamList = {
-  Home: undefined;
-  Tools: undefined;
-  Settings: undefined;
-};
-
 export type RootStackParamList = {
   Login: undefined;
-  /** The tab bar (Trang chủ · Công cụ · Cài đặt). */
-  Main: {screen?: keyof MainTabParamList} | undefined;
+  /** Trang chủ — the one screen a farmer lands on; everything else is pushed. */
+  Home: undefined;
+  /** Công cụ — the full grouped tool list, incl. the two not on the home grid. */
+  Tools: undefined;
+  Settings: undefined;
   PlotDetail: {plotId: string};
+  /** "Chọn lô" — the list you pick a plot from before opening its detail. */
+  PlotPicker: undefined;
   /**
-   * No `plotId` => create mode; with one => edit mode with the fields pre-filled.
-   * `pickedVariety` is merged in by the picker screens on the way back.
+   * SỬA một lô đã được giao. `plotId` là bắt buộc: lô đất do bên quản lý đất
+   * chia và gán, nông hộ không tự lập lô mới, nên không còn chế độ "tạo".
+   * `pickedVariety` được picker gộp vào params trên đường quay lại.
    */
-  PlotForm: {plotId?: string; pickedVariety?: PickedVariety} | undefined;
+  PlotForm: {plotId: string; pickedVariety?: PickedVariety};
 
   /** Variety picker, one route per step so the native back gesture steps back. */
   VarietyCropType: {selectedId: string | null; returnTo?: PickerReturnRoute};

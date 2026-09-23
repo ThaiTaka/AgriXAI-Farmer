@@ -27,6 +27,7 @@ import {
   USER_CATEGORY_NAME,
   varietyOptions,
 } from '../../db/repositories/varietyRepository';
+import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
 import {colors, space, text} from '../../theme';
 import {cropCategory, cropTypeById, VARIETY_BADGE_LABELS} from '../../utils/staticData';
@@ -64,38 +65,35 @@ export function VarietyPickScreen() {
 
   const finish = useCallback(
     (variety: VarietyOption | null) => {
-      navigation.popTo(
-        returnTo,
-        {
-          pickedVariety: {
-            cropType: params.cropTypeId,
-            cropName,
-            categoryId: params.categoryId === USER_CATEGORY_ID ? null : params.categoryId,
-            varietyId: variety?.id ?? null,
-            varietyName: variety?.name ?? null,
-          },
-        },
-        {merge: true},
-      );
+      popToPicker(navigation, returnTo, {
+        cropType: params.cropTypeId,
+        cropName,
+        categoryId: params.categoryId === USER_CATEGORY_ID ? null : params.categoryId,
+        varietyId: variety?.id ?? null,
+        varietyName: variety?.name ?? null,
+      });
     },
     [navigation, returnTo, params.cropTypeId, params.categoryId, cropName],
   );
 
   const cancel = useCallback(
-    () => navigation.popTo(returnTo, undefined, {merge: true}),
+    () => popToPicker(navigation, returnTo),
     [navigation, returnTo],
   );
 
   return (
     <Screen>
       <AppHeader
-        eyebrow={`Bước 3 / 3 · ${cropName} › ${categoryName}`}
+        eyebrow="Bước 3 / 3"
         title="Chọn giống"
         onBack={() => navigation.goBack()}
         action={{label: 'Huỷ', onPress: cancel}}
       />
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <Text style={[text('bodySm', colors.text.muted), styles.intro]} numberOfLines={2}>
+          {cropName} › {categoryName}
+        </Text>
         {varieties.length === 0 ? (
           <EmptyState
             title="Chưa có dữ liệu"
@@ -191,6 +189,9 @@ const styles = StyleSheet.create({
   scroll: {
     paddingHorizontal: space.lg,
     paddingBottom: space['3xl'],
+  },
+  intro: {
+    marginBottom: space.md,
   },
   item: {
     marginBottom: space.md,

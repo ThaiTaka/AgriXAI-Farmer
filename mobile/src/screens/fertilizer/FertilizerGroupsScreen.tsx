@@ -44,7 +44,7 @@ export function FertilizerGroupsScreen() {
     <Screen>
       <AppHeader
         eyebrow="Tư vấn phân bón"
-        title="Danh mục phân bón"
+        title="Bảng giá phân bón"
         onBack={() => navigation.goBack()}
       />
 
@@ -59,7 +59,11 @@ export function FertilizerGroupsScreen() {
             <Card
               key={group.code}
               testID={`fert-group-${group.code}`}
-              accessibilityLabel={`${group.name}, ${group.products} sản phẩm`}
+              accessibilityLabel={
+                group.missingPrice
+                  ? `${group.name}, ${group.products} sản phẩm, chưa có dữ liệu giá`
+                  : `${group.name}, ${group.products} sản phẩm`
+              }
               onPress={() => navigation.navigate('FertilizerProducts', {categoryCode: group.code})}
               style={styles.tile}>
               <View style={styles.tileIcon}>
@@ -69,7 +73,7 @@ export function FertilizerGroupsScreen() {
                 {group.name}
               </Text>
               {group.missingPrice ? (
-                <Badge label="Chưa có dữ liệu giá" tone="yellow" style={styles.tileBadge} />
+                <Badge label="Chưa có giá" tone="yellow" style={styles.tileBadge} />
               ) : (
                 <Text style={[text('caption', colors.text.muted), styles.tileMeta]}>
                   {group.products} sản phẩm
@@ -79,7 +83,7 @@ export function FertilizerGroupsScreen() {
           ))}
         </View>
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
           Giá tham khảo thu thập ngày {fertilizerCollectedAt()} từ sfarm.vn và giacaphe.com (qua
           vietnambiz.vn); thay đổi theo vùng và thời điểm. Nguồn sự thật khi vận hành là bảng giá do
           quản trị viên cập nhật.
@@ -100,10 +104,11 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: space.lg,
+    justifyContent: 'space-between',
+    rowGap: space.lg,
   },
   tile: {
-    width: '47.8%',
+    width: '48%',
     minHeight: 140,
   },
   tileIcon: {

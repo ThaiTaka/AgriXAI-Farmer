@@ -1,7 +1,8 @@
 """Demo farm for Giai đoạn 3 — the mock-up household from the brief.
 
-    Nông hộ: Nguyễn Văn Cường — xã Hòa Bình, huyện Thanh Trì, Hà Nội
-    Lô đất : PUC-001-HB, 300 m² cà chua MV1
+    Nông hộ: Lê Thành Thái — xã Hòa Bình, huyện Thanh Trì, Hà Nội
+    Lô đất : PUC-001-HB, 300 m² cà chua MV1 (có kho và thu-chi)
+             PUC-004-HB, 250 m² dưa leo Hunter 1.0 (lô mới, chưa ghi gì)
     + hai hộ láng giềng cho Giai đoạn 4: Nguyễn Văn Anh (PUC-002-HB, dưa leo)
       và Nguyễn Văn Hải (PUC-003-HB, ớt). Cùng mật khẩu demo.
 
@@ -22,10 +23,24 @@ from app.models.user import User, UserRole
 
 VN_TZ = timezone(timedelta(hours=7))
 
-DEMO_USERNAME = "nguyenvancuong"
+DEMO_USERNAME = "lethanhthai"
 DEMO_PASSWORD = "matkhau123"
-DEMO_USER_ID = "demo-user-cuong"
+DEMO_USER_ID = "demo-user-thai"
 DEMO_PLOT_ID = "demo-plot-puc-001-hb"
+# Lô thứ hai: mới lập, chưa có phiếu nào — trạng thái bình thường của một lô
+# vừa xuống giống, và là chỗ để thử các màn hình khi số liệu còn rỗng.
+DEMO_PLOT2_ID = "demo-plot-puc-004-hb"
+
+# Hộ demo từng mang tên khác. Trên một máy đã seed, đổi tên tại chỗ thay vì
+# lập tài khoản thứ hai — nếu không thì lô đất, kho và thu-chi chuyển sang chủ
+# mới mà tài khoản cũ vẫn nằm lại, rỗng, và admin vẫn nhìn thấy.
+LEGACY_USERNAMES = ("nguyenvancuong",)
+
+# Máy đã đồng bộ chỉ kéo về bản ghi có updated_at MỚI HƠN lần pull gần nhất.
+# Đổi nội dung một dòng seed mà để nguyên mốc thời gian cũ thì thay đổi đó
+# nằm lại trên máy chủ mãi mãi — điện thoại vẫn hiện tên cũ. Nên mỗi lần sửa
+# nội dung hộ demo, đóng dấu lại ngày sửa ở đây.
+DEMO_REVISION = "2026-09-23"
 
 
 def ms(day: str, hour: int = 8) -> int:
@@ -48,11 +63,15 @@ def _upsert(db, model, row_id: str, **values):
 def seed_demo_farm(db) -> None:
     user = db.scalar(select(User).where(User.username == DEMO_USERNAME))
     if user is None:
+        user = db.scalar(select(User).where(User.username.in_(LEGACY_USERNAMES)))
+        if user is not None:
+            user.username = DEMO_USERNAME
+    if user is None:
         user = User(id=DEMO_USER_ID, username=DEMO_USERNAME)
         db.add(user)
-    user.email = "cuong@agrilog.local"
+    user.email = "thai@agrilog.local"
     user.password_hash = hash_password(DEMO_PASSWORD)
-    user.full_name = "Nguyễn Văn Cường"
+    user.full_name = "Lê Thành Thái"
     user.role = UserRole.FARMER
     user.region = "Xã Hòa Bình, Huyện Thanh Trì, Hà Nội"
     user.phone = "0912000123"
@@ -67,7 +86,7 @@ def seed_demo_farm(db) -> None:
         Plot,
         DEMO_PLOT_ID,
         code="PUC-001-HB",
-        name="Ruộng cà chua nhà ông Cường",
+        name="Ruộng cà chua nhà ông Lê Thành Thái",
         region="Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
         area=300.0,
         area_unit="m2",
@@ -81,7 +100,29 @@ def seed_demo_farm(db) -> None:
         owner_id=owner,
         updated_by=owner,
         created_at=ms("2026-08-20"),
-        updated_at=ms("2026-08-20"),
+        updated_at=ms(DEMO_REVISION),
+    )
+
+    created += _upsert(
+        db,
+        Plot,
+        DEMO_PLOT2_ID,
+        code="PUC-004-HB",
+        name="Vườn dưa leo nhà ông Lê Thành Thái",
+        region="Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
+        area=250.0,
+        area_unit="m2",
+        crop_type="cucumber",
+        crop_name="Dưa leo",
+        variety_id="seed_cucumber_hunter_1",
+        variety_name="Hunter 1.0",
+        planted_at=ms("2026-09-15"),
+        status="active",
+        notes="Làm giàn lưới, tưới nhỏ giọt.",
+        owner_id=owner,
+        updated_by=owner,
+        created_at=ms("2026-09-15"),
+        updated_at=ms(DEMO_REVISION),
     )
 
     # Nhập kho 10/09/2026 — the two purchases in the brief, each with its

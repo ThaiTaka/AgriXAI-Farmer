@@ -555,6 +555,147 @@
           ]
         }
       ]
+    },
+    {
+      "id": "carrot",
+      "name": "Cà rốt",
+      "icon": "other",
+      "scientific_name": "Daucus carota subsp. sativus",
+      "description": "Cây lấy củ vụ đông, ưa đất cát pha tơi xốp và thoát nước. Danh mục hiện có giống củ dài dùng cho ăn tươi và chế biến.",
+      "categories": [
+        {
+          "category_id": "carrot_cu_dai",
+          "category_name": "Cà rốt củ dài",
+          "description": "Củ hình trụ suông, dài trên 15 cm — dạng phổ biến nhất ngoài đồng và ngoài chợ.",
+          "varieties": [
+            {
+              "id": "carrot_phudi_1_0",
+              "name": "PHUDI 1.0",
+              "description": "Củ suông dài 18–22 cm, đường kính 3–4,5 cm; ruột đặc, không rỗng; độ đồng đều củ cao.",
+              "usage": "Trồng quanh năm, chính vụ Thu Đông và Đông Xuân",
+              "growing_note": "Kháng bệnh tốt, năng suất cao, chậm trổ bông; thu hoạch trung bình sau 100 ngày tuỳ vụ; khoảng cách 20 cm × 10 cm; lượng giống 8–12 kg/ha. Độ ẩm ≤ 10%, độ sạch ≥ 98%, tỷ lệ nảy mầm ≥ 75%. Nguồn gốc Nhật Bản; phân phối: Phú Điền.",
+              "badge": null,
+              "source": "https://phudienseed.com.vn/san-pham/hat-giong-ca-rot-pd789/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "water_spinach",
+      "name": "Rau muống",
+      "icon": "other",
+      "scientific_name": "Ipomoea aquatica",
+      "description": "Rau ăn lá thu nhiều lứa, gieo được quanh năm trên cả ruộng cạn lẫn ruộng nước. Vòng quay ngắn nên là cây lấy ngắn nuôi dài của nhiều nông hộ.",
+      "categories": [
+        {
+          "category_id": "water_spinach_la_tre",
+          "category_name": "Rau muống lá tre",
+          "description": "Lá hẹp dạng lá tre, thân cứng, hợp gieo hạt trên ruộng cạn và thu bằng cách cắt lứa.",
+          "varieties": [
+            {
+              "id": "water_spinach_me_kong",
+              "name": "Mê Kông",
+              "description": "Lá dạng lá tre, ngọn mềm, màu xanh nhạt; cây cứng, không đổ ngã.",
+              "usage": "Gieo trồng quanh năm, thu nhiều lứa",
+              "growing_note": "Kháng bệnh tốt; thu hoạch 20–25 ngày sau gieo (50–55 ngày sau trồng); khoảng cách hàng 20 cm, cây 10–15 cm; lượng giống 2–3 kg/1.000 m²; gieo thẳng hoặc ngâm nước ấm 12–16 giờ trước khi gieo. Độ ẩm ≤ 10%, độ sạch ≥ 98%, tỷ lệ nảy mầm ≥ 75%. Nguồn gốc Việt Nam; phân phối: Phú Điền.",
+              "badge": "popular",
+              "source": "https://phudienseed.com.vn/san-pham/hat-giong-rau-muong-me-kong/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cabbage",
+      "name": "Bắp cải",
+      "icon": "other",
+      "scientific_name": "Brassica oleracea var. capitata",
+      "description": "Rau ăn lá cuốn bắp, vụ chính từ cuối tháng 8 đến tháng 1 năm sau ở miền Bắc. Giữ được lâu trên đồng nên rải được vụ thu hoạch.",
+      "categories": [
+        {
+          "category_id": "cabbage_tron",
+          "category_name": "Bắp cải tròn",
+          "description": "Bắp tròn cao, cuốn chắc — dạng truyền thống, bắp to, để được lâu.",
+          "varieties": [
+            {
+              "id": "cabbage_nasaca",
+              "name": "NASACA (lai F1)",
+              "description": "Bắp tròn cao, cuốn rất chắc, độ đồng đều cao; trọng lượng bình quân 1,8–3 kg tuỳ mức độ chăm sóc và thời vụ.",
+              "usage": "Gieo trồng từ 20 tháng 8 đến đầu tháng 1 năm sau",
+              "growing_note": "Kháng bệnh tốt, giữ được lâu trên đồng; thu hoạch 75–85 ngày sau trồng; khoảng cách hàng 45–50 cm, cây 34–40 cm; lượng giống 15–30 g/1.000 m². Độ ẩm ≤ 9%, độ sạch ≥ 98%, tỷ lệ nảy mầm ≥ 85%. Nguồn gốc Đài Loan; phân phối: Phú Điền.",
+              "badge": null,
+              "source": "https://phudienseed.com.vn/san-pham/hat-giong-bap-cai-lai-f1-nasaca/"
+            }
+          ]
+        },
+        {
+          "category_id": "cabbage_trai_tim",
+          "category_name": "Bắp cải trái tim",
+          "description": "Bắp hình trái tim nhọn, bắp nhỏ hơn và chín sớm hơn dạng tròn.",
+          "varieties": [
+            {
+              "id": "cabbage_valentine",
+              "name": "Valentine (trái tim F1)",
+              "description": "Bắp hình trái tim nhọn, cuốn rất chắc, ăn ngon, ngọt, giòn; trọng lượng trung bình 1,5–1,8 kg/bắp.",
+              "usage": "Gieo trồng từ cuối tháng 8 đến tháng 1 năm sau",
+              "growing_note": "Lưu giữ lâu được trên đồng ruộng; thu hoạch 50–55 ngày sau trồng; khoảng cách cây 35–40 cm, hàng 40 × 45 cm; lượng giống 20–25 g/1.000 m². Độ ẩm ≤ 9%, độ sạch ≥ 98%, tỷ lệ nảy mầm ≥ 85%. Nguồn gốc Đài Loan; phân phối: Phú Điền.",
+              "badge": null,
+              "source": "https://phudienseed.com.vn/san-pham/hat-giong-bap-cai-trai-tim-f1-valentine/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "corn",
+      "name": "Ngô",
+      "icon": "other",
+      "scientific_name": "Zea mays",
+      "description": "Cây lương thực trồng được nhiều vụ trong năm. Danh mục hiện có nhóm ngô nếp ăn tươi — bán bắp luộc, bắp nướng, vòng quay ngắn hơn ngô lấy hạt.",
+      "categories": [
+        {
+          "category_id": "corn_nep",
+          "category_name": "Ngô nếp",
+          "description": "Ăn tươi khi bắp còn sữa: dẻo, ngọt, thu sớm hơn ngô lấy hạt khô.",
+          "varieties": [
+            {
+              "id": "corn_hn88",
+              "name": "HN88 (nếp lai F1)",
+              "description": "Cây cao 180–205 cm, đóng bắp ở 85–100 cm; bắp dài 18–22 cm, đường kính 4,8–5,5 cm, 12–14 hàng hạt, 35–45 hạt/hàng; lá bi xanh và rất kín.",
+              "usage": "Ăn tươi (luộc, nướng); thích nghi rộng ở nhiều vùng sinh thái",
+              "growing_note": "Chất lượng ăn tươi rất ngon (dẻo – ngọt – đậm – thơm); chống chịu trung bình với một số sâu bệnh hại chính; thời gian từ gieo đến thu hoạch ăn tươi 65–85 ngày tuỳ vụ; tiềm năng năng suất bắp tươi 18–20 tấn/ha. Giống do Vinaseed Group nghiên cứu, tuyển chọn.",
+              "badge": "popular",
+              "source": "https://vinaseed.com.vn/vi/product/m107/giong-ngo-nep-lai-f1-hn-88-155.htm"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rice",
+      "name": "Lúa",
+      "icon": "other",
+      "scientific_name": "Oryza sativa",
+      "description": "Cây lương thực chính. Danh mục hiện có nhóm lúa thuần — giống để giống lại được, chi phí hạt thấp hơn lúa lai.",
+      "categories": [
+        {
+          "category_id": "rice_thuan",
+          "category_name": "Lúa thuần",
+          "description": "Giống thuần: gặt xong để lại làm giống vụ sau được, không phải mua hạt lai mỗi vụ.",
+          "varieties": [
+            {
+              "id": "rice_khang_dan_18",
+              "name": "Khang dân 18",
+              "description": "Cây cao 95–100 cm, lá cứng và rộng, khóm gọn, màu xanh vàng; đẻ nhánh trung bình đến yếu; hạt thon, khối lượng 1.000 hạt 19–20 g.",
+              "usage": "Trà Xuân muộn, Mùa sớm và Hè thu",
+              "growing_note": "Thời gian sinh trưởng: trà Xuân muộn 135–140 ngày, Mùa sớm 105–110 ngày, Hè thu 95 ngày. Năng suất 50–55 tạ/ha, thâm canh đạt 60–65 tạ/ha. Nhiễm rầy nâu; nhiễm vừa bạc lá và đạo ôn; nhiễm nhẹ khô vằn. Cấy 50–55 khóm/m². Giống lúa thuần nhập nội từ Trung Quốc, công nhận theo Quyết định 1659 QĐ/BNN-KHCN ngày 13/5/1999.",
+              "badge": null,
+              "source": "https://vaas.vn/kienthuc/Caylua/08/02_giongkhangdan18.htm"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

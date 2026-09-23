@@ -103,6 +103,15 @@ Mobile chuyển sang bottom-tabs (Trang chủ · Công cụ · Cài đặt) bọ
 đặt gom tài khoản, trạng thái đồng bộ theo bảng, nhật ký lỗi, đăng xuất, và (chỉ bản dev)
 nút "Thử màn hình lỗi" để kiểm tra boundary trên máy thật.
 
+> **Cập nhật 2026-09-22 — đoạn trên không còn đúng.** Bottom-tabs đã được gỡ; Trang chủ là
+> màn gốc của native-stack, mọi màn khác đẩy lên trên nó. Lý do đổi: ba tab chiếm 64pt +
+> inset ở mọi màn trong khi nông hộ hầu như chỉ ở Trang chủ. Hai thứ thanh tab đang âm thầm
+> gánh phải được thay bằng thứ khác: (1) danh mục phân bón và F4 kiểm tra kho chỉ tới được
+> qua màn Công cụ, nay có thẻ "Tất cả công cụ" ở Trang chủ dẫn vào; (2) thanh tab nằm NGOÀI
+> `ScreenErrorBoundary` nên luôn là lối thoát khi một màn sập — nay boundary tự có nút "Về
+> trang chủ". Không dùng deep linking. `@react-navigation/bottom-tabs` đã gỡ khỏi
+> `package.json`.
+
 Web-admin: `/login` → `/dashboard`; trang kiểm tra token cũ chuyển sang `/tokens`. Lưới
 `repeat(3, 1fr)` cho ba thẻ, hai cột trên tablet (< 1024 px), một cột trên điện thoại
 (< 640 px); thẻ có `:hover`/`:focus-visible` nâng `shadow-md` + `scale(1.02)`, mọi điều

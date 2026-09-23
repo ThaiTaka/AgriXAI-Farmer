@@ -10,6 +10,7 @@ import cropVarietiesJson from '@shared/data/crop_varieties.json';
 import fertilizerJson from '@shared/data/fertilizer_recommendations.json';
 
 import type {VarietyBadge} from '../db/models/CropVariety';
+import {humanizeCropSlug, slugifyCropName} from './cropSlug';
 
 /* ------------------------------ care protocols ----------------------------- */
 
@@ -80,13 +81,46 @@ export function cropTypeById(id: string): CropType | undefined {
   return cropTypes.find(c => c.id === id);
 }
 
+/**
+ * Tìm cây trong danh mục theo TÊN, bỏ qua dấu và chữ hoa thường.
+ *
+ * Mã của danh mục là tiếng Anh (`chili`, `tomato`), còn bà con gõ tiếng Việt,
+ * nên so bằng mã thì "Ớt" không bao giờ khớp với `chili` và ứng dụng đẻ ra một
+ * loại cây thứ hai trùng tên. So bằng tên đã chuẩn hoá thì "Ớt", "ớt", "Ot"
+ * đều về đúng một chỗ.
+ */
+export function cropTypeByName(name: string): CropType | undefined {
+  const slug = slugifyCropName(name);
+  if (!slug) return undefined;
+  return cropTypes.find(c => slugifyCropName(c.name) === slug);
+}
+
+/**
+ * Mã cây trồng sau khi gộp: cây bà con tự thêm mà trùng tên với danh mục thì
+ * trả về mã danh mục, nhờ vậy giống của họ nằm chung với giống chuẩn thay vì
+ * dựng một nhánh song song.
+ */
+export function canonicalCropType(cropTypeId: string, cropName?: string | null): string {
+  if (cropTypeById(cropTypeId)) return cropTypeId;
+  return cropTypeByName(cropName || cropTypeId)?.id ?? cropTypeId;
+}
+
 export function cropCategory(cropTypeId: string, categoryId: string): CropCategory | undefined {
   return cropTypeById(cropTypeId)?.categories.find(c => c.category_id === categoryId);
 }
 
-/** Display name of a crop, falling back to the raw id for farmer-added crops. */
+/**
+ * Tên cây để hiện lên màn hình.
+ *
+ * Thứ tự: tên đã lưu → tên trong danh mục (kể cả khi bản ghi mang mã tự sinh
+ * như `ot`) → cuối cùng mới dựng chữ từ mã. Không bao giờ trả về `sau_rieng`
+ * hay `ot` nguyên dạng: đó là mã định danh, không phải nhãn.
+ */
 export function cropNameOf(cropTypeId: string, stored?: string | null): string {
-  return stored || cropTypeById(cropTypeId)?.name || cropTypeId;
+  const trimmed = stored?.trim();
+  if (trimmed) return trimmed;
+  const catalogue = cropTypeById(cropTypeId) ?? cropTypeByName(cropTypeId);
+  return catalogue?.name ?? humanizeCropSlug(cropTypeId);
 }
 
 /** Every seed variety flattened with its crop + category, for merging with rows. */

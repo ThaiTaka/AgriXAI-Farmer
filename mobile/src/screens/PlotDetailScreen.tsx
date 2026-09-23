@@ -11,7 +11,7 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useMemo, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
@@ -22,16 +22,17 @@ import {EmptyState} from '../components/EmptyState';
 import {SegmentedControl} from '../components/form';
 import {CalculatorIcon, ClockIcon, PencilIcon} from '../components/icons';
 import {Screen} from '../components/Screen';
+import {SourceLink} from '../components/SourceLink';
 import type ChangeLog from '../db/models/ChangeLog';
 import type CropCycle from '../db/models/CropCycle';
 import type Plot from '../db/models/Plot';
 import {observeChangeLogs} from '../db/repositories/changeLogRepository';
 import {observeCycles} from '../db/repositories/cropCycleRepository';
 import {deletePlot, observePlot, PLOT_STATUS_LABELS} from '../db/repositories/plotRepository';
-import {useObservable} from '../db/useObservable';
+import {useObservable, useObservableReady} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
 import {CropCycleFormSheet} from './cycle/CropCycleFormSheet';
-import {colors, space, text} from '../theme';
+import {colors, size, space, text} from '../theme';
 import {formatArea, formatDate, formatDateTime, formatRelative} from '../utils/format';
 import {inferGrowthStage} from '../utils/growthStage';
 import {
@@ -64,7 +65,7 @@ export function PlotDetailScreen() {
   const author = useChangeAuthor();
   const [tab, setTab] = useState<TabKey>('info');
 
-  const plot = useObservable<Plot | null>(() => observePlot(params.plotId), [params.plotId], null);
+  const {value: plot, ready} = useObservableReady<Plot | null>(() => observePlot(params.plotId), [params.plotId], null);
 
   const onDelete = useCallback(() => {
     if (!plot) return;
@@ -90,10 +91,15 @@ export function PlotDetailScreen() {
       <Screen>
         <AppHeader title="Lô đất" onBack={() => navigation.goBack()} />
         <View style={styles.missing}>
-          <EmptyState
-            title="Không tìm thấy lô đất"
-            body="Lô đất này có thể đã bị xoá trên một thiết bị khác."
-          />
+          {!ready ? (
+            // Chưa có emission đầu tiên: báo "đã bị xoá" lúc này là sai sự thật.
+            <ActivityIndicator color={colors.primary.default} />
+          ) : (
+            <EmptyState
+              title="Không tìm thấy lô đất"
+              body="Lô đất này có thể đã bị xoá trên một thiết bị khác."
+            />
+          )}
         </View>
       </Screen>
     );
@@ -333,10 +339,13 @@ function CareTab({plot}: {plot: Plot}) {
         />
       )}
 
-      <Text style={[text('caption', colors.text.muted), styles.disclaimer]}>
+      {/* Không dán địa chỉ web vào giữa câu: chỉ nêu cơ quan ban hành, còn
+          trang gốc mở bằng dòng dẫn ngay dưới. */}
+      <Text style={[text('bodySm', colors.text.secondary), styles.disclaimer]}>
         {protocol.disclaimer}
-        {'\n'}Nguồn: {citation(protocol)} — {protocol.source.url}
+        {'\n'}Nguồn: {citation(protocol)}
       </Text>
+      <SourceLink url={protocol.source.url} />
     </>
   );
 }
@@ -412,13 +421,15 @@ const styles = StyleSheet.create({
     paddingVertical: space.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.border.default,
-    minHeight: 48,
+    minHeight: size.minTouchTarget,
   },
   factRowLast: {
     borderBottomWidth: 0,
   },
   factLabel: {
-    width: 128,
+    // Nhãn dài ("Cập nhật lần cuối") co lại thay vì đẩy cột giá trị.
+    flexBasis: 128,
+    flexShrink: 1,
   },
   factValue: {
     flex: 1,

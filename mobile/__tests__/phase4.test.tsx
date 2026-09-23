@@ -18,7 +18,7 @@ import {inferGrowthStage} from '../src/utils/growthStage';
 
 const day = (iso: string, hour = 8) => new Date(`${iso}T${String(hour).padStart(2, '0')}:00:00+07:00`).getTime();
 
-// The demo farm: Nguyễn Văn Cường, PUC-001-HB.
+// The demo farm: Lê Thành Thái, PUC-001-HB.
 const INS = [
   {fertilizerId: 'ure_ca_mau', fertilizerName: 'Urê Cà Mau', category: 'dam', quantityKg: 50, unitPrice: 13_600, occurredAt: day('2026-09-10')},
   {fertilizerId: 'dap_han_quoc', fertilizerName: 'DAP Hàn Quốc (nhập khẩu)', category: 'lan', quantityKg: 50, unitPrice: 22_000, occurredAt: day('2026-09-10')},
@@ -179,7 +179,7 @@ describe('pdf report', () => {
 
   test('HTML carries summary, both detail tables, notes, footer and Unicode', () => {
     const html = reportHtml({
-      farmerName: 'Nguyễn Văn Cường',
+      farmerName: 'Lê Thành Thái',
       address: 'Xã Hòa Bình, Huyện Thanh Trì, Hà Nội',
       report,
       notes,
@@ -189,7 +189,7 @@ describe('pdf report', () => {
     });
     expect(html).toContain('<meta charset="utf-8">');
     expect(html).toContain('size: A4; margin: 20mm');
-    expect(html).toContain('Nông hộ: <strong>Nguyễn Văn Cường</strong>');
+    expect(html).toContain('Nông hộ: <strong>Lê Thành Thái</strong>');
     expect(html).toContain('Kỳ: Tháng 9, Năm 2026');
     expect(html).toContain('Lãi/Lỗ [LỖ]');
     expect(html).toContain('−700.000₫');

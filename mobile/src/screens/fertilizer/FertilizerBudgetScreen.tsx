@@ -14,9 +14,10 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {AppHeader} from '../../components/AppHeader';
 import {Badge} from '../../components/Badge';
-import {SecondaryButton} from '../../components/buttons';
+import {PrimaryButton} from '../../components/buttons';
 import {Card} from '../../components/Card';
 import {EmptyState} from '../../components/EmptyState';
+import {InfoTooltip} from '../../components/InfoTooltip';
 import {NumberText} from '../../components/NumberText';
 import {Screen} from '../../components/Screen';
 import {Tabs} from '../../components/Tabs';
@@ -53,18 +54,29 @@ export function FertilizerBudgetScreen() {
     <Screen>
       <AppHeader eyebrow="Tư vấn phân bón" title="Lọc theo ngân sách" onBack={() => navigation.goBack()} />
 
+      {/* Không gắn count vào nhãn tab: "Trung bình (12)" bị cắt trong 1/3 bề ngang. */}
       <Tabs
-        items={tiers.map(t => ({key: t.code, label: t.name, count: grouped[t.code].length}))}
+        items={tiers.map(t => ({key: t.code, label: t.name}))}
         value={tier}
         onChange={setTier}
         style={styles.tabs}
       />
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <Text style={[text('bodySm', colors.text.muted), styles.intro]}>
-          {current.name}: {tierBandLabel(current, tiers, formatVnd)} — giá bao chia cho số kg mỗi bao. Giá tham
-          khảo thu thập {fertilizerCollectedAt()}.
-        </Text>
+        <View style={styles.intro}>
+          <Text style={[text('bodySm', colors.text.secondary), styles.introText]}>
+            {current.name} — {products.length} sản phẩm
+          </Text>
+          <InfoTooltip
+            testID="budget-info"
+            title={`Mức "${current.name}" nghĩa là gì?`}
+            body={
+              `Mức này gồm phân có giá ${tierBandLabel(current, tiers, formatVnd)}.\n\n` +
+              'Giá mỗi ký tính bằng cách lấy giá một bao chia cho số ký trong bao, nên so sánh được giữa các bao to nhỏ khác nhau.\n\n' +
+              `Giá tham khảo thu thập ngày ${fertilizerCollectedAt()} và thay đổi theo vùng, theo thời điểm — hãy coi là để so sánh, không phải giá bán tại cửa hàng của bạn.`
+            }
+          />
+        </View>
 
         {products.length === 0 ? (
           <EmptyState title="Không có sản phẩm ở mức này" body="Chưa có sản phẩm nào trong danh mục rơi vào khoảng giá này." />
@@ -78,13 +90,13 @@ export function FertilizerBudgetScreen() {
                     <FertilizerGroupIcon code={product.category} size={22} />
                   </View>
                   <View style={styles.body}>
-                    <Text style={text('caption', colors.text.muted)} numberOfLines={1}>
+                    <Text style={text('bodySm', colors.text.secondary)} numberOfLines={1}>
                       {group?.name ?? product.category} · {product.npk_ratio}
                     </Text>
-                    <Text style={[text('cardTitle'), styles.title]} numberOfLines={1}>
+                    <Text style={[text('cardTitle'), styles.title]} numberOfLines={2}>
                       {product.name}
                     </Text>
-                    <Text style={[text('caption', colors.text.muted), styles.meta]} numberOfLines={1}>
+                    <Text style={[text('bodySm', colors.text.secondary), styles.meta]} numberOfLines={2}>
                       {product.region} · {product.source}
                     </Text>
                   </View>
@@ -95,16 +107,18 @@ export function FertilizerBudgetScreen() {
                     <NumberText size="lg" numberOfLines={1}>
                       {formatVndRange(product.price_min, product.price_max)}
                     </NumberText>
-                    <Text style={text('caption', colors.text.muted)}>
+                    {/* Giá mỗi ký là con số bà con so sánh nhiều nhất: 14px, xám
+                        đậm (8.8:1 trên nền trắng) thay cho 12px xám nhạt. */}
+                    <Text style={[text('bodySm', colors.text.secondary), styles.perKg]}>
                       ≈ {formatVnd(product.price_per_kg_avg ?? 0)}/kg trung bình
                     </Text>
                   </View>
-                  <Badge label={packLabel(product.unit)} tone="gray" />
+                  <Badge label={packLabel(product.unit)} tone="gray" variant="quiet" />
                 </View>
 
-                <SecondaryButton
+                <PrimaryButton
                   small
-                  label="Chọn"
+                  label="Chọn phân này"
                   testID={`budget-pick-${product.id}`}
                   onPress={() => navigation.navigate('StockCheck', {fertilizerId: product.id})}
                   style={styles.pick}
@@ -135,7 +149,15 @@ const styles = StyleSheet.create({
     paddingBottom: space['3xl'],
   },
   intro: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: space.sm,
     marginBottom: space.lg,
+  },
+  introText: {
+    flex: 1,
+    minWidth: 0,
   },
   item: {
     marginBottom: space.md,
@@ -158,10 +180,10 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   title: {
-    marginTop: 2,
+    marginTop: space.xs,
   },
   meta: {
-    marginTop: 2,
+    marginTop: space.xs,
   },
   priceRow: {
     flexDirection: 'row',
@@ -174,9 +196,13 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 0,
   },
+  perKg: {
+    marginTop: space.xs,
+  },
+  // Nút chiếm cả bề ngang thẻ: chỉ có một hành động ở đây, và một khối xanh
+  // đặc thì không thể nhầm với nhãn "Bao 50 kg" bên trên.
   pick: {
     marginTop: space.md,
-    alignSelf: 'flex-start',
-    minWidth: 120,
+    alignSelf: 'stretch',
   },
 });

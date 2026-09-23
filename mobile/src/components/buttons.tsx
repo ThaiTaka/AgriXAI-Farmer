@@ -13,7 +13,8 @@ import {ArrowRight} from './icons';
  * Danger is a soft red variant of Secondary; it never shouts.
  *
  * All of them respect the field minimums (48 pt targets) and show the pressed
- * state as a quieter fill instead of a colour change.
+ * state as a quieter fill instead of a colour change, plus the same 0.98 dip
+ * the cards use so a tap is felt as well as seen.
  */
 
 interface BaseProps {
@@ -53,6 +54,7 @@ export function PrimaryButton({
         small && styles.small,
         styles.primary,
         pressed && styles.primaryPressed,
+        pressed && styles.dip,
         inactive && styles.inactive,
         style,
       ]}>
@@ -97,6 +99,7 @@ export function SecondaryButton({
         small && styles.small,
         styles.secondary,
         pressed && styles.secondaryPressed,
+        pressed && styles.dip,
         inactive && styles.inactive,
         style,
       ]}>
@@ -134,6 +137,7 @@ export function GhostButton({
         small && styles.small,
         styles.ghost,
         pressed && styles.ghostPressed,
+        pressed && styles.dip,
         disabled && styles.inactive,
         style,
       ]}>
@@ -150,7 +154,7 @@ export function DangerButton({label, onPress, style, testID}: BaseProps) {
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={label}
-      style={({pressed}) => [styles.base, styles.danger, pressed && styles.dangerPressed, style]}>
+      style={({pressed}) => [styles.base, styles.danger, pressed && styles.dangerPressed, pressed && styles.dip, style]}>
       <Text style={text('bodyStrong', colors.badge.redFg)}>{label}</Text>
     </Pressable>
   );
@@ -182,7 +186,7 @@ export function IconButton({onPress, children, accessibilityLabel, style, testID
 const styles = StyleSheet.create({
   base: {
     minHeight: size.buttonMinHeight,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -196,12 +200,19 @@ const styles = StyleSheet.create({
   inactive: {
     opacity: 0.5,
   },
+  /** Shared press dip — the same 0.98 the cards use, so every tap feels alike. */
+  dip: {
+    transform: [{scale: 0.98}],
+  },
   primary: {
     backgroundColor: colors.primary.default,
-    ...shadows.sm,
+    // A green-tinted lift rather than a gray one: under the button the ground
+    // is already soft green, and a neutral shadow there reads as grime.
+    ...shadows.brand,
   },
   primaryPressed: {
     backgroundColor: colors.primary.pressed,
+    ...shadows.raised,
   },
   arrow: {
     marginLeft: space.xs,
@@ -229,7 +240,7 @@ const styles = StyleSheet.create({
   iconButton: {
     width: size.iconButton,
     height: size.iconButton,
-    borderRadius: radius.sm,
+    borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',

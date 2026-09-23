@@ -17,6 +17,11 @@ interface Props {
   detail?: string | null;
   userId: string | null;
   token: string | null;
+  /**
+   * Lối thoát khi "Thử lại" cứ sập lại. Bỏ trống ở màn gốc (không có gì để
+   * quay về) — khi đó "Thử lại" là lựa chọn duy nhất, đúng như thực tế.
+   */
+  onGoHome?: () => void;
   children: React.ReactNode;
 }
 
@@ -28,10 +33,11 @@ interface State {
 }
 
 /**
- * Catches a render/effect error inside one screen so the rest of the app
- * (tabs, other screens) keeps working. The error is written to the local
- * `error_logs` table at once; "Thử lại" remounts the screen, "Báo lỗi"
- * pushes the log to POST /logs now (or leaves it queued when offline).
+ * Catches a render/effect error inside one screen so the rest of the app keeps
+ * working. The error is written to the local `error_logs` table at once;
+ * "Thử lại" remounts the screen, "Báo lỗi" pushes the log to POST /logs now
+ * (or leaves it queued when offline), "Về trang chủ" bỏ cả stack đang hỏng —
+ * lỗi tất định thì "Thử lại" chỉ sập lại, và không còn thanh tab để thoát.
  *
  * A class component because React only exposes componentDidCatch on classes.
  */
@@ -102,6 +108,14 @@ export class ScreenErrorBoundary extends React.Component<Props, State> {
               <Text style={text('caption', colors.text.muted)}>{this.props.route}</Text>
             </View>
             <PrimaryButton testID="boundary-retry" label="Thử lại" onPress={this.retry} style={styles.action} />
+            {this.props.onGoHome ? (
+              <SecondaryButton
+                testID="boundary-home"
+                label="Về trang chủ"
+                onPress={this.props.onGoHome}
+                style={styles.action}
+              />
+            ) : null}
             <SecondaryButton
               testID="boundary-report"
               label={
@@ -116,7 +130,7 @@ export class ScreenErrorBoundary extends React.Component<Props, State> {
               disabled={reportState === 'sent' || reportState === 'queued' || !this.state.entry}
               style={styles.action}
             />
-            <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+            <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
               Báo lỗi gửi thông điệp lỗi, màn hình đang mở và thời điểm — không gửi dữ liệu nông hộ.
             </Text>
           </Card>

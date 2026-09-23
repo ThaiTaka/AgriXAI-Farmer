@@ -1,8 +1,9 @@
 """Login and profile endpoints."""
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
+from app.core import rate_limit
 from app.core.database import get_db
 from app.core.security import create_access_token, hash_password, verify_password
 from app.models.user import User
@@ -13,8 +14,24 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @router.post("/login", response_model=LoginResponse)
-def login(body: LoginRequest, db: Session = Depends(get_db)) -> LoginResponse:
-    user = authenticate(db, body.username, body.password)
+def login(body: LoginRequest, request: Request, db: Session = Depends(get_db)) -> LoginResponse:
+    """Exchanges username (or email) + password for a bearer token.
+
+    Five wrong passwords in a minute from the same caller for the same account
+    and the door closes for a minute (429). Only wrong passwords count, so a
+    farmer who signs in normally never meets the limiter.
+    """
+    key = rate_limit.login_key(request, body.username)
+    rate_limit.enforce(key)
+    try:
+        user = authenticate(db, body.username, body.password)
+    except HTTPException as exc:
+        # A locked account (403) is not a guess; only a wrong password counts.
+        if exc.status_code == status.HTTP_401_UNAUTHORIZED:
+            rate_limit.record_failure(key)
+        raise
+
+    rate_limit.reset(key)
     token = create_access_token(subject=user.id, extra={"role": user.role.value})
     return LoginResponse(access_token=token, user=UserOut.model_validate(user))
 

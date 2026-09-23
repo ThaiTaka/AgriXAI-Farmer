@@ -25,14 +25,9 @@ import {Screen} from '../components/Screen';
 import {collections} from '../db';
 import type Plot from '../db/models/Plot';
 import type {PlotStatus} from '../db/models/Plot';
-import {
-  createPlot,
-  PLOT_STATUS_LABELS,
-  resolvePlotCode,
-  updatePlot,
-} from '../db/repositories/plotRepository';
+import {PLOT_STATUS_LABELS, updatePlot} from '../db/repositories/plotRepository';
 import type {RootStackParamList} from '../navigation/types';
-import {colors, space, text} from '../theme';
+import {colors, size, space, text} from '../theme';
 import {formatDate} from '../utils/format';
 import {isWellFormedPlotCode} from '../utils/plotCode';
 import {cropNameOf} from '../utils/staticData';
@@ -76,7 +71,7 @@ export function PlotFormScreen() {
   const navigation = useNavigation<Nav>();
   const {params} = useRoute<Route>();
   const author = useChangeAuthor();
-  const editingId = params?.plotId;
+  const editingId = params.plotId;
   const picked = params?.pickedVariety;
 
   const [form, setForm] = useState<FormState>(EMPTY);
@@ -167,8 +162,10 @@ export function PlotFormScreen() {
     if (saving || !validate()) return;
     setSaving(true);
     try {
+      if (!existing) throw new Error(`Không tìm thấy lô ${editingId} để sửa.`);
+
       const input = {
-        code: await resolvePlotCode(form.code),
+        code: form.code.trim() || existing.code,
         name: form.name.trim(),
         region: form.region.trim() || null,
         area: Number(form.area.replace(',', '.')),
@@ -182,11 +179,7 @@ export function PlotFormScreen() {
         notes: form.notes.trim() || null,
       };
 
-      if (existing) {
-        await updatePlot(existing, input, author);
-      } else {
-        await createPlot(input, author);
-      }
+      await updatePlot(existing, input, author);
       navigation.goBack();
     } catch (error) {
       console.error('[plotForm] save failed', error);
@@ -194,13 +187,15 @@ export function PlotFormScreen() {
     } finally {
       setSaving(false);
     }
-  }, [saving, validate, form, existing, author, navigation]);
+  }, [saving, validate, form, existing, editingId, author, navigation]);
 
   const openPicker = useCallback(() => {
     navigation.navigate('VarietyCropType', {selectedId: form.varietyId});
   }, [navigation, form.varietyId]);
 
-  const title = editingId ? 'Sửa lô đất' : 'Thêm lô đất';
+  // Chỉ còn một chế độ: sửa lô đã được giao. Lô mới do bên quản lý đất lập,
+  // nông hộ không tự tạo, nên màn này không bao giờ mở ở trạng thái rỗng.
+  const title = 'Sửa lô đất';
   const maxDate = useMemo(() => new Date(), []);
   const cropValue = form.cropName
     ? form.varietyName
@@ -267,11 +262,13 @@ export function PlotFormScreen() {
                   label="m²"
                   selected={form.areaUnit === 'm2'}
                   onPress={() => set('areaUnit', 'm2')}
+                  style={styles.unitChip}
                 />
                 <SelectChip
                   label="ha"
                   selected={form.areaUnit === 'ha'}
                   onPress={() => set('areaUnit', 'ha')}
+                  style={styles.unitChip}
                 />
               </View>
             </View>
@@ -313,6 +310,7 @@ export function PlotFormScreen() {
                   label={PLOT_STATUS_LABELS[status]}
                   selected={form.status === status}
                   onPress={() => set('status', status)}
+                  style={styles.statusChip}
                 />
               ))}
             </View>
@@ -336,7 +334,7 @@ export function PlotFormScreen() {
           />
           <SecondaryButton label="Huỷ" onPress={() => navigation.goBack()} style={styles.cancel} />
 
-          <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+          <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
             Lưu vào máy ngay cả khi không có mạng. Dữ liệu tự đồng bộ lên hệ thống khi có mạng
             trở lại.
           </Text>
@@ -388,9 +386,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: space.sm,
   },
+  // Cao bằng ô Diện tích cùng hàng, đồng thời đủ vùng chạm 48.
+  unitChip: {
+    minHeight: size.inputMinHeight,
+  },
   statusRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: space.sm,
+  },
+  statusChip: {
+    flex: 0,
+    minHeight: size.minTouchTarget,
+    paddingHorizontal: space.md,
   },
   save: {
     marginTop: space.sm,

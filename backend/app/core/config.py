@@ -23,14 +23,38 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     debug: bool = True
 
+    # "development" | "staging" | "production". Production refuses to start on
+    # the dev secret key — see app/main.py::_guard_production.
+    environment: str = "development"
+    log_level: str = "INFO"
+
     # SQLite for local development; swap to PostgreSQL by changing this one value.
     database_url: str = f"sqlite:///{BACKEND_DIR / 'agrilog.db'}"
+
+    # Connection pool (PostgreSQL only — SQLite ignores these).
+    # 100 concurrent farmers do not need 100 connections: each request holds one
+    # for a few milliseconds, so pool_size + max_overflow = 30 is ample and stays
+    # well under the default PostgreSQL limit of 100.
+    db_pool_size: int = 10
+    db_max_overflow: int = 20
+    db_pool_timeout: int = 30
+    # Recycle before a cloud provider's idle-connection cut (usually 5-10 min).
+    db_pool_recycle: int = 280
 
     secret_key: str = "dev-only-insecure-key-change-me"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60 * 24 * 7
 
     cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
+
+    # Anything slower than this is logged as a slow request (ms).
+    slow_request_ms: int = 1000
+
+    # Brute-force guard on POST /auth/login. Only *failed* attempts count, so a
+    # phone that logs in normally is never throttled. 0 disables the limiter.
+    login_max_failures: int = 5
+    login_failure_window_seconds: int = 60
+    login_lockout_seconds: int = 60
 
     seed_admin_username: str = "admin"
     seed_admin_password: str = "admin123"
@@ -40,6 +64,14 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def is_postgres(self) -> bool:
+        return self.database_url.startswith("postgres")
+
+    @property
+    def is_production(self) -> bool:
+        return self.environment.strip().lower() in {"production", "prod"}
 
 
 

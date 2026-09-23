@@ -1,0 +1,26 @@
+{
+  "$meta": {
+    "description": "Quy trình chăm sóc rau muống — hiện chỉ khai báo phần CHƯA có dữ liệu.",
+    "crop_type": "water_spinach",
+    "crop_name": "Rau muống",
+    "sources": []
+  },
+  "protocols": [],
+  "unavailable": [
+    {
+      "category_id": "water_spinach_la_tre",
+      "category_name": "Rau muống lá tre",
+      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho rau muống từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Rau ăn lá thu nhiều lứa nên định mức tính theo lứa cắt, không quy về một vụ như cây lấy quả được.",
+      "suggested_sources": [
+        {
+          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
+          "url": "https://khuyennongvn.gov.vn/"
+        },
+        {
+          "title": "Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia",
+          "url": "https://phanbonquocgia.gov.vn/"
+        }
+      ]
+    }
+  ]
+}

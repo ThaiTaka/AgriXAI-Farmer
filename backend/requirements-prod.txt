@@ -1,0 +1,18 @@
+# Phụ thuộc thêm cho production (ngoài requirements.txt).
+#   pip install -r requirements.txt -r requirements-prod.txt
+#
+# psycopg tách riêng vì môi trường dev chạy SQLite không cần tới nó — lập trình
+# viên mới clone repo về không phải chờ cài driver cho một cơ sở dữ liệu họ
+# chưa dùng.
+
+-r requirements.txt
+
+# Driver PostgreSQL (psycopg 3). Bản "binary" có sẵn wheel cho Linux/Windows,
+# không cần trình biên dịch trên máy chủ.
+psycopg[binary]==3.2.10
+
+# Chạy nhiều tiến trình uvicorn. Trên Linux dùng:
+#   gunicorn app.main:app -k uvicorn.workers.UvicornWorker -w 4 -b 0.0.0.0:8000
+# (uvicorn --workers hoạt động trên Linux nhưng KHÔNG ổn định trên Windows —
+#  xem docs/BACKEND_DEPLOYMENT.md.)
+gunicorn==23.0.0 ; sys_platform != "win32"

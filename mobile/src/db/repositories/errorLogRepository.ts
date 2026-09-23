@@ -2,10 +2,11 @@ import {Q} from '@nozbe/watermelondb';
 import {Platform} from 'react-native';
 
 import type {ErrorRecord} from '../../domain/errorLog';
+import {APP_VERSION} from '../../utils/version';
 import {collections, database} from '..';
 import type ErrorLogEntry from '../models/ErrorLogEntry';
 
-export const APP_VERSION = '0.1.0';
+export {APP_VERSION};
 
 /** Saves a caught error locally. Never throws — a failing logger inside an error boundary would hide the real error. */
 export async function recordError(record: ErrorRecord, userId: string, reported = false): Promise<ErrorLogEntry | null> {

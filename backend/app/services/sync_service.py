@@ -23,71 +23,123 @@ farmer's phone is more confusing than a deletion they can redo.
 A push that loses a race is not silent: the response lists every rejected row
 together with the server's current copy, so the phone can ask the farmer
 "giữ bản của tôi hay lấy bản mới?" instead of quietly diverging (Giai đoạn 4).
+
+Permissions: a push is a write path like any other, so the rules that guard the
+REST endpoints are repeated here — otherwise a phone could sync around them.
+Today that means two things: a farmer cannot create a plot (land is assigned by
+management — see POST /plots), and no client can set the admin-controlled
+fields on a crop variety. A rejected row comes back in `rejected_rows` with a
+reason; nothing is dropped in silence.
+
+A push is one transaction. A batch that fails half-way leaves the database
+exactly as it was, so a phone that lost signal mid-push can resend the same
+batch without wondering which half arrived.
 """
 
+import logging
 import time
+from functools import lru_cache
 from typing import Any
 
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.models.farm import ChangeLog, CropCycle, CropVariety, Plot
 from app.models.ledger import Expense, Income, Plan, TaskHistory, WarehouseIn, WarehouseOut
-from app.models.user import User
+from app.models.user import User, UserRole
 
-# Table name -> (model, is_owned). Owned tables are filtered to the caller;
-# crop_varieties is a shared catalogue so every farmer sees every variety.
-SYNC_MODELS: dict[str, tuple[type, bool]] = {
-    "plots": (Plot, True),
-    "crop_varieties": (CropVariety, False),
-    "crop_cycles": (CropCycle, True),
-    "change_logs": (ChangeLog, False),
+logger = logging.getLogger("agrilog.sync")
+
+# Advertised to the client in the X-Conflict-Resolution response header.
+CONFLICT_STRATEGY = "last-write-wins-logged"
+
+# Table name -> (model, owner column). The owner column is what scopes a table
+# to one account, both when pulling (only your rows come down) and when pushing
+# (the server, never the client, decides whose row it is).
+#
+# `None` means genuinely shared: crop_varieties is a catalogue every farm reads,
+# which is the whole point of letting one farmer's variety help the next.
+#
+# change_logs is scoped by `changed_by` rather than `owner_id` — it has no owner
+# column, the author *is* the owner. Treating it as shared, as this map did
+# until Giai đoạn 5, sent every farm's audit trail ("Nguyễn Văn Anh sửa diện
+# tích 800 -> 1200") to every other farmer's phone, and made each sync payload
+# grow with the whole system's history instead of one farm's.
+SYNC_MODELS: dict[str, tuple[type, str | None]] = {
+    "plots": (Plot, "owner_id"),
+    "crop_varieties": (CropVariety, None),
+    "crop_cycles": (CropCycle, "owner_id"),
+    "change_logs": (ChangeLog, "changed_by"),
     # Giai đoạn 3 ledgers — every row belongs to the farmer who wrote it.
-    "plans": (Plan, True),
-    "warehouse_in": (WarehouseIn, True),
-    "warehouse_out": (WarehouseOut, True),
-    "income": (Income, True),
-    "expense": (Expense, True),
-    "tasks_history": (TaskHistory, True),
+    "plans": (Plan, "owner_id"),
+    "warehouse_in": (WarehouseIn, "owner_id"),
+    "warehouse_out": (WarehouseOut, "owner_id"),
+    "income": (Income, "owner_id"),
+    "expense": (Expense, "owner_id"),
+    "tasks_history": (TaskHistory, "owner_id"),
 }
 
 # Columns the client owns. `id`, `created_at` and `updated_at` are handled
 # separately; everything else is copied straight across.
-_SKIP_ON_WRITE = {"id", "created_at", "updated_at", "deleted_at", "is_deleted"}
+_SKIP_ON_WRITE = frozenset({"id", "created_at", "updated_at", "deleted_at", "is_deleted"})
 
 # Fields on crop_varieties that only an admin may set (via PATCH /crop-varieties/{id}/approve).
 # A malicious phone client must not be able to self-approve its own variety submission
 # by embedding approved=true in a /sync push payload — we strip these silently so
 # the rest of the variety data still syncs normally.
-_CROP_VARIETY_READONLY = {"approved", "is_seed", "source"}
+_CROP_VARIETY_READONLY = frozenset({"approved", "is_seed", "source"})
+
+# Tables only an administrator may add rows to. A farmer still edits and deletes
+# the rows they own — they simply cannot conjure new land into existence.
+# Mirrors POST /plots in app/routers/plots.py; without this the phone could sync
+# around that rule.
+_ADMIN_ONLY_CREATE = {"plots"}
+
+
+class SyncPayloadError(ValueError):
+    """The batch could not be applied (malformed row, or a value the column
+    cannot hold). Nothing was written — the client may fix it and resend."""
 
 
 def now_ms() -> int:
     return int(time.time() * 1000)
 
 
-def _columns(model: type) -> list[str]:
-    return [c.name for c in model.__table__.columns]
+# A model's column list never changes at runtime, but a first sync serialises
+# thousands of rows — rebuilding the list per row made the loop spend more time
+# walking SQLAlchemy metadata than reading data. Cached once per model instead.
+@lru_cache(maxsize=None)
+def _columns(model: type) -> tuple[str, ...]:
+    return tuple(c.name for c in model.__table__.columns)
+
+
+@lru_cache(maxsize=None)
+def _readable_columns(model: type) -> tuple[str, ...]:
+    """What goes out to the phone: soft-delete bookkeeping stays server-side."""
+    return tuple(name for name in _columns(model) if name not in {"deleted_at", "is_deleted"})
+
+
+@lru_cache(maxsize=None)
+def _writable_columns(model: type) -> frozenset[str]:
+    """What a client may write: every column minus the ones the server owns."""
+    extra_skip = _CROP_VARIETY_READONLY if model is CropVariety else frozenset()
+    return frozenset(_columns(model)) - _SKIP_ON_WRITE - extra_skip
 
 
 def _serialise(row: Any, model: type) -> dict[str, Any]:
     """Row -> the flat dict shape WatermelonDB expects."""
-    out: dict[str, Any] = {}
-    for name in _columns(model):
-        if name in {"deleted_at", "is_deleted"}:
-            continue
-        out[name] = getattr(row, name)
-    return out
+    return {name: getattr(row, name) for name in _readable_columns(model)}
 
 
 def pull_changes(db: Session, user: User, last_pulled_at: int | None) -> dict[str, Any]:
     timestamp = now_ms()
     changes: dict[str, dict[str, list]] = {}
 
-    for table, (model, owned) in SYNC_MODELS.items():
+    for table, (model, owner_column) in SYNC_MODELS.items():
         stmt = select(model)
-        if owned:
-            stmt = stmt.where(model.owner_id == user.id)
+        if owner_column:
+            stmt = stmt.where(getattr(model, owner_column) == user.id)
 
         created: list[dict] = []
         updated: list[dict] = []
@@ -121,11 +173,20 @@ def push_changes(
     Returns per-table counters plus `conflict_rows`: the rows the server kept
     its own version of, each with that version attached.
     """
-    applied: dict[str, Any] = {"created": 0, "updated": 0, "deleted": 0, "conflicts": 0}
+    applied: dict[str, Any] = {
+        "created": 0,
+        "updated": 0,
+        "deleted": 0,
+        "conflicts": 0,
+        "rejected": 0,
+    }
     conflict_rows: list[dict[str, Any]] = []
+    rejected_rows: list[dict[str, Any]] = []
     stamp = now_ms()
+    is_admin = user.role is UserRole.ADMIN
 
-    for table, (model, owned) in SYNC_MODELS.items():
+    for table, (model, owner_column) in SYNC_MODELS.items():
+        may_create = is_admin or table not in _ADMIN_ONLY_CREATE
         table_changes = changes.get(table) or {}
 
         for raw in table_changes.get("created", []) or []:
@@ -137,13 +198,17 @@ def push_changes(
                 # The client thinks it created this row but the server already
                 # has it — a retry after a dropped response. Treat it as an
                 # update so the retry is idempotent rather than a 500.
-                if _apply_if_newer(existing, raw, model, stamp):
+                if _apply_if_newer(existing, raw, model, stamp, owner_column):
                     applied["updated"] += 1
                 else:
                     applied["conflicts"] += 1
-                    conflict_rows.append(_conflict(table, existing, model))
+                    conflict_rows.append(_conflict(table, existing, model, user))
                 continue
-            db.add(_build(model, raw, user, owned, stamp))
+            if not may_create:
+                applied["rejected"] += 1
+                rejected_rows.append(_rejected(table, record_id, user))
+                continue
+            db.add(_build(model, raw, user, owner_column, stamp))
             applied["created"] += 1
 
         for raw in table_changes.get("updated", []) or []:
@@ -152,14 +217,21 @@ def push_changes(
                 continue
             existing = db.get(model, record_id)
             if existing is None:
-                db.add(_build(model, raw, user, owned, stamp))
+                # An update to a row the server has never seen is a create: the
+                # phone made it offline and the create leg of the batch was
+                # lost. Same permission rule applies.
+                if not may_create:
+                    applied["rejected"] += 1
+                    rejected_rows.append(_rejected(table, record_id, user))
+                    continue
+                db.add(_build(model, raw, user, owner_column, stamp))
                 applied["created"] += 1
                 continue
-            if _apply_if_newer(existing, raw, model, stamp):
+            if _apply_if_newer(existing, raw, model, stamp, owner_column):
                 applied["updated"] += 1
             else:
                 applied["conflicts"] += 1
-                conflict_rows.append(_conflict(table, existing, model))
+                conflict_rows.append(_conflict(table, existing, model, user))
 
         for record_id in table_changes.get("deleted", []) or []:
             existing = db.get(model, record_id)
@@ -170,12 +242,32 @@ def push_changes(
             existing.updated_at = stamp
             applied["deleted"] += 1
 
-    db.commit()
+    try:
+        db.commit()
+    except SQLAlchemyError as exc:
+        # All-or-nothing: a half-applied batch is worse than a failed one,
+        # because the phone would have no way to tell which half landed.
+        db.rollback()
+        logger.warning("push failed user=%s error=%s", user.username, exc.__class__.__name__)
+        raise SyncPayloadError("Không ghi được dữ liệu đồng bộ") from exc
+
     applied["conflict_rows"] = conflict_rows
+    applied["rejected_rows"] = rejected_rows
     return applied
 
 
-def _conflict(table: str, existing: Any, model: type) -> dict[str, Any]:
+def _conflict(table: str, existing: Any, model: type, user: User) -> dict[str, Any]:
+    # Every conflict means an edit a farmer made did not land, so it is logged
+    # at WARNING — this is the line to grep when someone reports
+    # "tôi sửa rồi mà nó không đổi".
+    logger.warning(
+        "sync conflict table=%s id=%s user=%s server_updated_at=%s strategy=%s",
+        table,
+        existing.id,
+        user.username,
+        existing.updated_at,
+        CONFLICT_STRATEGY,
+    )
     return {
         "table": table,
         "id": existing.id,
@@ -185,39 +277,54 @@ def _conflict(table: str, existing: Any, model: type) -> dict[str, Any]:
     }
 
 
-def _build(model: type, raw: dict, user: User, owned: bool, stamp: int):
-    # Determine which fields this client is not allowed to write.
-    extra_skip = _CROP_VARIETY_READONLY if model is CropVariety else set()
-    values = {
-        key: value
-        for key, value in raw.items()
-        if key in set(_columns(model)) and key not in _SKIP_ON_WRITE and key not in extra_skip
+def _rejected(table: str, record_id: str, user: User) -> dict[str, Any]:
+    logger.warning(
+        "sync rejected table=%s id=%s user=%s reason=admin_only_create",
+        table,
+        record_id,
+        user.username,
+    )
+    return {
+        "table": table,
+        "id": record_id,
+        "reason": "admin_only_create",
+        "message": "Lo dat do quan tri vien tao va giao, ung dung khong tu them duoc.",
     }
+
+
+def _build(model: type, raw: dict, user: User, owner_column: str | None, stamp: int):
+    writable = _writable_columns(model)
+    values = {key: value for key, value in raw.items() if key in writable}
     values["id"] = raw["id"]
     values["created_at"] = raw.get("created_at") or stamp
     values["updated_at"] = raw.get("updated_at") or stamp
-    if owned:
+    if owner_column:
         # Never trust a client-supplied owner: a phone must not be able to file
         # records under someone else's account.
-        values["owner_id"] = user.id
-    return model(**values)
+        values[owner_column] = user.id
+    try:
+        return model(**values)
+    except TypeError as exc:  # a payload shape the model cannot take
+        raise SyncPayloadError(f"Ban ghi {raw.get('id')} khong hop le") from exc
 
 
-def _apply_if_newer(existing: Any, raw: dict, model: type, stamp: int) -> bool:
+def _apply_if_newer(
+    existing: Any, raw: dict, model: type, stamp: int, owner_column: str | None = None
+) -> bool:
     """Last-write-wins. Returns False when the server copy is newer (conflict)."""
     incoming_updated = raw.get("updated_at") or stamp
     if existing.updated_at is not None and existing.updated_at > incoming_updated:
         return False
 
-    # Fields the client is not allowed to overwrite on this model.
-    extra_skip = _CROP_VARIETY_READONLY if model is CropVariety else set()
+    # Anything outside this set belongs to the server: ids, timestamps, and the
+    # admin-controlled fields on crop_varieties. Silently ignored rather than
+    # rejected, so the rest of the row still syncs.
+    writable = _writable_columns(model)
     for key, value in raw.items():
-        if key in _SKIP_ON_WRITE or key not in set(_columns(model)):
+        if key not in writable:
             continue
-        if key == "owner_id":
-            continue
-        if key in extra_skip:
-            continue  # silently ignore — do not let client overwrite admin-controlled fields
+        if owner_column and key == owner_column:
+            continue  # authorship is the server's to decide, not the client's
         setattr(existing, key, value)
     existing.updated_at = max(incoming_updated, stamp)
     return True

@@ -1,4 +1,3 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
@@ -6,7 +5,6 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
 import {useAuth} from '../auth/AuthContext';
 import {ConflictDialog} from '../components/ConflictDialog';
-import {HomeIcon, SettingsIcon, ToolsIcon} from '../components/icons';
 import {OfflineBanner} from '../components/OfflineBanner';
 import {Screen} from '../components/Screen';
 import {ScreenErrorBoundary} from '../components/ScreenErrorBoundary';
@@ -19,6 +17,7 @@ import {FinanceScreen} from '../screens/finance/FinanceScreen';
 import {HomeScreen} from '../screens/HomeScreen';
 import {LoginScreen} from '../screens/LoginScreen';
 import {PlotDetailScreen} from '../screens/PlotDetailScreen';
+import {PlotPickerScreen} from '../screens/PlotPickerScreen';
 import {PlotFormScreen} from '../screens/PlotFormScreen';
 import {ReportExportScreen} from '../screens/report/ReportExportScreen';
 import {SettingsScreen} from '../screens/SettingsScreen';
@@ -28,65 +27,39 @@ import {VarietyCategoryScreen} from '../screens/variety/VarietyCategoryScreen';
 import {VarietyCropTypeScreen} from '../screens/variety/VarietyCropTypeScreen';
 import {VarietyPickScreen} from '../screens/variety/VarietyPickScreen';
 import {WarehouseScreen} from '../screens/warehouse/WarehouseScreen';
-import {colors, text} from '../theme';
-import type {MainTabParamList, RootStackParamList} from './types';
+import {colors} from '../theme';
+import type {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const Tabs = createBottomTabNavigator<MainTabParamList>();
-
-// Stable icon renderers (defining them inline would remount the tab bar on every render).
-const homeIcon = ({color}: {color: string}) => <HomeIcon color={color} />;
-const toolsIcon = ({color}: {color: string}) => <ToolsIcon color={color} />;
-const settingsIcon = ({color}: {color: string}) => <SettingsIcon color={color} />;
 
 /**
  * Wraps every screen in its own error boundary (react-navigation's
  * `screenLayout`), so a crash in one screen shows "Oops" there and leaves
- * the tab bar and the rest of the app working.
+ * the rest of the app working.
  */
 function useScreenLayout() {
   const {session} = useAuth();
   const userId = session?.user.id ?? null;
   const token = session?.token ?? null;
   return React.useCallback(
-    ({children, route}: {children: React.ReactNode; route: {name: string; params?: object}}) => (
-      <ScreenErrorBoundary route={route.name} userId={userId} token={token}>
+    ({
+      children,
+      route,
+      navigation,
+    }: {
+      children: React.ReactNode;
+      route: {name: string; params?: object};
+      navigation: {canGoBack: () => boolean; popToTop: () => void};
+    }) => (
+      <ScreenErrorBoundary
+        route={route.name}
+        userId={userId}
+        token={token}
+        onGoHome={navigation.canGoBack() ? () => navigation.popToTop() : undefined}>
         {children}
       </ScreenErrorBoundary>
     ),
     [userId, token],
-  );
-}
-
-function MainTabs() {
-  const layout = useScreenLayout();
-  return (
-    <Tabs.Navigator
-      screenLayout={layout}
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: colors.primary.default,
-        tabBarInactiveTintColor: colors.text.muted,
-        tabBarStyle: styles.tabBar,
-        tabBarLabelStyle: text('caption'),
-        sceneStyle: {backgroundColor: colors.surface.page},
-      }}>
-      <Tabs.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{title: 'Trang chủ', tabBarIcon: homeIcon, tabBarButtonTestID: 'tab-home'}}
-      />
-      <Tabs.Screen
-        name="Tools"
-        component={ToolsScreen}
-        options={{title: 'Công cụ', tabBarIcon: toolsIcon, tabBarButtonTestID: 'tab-tools'}}
-      />
-      <Tabs.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{title: 'Cài đặt', tabBarIcon: settingsIcon, tabBarButtonTestID: 'tab-settings'}}
-      />
-    </Tabs.Navigator>
   );
 }
 
@@ -118,8 +91,11 @@ export function RootNavigator() {
           <Stack.Screen name="Login" component={LoginScreen} />
         ) : (
           <>
-            <Stack.Screen name="Main" component={MainTabs} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Tools" component={ToolsScreen} />
+            <Stack.Screen name="Settings" component={SettingsScreen} />
             <Stack.Screen name="PlotDetail" component={PlotDetailScreen} />
+            <Stack.Screen name="PlotPicker" component={PlotPickerScreen} />
             <Stack.Screen name="PlotForm" component={PlotFormScreen} options={{animation: 'slide_from_bottom'}} />
             <Stack.Screen name="VarietyCropType" component={VarietyCropTypeScreen} />
             <Stack.Screen name="VarietyCategory" component={VarietyCategoryScreen} />
@@ -146,12 +122,5 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  tabBar: {
-    backgroundColor: colors.surface.card,
-    borderTopColor: colors.border.default,
-    height: 64,
-    paddingTop: 6,
-    paddingBottom: 8,
   },
 });

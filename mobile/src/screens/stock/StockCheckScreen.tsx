@@ -11,13 +11,14 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
 import {Badge} from '../../components/Badge';
 import {PrimaryButton, SecondaryButton} from '../../components/buttons';
 import {Card} from '../../components/Card';
+import {InfoTooltip} from '../../components/InfoTooltip';
 import {Field, PickerField, SelectChip} from '../../components/form';
 import {AlertIcon, CheckCircleIcon, ChevronRight} from '../../components/icons';
 import {NumberText} from '../../components/NumberText';
@@ -156,9 +157,10 @@ export function StockCheckScreen() {
 
   return (
     <Screen>
-      <AppHeader eyebrow="Tư vấn phân bón" title="Kiểm tra kho" onBack={() => navigation.goBack()} />
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <AppHeader eyebrow="Tư vấn phân bón" title="Kiểm tra kho" onBack={() => navigation.goBack()} />
 
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <PickerField
           testID="check-product"
           label="Phân bón"
@@ -216,8 +218,10 @@ export function StockCheckScreen() {
             {check ? (
               <>
                 <View style={styles.afterRow}>
-                  <Text style={text('bodySm', colors.text.muted)}>Sau khi bón {formatNumber(check.neededKg)} kg</Text>
-                  <NumberText size="md" color={colors.text.muted}>
+                  <Text style={[text('bodySm', colors.text.muted), styles.rowLabel]} numberOfLines={2}>
+                    Sau khi bón {formatNumber(check.neededKg)} kg
+                  </Text>
+                  <NumberText size="md" color={colors.text.muted} numberOfLines={1}>
                     {check.enough ? `${formatNumber(check.remainingKg)} kg` : '0 kg'}
                   </NumberText>
                 </View>
@@ -232,10 +236,12 @@ export function StockCheckScreen() {
             )}
 
             <View style={styles.priceRow}>
-              <Text style={text('bodySm', colors.text.muted)}>
+              <Text style={[text('bodySm', colors.text.muted), styles.rowLabel]} numberOfLines={2}>
                 {line?.latestUnitPrice ? 'Giá nhập gần nhất' : 'Giá tham khảo danh mục'}
               </Text>
-              <NumberText size="md">{latestPrice !== null ? `${formatVnd(latestPrice)}/kg` : 'Chưa có giá'}</NumberText>
+              <NumberText size="md" numberOfLines={1}>
+                {latestPrice !== null ? `${formatVnd(latestPrice)}/kg` : 'Chưa có giá'}
+              </NumberText>
             </View>
             {check && !check.enough && latestPrice !== null ? (
               <Text style={[text('caption', colors.text.muted), styles.estimate]}>
@@ -257,11 +263,18 @@ export function StockCheckScreen() {
           <PrimaryButton testID="check-plan" label="Lên kế hoạch bón" onPress={onPlan} loading={saving} style={styles.action} />
         ) : null}
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
-          Tồn = tổng nhập − tổng xuất trên máy này. Giá nhập gần nhất lấy từ phiếu nhập; chưa có phiếu thì dùng giá trung
-          bình trong danh mục.
-        </Text>
-      </ScrollView>
+        <View style={styles.footnote}>
+          <InfoTooltip
+            testID="check-info"
+            title="Số tồn và giá lấy từ đâu?"
+            body={
+              'Tồn kho = tổng đã nhập − tổng đã dùng, tính trên chính máy này, nên vẫn đúng khi mất mạng.\n\n' +
+              'Giá ưu tiên lấy từ phiếu nhập gần nhất của bạn — đó là giá bạn thực sự trả. Chưa có phiếu nào thì mới lấy giá trung bình trong bảng giá tham khảo.'
+            }
+          />
+        </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       <ProductPickerSheet
         visible={picking}
@@ -278,6 +291,9 @@ export function StockCheckScreen() {
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   scroll: {
     paddingHorizontal: space.lg,
     paddingBottom: space['3xl'],
@@ -305,6 +321,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: space.sm,
     marginTop: space.xs,
+  },
+  rowLabel: {
+    flex: 1,
+    minWidth: 0,
   },
   afterRow: {
     flexDirection: 'row',
@@ -334,5 +354,6 @@ const styles = StyleSheet.create({
   },
   footnote: {
     marginTop: space.sm,
+    alignItems: 'flex-start',
   },
 });

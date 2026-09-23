@@ -60,8 +60,14 @@ function splitColor(value) {
 
 /**
  * CSS box-shadow -> React Native shadow props.
- * iOS takes the values as-is (blur maps to shadowRadius/2); Android only has
- * `elevation`, approximated from the vertical offset so "sm" stays a whisper.
+ *
+ * iOS takes the values as-is (blur maps to shadowRadius/2). Android ignores
+ * shadowColor/Radius/Opacity entirely and draws only from `elevation`, so that
+ * one number has to carry the whole scale. Deriving it from the vertical offset
+ * alone (the pre-v6.1 rule) collapsed the scale to 1/2/4: a white card on the
+ * gray-50 ground had no visible edge, and the press-to-md lift on the dashboard
+ * cards moved the shadow by a single step nobody could see. Counting the blur
+ * as well spreads it to 2/4/10 — still soft, but the depth is actually there.
  */
 function shadowToRN(css) {
   const m = /^(-?[\d.]+)(?:px)?\s+(-?[\d.]+)px\s+(-?[\d.]+)px\s+(rgba?\([^)]+\)|#[0-9A-Fa-f]{3,8})$/.exec(
@@ -74,7 +80,7 @@ function shadowToRN(css) {
     shadowOffset: { width: Number(m[1]), height: Number(m[2]) },
     shadowRadius: Number(m[3]) / 2,
     shadowOpacity: opacity,
-    elevation: Math.max(1, Math.round(Number(m[2]))),
+    elevation: Math.max(1, Math.round(Number(m[3]) / 2 + Number(m[2]))),
   };
 }
 

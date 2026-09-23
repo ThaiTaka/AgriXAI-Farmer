@@ -17,6 +17,7 @@ import {EmptyState} from '../../components/EmptyState';
 import {ListRow} from '../../components/ListRow';
 import {Screen} from '../../components/Screen';
 import {categoryOptions} from '../../db/repositories/varietyRepository';
+import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
 import {colors, space, text} from '../../theme';
 import {cropTypeById} from '../../utils/staticData';
@@ -34,7 +35,7 @@ export function VarietyCategoryScreen() {
 
   const returnTo = params.returnTo ?? 'PlotForm';
   const cancel = useCallback(
-    () => navigation.popTo(returnTo, undefined, {merge: true}),
+    () => popToPicker(navigation, returnTo),
     [navigation, returnTo],
   );
 
@@ -82,7 +83,7 @@ export function VarietyCategoryScreen() {
           </Card>
         )}
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
           Cách gom "loại" là để dễ chọn trong ứng dụng, không phải phân loại thực vật học.
         </Text>
       </ScrollView>

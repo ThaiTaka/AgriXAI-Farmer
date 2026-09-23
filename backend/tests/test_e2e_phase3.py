@@ -1,6 +1,6 @@
 """End-to-end API cases for Giai đoạn 3, run through the real FastAPI app.
 
-Scenario: nông hộ Nguyễn Văn Cường (xã Hòa Bình, Thanh Trì, Hà Nội), lô
+Scenario: nông hộ Lê Thành Thái (xã Hòa Bình, Thanh Trì, Hà Nội), lô
 PUC-001-HB, 300 m² cà chua MV1 — the mock-up farm from the brief. Each test
 is one user story from the acceptance list; together they walk the full loop
 plan → purchase → stock check → issue → report → CSV.
@@ -45,13 +45,16 @@ def admin() -> dict[str, str]:
 
 
 @pytest.fixture(scope="module")
-def plot(farmer) -> dict:
+def plot(admin, farmer) -> dict:
+    """Land management creates the plot and assigns it — a farmer cannot."""
+    owner_id = client.get("/auth/me", headers=farmer).json()["id"]
     res = client.post(
         "/plots",
-        headers=farmer,
+        headers=admin,
         json={
+            "owner_id": owner_id,
             "code": "PUC-001-HB",
-            "name": "Ruộng cà chua nhà ông Cường",
+            "name": "Ruộng cà chua nhà ông Lê Thành Thái",
             "region": "Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
             "area": 300,
             "area_unit": "m2",
@@ -370,4 +373,6 @@ def test_e2e_15_care_protocols_endpoint_serves_the_merged_file(farmer):
     body = res.json()
     ids = {p["id"] for p in body["protocols"]}
     assert {"tomato_default", "coffee_robusta_ctt_2010", "cucumber_laichau_2025", "chili_hot_lamdong"} <= ids
-    assert {u["category_id"] for u in body["unavailable"]} == {"coffee_liberica", "coffee_excelsa", "chili_ornamental"}
+    # Tập khoảng trống đầy đủ được khoá ở test_static_data; ở đây chỉ cần biết
+    # endpoint có trả phần "unavailable" của file đã gộp.
+    assert {"coffee_liberica", "coffee_excelsa", "chili_ornamental"} <= {u["category_id"] for u in body["unavailable"]}

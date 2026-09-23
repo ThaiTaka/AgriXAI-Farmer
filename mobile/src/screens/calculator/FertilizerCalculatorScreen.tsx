@@ -12,7 +12,7 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
@@ -21,9 +21,10 @@ import {PrimaryButton, SecondaryButton} from '../../components/buttons';
 import {Card} from '../../components/Card';
 import {EmptyState} from '../../components/EmptyState';
 import {Field, PickerField, SegmentedControl, SelectChip} from '../../components/form';
-import {CalculatorIcon, ChevronRight, ExternalLinkIcon} from '../../components/icons';
+import {CalculatorIcon, ChevronRight} from '../../components/icons';
 import {NumberText} from '../../components/NumberText';
 import {Screen} from '../../components/Screen';
+import {SourceLink} from '../../components/SourceLink';
 import type Plot from '../../db/models/Plot';
 import {savePlan} from '../../db/repositories/planRepository';
 import {observePlots} from '../../db/repositories/plotRepository';
@@ -35,7 +36,7 @@ import type {CalcResult} from '../../domain/fertilizerCalc';
 import {calculate, formatRange} from '../../domain/fertilizerCalc';
 import type {PickedVariety, RootStackParamList} from '../../navigation/types';
 import {useSync} from '../../sync/SyncContext';
-import {colors, radius, space, text} from '../../theme';
+import {colors, radius, size, space, text} from '../../theme';
 import {formatNumber, formatVnd, formatVndRange} from '../../utils/format';
 import {cropNameOf, fertilizerProduct} from '../../utils/staticData';
 import {ProtocolUnavailable} from '../care/ProtocolUnavailable';
@@ -241,11 +242,18 @@ export function FertilizerCalculatorScreen() {
             error={error}
             hint={areaM2 > 0 && unit !== 'm2' ? `= ${formatNumber(areaM2)} m²` : undefined}
           />
-          <View style={styles.unitRow}>
+          {/* Sáu đơn vị không vừa một dòng máy 320pt: để wrap thì "ha" rơi
+              một mình xuống dòng dưới, trông như nút lạc. Cuộn ngang giữ
+              chúng thành một dải liền, thứ tự không đổi. */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.unitScroll}
+            contentContainerStyle={styles.unitRow}>
             {AREA_UNITS.map(u => (
               <SelectChip key={u.code} label={u.short} selected={unit === u.code} onPress={() => setUnit(u.code)} style={styles.unitChip} />
             ))}
-          </View>
+          </ScrollView>
         </View>
 
         {!selection ? (
@@ -302,7 +310,7 @@ export function FertilizerCalculatorScreen() {
                   </Pressable>
                 ))}
               </View>
-              <Text style={[text('caption', colors.text.muted), styles.refNote]}>
+              <Text style={[text('bodySm', colors.text.secondary), styles.refNote]}>
                 Định mức nguồn tính cho {formatNumber(protocol.reference_area.value)} {protocol.reference_area.unit === 'ha' ? 'ha' : 'm²'}
                 {protocol.basis === 'nutrient' ? ' · nguồn cho N–P₂O₅–K₂O nguyên chất, ứng dụng quy đổi ra phân đơn' : ''}.
               </Text>
@@ -398,19 +406,16 @@ export function FertilizerCalculatorScreen() {
                   <PrimaryButton testID="calc-save" label="Lưu kế hoạch" onPress={onSave} loading={saving} style={styles.save} />
                 )}
 
-                <Text style={[text('caption', colors.text.muted), styles.disclaimer]}>{protocol.disclaimer}</Text>
+                <Text style={[text('bodySm', colors.text.secondary), styles.disclaimer]}>{protocol.disclaimer}</Text>
                 {protocol.basis === 'nutrient' && conversionNote(protocol.crop_type) ? (
-                  <Text style={[text('caption', colors.text.muted), styles.disclaimer]}>{conversionNote(protocol.crop_type)}</Text>
+                  <Text style={[text('bodySm', colors.text.secondary), styles.disclaimer]}>{conversionNote(protocol.crop_type)}</Text>
                 ) : null}
-                <Pressable
-                  accessibilityRole="link"
-                  onPress={() => Linking.openURL(protocol.source.url).catch(() => {})}
-                  style={({pressed}) => [styles.sourceLink, pressed && styles.sourceLinkPressed]}>
-                  <Text style={[text('caption', colors.primary.default), styles.sourceLinkText]} numberOfLines={2}>
-                    Nguồn: {citation(protocol)} — {protocol.source.url}
-                  </Text>
-                  <ExternalLinkIcon size={14} />
-                </Pressable>
+                <SourceLink
+                  testID="calc-source"
+                  url={protocol.source.url}
+                  citation={`Nguồn: ${citation(protocol)}`}
+                  style={styles.sourceLink}
+                />
               </View>
             ) : null}
           </>
@@ -437,17 +442,23 @@ const styles = StyleSheet.create({
   },
   chip: {
     flex: 0,
+    minHeight: size.minTouchTarget,
     paddingHorizontal: space.md,
+  },
+  unitScroll: {
+    marginTop: space.sm,
   },
   unitRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: space.sm,
-    marginTop: space.sm,
+    // Chừa mép phải để chip cuối không dính viền màn khi cuộn hết.
+    paddingRight: space.lg,
   },
+  // Chọn nhầm m²/sào/ha là sai toàn bộ lượng phân — giữ đủ vùng chạm 48.
   unitChip: {
     flex: 0,
     minWidth: 64,
+    minHeight: size.minTouchTarget,
     paddingHorizontal: space.md,
   },
   scenarios: {
@@ -459,7 +470,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border.strong,
     backgroundColor: colors.surface.card,
     padding: space.md,
-    minHeight: 48,
+    minHeight: size.minTouchTarget,
     justifyContent: 'center',
   },
   scenarioSelected: {
@@ -534,16 +545,6 @@ const styles = StyleSheet.create({
     marginTop: space.lg,
   },
   sourceLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space.sm,
     marginTop: space.sm,
-    minHeight: 32,
-  },
-  sourceLinkPressed: {
-    opacity: 0.7,
-  },
-  sourceLinkText: {
-    flex: 1,
   },
 });

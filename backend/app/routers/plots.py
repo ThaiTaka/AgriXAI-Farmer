@@ -48,19 +48,42 @@ def list_plots(
 @plots_router.post("", response_model=PlotOut, status_code=status.HTTP_201_CREATED)
 def create_plot(
     body: PlotCreate,
-    user: User = Depends(current_user),
+    admin: User = Depends(current_admin),
     db: Session = Depends(get_db),
 ) -> Plot:
+    """Creates a plot. **Administrators only.**
+
+    A plot is a piece of land that has been surveyed, coded and assigned — the
+    farmer receives it, they do not invent it. The phone dropped its "thêm lô"
+    button in ea4dce2; this closes the same door on the server, where it
+    actually counts. A farmer calling this gets 403.
+
+    Editing (PATCH) stays open to the owning farmer: they are the one who knows
+    what is planted and when, and that is the data the app is for.
+    """
+    owner = _assignable_owner(db, admin, body.owner_id)
     plot = Plot(
         id=body.id or str(uuid.uuid4()),
-        owner_id=user.id,
-        updated_by=user.id,
-        **body.model_dump(exclude={"id"}),
+        owner_id=owner.id,
+        updated_by=admin.id,
+        **body.model_dump(exclude={"id", "owner_id"}),
     )
     db.add(plot)
     db.commit()
     db.refresh(plot)
     return plot
+
+
+def _assignable_owner(db: Session, admin: User, owner_id: str | None) -> User:
+    """The account a newly created plot belongs to."""
+    if not owner_id or owner_id == admin.id:
+        return admin
+    owner = db.get(User, owner_id)
+    if owner is None or owner.is_deleted:
+        raise HTTPException(status_code=404, detail="Không tìm thấy tài khoản nhận lô đất")
+    if not owner.is_active:
+        raise HTTPException(status_code=400, detail="Tài khoản đã bị khoá, không thể giao lô đất")
+    return owner
 
 
 @plots_router.get("/{plot_id}", response_model=PlotOut)

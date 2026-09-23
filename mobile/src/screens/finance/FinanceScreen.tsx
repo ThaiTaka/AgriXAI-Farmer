@@ -12,7 +12,7 @@ import type {RouteProp} from '@react-navigation/native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Alert, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
+import {Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Share, StyleSheet, Text, View} from 'react-native';
 
 import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {AppHeader} from '../../components/AppHeader';
@@ -68,13 +68,15 @@ export function FinanceScreen() {
 
   return (
     <Screen>
-      <AppHeader eyebrow="Tài chính nông hộ" title="Thu – Chi" onBack={() => navigation.goBack()} />
-      <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        {tab === 'income' ? <EntryTab side="income" rows={incomes} plots={plots} /> : null}
-        {tab === 'expense' ? <EntryTab side="expense" rows={expenses} plots={plots} onOpenPurchase={id => navigation.navigate('Warehouse', {tab: 'in', prefill: {fertilizerId: id}})} /> : null}
-        {tab === 'report' ? <ReportTab incomes={incomes} expenses={expenses} /> : null}
-      </ScrollView>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <AppHeader eyebrow="Tài chính nông hộ" title="Thu – Chi" onBack={() => navigation.goBack()} />
+        <Tabs items={TABS} value={tab} onChange={setTab} style={styles.tabs} />
+        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+          {tab === 'income' ? <EntryTab side="income" rows={incomes} plots={plots} /> : null}
+          {tab === 'expense' ? <EntryTab side="expense" rows={expenses} plots={plots} onOpenPurchase={id => navigation.navigate('Warehouse', {tab: 'in', prefill: {fertilizerId: id}})} /> : null}
+          {tab === 'report' ? <ReportTab incomes={incomes} expenses={expenses} /> : null}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 }
@@ -151,8 +153,9 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
             setAmount(v);
             setErrors(e => ({...e, amount: undefined}));
           }}
-          placeholder="1500000"
+          placeholder="1.500.000"
           keyboardType="numeric"
+          money
           error={errors.amount}
           hint={amountValue > 0 ? `= ${formatVnd(amountValue)}` : undefined}
           style={styles.field}
@@ -169,7 +172,17 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
             </ScrollView>
           </View>
         ) : null}
-        <Field testID={`${side}-note`} label="Ghi chú" value={note} onChangeText={setNote} placeholder={side === 'income' ? 'Bán cho ai, giá bao nhiêu một kg…' : 'Thuê ai, mua ở đâu…'} style={styles.field} />
+        {/* Ghi chú là một câu chứ không phải một từ: ô một dòng thì gõ vài
+            chữ là chữ trôi mất, bà con không đọc lại được mình vừa ghi gì. */}
+        <Field
+          testID={`${side}-note`}
+          label="Ghi chú"
+          value={note}
+          onChangeText={setNote}
+          placeholder={side === 'income' ? 'Bán cho ai, giá bao nhiêu một kg…' : 'Thuê ai, mua ở đâu…'}
+          multiline
+          style={styles.field}
+        />
         <PrimaryButton testID={`${side}-save`} label={side === 'income' ? 'Lưu khoản thu' : 'Lưu khoản chi'} onPress={onSave} loading={saving} />
       </Card>
 
@@ -191,12 +204,12 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
                   accessibilityRole="checkbox"
                   accessibilityState={{checked: row.checked}}
                   accessibilityLabel={row.checked ? 'Đã kiểm tra' : 'Chưa kiểm tra'}
-                  hitSlop={8}
+                  hitSlop={12}
                   onPress={() => setChecked(row, !row.checked, author).catch(e => console.warn('[finance] check failed', e))}>
                   <CheckboxIcon checked={row.checked} />
                 </Pressable>
                 <View style={styles.entryBody}>
-                  <Text style={text('bodyStrong')} numberOfLines={1}>
+                  <Text style={text('bodyStrong')} numberOfLines={2}>
                     {row.description}
                   </Text>
                   <View style={styles.entryMeta}>
@@ -213,7 +226,10 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
                   ) : null}
                 </View>
                 <View style={styles.entryValue}>
-                  <NumberText size="md" color={side === 'income' ? colors.primary.default : colors.text.secondary}>
+                  <NumberText
+                    size="md"
+                    numberOfLines={1}
+                    color={side === 'income' ? colors.primary.default : colors.text.secondary}>
                     {side === 'income' ? '+' : '−'}
                     {formatVnd(row.amount)}
                   </NumberText>
@@ -235,7 +251,7 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
         </Card>
       )}
       {onOpenPurchase ? (
-        <Text style={[text('caption', colors.text.muted), styles.note]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.note]}>
           Khoản chi "Từ kho" được ghi tự động khi nhập kho; xoá phiếu nhập không xoá khoản chi và ngược lại.
         </Text>
       ) : null}
@@ -284,7 +300,7 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
         <View style={styles.profitRow}>
           <View>
             <Text style={text('eyebrow', colors.text.muted)}>{report.profit >= 0 ? 'Lãi' : 'Lỗ'} — {report.label}</Text>
-            <Text style={[text('caption', colors.text.muted), styles.formula]}>= Tổng thu − Tổng chi</Text>
+            <Text style={[text('bodySm', colors.text.secondary), styles.formula]}>= Tổng thu − Tổng chi</Text>
           </View>
           <NumberText size="lg" color={profitColor} numberOfLines={1}>
             {formatVnd(report.profit)}
@@ -306,6 +322,7 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
               ]}
               formatY={v => formatVnd(Math.round(v))}
               formatX={formatDate}
+              interpolation="smooth"
             />
           </Card>
 
@@ -327,7 +344,7 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
       )}
 
       <SecondaryButton testID="report-export" label="Xuất CSV" icon={<ShareIcon />} onPress={exportCsv} style={styles.export} />
-      <Text style={[text('caption', colors.text.muted), styles.note]}>
+      <Text style={[text('bodySm', colors.text.secondary), styles.note]}>
         CSV: dòng 1 kỳ báo cáo · dòng 2 Thu, Chi, Lãi lỗ · từng giao dịch · dòng cuối tổng. Gửi qua bảng chia sẻ của máy.
       </Text>
     </>
@@ -335,6 +352,9 @@ function ReportTab({incomes, expenses}: {incomes: Income[]; expenses: Expense[]}
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   tabs: {
     marginHorizontal: space.lg,
     marginBottom: space.lg,
@@ -405,6 +425,8 @@ const styles = StyleSheet.create({
   },
   entryValue: {
     alignItems: 'flex-end',
+    flexShrink: 0,
+    maxWidth: 140,
   },
   trash: {
     width: 40,

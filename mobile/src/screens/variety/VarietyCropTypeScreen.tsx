@@ -19,6 +19,7 @@ import {CropIcon, PlusIcon} from '../../components/icons';
 import {Screen} from '../../components/Screen';
 import type {VarietyOption} from '../../db/repositories/varietyRepository';
 import {cropTypeOptions, USER_CATEGORY_ID} from '../../db/repositories/varietyRepository';
+import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
 import {colors, radius, space, text} from '../../theme';
 import {AddVarietySheet} from './AddVarietySheet';
@@ -37,26 +38,20 @@ export function VarietyCropTypeScreen() {
   const returnTo = params.returnTo ?? 'PlotForm';
 
   const cancel = useCallback(
-    () => navigation.popTo(returnTo, undefined, {merge: true}),
+    () => popToPicker(navigation, returnTo),
     [navigation, returnTo],
   );
 
   const onCreated = useCallback(
     (variety: VarietyOption) => {
       setAdding(false);
-      navigation.popTo(
-        returnTo,
-        {
-          pickedVariety: {
-            cropType: variety.cropType,
-            cropName: variety.cropName,
-            categoryId: variety.categoryId === USER_CATEGORY_ID ? null : variety.categoryId,
-            varietyId: variety.id,
-            varietyName: variety.name,
-          },
-        },
-        {merge: true},
-      );
+      popToPicker(navigation, returnTo, {
+        cropType: variety.cropType,
+        cropName: variety.cropName,
+        categoryId: variety.categoryId === USER_CATEGORY_ID ? null : variety.categoryId,
+        varietyId: variety.id,
+        varietyName: variety.name,
+      });
     },
     [navigation, returnTo],
   );
@@ -123,7 +118,7 @@ export function VarietyCropTypeScreen() {
           </Card>
         </View>
 
-        <Text style={[text('caption', colors.text.muted), styles.footnote]}>
+        <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
           Danh mục giống lấy từ Viện Eakmat (WASI), công ty giống Rạng Đông, East-West Seed, Phú
           Điền, Chánh Phong, Rijk Zwaan và các nguồn nông nghiệp công khai. Số liệu chép đúng theo
           nguồn — chỗ chưa có dữ liệu được ghi rõ.
@@ -148,11 +143,11 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: space.lg,
+    justifyContent: 'space-between',
+    rowGap: space.lg,
   },
   tile: {
-    // Two columns with a 16pt gutter: (100% - 16) / 2.
-    width: '47.8%',
+    width: '48%',
     minHeight: 132,
   },
   tileOther: {

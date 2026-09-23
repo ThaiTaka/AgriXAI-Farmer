@@ -1,7 +1,7 @@
 """Stock and finance arithmetic (app/services/ledger_service.py).
 
 The numbers here are the mock-up farm from the Giai đoạn 3 brief — Nguyễn Văn
-Cường, PUC-001-HB — so the same figures can be checked on the phone.
+Thái, PUC-001-HB — so the same figures can be checked on the phone.
 """
 
 from datetime import datetime

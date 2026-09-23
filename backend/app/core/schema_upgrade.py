@@ -13,10 +13,16 @@ Data fixes that accompany a schema step live in `apply_data_fixes` so both the
 API (lifespan) and the seeder (`python -m app.seed`) run the same code.
 """
 
+import logging
+
 from sqlalchemy import inspect, text
 from sqlalchemy.engine import Engine
+from sqlalchemy.schema import CreateIndex
 
+import app.models  # noqa: F401 — importing the package fills Base.metadata
 from app.core.database import Base
+
+logger = logging.getLogger("agrilog.schema")
 
 
 def add_missing_columns(engine: Engine) -> list[str]:
@@ -36,13 +42,40 @@ def add_missing_columns(engine: Engine) -> list[str]:
                 nullable = "" if column.nullable else " NOT NULL"
                 default = ""
                 if column.default is not None and column.default.is_scalar:
-                    default = f" DEFAULT {_literal(column.default.arg)}"
+                    default = f" DEFAULT {_literal(column.default.arg, engine)}"
                 conn.execute(
                     text(f'ALTER TABLE {table.name} ADD COLUMN "{column.name}" {ddl}{nullable}{default}')
                 )
                 added.append(f"{table.name}.{column.name}")
 
     return added
+
+
+def add_missing_indexes(engine: Engine) -> list[str]:
+    """Creates every index the models declare but the live table lacks.
+
+    `create_all` skips a table that already exists, and with it any index added
+    to that table later — so a database created before the composite sync
+    indexes (app/models/__init__.py) would never get them. Runs on both SQLite
+    and PostgreSQL; `IF NOT EXISTS` keeps it a no-op on the second start-up.
+    """
+    inspector = inspect(engine)
+    created: list[str] = []
+
+    with engine.begin() as conn:
+        for table in Base.metadata.sorted_tables:
+            if not inspector.has_table(table.name):
+                continue  # create_all just made it, indexes included
+            live = {ix["name"] for ix in inspector.get_indexes(table.name)}
+            for index in table.indexes:
+                if index.name in live:
+                    continue
+                conn.execute(CreateIndex(index, if_not_exists=True))
+                created.append(index.name)
+
+    if created:
+        logger.info("created %d missing index(es): %s", len(created), ", ".join(created))
+    return created
 
 
 def apply_data_fixes(engine: Engine) -> None:
@@ -79,13 +112,18 @@ def apply_data_fixes(engine: Engine) -> None:
 def upgrade(engine: Engine) -> list[str]:
     Base.metadata.create_all(bind=engine)
     added = add_missing_columns(engine)
+    add_missing_indexes(engine)
     apply_data_fixes(engine)
     return added
 
 
-def _literal(value: object) -> str:
+def _literal(value: object, engine: Engine) -> str:
     if isinstance(value, bool):
-        return "1" if value else "0"
+        # SQLite stores booleans as 0/1 and has no TRUE keyword before 3.23;
+        # PostgreSQL rejects `DEFAULT 1` on a boolean column outright.
+        if engine.dialect.name == "sqlite":
+            return "1" if value else "0"
+        return "TRUE" if value else "FALSE"
     if isinstance(value, (int, float)):
         return str(value)
     return "'" + str(value).replace("'", "''") + "'"
