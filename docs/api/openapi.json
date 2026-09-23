@@ -1,0 +1,6474 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AgriLog v2 API",
+    "description": "API cho ứng dụng nông hộ AgriLog v2 (mobile) và trang quản trị (web-admin).\n\n**Xác thực:** đăng nhập ở `POST /auth/login`, rồi gửi `Authorization: Bearer <token>` cho mọi endpoint khác.\n\n**Đồng bộ:** `GET /sync` kéo thay đổi, `POST /sync` đẩy thay đổi. Xung đột giải quyết theo *last write wins* dựa trên `updated_at`, và mọi bản ghi bị giữ lại đều trả về trong `conflicts` kèm bản của máy chủ.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "description": "Exchanges username (or email) + password for a bearer token.\n\nFive wrong passwords in a minute from the same caller for the same account\nand the door closes for a minute (429). Only wrong passwords count, so a\nfarmer who signs in normally never meets the limiter.",
+        "operationId": "login_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Read Me",
+        "operationId": "read_me_auth_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Update Me",
+        "operationId": "update_me_auth_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/auth/change-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Change Password",
+        "description": "Đổi mật khẩu — bất kỳ người dùng nào cũng gọi được (farmer lẫn admin).\n\nQuy tắc bảo mật:\n- Phải xác nhận mật khẩu hiện tại trước khi đặt mật khẩu mới.\n- Không cho phép đặt lại mật khẩu cũ (new == current).\n- Trả 204 No Content khi thành công (không tiết lộ thông tin thừa).\n- Trả 400 nếu mật khẩu hiện tại sai hoặc mật khẩu mới trùng cũ.",
+        "operationId": "change_password_auth_change_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordChange"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/plots": {
+      "get": {
+        "tags": [
+          "plots"
+        ],
+        "summary": "List Plots",
+        "operationId": "list_plots_plots_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlotOut"
+                  },
+                  "title": "Response List Plots Plots Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "plots"
+        ],
+        "summary": "Create Plot",
+        "description": "Creates a plot. **Administrators only.**\n\nA plot is a piece of land that has been surveyed, coded and assigned — the\nfarmer receives it, they do not invent it. The phone dropped its \"thêm lô\"\nbutton in ea4dce2; this closes the same door on the server, where it\nactually counts. A farmer calling this gets 403.\n\nEditing (PATCH) stays open to the owning farmer: they are the one who knows\nwhat is planted and when, and that is the data the app is for.",
+        "operationId": "create_plot_plots_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlotCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlotOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/plots/{plot_id}": {
+      "get": {
+        "tags": [
+          "plots"
+        ],
+        "summary": "Get Plot",
+        "operationId": "get_plot_plots__plot_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "plot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Plot Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlotOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "plots"
+        ],
+        "summary": "Update Plot",
+        "operationId": "update_plot_plots__plot_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "plot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Plot Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlotUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlotOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "plots"
+        ],
+        "summary": "Delete Plot",
+        "operationId": "delete_plot_plots__plot_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "plot_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Plot Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crop-varieties": {
+      "get": {
+        "tags": [
+          "crop-varieties"
+        ],
+        "summary": "List Varieties",
+        "operationId": "list_varieties_crop_varieties_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "crop_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Crop Type"
+            }
+          },
+          {
+            "name": "include_unapproved",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Include Unapproved"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CropVarietyOut"
+                  },
+                  "title": "Response List Varieties Crop Varieties Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "crop-varieties"
+        ],
+        "summary": "Create Variety",
+        "operationId": "create_variety_crop_varieties_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CropVarietyCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CropVarietyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crop-varieties/{variety_id}": {
+      "patch": {
+        "tags": [
+          "crop-varieties"
+        ],
+        "summary": "Review Variety",
+        "operationId": "review_variety_crop_varieties__variety_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "variety_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Variety Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CropVarietyApprove"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CropVarietyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "crop-varieties"
+        ],
+        "summary": "Reject Variety",
+        "operationId": "reject_variety_crop_varieties__variety_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "variety_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Variety Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sync": {
+      "get": {
+        "tags": [
+          "sync"
+        ],
+        "summary": "Pull",
+        "operationId": "pull_sync_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "last_pulled_at",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Last Pulled At"
+            }
+          },
+          {
+            "name": "schema_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Schema Version"
+            }
+          },
+          {
+            "name": "migration",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Migration"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Pull Sync Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "sync"
+        ],
+        "summary": "Push",
+        "description": "Applies a batch of client changes as one transaction.\n\nA batch either lands whole or not at all (422 + nothing written), so a phone\nthat lost signal half-way through can resend exactly what it sent before.",
+        "operationId": "push_sync_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "last_pulled_at",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Last Pulled At"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {}
+                  }
+                },
+                "title": "Changes"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Push Sync Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/plans": {
+      "get": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "List Plans",
+        "operationId": "list_plans_plans_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanOut"
+                  },
+                  "title": "Response List Plans Plans Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Create Plan",
+        "operationId": "create_plan_plans_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/plans/{plan_id}": {
+      "patch": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Update Plan",
+        "operationId": "update_plan_plans__plan_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "plans"
+        ],
+        "summary": "Delete Plan",
+        "operationId": "delete_plan_plans__plan_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Plan Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/warehouse/in": {
+      "get": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "List Warehouse In",
+        "operationId": "list_warehouse_in_warehouse_in_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WarehouseInOut"
+                  },
+                  "title": "Response List Warehouse In Warehouse In Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Create Warehouse In",
+        "operationId": "create_warehouse_in_warehouse_in_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WarehouseInCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WarehouseInOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/warehouse/in/{row_id}": {
+      "patch": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Update Warehouse In",
+        "operationId": "update_warehouse_in_warehouse_in__row_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WarehouseInUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WarehouseInOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Delete Warehouse In",
+        "operationId": "delete_warehouse_in_warehouse_in__row_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/warehouse/out": {
+      "get": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "List Warehouse Out",
+        "operationId": "list_warehouse_out_warehouse_out_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WarehouseOutOut"
+                  },
+                  "title": "Response List Warehouse Out Warehouse Out Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Create Warehouse Out",
+        "operationId": "create_warehouse_out_warehouse_out_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WarehouseOutCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WarehouseOutOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/warehouse/out/{row_id}": {
+      "patch": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Update Warehouse Out",
+        "operationId": "update_warehouse_out_warehouse_out__row_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WarehouseOutUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WarehouseOutOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Delete Warehouse Out",
+        "operationId": "delete_warehouse_out_warehouse_out__row_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/warehouse/summary": {
+      "get": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Warehouse Summary",
+        "operationId": "warehouse_summary_warehouse_summary_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StockSummaryOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/warehouse/summary.csv": {
+      "get": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Warehouse Summary Csv",
+        "operationId": "warehouse_summary_csv_warehouse_summary_csv_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/warehouse/check": {
+      "get": {
+        "tags": [
+          "warehouse"
+        ],
+        "summary": "Warehouse Check",
+        "description": "F4: is there enough of one fertiliser in the shed for a planned application?",
+        "operationId": "warehouse_check_warehouse_check_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "fertilizer_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Fertilizer Id"
+            }
+          },
+          {
+            "name": "needed_kg",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "title": "Needed Kg"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StockCheckOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/income": {
+      "get": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "List Income",
+        "operationId": "list_income_income_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IncomeOut"
+                  },
+                  "title": "Response List Income Income Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Create Income",
+        "operationId": "create_income_income_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomeCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncomeOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/income/{row_id}": {
+      "patch": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Update Income",
+        "operationId": "update_income_income__row_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncomeUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncomeOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Delete Income",
+        "operationId": "delete_income_income__row_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/income/{row_id}/checked": {
+      "patch": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Set Income Checked",
+        "operationId": "set_income_checked_income__row_id__checked_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckedUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IncomeOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expense": {
+      "get": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "List Expense",
+        "operationId": "list_expense_expense_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExpenseOut"
+                  },
+                  "title": "Response List Expense Expense Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Create Expense",
+        "operationId": "create_expense_expense_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpenseCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expense/{row_id}": {
+      "patch": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Update Expense",
+        "operationId": "update_expense_expense__row_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpenseUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Delete Expense",
+        "operationId": "delete_expense_expense__row_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expense/{row_id}/checked": {
+      "patch": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Set Expense Checked",
+        "operationId": "set_expense_checked_expense__row_id__checked_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "row_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckedUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/financials": {
+      "get": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Financials",
+        "operationId": "financials_reports_financials_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Year"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Month"
+            }
+          },
+          {
+            "name": "quarter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Quarter"
+            }
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialReportOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/financials.csv": {
+      "get": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Financials Csv",
+        "operationId": "financials_csv_reports_financials_csv_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Year"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Month"
+            }
+          },
+          {
+            "name": "quarter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Quarter"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/care-protocols": {
+      "get": {
+        "tags": [
+          "care-protocols"
+        ],
+        "summary": "List Care Protocols",
+        "description": "The merged shared/data/care_protocols.json, so web-admin shows exactly\nwhat the phone bundles.",
+        "operationId": "list_care_protocols_care_protocols_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response List Care Protocols Care Protocols Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/tasks-history": {
+      "get": {
+        "tags": [
+          "care-protocols"
+        ],
+        "summary": "List Tasks History",
+        "operationId": "list_tasks_history_tasks_history_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "plot_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Plot Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response List Tasks History Tasks History Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs": {
+      "post": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Post Logs",
+        "description": "Accepts a batch (the phone queues while offline). Re-sending an id is\na no-op, so a retry after a dropped response cannot duplicate a log.",
+        "operationId": "post_logs_logs_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ErrorLogIn"
+                },
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Post Logs Logs Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "List Logs",
+        "operationId": "list_logs_logs_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorLogOut"
+                  },
+                  "title": "Response List Logs Logs Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/summary": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Dashboard Summary",
+        "operationId": "dashboard_summary_dashboard_summary_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Year"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Month"
+            }
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/financials.pdf": {
+      "get": {
+        "tags": [
+          "finance"
+        ],
+        "summary": "Financials Pdf",
+        "operationId": "financials_pdf_reports_financials_pdf_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Year"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Month"
+            }
+          },
+          {
+            "name": "quarter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Quarter"
+            }
+          },
+          {
+            "name": "owner_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Owner Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "List Users",
+        "operationId": "list_users_users_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/UserSummary"
+                  },
+                  "type": "array",
+                  "title": "Response List Users Users Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Create User",
+        "description": "Admin tạo tài khoản nông hộ mới.\n\n- Password được hash bằng bcrypt trước khi lưu — không bao giờ lưu plaintext.\n- Trả 409 khi username đã tồn tại thay vì để lộ 500.\n- ID tạo bằng UUID v4 (theo convention toàn dự án).",
+        "operationId": "create_user_users_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/users/version": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "App Version",
+        "operationId": "app_version_users_version_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response App Version Users Version Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/users/{user_id}/status": {
+      "patch": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Update User Status",
+        "description": "Admin khoá hoặc mở khoá tài khoản nông hộ.\n\n- Admin không thể tự khoá chính mình (tránh mất quyền quản trị).\n- Trả 404 nếu id không tồn tại hoặc đã bị xoá mềm.",
+        "operationId": "update_user_status_users__user_id__status_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserStatusUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fertilizer-prices": {
+      "post": {
+        "tags": [
+          "fertilizer-prices"
+        ],
+        "summary": "Create Price",
+        "description": "Admin nhập giá mới cho một loại phân bón.\n\nLuôn INSERT dòng mới — không UPDATE dòng cũ.\nSau khi tạo, giá mới này trở thành \"giá hiện hành\" nếu\neffective_from của nó lớn hơn tất cả các dòng trước.",
+        "operationId": "create_price_fertilizer_prices_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FertilizerPriceIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FertilizerPriceOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/fertilizer-prices/latest": {
+      "get": {
+        "tags": [
+          "fertilizer-prices"
+        ],
+        "summary": "Get Latest Prices",
+        "description": "Trả về giá hiện hành (mới nhất theo effective_from) của mỗi loại phân bón.\n\nDanh sách đủ để web-admin hiển thị bảng giá theo nhóm.\nCác fertilizer_id chưa có giá trong DB thì dùng giá từ JSON catalogue.",
+        "operationId": "get_latest_prices_fertilizer_prices_latest_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/FertilizerPriceOut"
+                  },
+                  "type": "array",
+                  "title": "Response Get Latest Prices Fertilizer Prices Latest Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/fertilizer-prices/history/{fertilizer_id}": {
+      "get": {
+        "tags": [
+          "fertilizer-prices"
+        ],
+        "summary": "Get Price History",
+        "description": "Lịch sử toàn bộ giá của một loại phân bón, mới nhất trước.",
+        "operationId": "get_price_history_fertilizer_prices_history__fertilizer_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "fertilizer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Fertilizer Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FertilizerPriceOut"
+                  },
+                  "title": "Response Get Price History Fertilizer Prices History  Fertilizer Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CheckedUpdate": {
+        "properties": {
+          "checked": {
+            "type": "boolean",
+            "title": "Checked"
+          }
+        },
+        "type": "object",
+        "required": [
+          "checked"
+        ],
+        "title": "CheckedUpdate"
+      },
+      "CropVarietyApprove": {
+        "properties": {
+          "approved": {
+            "type": "boolean",
+            "title": "Approved"
+          }
+        },
+        "type": "object",
+        "required": [
+          "approved"
+        ],
+        "title": "CropVarietyApprove",
+        "description": "Admin review of a farmer-submitted variety (web-admin duyệt giống)."
+      },
+      "CropVarietyCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "crop_type": {
+            "type": "string",
+            "maxLength": 48,
+            "title": "Crop Type"
+          },
+          "crop_name": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Crop Name"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Id"
+          },
+          "category_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 96
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usage"
+          },
+          "growing_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Growing Note"
+          },
+          "badge": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Badge"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "crop_type",
+          "crop_name"
+        ],
+        "title": "CropVarietyCreate"
+      },
+      "CropVarietyOut": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "crop_type": {
+            "type": "string",
+            "maxLength": 48,
+            "title": "Crop Type"
+          },
+          "crop_name": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Crop Name"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Id"
+          },
+          "category_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 96
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usage"
+          },
+          "growing_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Growing Note"
+          },
+          "badge": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Badge"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "seed_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed Key"
+          },
+          "is_seed": {
+            "type": "boolean",
+            "title": "Is Seed"
+          },
+          "approved": {
+            "type": "boolean",
+            "title": "Approved"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "integer",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "crop_type",
+          "crop_name",
+          "id",
+          "seed_key",
+          "is_seed",
+          "approved",
+          "source",
+          "created_by",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "CropVarietyOut"
+      },
+      "DailyPoint": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date"
+          },
+          "income": {
+            "type": "number",
+            "title": "Income"
+          },
+          "expense": {
+            "type": "number",
+            "title": "Expense"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "income",
+          "expense"
+        ],
+        "title": "DailyPoint"
+      },
+      "DashboardOut": {
+        "properties": {
+          "owner_id": {
+            "type": "string",
+            "title": "Owner Id"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "month": {
+            "type": "integer",
+            "title": "Month"
+          },
+          "stock_value": {
+            "type": "number",
+            "title": "Stock Value"
+          },
+          "stock_kg": {
+            "type": "number",
+            "title": "Stock Kg"
+          },
+          "stock_kinds": {
+            "type": "integer",
+            "title": "Stock Kinds"
+          },
+          "month_income": {
+            "type": "number",
+            "title": "Month Income"
+          },
+          "month_expense": {
+            "type": "number",
+            "title": "Month Expense"
+          },
+          "month_profit": {
+            "type": "number",
+            "title": "Month Profit"
+          },
+          "pending_tasks": {
+            "type": "integer",
+            "title": "Pending Tasks"
+          },
+          "pending_groups": {
+            "items": {
+              "$ref": "#/components/schemas/PendingGroupOut"
+            },
+            "type": "array",
+            "title": "Pending Groups"
+          }
+        },
+        "type": "object",
+        "required": [
+          "owner_id",
+          "full_name",
+          "region",
+          "year",
+          "month",
+          "stock_value",
+          "stock_kg",
+          "stock_kinds",
+          "month_income",
+          "month_expense",
+          "month_profit",
+          "pending_tasks",
+          "pending_groups"
+        ],
+        "title": "DashboardOut"
+      },
+      "ErrorLogIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "action": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Action"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Message"
+          },
+          "stack": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stack"
+          },
+          "app_version": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "App Version"
+          },
+          "platform": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "reported": {
+            "type": "boolean",
+            "title": "Reported",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "message",
+          "occurred_at"
+        ],
+        "title": "ErrorLogIn"
+      },
+      "ErrorLogOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "action": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Action"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Message"
+          },
+          "stack": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stack"
+          },
+          "app_version": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "App Version"
+          },
+          "platform": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Platform"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "reported": {
+            "type": "boolean",
+            "title": "Reported",
+            "default": false
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "action",
+          "message",
+          "occurred_at",
+          "user_id",
+          "created_at"
+        ],
+        "title": "ErrorLogOut"
+      },
+      "ExpenseCreate": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ExpenseKind",
+            "default": "other"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Description"
+          },
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Amount"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "checked": {
+            "type": "boolean",
+            "title": "Checked",
+            "default": false
+          },
+          "warehouse_in_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warehouse In Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "description",
+          "amount",
+          "occurred_at"
+        ],
+        "title": "ExpenseCreate"
+      },
+      "ExpenseKind": {
+        "type": "string",
+        "enum": [
+          "fertilizer",
+          "labor",
+          "utilities",
+          "other"
+        ],
+        "title": "ExpenseKind"
+      },
+      "ExpenseOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "owner_id": {
+            "type": "string",
+            "title": "Owner Id"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "integer",
+            "title": "Updated At"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "checked": {
+            "type": "boolean",
+            "title": "Checked"
+          },
+          "warehouse_in_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warehouse In Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "owner_id",
+          "updated_by",
+          "created_at",
+          "updated_at",
+          "kind",
+          "description",
+          "amount",
+          "occurred_at",
+          "note",
+          "plot_id",
+          "checked",
+          "warehouse_in_id"
+        ],
+        "title": "ExpenseOut"
+      },
+      "ExpenseUpdate": {
+        "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExpenseKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "checked": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked"
+          }
+        },
+        "type": "object",
+        "title": "ExpenseUpdate"
+      },
+      "FertilizerPriceIn": {
+        "properties": {
+          "fertilizer_id": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Fertilizer Id"
+          },
+          "price_per_kg": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Price Per Kg",
+            "description": "Giá VNĐ/kg, phải dương"
+          },
+          "effective_from": {
+            "type": "integer",
+            "title": "Effective From",
+            "description": "Thời điểm hiệu lực (epoch ms)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fertilizer_id",
+          "price_per_kg",
+          "effective_from"
+        ],
+        "title": "FertilizerPriceIn",
+        "description": "Body yêu cầu khi admin nhập giá mới."
+      },
+      "FertilizerPriceOut": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "fertilizer_id": {
+            "type": "string",
+            "title": "Fertilizer Id"
+          },
+          "fertilizer_name": {
+            "type": "string",
+            "title": "Fertilizer Name"
+          },
+          "group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group"
+          },
+          "price_per_kg": {
+            "type": "number",
+            "title": "Price Per Kg"
+          },
+          "effective_from": {
+            "type": "integer",
+            "title": "Effective From"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "fertilizer_id",
+          "fertilizer_name",
+          "group",
+          "price_per_kg",
+          "effective_from",
+          "updated_by",
+          "created_at"
+        ],
+        "title": "FertilizerPriceOut",
+        "description": "Trả về: giá hiện hành kèm tên phân bón từ danh mục JSON."
+      },
+      "FinancialReportOut": {
+        "properties": {
+          "period": {
+            "type": "string",
+            "title": "Period"
+          },
+          "total_income": {
+            "type": "number",
+            "title": "Total Income"
+          },
+          "total_expense": {
+            "type": "number",
+            "title": "Total Expense"
+          },
+          "profit": {
+            "type": "number",
+            "title": "Profit"
+          },
+          "income_by_kind": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Income By Kind"
+          },
+          "expense_by_kind": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Expense By Kind"
+          },
+          "daily": {
+            "items": {
+              "$ref": "#/components/schemas/DailyPoint"
+            },
+            "type": "array",
+            "title": "Daily"
+          },
+          "incomes": {
+            "items": {
+              "$ref": "#/components/schemas/IncomeOut"
+            },
+            "type": "array",
+            "title": "Incomes"
+          },
+          "expenses": {
+            "items": {
+              "$ref": "#/components/schemas/ExpenseOut"
+            },
+            "type": "array",
+            "title": "Expenses"
+          }
+        },
+        "type": "object",
+        "required": [
+          "period",
+          "total_income",
+          "total_expense",
+          "profit",
+          "income_by_kind",
+          "expense_by_kind",
+          "daily",
+          "incomes",
+          "expenses"
+        ],
+        "title": "FinancialReportOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "app": {
+            "type": "string",
+            "title": "App"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "database": {
+            "type": "string",
+            "title": "Database"
+          },
+          "static_data": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "type": "object",
+            "title": "Static Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "app",
+          "version",
+          "database",
+          "static_data"
+        ],
+        "title": "HealthResponse"
+      },
+      "IncomeCreate": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/IncomeKind",
+            "default": "product"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Description"
+          },
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Amount"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "checked": {
+            "type": "boolean",
+            "title": "Checked",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "description",
+          "amount",
+          "occurred_at"
+        ],
+        "title": "IncomeCreate"
+      },
+      "IncomeKind": {
+        "type": "string",
+        "enum": [
+          "product",
+          "service",
+          "other"
+        ],
+        "title": "IncomeKind"
+      },
+      "IncomeOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "owner_id": {
+            "type": "string",
+            "title": "Owner Id"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "integer",
+            "title": "Updated At"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "checked": {
+            "type": "boolean",
+            "title": "Checked"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "owner_id",
+          "updated_by",
+          "created_at",
+          "updated_at",
+          "kind",
+          "description",
+          "amount",
+          "occurred_at",
+          "note",
+          "plot_id",
+          "checked"
+        ],
+        "title": "IncomeOut"
+      },
+      "IncomeUpdate": {
+        "properties": {
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/IncomeKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "amount": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Amount"
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "checked": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked"
+          }
+        },
+        "type": "object",
+        "title": "IncomeUpdate"
+      },
+      "LoginRequest": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
+      "LoginResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type",
+            "default": "bearer"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "user"
+        ],
+        "title": "LoginResponse"
+      },
+      "PasswordChange": {
+        "properties": {
+          "current_password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Current Password"
+          },
+          "new_password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 6,
+            "title": "New Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "current_password",
+          "new_password"
+        ],
+        "title": "PasswordChange",
+        "description": "Đổi mật khẩu — người dùng phải xác nhận mật khẩu cũ trước."
+      },
+      "PendingGroupOut": {
+        "properties": {
+          "plot_id": {
+            "type": "string",
+            "title": "Plot Id"
+          },
+          "plot_name": {
+            "type": "string",
+            "title": "Plot Name"
+          },
+          "crop_name": {
+            "type": "string",
+            "title": "Crop Name"
+          },
+          "stage_name": {
+            "type": "string",
+            "title": "Stage Name"
+          },
+          "pending": {
+            "type": "integer",
+            "title": "Pending"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plot_id",
+          "plot_name",
+          "crop_name",
+          "stage_name",
+          "pending"
+        ],
+        "title": "PendingGroupOut"
+      },
+      "PlanCreate": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "crop_type": {
+            "type": "string",
+            "maxLength": 48,
+            "title": "Crop Type"
+          },
+          "crop_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crop Name"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Id"
+          },
+          "variety_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Id"
+          },
+          "variety_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Name"
+          },
+          "protocol_id": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Protocol Id"
+          },
+          "scenario_id": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Scenario Id"
+          },
+          "scenario_name": {
+            "type": "string",
+            "maxLength": 160,
+            "title": "Scenario Name"
+          },
+          "area_input": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Area Input"
+          },
+          "area_unit": {
+            "type": "string",
+            "maxLength": 16,
+            "title": "Area Unit"
+          },
+          "area_m2": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Area M2"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlanItem"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Items"
+          },
+          "cost_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Min"
+          },
+          "cost_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Max"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "crop_type",
+          "protocol_id",
+          "scenario_id",
+          "scenario_name",
+          "area_input",
+          "area_unit",
+          "area_m2",
+          "items"
+        ],
+        "title": "PlanCreate"
+      },
+      "PlanItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "fertilizer_category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fertilizer Category"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit",
+            "default": "kg"
+          },
+          "min": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Min"
+          },
+          "max": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Max"
+          },
+          "price_product_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Product Id"
+          },
+          "price_per_kg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Per Kg"
+          },
+          "cost_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Min"
+          },
+          "cost_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Max"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "name",
+          "min",
+          "max"
+        ],
+        "title": "PlanItem"
+      },
+      "PlanOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "owner_id": {
+            "type": "string",
+            "title": "Owner Id"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "integer",
+            "title": "Updated At"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "crop_type": {
+            "type": "string",
+            "title": "Crop Type"
+          },
+          "crop_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crop Name"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Id"
+          },
+          "variety_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Id"
+          },
+          "variety_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Name"
+          },
+          "protocol_id": {
+            "type": "string",
+            "title": "Protocol Id"
+          },
+          "scenario_id": {
+            "type": "string",
+            "title": "Scenario Id"
+          },
+          "scenario_name": {
+            "type": "string",
+            "title": "Scenario Name"
+          },
+          "area_input": {
+            "type": "number",
+            "title": "Area Input"
+          },
+          "area_unit": {
+            "type": "string",
+            "title": "Area Unit"
+          },
+          "area_m2": {
+            "type": "number",
+            "title": "Area M2"
+          },
+          "items_json": {
+            "type": "string",
+            "title": "Items Json"
+          },
+          "cost_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Min"
+          },
+          "cost_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Max"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "owner_id",
+          "updated_by",
+          "created_at",
+          "updated_at",
+          "plot_id",
+          "crop_type",
+          "crop_name",
+          "category_id",
+          "variety_id",
+          "variety_name",
+          "protocol_id",
+          "scenario_id",
+          "scenario_name",
+          "area_input",
+          "area_unit",
+          "area_m2",
+          "items_json",
+          "cost_min",
+          "cost_max",
+          "note"
+        ],
+        "title": "PlanOut"
+      },
+      "PlanUpdate": {
+        "properties": {
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "crop_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 48
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crop Type"
+          },
+          "crop_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crop Name"
+          },
+          "category_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Id"
+          },
+          "variety_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Id"
+          },
+          "variety_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Name"
+          },
+          "protocol_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Protocol Id"
+          },
+          "scenario_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario Id"
+          },
+          "scenario_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario Name"
+          },
+          "area_input": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area Input"
+          },
+          "area_unit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area Unit"
+          },
+          "area_m2": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area M2"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PlanItem"
+                },
+                "type": "array",
+                "minItems": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Items"
+          },
+          "cost_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Min"
+          },
+          "cost_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Max"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "title": "PlanUpdate"
+      },
+      "PlotCreate": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "area": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Area",
+            "default": 0.0
+          },
+          "area_unit": {
+            "type": "string",
+            "maxLength": 8,
+            "title": "Area Unit",
+            "default": "m2"
+          },
+          "crop_type": {
+            "type": "string",
+            "maxLength": 48,
+            "title": "Crop Type",
+            "default": "tomato"
+          },
+          "crop_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crop Name"
+          },
+          "variety_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Id"
+          },
+          "variety_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Name"
+          },
+          "planted_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planted At"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PlotStatus",
+            "default": "active"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "owner_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name"
+        ],
+        "title": "PlotCreate",
+        "description": "Admin-only body (POST /plots).\n\n`id` is optional: a client that generated one offline sends it so the\nrecord keeps a single identity across devices.\n`owner_id` is the farmer the plot is handed to — land management assigns\nplots, farmers never create their own. Omitted, the plot is filed under the\nadmin making the call."
+      },
+      "PlotOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "area": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Area",
+            "default": 0.0
+          },
+          "area_unit": {
+            "type": "string",
+            "maxLength": 8,
+            "title": "Area Unit",
+            "default": "m2"
+          },
+          "crop_type": {
+            "type": "string",
+            "maxLength": 48,
+            "title": "Crop Type",
+            "default": "tomato"
+          },
+          "crop_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crop Name"
+          },
+          "variety_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Id"
+          },
+          "variety_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Name"
+          },
+          "planted_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planted At"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PlotStatus",
+            "default": "active"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "owner_id": {
+            "type": "string",
+            "title": "Owner Id"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "integer",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "id",
+          "owner_id",
+          "updated_by",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PlotOut"
+      },
+      "PlotStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "fallow",
+          "harvested"
+        ],
+        "title": "PlotStatus"
+      },
+      "PlotUpdate": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "area": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area"
+          },
+          "area_unit": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 8
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area Unit"
+          },
+          "crop_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 48
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crop Type"
+          },
+          "crop_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crop Name"
+          },
+          "variety_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Id"
+          },
+          "variety_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variety Name"
+          },
+          "planted_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planted At"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlotStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          }
+        },
+        "type": "object",
+        "title": "PlotUpdate"
+      },
+      "StockCheckOut": {
+        "properties": {
+          "fertilizer_id": {
+            "type": "string",
+            "title": "Fertilizer Id"
+          },
+          "stock_kg": {
+            "type": "number",
+            "title": "Stock Kg"
+          },
+          "needed_kg": {
+            "type": "number",
+            "title": "Needed Kg"
+          },
+          "remaining_kg": {
+            "type": "number",
+            "title": "Remaining Kg"
+          },
+          "shortfall_kg": {
+            "type": "number",
+            "title": "Shortfall Kg"
+          },
+          "enough": {
+            "type": "boolean",
+            "title": "Enough"
+          },
+          "latest_unit_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Unit Price"
+          },
+          "fifo_unit_price": {
+            "type": "number",
+            "title": "Fifo Unit Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fertilizer_id",
+          "stock_kg",
+          "needed_kg",
+          "remaining_kg",
+          "shortfall_kg",
+          "enough",
+          "latest_unit_price",
+          "fifo_unit_price"
+        ],
+        "title": "StockCheckOut"
+      },
+      "StockLineOut": {
+        "properties": {
+          "fertilizer_id": {
+            "type": "string",
+            "title": "Fertilizer Id"
+          },
+          "fertilizer_name": {
+            "type": "string",
+            "title": "Fertilizer Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "in_kg": {
+            "type": "number",
+            "title": "In Kg"
+          },
+          "out_kg": {
+            "type": "number",
+            "title": "Out Kg"
+          },
+          "stock_kg": {
+            "type": "number",
+            "title": "Stock Kg"
+          },
+          "avg_price": {
+            "type": "number",
+            "title": "Avg Price"
+          },
+          "stock_value": {
+            "type": "number",
+            "title": "Stock Value"
+          },
+          "latest_unit_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latest Unit Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fertilizer_id",
+          "fertilizer_name",
+          "category",
+          "in_kg",
+          "out_kg",
+          "stock_kg",
+          "avg_price",
+          "stock_value",
+          "latest_unit_price"
+        ],
+        "title": "StockLineOut"
+      },
+      "StockSummaryOut": {
+        "properties": {
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/StockLineOut"
+            },
+            "type": "array",
+            "title": "Lines"
+          },
+          "total_stock_kg": {
+            "type": "number",
+            "title": "Total Stock Kg"
+          },
+          "total_value": {
+            "type": "number",
+            "title": "Total Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lines",
+          "total_stock_kg",
+          "total_value"
+        ],
+        "title": "StockSummaryOut"
+      },
+      "StockUnit": {
+        "type": "string",
+        "enum": [
+          "kg",
+          "tan"
+        ],
+        "title": "StockUnit"
+      },
+      "UserCreate": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 3,
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 6,
+            "title": "Password"
+          },
+          "full_name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Full Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRole",
+            "default": "farmer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "full_name"
+        ],
+        "title": "UserCreate",
+        "description": "Admin tạo tài khoản nông hộ mới — password được hash phía backend."
+      },
+      "UserOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserRole"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "full_name",
+          "role",
+          "is_active"
+        ],
+        "title": "UserOut"
+      },
+      "UserRole": {
+        "type": "string",
+        "enum": [
+          "farmer",
+          "admin"
+        ],
+        "title": "UserRole"
+      },
+      "UserStatusUpdate": {
+        "properties": {
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_active"
+        ],
+        "title": "UserStatusUpdate",
+        "description": "Admin khoá hoặc mở khoá tài khoản nông hộ."
+      },
+      "UserSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "full_name",
+          "region",
+          "role",
+          "is_active"
+        ],
+        "title": "UserSummary"
+      },
+      "UserUpdate": {
+        "properties": {
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          }
+        },
+        "type": "object",
+        "title": "UserUpdate"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WarehouseInCreate": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "fertilizer_id": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Fertilizer Id"
+          },
+          "fertilizer_name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Fertilizer Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "quantity": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Quantity"
+          },
+          "unit": {
+            "$ref": "#/components/schemas/StockUnit",
+            "default": "kg"
+          },
+          "price": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Price",
+            "description": "Tổng tiền của lô nhập (đồng)"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "record_expense": {
+            "type": "boolean",
+            "title": "Record Expense",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "fertilizer_id",
+          "fertilizer_name",
+          "quantity",
+          "price",
+          "occurred_at"
+        ],
+        "title": "WarehouseInCreate"
+      },
+      "WarehouseInOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "owner_id": {
+            "type": "string",
+            "title": "Owner Id"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "integer",
+            "title": "Updated At"
+          },
+          "fertilizer_id": {
+            "type": "string",
+            "title": "Fertilizer Id"
+          },
+          "fertilizer_name": {
+            "type": "string",
+            "title": "Fertilizer Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "quantity": {
+            "type": "number",
+            "title": "Quantity"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "quantity_kg": {
+            "type": "number",
+            "title": "Quantity Kg"
+          },
+          "price": {
+            "type": "number",
+            "title": "Price"
+          },
+          "unit_price": {
+            "type": "number",
+            "title": "Unit Price"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "expense_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expense Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "owner_id",
+          "updated_by",
+          "created_at",
+          "updated_at",
+          "fertilizer_id",
+          "fertilizer_name",
+          "category",
+          "quantity",
+          "unit",
+          "quantity_kg",
+          "price",
+          "unit_price",
+          "occurred_at",
+          "note",
+          "plot_id",
+          "expense_id"
+        ],
+        "title": "WarehouseInOut"
+      },
+      "WarehouseInUpdate": {
+        "properties": {
+          "fertilizer_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fertilizer Id"
+          },
+          "fertilizer_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fertilizer Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "quantity": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quantity"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StockUnit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price",
+            "description": "Tổng tiền của lô nhập (đồng)"
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          }
+        },
+        "type": "object",
+        "title": "WarehouseInUpdate"
+      },
+      "WarehouseOutCreate": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "fertilizer_id": {
+            "type": "string",
+            "maxLength": 64,
+            "title": "Fertilizer Id"
+          },
+          "fertilizer_name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Fertilizer Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "quantity_kg": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "title": "Quantity Kg"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "plan_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plan Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fertilizer_id",
+          "fertilizer_name",
+          "quantity_kg",
+          "occurred_at"
+        ],
+        "title": "WarehouseOutCreate"
+      },
+      "WarehouseOutOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "owner_id": {
+            "type": "string",
+            "title": "Owner Id"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "integer",
+            "title": "Updated At"
+          },
+          "fertilizer_id": {
+            "type": "string",
+            "title": "Fertilizer Id"
+          },
+          "fertilizer_name": {
+            "type": "string",
+            "title": "Fertilizer Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "quantity_kg": {
+            "type": "number",
+            "title": "Quantity Kg"
+          },
+          "unit_price": {
+            "type": "number",
+            "title": "Unit Price"
+          },
+          "total_cost": {
+            "type": "number",
+            "title": "Total Cost"
+          },
+          "occurred_at": {
+            "type": "integer",
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "plan_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plan Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "owner_id",
+          "updated_by",
+          "created_at",
+          "updated_at",
+          "fertilizer_id",
+          "fertilizer_name",
+          "category",
+          "quantity_kg",
+          "unit_price",
+          "total_cost",
+          "occurred_at",
+          "note",
+          "plot_id",
+          "plan_id"
+        ],
+        "title": "WarehouseOutOut"
+      },
+      "WarehouseOutUpdate": {
+        "properties": {
+          "fertilizer_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fertilizer Id"
+          },
+          "fertilizer_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fertilizer Name"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 32
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "quantity_kg": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Quantity Kg"
+          },
+          "unit_price": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit Price"
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "plot_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plot Id"
+          },
+          "plan_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Plan Id"
+          }
+        },
+        "type": "object",
+        "title": "WarehouseOutUpdate"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Đăng nhập, hồ sơ, đổi mật khẩu."
+    },
+    {
+      "name": "sync",
+      "description": "Đồng bộ hai chiều với WatermelonDB trên điện thoại."
+    },
+    {
+      "name": "plots",
+      "description": "Lô đất. Quản trị viên tạo và giao; nông hộ xem và sửa lô của mình."
+    },
+    {
+      "name": "crop-varieties",
+      "description": "Danh mục giống cây — nông hộ đề xuất, quản trị viên duyệt."
+    },
+    {
+      "name": "plans",
+      "description": "Kế hoạch bón phân đã lưu (F1)."
+    },
+    {
+      "name": "warehouse",
+      "description": "Kho phân bón: nhập, xuất, tồn, đối chiếu."
+    },
+    {
+      "name": "finance",
+      "description": "Thu, chi và báo cáo (JSON, CSV, PDF)."
+    },
+    {
+      "name": "care-protocols",
+      "description": "Quy trình chăm sóc và lịch sử công việc."
+    },
+    {
+      "name": "dashboard",
+      "description": "Số liệu tổng hợp cho màn hình chính."
+    },
+    {
+      "name": "ops",
+      "description": "Nhật ký lỗi từ điện thoại và quản lý tài khoản."
+    },
+    {
+      "name": "health",
+      "description": "Kiểm tra tình trạng dịch vụ và kết nối cơ sở dữ liệu."
+    }
+  ]
+}

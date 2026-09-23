@@ -45,11 +45,14 @@ def admin() -> dict[str, str]:
 
 
 @pytest.fixture(scope="module")
-def plot(farmer) -> dict:
+def plot(admin, farmer) -> dict:
+    """Land management creates the plot and assigns it — a farmer cannot."""
+    owner_id = client.get("/auth/me", headers=farmer).json()["id"]
     res = client.post(
         "/plots",
-        headers=farmer,
+        headers=admin,
         json={
+            "owner_id": owner_id,
             "code": "PUC-001-HB",
             "name": "Ruộng cà chua nhà ông Lê Thành Thái",
             "region": "Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",

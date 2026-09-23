@@ -21,10 +21,17 @@ class PlotBase(BaseModel):
 
 
 class PlotCreate(PlotBase):
-    """`id` is optional: the mobile app supplies the id it already generated
-    offline so the record keeps one identity across devices."""
+    """Admin-only body (POST /plots).
+
+    `id` is optional: a client that generated one offline sends it so the
+    record keeps a single identity across devices.
+    `owner_id` is the farmer the plot is handed to — land management assigns
+    plots, farmers never create their own. Omitted, the plot is filed under the
+    admin making the call.
+    """
 
     id: str | None = Field(default=None, max_length=64)
+    owner_id: str | None = Field(default=None, max_length=64)
 
 
 class PlotUpdate(BaseModel):

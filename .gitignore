@@ -36,6 +36,9 @@ __pycache__/
 .ruff_cache/
 backend/*.db
 backend/*.db-journal
+# SQLite chạy ở chế độ WAL (app/core/database.py) nên có thêm hai file phụ.
+backend/*.db-wal
+backend/*.db-shm
 
 # ---- Env & secrets ----
 .env

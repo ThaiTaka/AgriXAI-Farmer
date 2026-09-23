@@ -94,10 +94,25 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | `admin` | `admin123` | Quản trị viên |
 | `thaitaka` | `matkhau123` | Nông dân |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (100 test: smoke, sync hai chiều,
+Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` (153 test: smoke, sync hai chiều,
 parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 ca e2e API của
-Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e — và
-20 test admin sửa/xoá kế hoạch, kho, thu-chi; phủ 94 %).
+Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e —
+20 test admin sửa/xoá kế hoạch, kho, thu-chi, và 23 test Giai đoạn 5: quyền trên lô đất,
+cô lập dữ liệu giữa các nông hộ, tính toàn vẹn của lô đẩy đồng bộ, chặn dò mật khẩu).
+
+Cùng bộ test đó chạy được trên PostgreSQL — trỏ `TEST_DATABASE_URL` vào một cơ sở dữ liệu
+dùng một lần (nó sẽ bị **xoá sạch** khi bắt đầu):
+
+```bash
+docker run -d --name agrilog-pg -e POSTGRES_USER=agrilog -e POSTGRES_PASSWORD=agrilog \
+  -e POSTGRES_DB=agrilog -p 5443:5432 postgres:16-alpine
+TEST_DATABASE_URL="postgresql+psycopg://agrilog:agrilog@127.0.0.1:5443/agrilog" \
+  ./.venv/Scripts/python.exe -m pytest -q
+```
+
+Đưa lên máy chủ thật: [docs/BACKEND_DEPLOYMENT.md](docs/BACKEND_DEPLOYMENT.md) (PostgreSQL,
+Docker, chuyển dữ liệu, kiểm tải, sao lưu, theo dõi). Danh sách đầy đủ 56 endpoint:
+[docs/API_ENDPOINTS.md](docs/API_ENDPOINTS.md).
 
 Ba nông hộ demo (cùng mật khẩu `matkhau123`), mỗi hộ có lô, kho và thu-chi riêng tháng 9/2026:
 
@@ -115,6 +130,12 @@ Admin sửa/xoá hộ nông hộ (khiếu nại, nhập nhầm): `PATCH`/`DELETE
 `/warehouse/in/{id}`, `/warehouse/out/{id}`, `/income/{id}` và `/expense/{id}` — chỉ vai trò
 `admin` gọi được (403 với nông dân), 404 nếu bản ghi không tồn tại; sửa kho tự tính lại
 `quantity_kg`/`unit_price`/`total_cost` từ số liệu mới. Điện thoại vẫn chỉ đồng bộ qua `/sync`.
+
+**Lô đất do quản trị viên tạo và giao** (Giai đoạn 5): `POST /plots` chỉ vai trò `admin` gọi
+được, kèm `owner_id` để giao lô cho một nông hộ; nông hộ gọi nhận 403. Đường đồng bộ cũng
+chặn như vậy — lô do máy khách tự tạo bị trả về trong `rejected` chứ không được ghi, nếu
+không thì quy tắc coi như không tồn tại. Nông hộ **vẫn sửa được** lô của mình, vì họ mới là
+người biết ruộng trồng gì.
 
 ## Chạy web-admin
 
@@ -313,7 +334,12 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
   "Chu kỳ canh tác" luôn rỗng; giai đoạn cây ở tab "Chăm sóc" vẫn **ước tính từ ngày trồng**
   theo chu kỳ cà chua (ADR 0002 §7).
 - Schema mobile ở **v6** (v4→v5 thêm sáu bảng, v5→v6 thêm `error_logs`). Server tự thêm
-  cột/bảng thiếu lúc khởi động (`app/core/schema_upgrade.py`) thay cho Alembic.
+  cột/bảng/chỉ mục thiếu lúc khởi động (`app/core/schema_upgrade.py`) thay cho Alembic —
+  chỉ làm được thay đổi kiểu "thêm vào"; đổi kiểu cột hay xoá cột vẫn phải làm tay.
+- Kiểm tải mới chạy trên máy phát triển Windows: 100 nông hộ đồng thời không lỗi và không
+  mất bản ghi, nhưng p95 dưới 1 giây mới đạt tới khoảng 50 người cho mỗi tiến trình. Phải đo
+  lại trên máy chủ Linux trước khi tuyên bố đạt mốc 100
+  ([docs/BACKEND_DEPLOYMENT.md](docs/BACKEND_DEPLOYMENT.md) §5).
 - Test render toàn bộ `App` trong jest đã bỏ (cần mock native module; treo với WatermelonDB);
   thay bằng test render từng component và test logic thuần.
 - Nhận dạng giọng nói chưa có — sẽ dùng `DummyAsrEngine` trước, chọn Vosk hay whisper.cpp
