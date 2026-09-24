@@ -351,6 +351,11 @@ export default function DashboardPage() {
             </Link>
           ) : null}
           {me.role === "admin" ? (
+            <Link className="btn btn-secondary" href="/care-guides">
+              Hướng dẫn chăm sóc
+            </Link>
+          ) : null}
+          {me.role === "admin" ? (
             <Link className="btn btn-secondary" href="/fertilizer-prices">
               Giá phân bón
             </Link>
