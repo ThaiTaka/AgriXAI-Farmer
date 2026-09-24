@@ -17,7 +17,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import select
 
 from app.core.security import hash_password
-from app.models.farm import Plot
+from app.models.farm import CropCycle, Plot
 from app.models.ledger import Expense, Income, WarehouseIn
 from app.models.user import User, UserRole
 
@@ -40,7 +40,7 @@ LEGACY_USERNAMES = ("nguyenvancuong",)
 # Đổi nội dung một dòng seed mà để nguyên mốc thời gian cũ thì thay đổi đó
 # nằm lại trên máy chủ mãi mãi — điện thoại vẫn hiện tên cũ. Nên mỗi lần sửa
 # nội dung hộ demo, đóng dấu lại ngày sửa ở đây.
-DEMO_REVISION = "2026-09-23"
+DEMO_REVISION = "2026-09-24"
 
 
 def ms(day: str, hour: int = 8) -> int:
@@ -188,10 +188,13 @@ def seed_demo_farm(db) -> None:
         created_at=ms("2026-09-01"),
         updated_at=ms("2026-09-01"),
     )
-    for row_id, kind, description, amount, day in [
-        ("demo-expense-labor", "labor", "Công bón phân (3 công)", 300_000.0, "2026-09-05"),
-        ("demo-expense-utilities", "utilities", "Điện nước", 120_000.0, "2026-09-10"),
+    # "3 công" = 3 người × 1 ngày × 100.000₫ — the V2.1 labour breakdown of the
+    # same 300.000₫ the brief lists, so every report total stays as it was.
+    for row_id, kind, description, amount, day, labor in [
+        ("demo-expense-labor", "labor", "Công bón phân (3 công)", 300_000.0, "2026-09-05", (3.0, 1.0, "day", 100_000.0)),
+        ("demo-expense-utilities", "utilities", "Điện nước", 120_000.0, "2026-09-10", None),
     ]:
+        workers, quantity, unit, unit_price = labor or (None, None, None, None)
         created += _upsert(
             db,
             Expense,
@@ -204,14 +207,66 @@ def seed_demo_farm(db) -> None:
             plot_id=DEMO_PLOT_ID,
             checked=False,
             warehouse_in_id=None,
+            task_id=None,
+            workers=workers,
+            quantity=quantity,
+            unit=unit,
+            unit_price=unit_price,
             owner_id=owner,
             updated_by=owner,
             created_at=ms(day),
-            updated_at=ms(day),
+            updated_at=ms(DEMO_REVISION) if labor else ms(day),
         )
+
+    created += seed_demo_cycles(db, owner)
 
     print(f"  demo farm ({DEMO_USERNAME}): {created} rows added, rest refreshed")
     seed_neighbour_farms(db)
+
+
+# Past seasons on the demo tomato plot (300 m²), so the cultivation history and
+# the crop suggestion have something real to show: tomato did best in spring
+# twice, cabbage is the winter crop, carrot the weakest. Yields are demo
+# figures within the ordinary range for these crops (28–46 t/ha), not data.
+# No open cycle: the plot's current tomato is tracked by its planted_at, and an
+# open cycle would override that stage on the care tab.
+DEMO_CYCLES = [
+    ("demo-cycle-2024-dong", "Vụ Đông 2024 — Bắp cải", "cabbage", "Bắp cải", "winter", "2024-10-10", "2025-01-15", 1_050.0),
+    ("demo-cycle-2025-xuan", "Vụ Xuân 2025 — Cà chua MV1", "tomato", "Cà chua", "spring", "2025-02-05", "2025-05-25", 1_380.0),
+    ("demo-cycle-2025-thu", "Vụ Thu 2025 — Cà rốt", "carrot", "Cà rốt", "autumn", "2025-08-01", "2025-11-05", 840.0),
+    ("demo-cycle-2026-xuan", "Vụ Xuân 2026 — Cà chua MV1", "tomato", "Cà chua", "spring", "2026-02-03", "2026-06-05", 1_230.0),
+]
+
+
+def seed_demo_cycles(db, owner: str) -> int:
+    created = 0
+    for row_id, name, crop_type, crop_name, season, start, end, yield_kg in DEMO_CYCLES:
+        created += _upsert(
+            db,
+            CropCycle,
+            row_id,
+            plot_id=DEMO_PLOT_ID,
+            name=name,
+            crop_type=crop_type,
+            crop_name=crop_name,
+            variety_id="seed_ca_chua_mv1" if crop_type == "tomato" else None,
+            variety_name="MV1" if crop_type == "tomato" else None,
+            stage="finished",
+            season=season,
+            started_at=ms(start),
+            ended_at=ms(end),
+            area_m2=300.0,
+            yield_kg=yield_kg,
+            notes=None,
+            media_json=None,
+            owner_id=owner,
+            updated_by=owner,
+            created_at=ms(end),
+            # Stamped with the revision, not the harvest date: a phone that
+            # synced before V2.1 only pulls rows changed after its last pull.
+            updated_at=ms(DEMO_REVISION),
+        )
+    return created
 
 
 # Two more households in the same commune for the multi-user tests of Giai

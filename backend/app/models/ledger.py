@@ -26,10 +26,20 @@ class IncomeKind(str, enum.Enum):
 
 
 class ExpenseKind(str, enum.Enum):
+    SEED = "seed"
     FERTILIZER = "fertilizer"
     LABOR = "labor"
     UTILITIES = "utilities"
     OTHER = "other"
+
+
+class LaborUnit(str, enum.Enum):
+    """How hired work is priced: by the hour, by the day (ngày công), or as
+    one agreed sum for the whole job (khoán)."""
+
+    HOUR = "hour"
+    DAY = "day"
+    LUMP = "lump"
 
 
 class StockUnit(str, enum.Enum):
@@ -117,6 +127,16 @@ class Income(Base, SyncMixin):
 
 
 class Expense(Base, SyncMixin):
+    """Every đồng that left the farm.
+
+    Hired labour is an expense like any other (kind "labor"), so it lands in the
+    monthly report, the PDF and the profit card without a second ledger to add
+    up. What makes it a labour cost is the breakdown — `workers` × `quantity`
+    (hours or days each) × `unit_price` — and, when it was hired for a care
+    task, the `task_id` of that tasks_history row. `amount` stays the total
+    every report sums; app/services/labor.py is the one place that computes it.
+    """
+
     __tablename__ = "expense"
 
     kind: Mapped[str] = mapped_column(String(16), default=ExpenseKind.OTHER.value, nullable=False)
@@ -127,6 +147,11 @@ class Expense(Base, SyncMixin):
     plot_id: Mapped[str | None] = mapped_column(String(64), default=None)
     checked: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     warehouse_in_id: Mapped[str | None] = mapped_column(String(64), default=None)
+    task_id: Mapped[str | None] = mapped_column(String(64), index=True, default=None)
+    workers: Mapped[float | None] = mapped_column(Float, default=None)
+    quantity: Mapped[float | None] = mapped_column(Float, default=None)
+    unit: Mapped[str | None] = mapped_column(String(8), default=None)
+    unit_price: Mapped[float | None] = mapped_column(Float, default=None)
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
     updated_by: Mapped[str | None] = mapped_column(String(64), default=None)
 
@@ -146,5 +171,25 @@ class TaskHistory(Base, SyncMixin):
     done_at: Mapped[int | None] = mapped_column(BigInteger, default=None)
     remind_at: Mapped[int | None] = mapped_column(BigInteger, default=None)
     note: Mapped[str | None] = mapped_column(Text, default=None)
+    owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
+    updated_by: Mapped[str | None] = mapped_column(String(64), default=None)
+
+
+class TaskNote(Base, SyncMixin):
+    """What the farmer wrote, photographed or filmed while doing a care task —
+    how it was actually done on *this* plot, kept for next season.
+
+    `task_id` is the tasks_history row; `plot_id` is copied from it so a plot's
+    own working method can be listed without a join.
+    """
+
+    __tablename__ = "task_notes"
+
+    task_id: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
+    plot_id: Mapped[str | None] = mapped_column(String(64), index=True, default=None)
+    note_text: Mapped[str] = mapped_column(Text, default="", nullable=False)
+    # JSON list of media refs — see app/services/media_service.py.
+    media_json: Mapped[str | None] = mapped_column(Text, default=None)
+    occurred_at: Mapped[int] = mapped_column(BigInteger, nullable=False)
     owner_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
     updated_by: Mapped[str | None] = mapped_column(String(64), default=None)

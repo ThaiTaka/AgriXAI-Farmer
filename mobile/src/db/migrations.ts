@@ -16,6 +16,67 @@ import {
 export const migrations = schemaMigrations({
   migrations: [
     {
+      // v6 -> v7 (V2.1): cultivation history, task notes with media, hired
+      // labour, care guides. Additive only — every existing row keeps its
+      // data; an old crop cycle simply has no season/area until edited.
+      toVersion: 7,
+      steps: [
+        addColumns({
+          table: 'crop_cycles',
+          columns: [
+            {name: 'crop_name', type: 'string', isOptional: true},
+            {name: 'season', type: 'string', isOptional: true},
+            {name: 'area_m2', type: 'number', isOptional: true},
+            {name: 'media_json', type: 'string', isOptional: true},
+          ],
+        }),
+        addColumns({
+          table: 'expense',
+          columns: [
+            {name: 'task_id', type: 'string', isOptional: true, isIndexed: true},
+            {name: 'workers', type: 'number', isOptional: true},
+            {name: 'quantity', type: 'number', isOptional: true},
+            {name: 'unit', type: 'string', isOptional: true},
+            {name: 'unit_price', type: 'number', isOptional: true},
+          ],
+        }),
+        createTable({
+          name: 'task_notes',
+          columns: [
+            {name: 'task_id', type: 'string', isIndexed: true},
+            {name: 'plot_id', type: 'string', isOptional: true, isIndexed: true},
+            {name: 'note_text', type: 'string'},
+            {name: 'media_json', type: 'string', isOptional: true},
+            {name: 'occurred_at', type: 'number'},
+            {name: 'owner_id', type: 'string', isIndexed: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+        createTable({
+          name: 'care_guides',
+          columns: [
+            {name: 'crop_type', type: 'string', isIndexed: true},
+            {name: 'stage_code', type: 'string', isOptional: true},
+            {name: 'title', type: 'string'},
+            {name: 'summary', type: 'string', isOptional: true},
+            {name: 'youtube_id', type: 'string', isOptional: true},
+            {name: 'steps_json', type: 'string', isOptional: true},
+            {name: 'images_json', type: 'string', isOptional: true},
+            {name: 'source_name', type: 'string', isOptional: true},
+            {name: 'source_url', type: 'string', isOptional: true},
+            {name: 'published', type: 'boolean'},
+            {name: 'sort_order', type: 'number'},
+            {name: 'created_by', type: 'string', isOptional: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+      ],
+    },
+    {
       // v5 -> v6: local-only error log for the screen error boundary.
       toVersion: 6,
       steps: [

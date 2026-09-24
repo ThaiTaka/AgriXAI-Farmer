@@ -25,11 +25,19 @@ together with the server's current copy, so the phone can ask the farmer
 "giữ bản của tôi hay lấy bản mới?" instead of quietly diverging (Giai đoạn 4).
 
 Permissions: a push is a write path like any other, so the rules that guard the
-REST endpoints are repeated here — otherwise a phone could sync around them.
-Today that means two things: a farmer cannot create a plot (land is assigned by
-management — see POST /plots), and no client can set the admin-controlled
-fields on a crop variety. A rejected row comes back in `rejected_rows` with a
-reason; nothing is dropped in silence.
+REST endpoints are repeated here — otherwise a phone could sync around them:
+
+  * a farmer cannot create a plot (land is assigned by management — see
+    POST /plots);
+  * no client can set the admin-controlled fields on a crop variety;
+  * care guides are written by admins only, in any direction;
+  * a row can only be changed or deleted by whoever owns it. Until V2.1 an
+    update or delete was applied to any id the phone named, so one farm could
+    overwrite or delete another's plot just by knowing its id — and the demo
+    ids are guessable. Admins keep the right to correct any farm's rows.
+
+A rejected row comes back in `rejected_rows` with a reason; nothing is dropped
+in silence.
 
 A push is one transaction. A batch that fails half-way leaves the database
 exactly as it was, so a phone that lost signal mid-push can resend the same
@@ -45,8 +53,8 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.models.farm import ChangeLog, CropCycle, CropVariety, Plot
-from app.models.ledger import Expense, Income, Plan, TaskHistory, WarehouseIn, WarehouseOut
+from app.models.farm import CareGuide, ChangeLog, CropCycle, CropVariety, Plot
+from app.models.ledger import Expense, Income, Plan, TaskHistory, TaskNote, WarehouseIn, WarehouseOut
 from app.models.user import User, UserRole
 
 logger = logging.getLogger("agrilog.sync")
@@ -78,6 +86,10 @@ SYNC_MODELS: dict[str, tuple[type, str | None]] = {
     "income": (Income, "owner_id"),
     "expense": (Expense, "owner_id"),
     "tasks_history": (TaskHistory, "owner_id"),
+    # V2.1 — notes and photos of how a task was done, per farm.
+    "task_notes": (TaskNote, "owner_id"),
+    # V2.1 — admin-written how-tos every farm reads (see _ADMIN_ONLY_WRITE).
+    "care_guides": (CareGuide, None),
 }
 
 # Columns the client owns. `id`, `created_at` and `updated_at` are handled
@@ -95,6 +107,16 @@ _CROP_VARIETY_READONLY = frozenset({"approved", "is_seed", "source"})
 # Mirrors POST /plots in app/routers/plots.py; without this the phone could sync
 # around that rule.
 _ADMIN_ONLY_CREATE = {"plots"}
+
+# Tables a non-admin may not touch at all through /sync — they read them, an
+# admin writes them in web-admin. Mirrors the admin-only REST endpoints.
+_ADMIN_ONLY_WRITE = {"care_guides"}
+
+_REJECT_MESSAGES = {
+    "admin_only_create": "Lo dat do quan tri vien tao va giao, ung dung khong tu them duoc.",
+    "admin_only_write": "Chỉ quản trị viên được sửa nội dung này.",
+    "not_owner": "Bản ghi này không thuộc tài khoản của bạn.",
+}
 
 
 class SyncPayloadError(ValueError):
@@ -185,8 +207,12 @@ def push_changes(
     stamp = now_ms()
     is_admin = user.role is UserRole.ADMIN
 
+    def reject(table: str, record_id: str, reason: str) -> None:
+        applied["rejected"] += 1
+        rejected_rows.append(_rejected(table, record_id, user, reason))
+
     for table, (model, owner_column) in SYNC_MODELS.items():
-        may_create = is_admin or table not in _ADMIN_ONLY_CREATE
+        create_refusal = _create_refusal(table, is_admin)
         table_changes = changes.get(table) or {}
 
         for raw in table_changes.get("created", []) or []:
@@ -197,16 +223,20 @@ def push_changes(
             if existing is not None:
                 # The client thinks it created this row but the server already
                 # has it — a retry after a dropped response. Treat it as an
-                # update so the retry is idempotent rather than a 500.
-                if _apply_if_newer(existing, raw, model, stamp, owner_column):
+                # update so the retry is idempotent rather than a 500. Same
+                # ownership rule as any update: a "create" naming someone
+                # else's id must not become a way to overwrite their row.
+                refusal = _modify_refusal(table, existing, owner_column, user, is_admin)
+                if refusal:
+                    reject(table, record_id, refusal)
+                elif _apply_if_newer(existing, raw, model, stamp, owner_column):
                     applied["updated"] += 1
                 else:
                     applied["conflicts"] += 1
                     conflict_rows.append(_conflict(table, existing, model, user))
                 continue
-            if not may_create:
-                applied["rejected"] += 1
-                rejected_rows.append(_rejected(table, record_id, user))
+            if create_refusal:
+                reject(table, record_id, create_refusal)
                 continue
             db.add(_build(model, raw, user, owner_column, stamp))
             applied["created"] += 1
@@ -220,14 +250,16 @@ def push_changes(
                 # An update to a row the server has never seen is a create: the
                 # phone made it offline and the create leg of the batch was
                 # lost. Same permission rule applies.
-                if not may_create:
-                    applied["rejected"] += 1
-                    rejected_rows.append(_rejected(table, record_id, user))
+                if create_refusal:
+                    reject(table, record_id, create_refusal)
                     continue
                 db.add(_build(model, raw, user, owner_column, stamp))
                 applied["created"] += 1
                 continue
-            if _apply_if_newer(existing, raw, model, stamp, owner_column):
+            refusal = _modify_refusal(table, existing, owner_column, user, is_admin)
+            if refusal:
+                reject(table, record_id, refusal)
+            elif _apply_if_newer(existing, raw, model, stamp, owner_column):
                 applied["updated"] += 1
             else:
                 applied["conflicts"] += 1
@@ -236,6 +268,10 @@ def push_changes(
         for record_id in table_changes.get("deleted", []) or []:
             existing = db.get(model, record_id)
             if existing is None or existing.is_deleted:
+                continue
+            refusal = _modify_refusal(table, existing, owner_column, user, is_admin)
+            if refusal:
+                reject(table, record_id, refusal)
                 continue
             existing.is_deleted = True
             existing.deleted_at = stamp
@@ -277,18 +313,47 @@ def _conflict(table: str, existing: Any, model: type, user: User) -> dict[str, A
     }
 
 
-def _rejected(table: str, record_id: str, user: User) -> dict[str, Any]:
+def _create_refusal(table: str, is_admin: bool) -> str | None:
+    """Why this caller may not add rows to `table`, or None if they may."""
+    if is_admin:
+        return None
+    if table in _ADMIN_ONLY_WRITE:
+        return "admin_only_write"
+    if table in _ADMIN_ONLY_CREATE:
+        return "admin_only_create"
+    return None
+
+
+def _modify_refusal(
+    table: str, existing: Any, owner_column: str | None, user: User, is_admin: bool
+) -> str | None:
+    """Why this caller may not change or delete `existing`, or None if they may.
+
+    Owned tables: only the owner. The shared variety catalogue: only the farmer
+    who proposed the variety (seeded ones have no author, so no farmer can edit
+    them). Admins may correct anything.
+    """
+    if is_admin:
+        return None
+    if table in _ADMIN_ONLY_WRITE:
+        return "admin_only_write"
+    author = getattr(existing, owner_column) if owner_column else getattr(existing, "created_by", None)
+    return None if author == user.id else "not_owner"
+
+
+def _rejected(table: str, record_id: str, user: User, reason: str) -> dict[str, Any]:
     logger.warning(
-        "sync rejected table=%s id=%s user=%s reason=admin_only_create",
+        "sync rejected table=%s id=%s user=%s reason=%s",
         table,
         record_id,
         user.username,
+        reason,
     )
     return {
         "table": table,
         "id": record_id,
-        "reason": "admin_only_create",
-        "message": "Lo dat do quan tri vien tao va giao, ung dung khong tu them duoc.",
+        "reason": reason,
+        "message": _REJECT_MESSAGES[reason],
     }
 
 

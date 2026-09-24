@@ -56,6 +56,19 @@ class Settings(BaseSettings):
     login_failure_window_seconds: int = 60
     login_lockout_seconds: int = 60
 
+    # Photos and videos farmers attach to task notes and harvests, plus the
+    # images of care guides. On a container this MUST be a mounted volume —
+    # see docs/BACKEND_DEPLOYMENT.md — or every upload vanishes on redeploy.
+    media_dir: str = str(BACKEND_DIR / "media")
+    media_max_image_mb: int = 10
+    # A one-minute phone clip at 720p is 60-100 MB; anything longer is not a
+    # field note but a film, and would stall a 3G upload for an hour anyway.
+    media_max_video_mb: int = 100
+    # Lifetime of the query-string token that lets <img>/<video>/WebView load a
+    # private file (they cannot send an Authorization header). Kept short
+    # because a URL ends up in history and proxy logs.
+    media_token_minutes: int = 360
+
     seed_admin_username: str = "admin"
     seed_admin_password: str = "admin123"
     seed_farmer_username: str = "thaitaka"
