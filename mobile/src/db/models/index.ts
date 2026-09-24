@@ -8,6 +8,8 @@ export {default as WarehouseOut} from './WarehouseOut';
 export {default as Income} from './Income';
 export {default as Expense} from './Expense';
 export {default as TaskHistory} from './TaskHistory';
+export {default as TaskNote} from './TaskNote';
+export {default as CareGuide} from './CareGuide';
 export {default as ErrorLogEntry} from './ErrorLogEntry';
 
 export type {PlotStatus} from './Plot';

@@ -477,3 +477,50 @@ export function SettingsIcon({size = 24, color = colors.text.muted}: IconProps) 
     </Svg>
   );
 }
+
+/* ----------------------------- V2.1: media icons ----------------------------- */
+
+export function CameraIcon({size = 20, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Circle cx={12} cy={13} r={3.5} stroke={color} strokeWidth={STROKE} />
+    </Svg>
+  );
+}
+
+export function VideoIcon({size = 20, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M3 7a1 1 0 0 1 1-1h11a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="m16 10 5-3v10l-5-3" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+    </Svg>
+  );
+}
+
+export function GalleryIcon({size = 20, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="m3 16 5-5 4 4 3-3 6 6" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Circle cx={16} cy={9} r={1.5} fill={color} />
+    </Svg>
+  );
+}
+
+export function PlayIcon({size = 20, color = colors.white}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M8 5.5v13a.5.5 0 0 0 .77.42l10-6.5a.5.5 0 0 0 0-.84l-10-6.5A.5.5 0 0 0 8 5.5Z" fill={color} />
+    </Svg>
+  );
+}
+
+export function NoteIcon({size = 20, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="M8.5 11h7M8.5 15h7M8.5 7h3" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+    </Svg>
+  );
+}

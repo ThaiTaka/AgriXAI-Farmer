@@ -38,6 +38,7 @@ import {observePlots} from '../../db/repositories/plotRepository';
 import {useObservable} from '../../db/useObservable';
 import type {ExpenseKind, IncomeKind} from '../../domain/finance';
 import {EXPENSE_KINDS, expenseKindLabel, financialCsv, financialReport, INCOME_KINDS, incomeKindLabel} from '../../domain/finance';
+import {describeLabor} from '../../domain/labor';
 import type {PeriodFilter} from '../../domain/warehouse';
 import type {FinanceTab, RootStackParamList} from '../../navigation/types';
 import {colors, radius, space, text} from '../../theme';
@@ -198,6 +199,7 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
         <Card flush style={styles.table}>
           {rows.slice(0, 60).map((row, index) => {
             const fromStock = side === 'expense' && (row as Expense).warehouseInId;
+            const labor = side === 'expense' ? describeLabor(row as Expense) : null;
             return (
               <View key={row.id} style={[styles.entryRow, index === Math.min(rows.length, 60) - 1 && styles.trLast]} testID={`entry-${side}-${row.id}`}>
                 <Pressable
@@ -219,6 +221,11 @@ function EntryTab({side, rows, plots, onOpenPurchase}: {side: 'income' | 'expens
                     <Badge label={row.checked ? 'Đã kiểm tra' : 'Chưa kiểm tra'} tone={row.checked ? 'green' : 'gray'} />
                     {fromStock ? <Badge label="Từ kho" tone="blue" /> : null}
                   </View>
+                  {labor ? (
+                    <Text style={text('caption', colors.text.secondary)} numberOfLines={2}>
+                      {labor}
+                    </Text>
+                  ) : null}
                   {row.note ? (
                     <Text style={text('caption', colors.text.muted)} numberOfLines={2}>
                       {row.note}

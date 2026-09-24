@@ -32,6 +32,7 @@ import type {PickedVariety, RootStackParamList} from '../../navigation/types';
 import {colors, space, text} from '../../theme';
 import {inferGrowthStage} from '../../utils/growthStage';
 import {cropNameOf, cropTypeById} from '../../utils/staticData';
+import {GuideLinks} from '../guide/GuideLinks';
 import {CareStageAccordion} from './CareStageAccordion';
 import {ProtocolUnavailable} from './ProtocolUnavailable';
 import {useCategoryOf} from './useCategoryOf';
@@ -195,6 +196,8 @@ export function CareProtocolScreen() {
               ) : null}
               <SourceLink testID="care-source-link" url={protocol.source.url} style={styles.sourceLink} />
             </Card>
+
+            <GuideLinks cropType={selection.cropType} />
 
             <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>
               {selection.plotId ? 'Công việc cho lô này' : 'Công việc theo giai đoạn'}

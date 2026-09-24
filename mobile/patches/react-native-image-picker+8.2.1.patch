@@ -1,0 +1,22 @@
+diff --git a/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/VideoMetadata.java b/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/VideoMetadata.java
+index 2cec8b2..89c8c3b 100644
+--- a/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/VideoMetadata.java
++++ b/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/VideoMetadata.java
+@@ -37,7 +37,16 @@ public class VideoMetadata extends Metadata {
+ 
+             // Extract anymore metadata here...
+             if (duration != null) this.duration = Math.round(Float.parseFloat(duration)) / 1000;
+-            if (bitrate != null) this.bitrate = parseInt(bitrate);
++            // AgriLog patch: a container with no bitrate (screen recordings, some
++            // re-encoded chat videos) reports Long.MIN_VALUE, and parseInt threw -
++            // failing the whole pick. Unknown bitrate is simply 0.
++            if (bitrate != null) {
++                try {
++                    this.bitrate = (int) Math.max(0L, Math.min(Integer.MAX_VALUE, Long.parseLong(bitrate)));
++                } catch (NumberFormatException e) {
++                    this.bitrate = 0;
++                }
++            }
+ 
+             if (datetime != null) {
+                 // METADATA_KEY_DATE gives us the following format: "20211214T102646.000Z"

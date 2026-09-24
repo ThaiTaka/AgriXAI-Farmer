@@ -9,7 +9,7 @@
 import {csvLine, inPeriod, periodLabel, startOfDay, type PeriodFilter} from './warehouse';
 
 export type IncomeKind = 'product' | 'service' | 'other';
-export type ExpenseKind = 'fertilizer' | 'labor' | 'utilities' | 'other';
+export type ExpenseKind = 'seed' | 'fertilizer' | 'labor' | 'utilities' | 'other';
 
 export const INCOME_KINDS: readonly {code: IncomeKind; label: string}[] = [
   {code: 'product', label: 'Sản phẩm'},
@@ -18,6 +18,7 @@ export const INCOME_KINDS: readonly {code: IncomeKind; label: string}[] = [
 ];
 
 export const EXPENSE_KINDS: readonly {code: ExpenseKind; label: string}[] = [
+  {code: 'seed', label: 'Giống cây'},
   {code: 'fertilizer', label: 'Phân bón'},
   {code: 'labor', label: 'Công nhân'},
   {code: 'utilities', label: 'Điện nước'},

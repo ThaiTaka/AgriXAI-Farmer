@@ -31,8 +31,14 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Chụp ảnh, quay video công việc và mùa thu hoạch để lưu vào nhật ký lô đất.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ghi tiếng khi quay video cách làm công việc trên lô đất.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Chọn ảnh, video có sẵn trong máy để đính kèm vào ghi chú công việc.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

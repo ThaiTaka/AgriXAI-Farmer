@@ -1,4 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {useNavigation} from '@react-navigation/native';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useMemo, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 
@@ -6,7 +8,7 @@ import {useChangeAuthor, useCurrentUser} from '../../auth/AuthContext';
 import {Badge} from '../../components/Badge';
 import {ProgressBar} from '../../components/ProgressBar';
 import {Card} from '../../components/Card';
-import {BellIcon, CheckboxIcon, ChevronRight} from '../../components/icons';
+import {BellIcon, CheckboxIcon, ChevronRight, NoteIcon} from '../../components/icons';
 import type TaskHistory from '../../db/models/TaskHistory';
 import {
   historyKey,
@@ -17,6 +19,7 @@ import {
 import {useObservable} from '../../db/useObservable';
 import type {CareProtocol, CareStage} from '../../domain/careProtocol';
 import {TASK_TYPE_LABELS} from '../../domain/careProtocol';
+import type {RootStackParamList} from '../../navigation/types';
 import {colors, radius, size, space, text} from '../../theme';
 import {formatDate} from '../../utils/format';
 
@@ -37,6 +40,7 @@ interface Props {
  * itself — the farmer's tap is the confirmation.
  */
 export function CareStageAccordion({protocol, plotId, currentStageCode, onlyStage}: Props) {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const user = useCurrentUser();
   const author = useChangeAuthor();
   const [open, setOpen] = useState<string | null>(currentStageCode ?? protocol.stages[0]?.stage_code ?? null);
@@ -172,6 +176,27 @@ export function CareStageAccordion({protocol, plotId, currentStageCode, onlyStag
                             </Text>
                           </Pressable>
                         </View>
+                        <Pressable
+                          accessibilityRole="button"
+                          accessibilityLabel={`Ghi chú, ảnh và tiền công: ${task.title}`}
+                          testID={`task-open-${stage.stage_code}-${task.key}`}
+                          onPress={() =>
+                            navigation.navigate('TaskDetail', {
+                              protocolId: protocol.id,
+                              stageCode: stage.stage_code,
+                              taskKey: task.key,
+                              taskTitle: task.title,
+                              cropType: protocol.crop_type,
+                              plotId,
+                            })
+                          }
+                          style={({pressed}) => [styles.records, pressed && styles.remindPressed]}>
+                          <NoteIcon size={16} />
+                          <Text style={[text('caption', colors.primary.default), styles.recordsLabel]}>
+                            Ghi chú, ảnh/video, tiền công
+                          </Text>
+                          <ChevronRight size={16} color={colors.primary.default} />
+                        </Pressable>
                       </View>
                     </View>
                   );
@@ -322,5 +347,20 @@ const styles = StyleSheet.create({
   },
   remindPressed: {
     backgroundColor: colors.primary.soft,
+  },
+  records: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.xs,
+    minHeight: size.minTouchTarget,
+    marginTop: space.xs,
+    paddingHorizontal: space.sm,
+    marginLeft: -space.sm,
+    borderRadius: radius.xs,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border.default,
+  },
+  recordsLabel: {
+    flex: 1,
   },
 });
