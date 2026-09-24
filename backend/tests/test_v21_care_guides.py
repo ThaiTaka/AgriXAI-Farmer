@@ -159,3 +159,18 @@ def test_a_farmer_cannot_write_guides_through_sync_either(farmer):
     current = client.get(f"/care-guides/{guide['id']}", headers=admin()).json()
     assert current["title"] == "Bản gốc"
     assert client.get(f"/care-guides/{forged_id}", headers=admin()).status_code == 404
+
+
+def test_demo_guides_take_their_steps_from_the_sourced_protocol(farmer):
+    """The seeded guides only repeat what the protocol's source says."""
+    from app.services import static_data
+
+    protocol = next(p for p in static_data.load("care_protocols")["protocols"] if p["crop_type"] == "tomato")
+    titles = {t["title"] for s in protocol["stages"] for t in s["tasks"]}
+    guides = client.get("/crops/tomato/care-guides", headers=farmer).json()
+    demo = [g for g in guides if g["id"].startswith("demo-guide-")]
+    assert {g["youtube_id"] for g in demo} == {"M1fqC6tuXLI", "nGqGU7yYO-c"}
+    for guide in demo:
+        assert guide["published"] and guide["steps"]
+        assert all(step["title"] in titles for step in guide["steps"])
+        assert guide["source_url"] == protocol["source"]["url"]

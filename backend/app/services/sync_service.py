@@ -154,9 +154,42 @@ def _serialise(row: Any, model: type) -> dict[str, Any]:
     return {name: getattr(row, name) for name in _readable_columns(model)}
 
 
-def pull_changes(db: Session, user: User, last_pulled_at: int | None) -> dict[str, Any]:
+def migration_tables(migration: dict[str, Any] | None) -> tuple[set[str], set[str]]:
+    """(new tables, tables with new columns) named by a WatermelonDB migration sync.
+
+    The phone sends `migration={"from": 6, "tables": [...], "columns": [{"table":
+    ..., "columns": [...]}]}` on its first pull after a local schema upgrade.
+    Tables that live only on the phone (error_logs) are ignored.
+    """
+    if not migration:
+        return set(), set()
+    created = {t for t in migration.get("tables") or [] if isinstance(t, str)}
+    widened = {
+        c.get("table")
+        for c in migration.get("columns") or []
+        if isinstance(c, dict) and isinstance(c.get("table"), str)
+    }
+    return created & set(SYNC_MODELS), widened & set(SYNC_MODELS)
+
+
+def pull_changes(
+    db: Session,
+    user: User,
+    last_pulled_at: int | None,
+    migration: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Rows changed since `last_pulled_at`, per table.
+
+    `migration` handles the phone that upgraded its local schema. Rows it pulled
+    while still on the old app version arrived without the new columns — the
+    old schema had nowhere to put them — and a plain incremental pull would
+    never send them again. So every table the upgrade created or widened is
+    sent whole: new tables as "created", widened ones as "updated" (WatermelonDB
+    fills in the missing columns and keeps any unsynced local edits).
+    """
     timestamp = now_ms()
     changes: dict[str, dict[str, list]] = {}
+    new_tables, widened_tables = migration_tables(migration)
 
     for table, (model, owner_column) in SYNC_MODELS.items():
         stmt = select(model)
@@ -167,7 +200,11 @@ def pull_changes(db: Session, user: User, last_pulled_at: int | None) -> dict[st
         updated: list[dict] = []
         deleted: list[str] = []
 
-        if last_pulled_at is None:
+        if last_pulled_at is not None and (table in new_tables or table in widened_tables):
+            bucket = created if table in new_tables else updated
+            for row in db.scalars(stmt.where(model.is_deleted.is_(False))):
+                bucket.append(_serialise(row, model))
+        elif last_pulled_at is None:
             # First sync: everything alive, all as "created".
             for row in db.scalars(stmt.where(model.is_deleted.is_(False))):
                 created.append(_serialise(row, model))

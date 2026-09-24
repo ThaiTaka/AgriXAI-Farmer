@@ -1,5 +1,6 @@
 """WatermelonDB sync endpoints."""
 
+import json
 import logging
 from typing import Any
 
@@ -29,16 +30,23 @@ def pull(
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
-    result = pull_changes(db, user, last_pulled_at)
+    try:
+        migration_info = json.loads(migration) if migration else None
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail="Tham số migration không phải JSON") from exc
+    if migration_info is not None and not isinstance(migration_info, dict):
+        raise HTTPException(status_code=422, detail="Tham số migration không hợp lệ")
+    result = pull_changes(db, user, last_pulled_at, migration_info)
     counts = {
         table: {kind: len(rows) for kind, rows in table_changes.items()}
         for table, table_changes in result["changes"].items()
     }
     logger.debug(
-        "pull user=%s last_pulled_at=%s schema=%s counts=%s",
+        "pull user=%s last_pulled_at=%s schema=%s migration=%s counts=%s",
         user.username,
         last_pulled_at,
         schema_version,
+        migration_info,
         counts,
     )
     return result

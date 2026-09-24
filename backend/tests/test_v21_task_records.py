@@ -41,7 +41,8 @@ def test_labor_amount_by_hour_day_and_lump():
     assert labor_amount("day", 3, 1, 100_000) == 300_000
     assert labor_amount("day", 2, 1.5, 180_000) == 540_000
     assert labor_amount("lump", None, None, 450_000) == 450_000
-    assert labor_amount("hour", 1, 2.5, 33_333) == 83_332  # whole đồng
+    # 83.332,5₫ → 83.333₫: half up, like the phone (Python's round() would say 83.332).
+    assert labor_amount("hour", 1, 2.5, 33_333) == 83_333
     with pytest.raises(ValueError):
         labor_amount("hour", None, 2, 30_000)
 

@@ -12,14 +12,16 @@ records every time. Figures are the ones in the brief; prices match the
 catalogue (Urê Cà Mau 680.000₫/50 kg, DAP 1.100.000₫/50 kg).
 """
 
+import json
 from datetime import datetime, timedelta, timezone
 
 from sqlalchemy import select
 
 from app.core.security import hash_password
-from app.models.farm import CropCycle, Plot
+from app.models.farm import CareGuide, CropCycle, Plot
 from app.models.ledger import Expense, Income, WarehouseIn
 from app.models.user import User, UserRole
+from app.services import static_data
 
 VN_TZ = timezone(timedelta(hours=7))
 
@@ -222,6 +224,78 @@ def seed_demo_farm(db) -> None:
 
     print(f"  demo farm ({DEMO_USERNAME}): {created} rows added, rest refreshed")
     seed_neighbour_farms(db)
+    seed_demo_guides(db)
+
+
+# Two care guides for tomato so the demo shows the embedded video. The video
+# ids were checked against YouTube's oEmbed endpoint on 2026-09-24 (title and
+# channel below are what it returned). The steps are NOT written here: they are
+# read from the sourced tomato protocol (shared/data/care_protocols.json) at
+# seed time, so a guide never says more than the protocol's source does.
+DEMO_GUIDES = [
+    {
+        "id": "demo-guide-ca-chua-ra-hoa",
+        "stage_code": "flowering",
+        "title": "Cà chua ra hoa: làm giàn, tỉa lá gốc, bón thúc đợt 2",
+        # "Kỹ thuật trồng cà chua công nghệ cao trong nhà màng" — Báo Nông nghiệp và Môi trường
+        "youtube_id": "M1fqC6tuXLI",
+        "video_credit": "Video: Báo Nông nghiệp và Môi trường",
+        "tasks": ("flowering", ["lam_gian", "tia_la_goc", "bon_thuc_2", "kiem_tra_benh"]),
+        "sort_order": 2,
+    },
+    {
+        "id": "demo-guide-u-phan-bon-lot",
+        "stage_code": "seedling",
+        "title": "Bón lót phân hữu cơ trước khi trồng cà chua",
+        # "Kỹ thuật ủ phân hữu cơ bón cho cây trồng | VTC16" — KÊNH VTC16
+        "youtube_id": "nGqGU7yYO-c",
+        "video_credit": "Video: Kênh VTC16",
+        "tasks": ("seedling", ["bon_lot", "tuoi_giu_am", "bon_thuc_1"]),
+        "sort_order": 1,
+    },
+]
+
+
+def seed_demo_guides(db) -> None:
+    protocol = next(
+        (p for p in static_data.load("care_protocols")["protocols"] if p["crop_type"] == "tomato"), None
+    )
+    if protocol is None:
+        print("  care guides: no tomato protocol, skipped")
+        return
+    stages = {s["stage_code"]: s for s in protocol["stages"]}
+    source = protocol["source"]
+    created = 0
+    for spec in DEMO_GUIDES:
+        stage_code, keys = spec["tasks"]
+        stage = stages.get(stage_code)
+        if stage is None:
+            continue
+        tasks = {t["key"]: t for t in stage["tasks"]}
+        steps = [
+            {"title": tasks[k]["title"], "body": tasks[k]["detail"], "image_id": None} for k in keys if k in tasks
+        ]
+        created += _upsert(
+            db,
+            CareGuide,
+            spec["id"],
+            crop_type="tomato",
+            stage_code=spec["stage_code"],
+            title=spec["title"],
+            summary=f"{stage['stage_name_vi']} — {stage['timing']}.",
+            youtube_id=spec["youtube_id"],
+            steps_json=json.dumps(steps, ensure_ascii=False),
+            images_json=json.dumps([]),
+            source_name=f"Các bước: {source['publisher']} — {source['title']}. {spec['video_credit']}",
+            source_url=source["url"],
+            published=True,
+            sort_order=spec["sort_order"],
+            created_by=None,
+            updated_by=None,
+            created_at=ms(DEMO_REVISION),
+            updated_at=ms(DEMO_REVISION),
+        )
+    print(f"  care guides: {created} added, rest refreshed")
 
 
 # Past seasons on the demo tomato plot (300 m²), so the cultivation history and

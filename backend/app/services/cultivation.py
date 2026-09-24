@@ -18,6 +18,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Iterable
 
 from app.models.farm import Season
+from app.services.rounding import half_up
 
 VN_TZ = timezone(timedelta(hours=7))
 
@@ -53,7 +54,7 @@ def productivity(yield_kg: float | None, area_m2: float | None) -> float | None:
     """kg per 1.000 m², or None when either figure is missing."""
     if not yield_kg or not area_m2 or yield_kg <= 0 or area_m2 <= 0:
         return None
-    return round(yield_kg / area_m2 * 1000, 1)
+    return half_up(yield_kg / area_m2 * 1000, 1)
 
 
 def cycle_season(cycle: Any) -> str:
@@ -67,11 +68,12 @@ def season_label(season: str, year: int | None = None) -> str:
 
 def vn_number(value: float) -> str:
     """4500.0 → "4.500", 82.5 → "82,5" — how the farmer writes it."""
-    rounded = round(value, 1)
+    rounded = half_up(value, 1)
     whole = int(rounded)
-    text = f"{whole:,}".replace(",", ".")
-    decimal = round(abs(rounded - whole) * 10)
-    return f"{text},{decimal}" if decimal else text
+    text = f"{abs(whole):,}".replace(",", ".")
+    decimal = int(half_up(abs(rounded - whole) * 10))
+    sign = "-" if rounded < 0 else ""
+    return f"{sign}{text},{decimal}" if decimal else f"{sign}{text}"
 
 
 @dataclass
@@ -116,7 +118,7 @@ def recommend(cycles: Iterable[Any], season: str | None, crop_names: dict[str, s
     for crop_type, rows in groups.items():
         rows.sort(key=lambda c: c.started_at)
         values = [productivity(c.yield_kg, c.area_m2) for c in rows]
-        avg = round(sum(values) / len(values), 1)
+        avg = half_up(sum(values) / len(values), 1)
         best_index = max(range(len(rows)), key=lambda i: values[i])
         best = rows[best_index]
         name = next((c.crop_name for c in rows if c.crop_name), None) or names.get(crop_type, crop_type)
@@ -198,6 +200,6 @@ def plot_costs(
     for row in warehouse_outs:
         if row.plot_id == plot_id and inside(row.occurred_at):
             totals["fertilizer"] += row.total_cost
-    totals = {k: float(round(v)) for k, v in totals.items()}
+    totals = {k: half_up(v) for k, v in totals.items()}
     totals["total"] = float(sum(totals.values()))
     return totals

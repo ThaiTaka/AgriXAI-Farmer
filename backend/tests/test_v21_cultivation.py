@@ -57,6 +57,15 @@ def test_productivity_is_kg_per_thousand_square_metres():
     assert cult.productivity(0, 300) is None
 
 
+def test_rounding_is_half_up_like_the_phone():
+    from app.services.rounding import half_up
+
+    # Python's round() would give 0, 2 and 4.2 — the phone gives 1, 3 and 4.3.
+    assert half_up(0.5) == 1
+    assert half_up(2.5) == 3
+    assert half_up(4.25, 1) == 4.3
+
+
 def test_vietnamese_number_format():
     assert cult.vn_number(4600) == "4.600"
     assert cult.vn_number(82.5) == "82,5"
