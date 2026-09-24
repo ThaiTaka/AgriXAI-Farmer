@@ -4,7 +4,7 @@
 # tĩnh (quy trình chăm sóc, danh mục giống, bảng giá phân) trong shared/data:
 #
 #   docker build -f backend/Dockerfile -t agrilog-api .
-#   docker run -p 8000:8000 --env-file backend/.env.production agrilog-api
+#   docker run -p 8000:8000 -v agrilog-media:/data/media --env-file backend/.env.production agrilog-api
 
 FROM python:3.12-slim
 
@@ -27,8 +27,16 @@ COPY shared/data /shared/data
 # Font Unicode cho báo cáo PDF tiếng Việt (app/services/report_pdf.py).
 COPY mobile/src/assets/fonts /mobile/src/assets/fonts
 
-# Chạy bằng tài khoản thường, không phải root.
-RUN useradd --create-home --uid 1000 agrilog && chown -R agrilog:agrilog /app /shared /mobile
+# Chạy bằng tài khoản thường, không phải root. /data/media (ảnh/video nông hộ)
+# được tạo sẵn và thuộc về tài khoản đó: một volume gắn vào thư mục chưa có
+# trong ảnh sẽ thuộc root, và API không ghi được tệp nào.
+RUN useradd --create-home --uid 1000 agrilog \
+    && mkdir -p /data/media \
+    && chown -R agrilog:agrilog /app /shared /mobile /data
+ENV MEDIA_DIR=/data/media
+# Gắn volume ở đây (docker run -v agrilog-media:/data/media), nếu không ảnh mất
+# theo container ở lần triển khai kế tiếp.
+VOLUME ["/data/media"]
 USER agrilog
 
 EXPOSE 8000

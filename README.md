@@ -86,6 +86,24 @@ AAA), nhãn và nút phân biệt rõ, dải chip cuộn ngang thay vì vỡ dò
 |---|---|
 | ![Danh sách công cụ](docs/screenshots/74-p5-tools-menu.png) | ![Chip đơn vị diện tích cuộn ngang](docs/screenshots/80-p5-calculator-unit-chips-scroll.png) |
 
+### 6. Lịch sử trồng trọt, ghi chú kèm ảnh/video, tiền công (V2.1)
+
+Lịch sử **trồng trọt** (vụ nào, cây gì, được bao nhiêu kg) tách khỏi lịch sử **công việc** (việc
+nào đã làm, làm thế nào). Từ các vụ đã ghi sản lượng, ứng dụng gợi ý cây cho vụ tới — chỉ
+những cây lô đã từng trồng, xếp theo năng suất thật, không bịa. Mỗi công việc có ghi chú kèm
+ảnh/video (lưu trên máy, tự tải lên khi có sóng) và tiền thuê người (số người × giờ/ngày × đơn
+giá, hoặc khoán) — tiền công là một khoản chi nên tự vào Thu – Chi. Hướng dẫn chăm sóc có video
+YouTube phát ngay trong ứng dụng; quản trị viên soạn trên web. Quyết định và giới hạn:
+[ADR 0008](docs/adr/0008-v2-1-canh-tac-media-nhan-cong.md).
+
+| Vụ trồng: gợi ý theo mùa | So sánh năng suất |
+|---|---|
+| ![Gợi ý cây cho vụ xuân từ lịch sử của lô](docs/screenshots/86-v21-crop-suggestion-spring.png) | ![Lịch sử trồng trọt và biểu đồ năng suất](docs/screenshots/85-v21-cultivation-history-chart.png) |
+
+| Video hướng dẫn trong app | Lịch sử công việc | Tiền công |
+|---|---|---|
+| ![YouTube phát ngay trong ứng dụng](docs/screenshots/89-v21-youtube-embedded-playing.png) | ![Đã làm kèm ghi chú, ảnh, tiền công](docs/screenshots/90-v21-task-history-done.png) | ![1 người × 2 giờ × 30.000₫](docs/screenshots/92-v21-labor-cost-60000.png) |
+
 ## Phạm vi
 
 Ứng dụng **không** chẩn đoán bệnh cây. Tính năng đó từng có ở Giai đoạn 2 và đã bị gỡ bỏ
@@ -260,6 +278,11 @@ Trạng thái đo ngày 23/09/2026: **198 test / 20 bộ, phủ 91,0 % câu lệ
 > Giai đoạn 4 thêm hai module native (`react-native-html-to-pdf`, `react-native-share`):
 > sau khi `npm install` phải build lại app (`./gradlew app:installDebug`), lần đầu cần mạng
 > để Gradle tải `pdfbox-android`.
+>
+> V2.1 thêm ba module native nữa (`react-native-webview`, `react-native-image-picker`,
+> `@dr.pogodin/react-native-fs`, ghim đúng phiên bản) — cũng phải build lại app.
+> `npm install` tự áp bản vá `patches/react-native-image-picker+8.2.1.patch` (postinstall
+> `patch-package`). Đo ngày 24/09/2026: **236 test / 24 bộ, phủ 94 % dòng**.
 
 Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **cả tên đăng nhập lẫn email**
 (`thaitaka` hoặc `thaitaka@agrilog.local`).
@@ -396,6 +419,7 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | **Giai đoạn 5** — kho (form nhập, bảng tồn, biểu đồ) và thu-chi (form, báo cáo) | `75-p5-warehouse-form-textarea-chips.png`, `76-p5-stock-summary.png`, `77-p5-stock-chart-bezier.png`, `78-p5-income-form-chip-vs-button.png`, `79-p5-finance-report-charts.png` |
 | **Giai đoạn 5** — chip đơn vị cuộn ngang, danh mục cây (có cây nông hộ tự thêm + ghi nguồn), quy trình chăm sóc với link nguồn | `80-p5-calculator-unit-chips-scroll.png`, `81-p5-crop-picker.png`, `82-p5-crop-picker-user-added-and-sources.png`, `83-p5-care-protocol-source-link.png` |
 | **Giai đoạn 5** — ứng dụng chạy đủ chức năng khi **máy chủ đã tắt** (offline-first) | `84-p5-works-with-backend-down.png` |
+| **V2.1 (24/09/2026)** — vụ trồng + biểu đồ năng suất, gợi ý theo mùa, gợi ý trong form vụ mới, tab Chăm sóc có video, YouTube phát trong app, lịch sử công việc, ghi chú chờ tải ảnh, tiền công, Thu – Chi có cách tính tiền công, phát video trong máy, web-admin soạn hướng dẫn | `85-v21-cultivation-history-chart.png` … `95-v21-web-admin-care-guide-editor.png` |
 
 ## Giới hạn hiện tại
 
@@ -410,10 +434,12 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 - "Báo lỗi" gửi thông điệp, stack, màn hình, phiên bản và thời điểm — chưa đính kèm ảnh chụp
   màn hình.
 - PDF trên web do server tạo (fpdf2) thay vì pdfkit trong trình duyệt; nội dung khớp bản mobile.
-- Bảng `crop_cycles` đã có trong schema nhưng chưa có màn hình nào ghi vào nó, nên tab
-  "Chu kỳ canh tác" luôn rỗng; giai đoạn cây ở tab "Chăm sóc" vẫn **ước tính từ ngày trồng**
-  theo chu kỳ cà chua (ADR 0002 §7).
-- Schema mobile ở **v6** (v4→v5 thêm sáu bảng, v5→v6 thêm `error_logs`). Server tự thêm
+- Giai đoạn của một vụ đang trồng (`crop_cycles.stage`) chưa tự tiến theo thời gian — chỉ đổi
+  khi sửa tay; lô không có vụ đang mở thì tab "Chăm sóc" **ước tính từ ngày trồng**
+  (ADR 0002 §7).
+- Gợi ý trồng xen / khoảng cách giữa các cây chưa làm: chưa có nguồn chính thống (ADR 0008).
+- Schema mobile ở **v7** (v6→v7: `task_notes`, `care_guides`, thêm cột cho `crop_cycles` và
+  `expense`), có migration sync — **triển khai máy chủ trước app**. Server tự thêm
   cột/bảng/chỉ mục thiếu lúc khởi động (`app/core/schema_upgrade.py`) thay cho Alembic —
   chỉ làm được thay đổi kiểu "thêm vào"; đổi kiểu cột hay xoá cột vẫn phải làm tay.
 - Kiểm tải mới chạy trên máy phát triển Windows: 100 nông hộ đồng thời không lỗi và không
