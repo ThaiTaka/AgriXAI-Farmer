@@ -73,6 +73,37 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   return (await res.json()) as T;
 }
 
+/**
+ * Multipart upload (photos for care guides). Same auth and error handling as
+ * `api`, but no JSON Content-Type — the browser sets the multipart boundary.
+ */
+export async function apiUpload<T>(path: string, form: FormData): Promise<T> {
+  const token = getToken();
+  const res = await fetch(`${API_URL}${path}`, {
+    method: "POST",
+    headers: token ? {Authorization: `Bearer ${token}`} : {},
+    body: form,
+  });
+  if (res.status === 401) {
+    setToken(null);
+    throw new ApiError("Phiên đăng nhập đã hết hạn", 401);
+  }
+  if (!res.ok) {
+    let detail = `Lỗi máy chủ (${res.status})`;
+    try {
+      const body = await res.json();
+      if (typeof body?.detail === "string") detail = body.detail;
+    } catch {
+      // keep the generic message
+    }
+    throw new ApiError(detail, res.status);
+  }
+  return (await res.json()) as T;
+}
+
+/** Public media (care-guide pictures) load straight from the API, no token. */
+export const mediaUrl = (id: string): string => `${API_URL}/media/${encodeURIComponent(id)}`;
+
 /** Fetches a binary endpoint (the PDF) and returns it as a Blob. */
 export async function apiBlob(path: string): Promise<{blob: Blob; filename: string}> {
   const token = getToken();

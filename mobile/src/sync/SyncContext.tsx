@@ -6,6 +6,7 @@ import type {SyncConflict, SyncOutcome} from '../api/sync';
 import {runSync} from '../api/sync';
 import {useAuth} from '../auth/AuthContext';
 import type {TableSyncInfo} from '../domain/syncStatus';
+import {uploadPendingMedia} from '../media/uploader';
 import {keepLocalVersion, takeServerVersion} from './conflicts';
 import {pendingByTable} from './pending';
 
@@ -48,6 +49,9 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
   tokenRef.current = token;
   const userRef = useRef(userId);
   userRef.current = userId;
+  // Lets a finished media upload ask for one more pass without `sync`
+  // depending on itself.
+  const syncRef = useRef<(() => Promise<SyncOutcome>) | null>(null);
 
   const refreshPending = useCallback(async () => {
     try {
@@ -76,6 +80,14 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
       // Online for sure: drain the error-log queue too. Never fatal.
       if (userRef.current) {
         uploadErrorLogs(current, userRef.current).catch(error => console.warn('[logs] upload failed', error));
+        // Photos/videos waiting on this phone. Each file sent flips a flag in
+        // its row, so a second pass carries those flags to the server now
+        // rather than a minute from now; with nothing sent, nothing follows.
+        uploadPendingMedia(current, userRef.current)
+          .then(sent => {
+            if (sent > 0) setTimeout(() => syncRef.current?.().catch(() => {}), 0);
+          })
+          .catch(error => console.warn('[media] upload failed', error));
       }
     } else if (outcome.reason === 'offline') {
       setState('offline');
@@ -91,6 +103,8 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
     await refreshPending();
     return outcome;
   }, [signOut, refreshPending]);
+
+  syncRef.current = sync;
 
   const resolveConflict = useCallback(
     async (conflict: SyncConflict, choice: 'mine' | 'theirs') => {

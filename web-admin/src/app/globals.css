@@ -704,3 +704,67 @@ a:focus-visible {
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--font-size-sm);
 }
+
+/* ── Hướng dẫn chăm sóc (V2.1) ─────────────────────────────────────── */
+
+.input.textarea {
+  padding: var(--space-sm) var(--space-md);
+  min-height: 72px;
+  line-height: 1.5;
+  resize: vertical;
+  font: inherit;
+}
+
+.video-preview {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #000;
+}
+
+.video-preview iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.thumb {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: 0;
+  align-items: flex-start;
+}
+
+.thumb img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-default);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.step-edit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-subtle);
+}

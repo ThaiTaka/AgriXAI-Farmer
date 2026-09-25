@@ -40,6 +40,17 @@ ACCESS = {
     ("GET", "/users"): "**chỉ quản trị viên**",
     ("POST", "/users"): "**chỉ quản trị viên**",
     ("PATCH", "/users/{user_id}/status"): "**chỉ quản trị viên**",
+    # V2.1
+    ("POST", "/care-guides"): "**chỉ quản trị viên**",
+    ("PATCH", "/care-guides/{guide_id}"): "**chỉ quản trị viên**",
+    ("DELETE", "/care-guides/{guide_id}"): "**chỉ quản trị viên**",
+    ("POST", "/care-guides/{guide_id}/upload-image"): "**chỉ quản trị viên**",
+    ("GET", "/care-guides"): "đã đăng nhập (bản nháp: chỉ quản trị viên)",
+    ("GET", "/care-guides/{guide_id}"): "đã đăng nhập (bản nháp: chỉ quản trị viên)",
+    ("GET", "/crops/{crop_type}/care-guides"): "đã đăng nhập (bản nháp: chỉ quản trị viên)",
+    ("POST", "/media"): "đã đăng nhập (`public=true`: chỉ quản trị viên)",
+    ("GET", "/media/{media_id}"): "ảnh công khai: ai cũng xem; ảnh riêng: chủ hoặc quản trị viên (header hoặc `?t=`)",
+    ("DELETE", "/media/{media_id}"): "chủ tệp hoặc quản trị viên",
 }
 DEFAULT_ACCESS = "đã đăng nhập (chỉ thấy dữ liệu của chính mình)"
 
@@ -87,6 +98,14 @@ def main() -> int:
         "* `POST /sync` trả thêm `conflicts` (bản máy chủ giữ lại) và `rejected`",
         "  (bản máy chủ từ chối, kèm lý do), và header `X-Conflict-Resolution`.",
         "* Nông hộ không tạo được lô đất — cả qua `POST /plots` lẫn qua `POST /sync`.",
+        "* Qua `POST /sync`, một bản ghi chỉ được sửa/xoá bởi chủ của nó (hoặc quản trị viên);",
+        "  bảng `care_guides` chỉ quản trị viên ghi. Bản bị từ chối có `reason`",
+        "  `not_owner` / `admin_only_write` / `admin_only_create`.",
+        "* `GET /sync?migration=...` (migration sync): lần kéo đầu sau khi điện thoại nâng",
+        "  schema, máy chủ gửi lại nguyên các bảng mới/được thêm cột. Triển khai máy chủ",
+        "  trước bản app có schema mới.",
+        "* Ảnh/video riêng xem qua `?t=<token>` từ `POST /media/token` (6 giờ, chỉ mở",
+        "  được `/media`, không dùng thay đăng nhập được).",
     ]
 
     MD_OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")

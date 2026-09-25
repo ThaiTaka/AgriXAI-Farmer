@@ -55,6 +55,14 @@ def current_user(
             detail="Token không hợp lệ hoặc đã hết hạn",
             headers={"WWW-Authenticate": "Bearer"},
         ) from exc
+    if payload.get("scope") is not None:
+        # A scoped token (today: the media token from a picture URL) must never
+        # stand in for a login — it was built to be seen by others.
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token này chỉ dùng để xem ảnh/video",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     user = db.get(User, payload.get("sub"))
     if user is None or user.is_deleted or not user.is_active:

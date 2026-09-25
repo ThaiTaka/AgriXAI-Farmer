@@ -10,7 +10,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import engine
 from app.core.schema_upgrade import upgrade
-from app.routers import auth, fertilizer_prices, health, ledger, ops, plots, sync
+from app.routers import (
+    auth,
+    care_guides,
+    cultivation,
+    fertilizer_prices,
+    health,
+    ledger,
+    media,
+    ops,
+    plots,
+    sync,
+    task_records,
+)
 
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
@@ -28,7 +40,10 @@ TAGS_METADATA = [
     {"name": "plans", "description": "Kế hoạch bón phân đã lưu (F1)."},
     {"name": "warehouse", "description": "Kho phân bón: nhập, xuất, tồn, đối chiếu."},
     {"name": "finance", "description": "Thu, chi và báo cáo (JSON, CSV, PDF)."},
-    {"name": "care-protocols", "description": "Quy trình chăm sóc và lịch sử công việc."},
+    {"name": "care-protocols", "description": "Quy trình chăm sóc, lịch sử công việc, ghi chú kèm ảnh/video và tiền công."},
+    {"name": "cultivation", "description": "Lịch sử trồng trọt của lô, gợi ý cây theo năng suất, chi phí của lô."},
+    {"name": "care-guides", "description": "Hướng dẫn chăm sóc có video YouTube nhúng và ảnh từng bước — quản trị viên soạn."},
+    {"name": "media", "description": "Ảnh và video: tải lên, xem, xoá."},
     {"name": "dashboard", "description": "Số liệu tổng hợp cho màn hình chính."},
     {"name": "ops", "description": "Nhật ký lỗi từ điện thoại và quản lý tài khoản."},
     {"name": "health", "description": "Kiểm tra tình trạng dịch vụ và kết nối cơ sở dữ liệu."},
@@ -146,6 +161,10 @@ app.include_router(ops.dashboard_router)
 app.include_router(ops.reports_pdf_router)
 app.include_router(ops.users_router)
 app.include_router(fertilizer_prices.router)
+app.include_router(cultivation.router)
+app.include_router(task_records.router)
+app.include_router(care_guides.router)
+app.include_router(media.router)
 
 
 @app.get("/", include_in_schema=False)

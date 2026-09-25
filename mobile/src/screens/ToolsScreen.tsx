@@ -19,6 +19,7 @@ import {
   ScaleIcon,
   ShareIcon,
   TagIcon,
+  VideoIcon,
   WarehouseIcon,
 } from '../components/icons';
 import {IconTile} from '../components/IconTile';
@@ -40,6 +41,7 @@ type ToolRoute =
   | 'StockCheck'
   | 'FertilizerGroups'
   | 'CareProtocol'
+  | 'CareGuides'
   | 'Warehouse'
   | 'Finance'
   | 'ReportExport';
@@ -63,7 +65,10 @@ const GROUPS: {label: string; tools: Tool[]}[] = [
   },
   {
     label: 'Chăm sóc',
-    tools: [{route: 'CareProtocol', title: 'Quy trình chăm sóc', subtitle: 'Bón gì, làm gì ở từng giai đoạn cây', icon: <ClipboardIcon />}],
+    tools: [
+      {route: 'CareProtocol', title: 'Quy trình chăm sóc', subtitle: 'Bón gì, làm gì ở từng giai đoạn cây', icon: <ClipboardIcon />},
+      {route: 'CareGuides', title: 'Hướng dẫn có video', subtitle: 'Xem cách làm bằng video và ảnh từng bước', icon: <VideoIcon size={22} />},
+    ],
   },
   {
     label: 'Kho và tài chính',

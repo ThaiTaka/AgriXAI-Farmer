@@ -9,12 +9,14 @@ to any one table, so they are declared here, once, next to the query they serve.
 from sqlalchemy import Index
 
 from app.models.farm import (
+    CareGuide,
     ChangeLog,
     CropCycle,
     CropVariety,
     GrowthStage,
     Plot,
     PlotStatus,
+    Season,
 )
 from app.models.fertilizer import FertilizerPrice
 from app.models.ledger import (
@@ -22,13 +24,15 @@ from app.models.ledger import (
     ExpenseKind,
     Income,
     IncomeKind,
+    LaborUnit,
     Plan,
     StockUnit,
     TaskHistory,
+    TaskNote,
     WarehouseIn,
     WarehouseOut,
 )
-from app.models.ops import ErrorLog
+from app.models.ops import ErrorLog, MediaFile
 from app.models.user import User, UserRole
 
 __all__ = [
@@ -49,7 +53,12 @@ __all__ = [
     "ExpenseKind",
     "StockUnit",
     "TaskHistory",
+    "TaskNote",
+    "LaborUnit",
+    "CareGuide",
+    "Season",
     "ErrorLog",
+    "MediaFile",
     "FertilizerPrice",
 ]
 
@@ -75,6 +84,7 @@ SYNC_PULL_INDEXES = (
     Index("ix_income_owner_updated", Income.owner_id, Income.updated_at),
     Index("ix_expense_owner_updated", Expense.owner_id, Expense.updated_at),
     Index("ix_tasks_history_owner_updated", TaskHistory.owner_id, TaskHistory.updated_at),
+    Index("ix_task_notes_owner_updated", TaskNote.owner_id, TaskNote.updated_at),
     # change_logs is scoped by its author rather than by an owner column.
     Index("ix_change_logs_author_updated", ChangeLog.changed_by, ChangeLog.updated_at),
     # Reports and the dashboard filter one farm by business date, not by sync time.

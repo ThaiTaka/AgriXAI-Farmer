@@ -23,6 +23,21 @@ Biến môi trường: chép `backend/.env.production.example` rồi điền. Ba
 `SECRET_KEY`, `DATABASE_URL` và `CORS_ORIGINS` — API sẽ **từ chối khởi động** nếu
 `ENVIRONMENT=production` mà còn dùng khoá dev, còn trỏ SQLite, hoặc `DEBUG=true`.
 
+### Ảnh và video (V2.1)
+
+Nông hộ đính kèm ảnh/video vào ghi chú công việc và vụ thu hoạch; quản trị viên tải ảnh cho
+hướng dẫn chăm sóc. Tệp nằm trên đĩa ở `MEDIA_DIR`, cơ sở dữ liệu chỉ giữ mã tệp:
+
+| Việc | Vì sao |
+|---|---|
+| `MEDIA_DIR` trỏ vào **ổ gắn ngoài** (Docker volume `-v agrilog-media:/data/media`, đĩa riêng của VPS) | Để trong container thì mỗi lần triển khai lại là mất sạch ảnh |
+| Nâng giới hạn thân request ở reverse proxy: nginx `client_max_body_size 110m;` (Caddy: `request_body { max_size 110MB }`) | nginx mặc định **1 MB** — mọi ảnh trên 1 MB bị chặn trước khi tới API, nông hộ chỉ thấy "tải lên thất bại" mãi |
+| Sao lưu `MEDIA_DIR` cùng lịch với `pg_dump` (mục 6) | Phục hồi CSDL mà thiếu thư mục này thì ghi chú vẫn còn, ảnh thì không |
+
+Giới hạn mặc định: ảnh 10 MB, video 100 MB (`MEDIA_MAX_IMAGE_MB`, `MEDIA_MAX_VIDEO_MB`). Điện
+thoại đã tự nén ảnh xuống ≤ 1600 px và giới hạn video 60 giây ở chất lượng thấp, nên thực tế một
+ảnh khoảng 60–500 KB.
+
 ### Quy tắc kích thước pool
 
 ```
@@ -69,11 +84,22 @@ Build từ thư mục gốc của repo, không phải từ `backend/`: API đọ
 
 ```bash
 docker build -f backend/Dockerfile -t agrilog-api .
-docker run -d --name agrilog-api -p 8000:8000 --env-file backend/.env.production agrilog-api
+docker run -d --name agrilog-api -p 8000:8000 \
+  -v agrilog-media:/data/media \
+  --env-file backend/.env.production agrilog-api
 ```
 
 Ảnh chạy 4 tiến trình gunicorn + worker uvicorn, dưới tài khoản thường (không phải root), và
-có sẵn `HEALTHCHECK` gọi `/health`.
+có sẵn `HEALTHCHECK` gọi `/health`. `/data/media` được tạo sẵn trong ảnh và thuộc tài khoản đó,
+nên volume gắn vào ghi được ngay.
+
+### Thứ tự khi phát hành bản có schema điện thoại mới
+
+**Máy chủ trước, app sau.** Khi app nâng schema (V2.1: v6 → v7), lần đồng bộ đầu tiên sau khi
+cập nhật gửi kèm `migration=...` để máy chủ gửi lại nguyên các bảng mới và bảng được thêm cột
+(xem [ADR 0008](adr/0008-v2-1-canh-tac-media-nhan-cong.md)). Máy chủ cũ không hiểu tham số này;
+điện thoại vẫn đánh dấu là đã chuyển xong, và các cột mới của dữ liệu cũ **rỗng vĩnh viễn** trên
+máy đó. Chuyện này đã xảy ra thật khi chạy thử (năng suất hiện "—", gợi ý báo "chưa đủ dữ liệu").
 
 ### VPS không dùng Docker
 
@@ -164,6 +190,8 @@ tiến trình uvicorn):
 # Hằng ngày, giữ 7 ngày
 pg_dump "$DATABASE_URL" | gzip > /var/backups/agrilog-$(date +%F).sql.gz
 find /var/backups -name 'agrilog-*.sql.gz' -mtime +7 -delete
+# Ảnh/video: đồng bộ tăng dần, cùng giờ với pg_dump
+rsync -a /data/media/ /var/backups/agrilog-media/
 ```
 
 **Bản sao lưu chưa từng phục hồi thử thì chưa phải bản sao lưu.** Mỗi tháng một lần, phục hồi
@@ -181,6 +209,8 @@ API tự ghi log những thứ cần cho việc chẩn đoán:
 | `sync conflict table=plots id=... user=...` | Một sửa đổi của nông hộ không được ghi (bản máy chủ mới hơn). Đây là dòng cần tìm khi có người báo "tôi sửa rồi mà nó không đổi" |
 | `sync rejected table=plots ... reason=admin_only_create` | Máy khách cố tạo lô đất — có thể là app cũ, cũng có thể là ai đó đang thử |
 | `push failed user=... error=IntegrityError` | Một lô đẩy bị quay lui toàn bộ |
+| `sync rejected ... reason=not_owner` | Máy khách cố sửa/xoá bản ghi của tài khoản khác — thường là có người đang thử |
+| `sync rejected ... reason=admin_only_write` | Máy khách cố ghi vào hướng dẫn chăm sóc |
 
 Mọi phản hồi đều có header `X-Response-Time-Ms`, nên đo được từ phía máy khách mà không cần
 vào máy chủ.
@@ -201,6 +231,8 @@ Nên có thêm:
 | Giới hạn đăng nhập đếm theo từng tiến trình | Chạy N worker thì hạn mức thực tế là 5×N lần/phút | Khi cần siết chặt: đặt giới hạn ở nginx/Caddy |
 | Token sống 7 ngày, không có refresh | Token lộ thì dùng được 7 ngày | Bù bằng khoá tài khoản (`PATCH /users/{id}/status`) — có hiệu lực ngay ở yêu cầu kế tiếp |
 | Kiểm tải mới chạy trên máy Windows dev | Chưa có số đo của môi trường thật | Trước khi tuyên bố đạt mốc 100 người đồng thời |
+| Ảnh/video lưu trên đĩa của một máy | Chạy nhiều máy chủ API thì mỗi máy chỉ thấy tệp của mình | Khi mở rộng ra hơn một máy: chuyển sang kho đối tượng (S3/MinIO) sau `media_service` |
+| Xoá ghi chú không xoá tệp trên máy chủ | Tệp mồ côi chiếm đĩa dần | Khi đĩa media vượt ~70 %: viết job dọn tệp không còn ghi chú nào nhắc tới |
 
 ### Vì sao không có `POST /auth/logout`
 

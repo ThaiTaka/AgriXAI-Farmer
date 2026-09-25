@@ -57,6 +57,13 @@ export function observeWarehouseOut(ownerId: string) {
     .observeWithColumns(['quantity_kg', 'total_cost', 'occurred_at', 'note']);
 }
 
+/** Stock issued onto one plot — its fertiliser cost at FIFO prices. */
+export function observePlotIssues(ownerId: string, plotId: string) {
+  return collections.warehouseOut
+    .query(Q.where('owner_id', ownerId), Q.where('plot_id', plotId))
+    .observeWithColumns(['total_cost', 'occurred_at']);
+}
+
 /** Model rows → the plain shapes the domain functions take. */
 export const toInRows = (rows: readonly WarehouseIn[]): InRow[] =>
   rows.map(r => ({

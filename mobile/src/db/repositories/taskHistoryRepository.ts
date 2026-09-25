@@ -94,6 +94,55 @@ export async function setTaskDone(ref: TaskRef, done: boolean, author: ChangeAut
   });
 }
 
+/** Every task row of one plot — the plot's task history (Lịch sử công việc). */
+export function observePlotTasks(ownerId: string, plotId: string) {
+  return collections.tasksHistory
+    .query(Q.where('owner_id', ownerId), Q.where('plot_id', plotId))
+    .observeWithColumns(['done', 'done_at', 'remind_at']);
+}
+
+/** The row behind one task, or null until the farmer first touches it. */
+export function observeTaskRow(ownerId: string, ref: TaskRef) {
+  return collections.tasksHistory
+    .query(
+      Q.where('owner_id', ownerId),
+      Q.where('protocol_id', ref.protocolId),
+      Q.where('stage_code', ref.stageCode),
+      Q.where('task_key', ref.taskKey),
+      ref.plotId ? Q.where('plot_id', ref.plotId) : Q.where('plot_id', null),
+    )
+    .observeWithColumns(['done', 'done_at', 'remind_at']);
+}
+
+/**
+ * The tasks_history row a note or a labour cost hangs off. A farmer may write
+ * "thuê 2 người làm việc này" before ticking it done, so the row is created
+ * (not done, no reminder) the first time something is attached.
+ */
+export async function ensureTaskRow(ref: TaskRef, author: ChangeAuthor): Promise<TaskHistory> {
+  const existing = await findRow(author.id, ref);
+  if (existing) return existing;
+  let created!: TaskHistory;
+  await database.write(async () => {
+    created = collections.tasksHistory.prepareCreate(r => {
+      r.protocolId = ref.protocolId;
+      r.stageCode = ref.stageCode;
+      r.taskKey = ref.taskKey;
+      r.taskTitle = ref.taskTitle;
+      r.cropType = ref.cropType;
+      r.plotId = ref.plotId;
+      r.done = false;
+      r.doneAt = null;
+      r.remindAt = null;
+      r.note = null;
+      r.ownerId = author.id;
+      r.updatedBy = author.id;
+    });
+    await database.batch(created);
+  });
+  return created;
+}
+
 /** Stores a reminder date on the task (null clears it). */
 export async function setTaskReminder(ref: TaskRef, remindAt: number | null, author: ChangeAuthor): Promise<void> {
   const existing = await findRow(author.id, ref);

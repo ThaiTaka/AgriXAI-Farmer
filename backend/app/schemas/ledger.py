@@ -255,6 +255,12 @@ class ExpenseOut(_Synced):
     plot_id: str | None
     checked: bool
     warehouse_in_id: str | None
+    # Hired labour breakdown (kind "labor"); null on every other expense.
+    task_id: str | None = None
+    workers: float | None = None
+    quantity: float | None = None
+    unit: str | None = None
+    unit_price: float | None = None
 
 
 class ExpenseUpdate(BaseModel):

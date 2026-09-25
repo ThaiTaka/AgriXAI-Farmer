@@ -60,6 +60,23 @@ export type RootStackParamList = {
   Finance: {tab?: FinanceTab} | undefined;
   /** Báo cáo tháng/quý → PDF. */
   ReportExport: undefined;
+
+  /**
+   * V2.1 — one care task: done or not, the farmer's notes with photos/videos,
+   * and the labour hired for it. Identified like a tasks_history row, because
+   * the row itself may not exist yet (nothing recorded on the task so far).
+   */
+  TaskDetail: {
+    protocolId: string;
+    stageCode: string;
+    taskKey: string;
+    taskTitle: string;
+    cropType: string;
+    plotId: string | null;
+  };
+  /** V2.1 — care guides with video, for one crop or all. */
+  CareGuides: {cropType?: string} | undefined;
+  CareGuide: {guideId: string};
 };
 
 declare global {

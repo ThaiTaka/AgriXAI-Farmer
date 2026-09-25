@@ -255,6 +255,7 @@ def financial_report(incomes: Iterable, expenses: Iterable, period: Period) -> F
 
 INCOME_KIND_VI = {"product": "Sản phẩm", "service": "Dịch vụ", "other": "Khác"}
 EXPENSE_KIND_VI = {
+    "seed": "Giống cây",
     "fertilizer": "Phân bón",
     "labor": "Công nhân",
     "utilities": "Điện nước",

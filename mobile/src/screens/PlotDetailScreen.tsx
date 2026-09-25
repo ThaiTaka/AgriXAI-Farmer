@@ -1,8 +1,9 @@
 /**
  * Màn hình 08 — Chi tiết lô đất.
  *
- * Header with back + edit, a segmented control for the four tabs (info, cycles,
- * care, audit), then the tab body. Every tab reads from the local database or
+ * Header with back + edit, a segmented control for the four tabs (info, vụ
+ * trồng = cultivation history, care = protocol + task history, audit), then
+ * the tab body. Every tab reads from the local database or
  * from the bundled JSON catalogues, so the whole screen works with the network
  * off.
  */
@@ -15,8 +16,7 @@ import {ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View} from 'reac
 
 import {useChangeAuthor} from '../auth/AuthContext';
 import {AppHeader} from '../components/AppHeader';
-import {Badge} from '../components/Badge';
-import {DangerButton, GhostButton, IconButton, SecondaryButton} from '../components/buttons';
+import {DangerButton, GhostButton, IconButton} from '../components/buttons';
 import {Card} from '../components/Card';
 import {EmptyState} from '../components/EmptyState';
 import {SegmentedControl} from '../components/form';
@@ -27,11 +27,10 @@ import type ChangeLog from '../db/models/ChangeLog';
 import type CropCycle from '../db/models/CropCycle';
 import type Plot from '../db/models/Plot';
 import {observeChangeLogs} from '../db/repositories/changeLogRepository';
-import {observeCycles} from '../db/repositories/cropCycleRepository';
 import {deletePlot, observePlot, PLOT_STATUS_LABELS} from '../db/repositories/plotRepository';
 import {useObservable, useObservableReady} from '../db/useObservable';
 import type {RootStackParamList} from '../navigation/types';
-import {CropCycleFormSheet} from './cycle/CropCycleFormSheet';
+import {CyclesTab} from './cycle/CyclesTab';
 import {colors, size, space, text} from '../theme';
 import {formatArea, formatDate, formatDateTime, formatRelative} from '../utils/format';
 import {inferGrowthStage} from '../utils/growthStage';
@@ -44,15 +43,17 @@ import {
   STAGE_LABELS,
 } from '../utils/staticData';
 import {CareStageAccordion} from './care/CareStageAccordion';
+import {TaskHistorySection} from './care/TaskHistorySection';
 import {ProtocolUnavailable} from './care/ProtocolUnavailable';
 import {useCategoryOf} from './care/useCategoryOf';
+import {GuideLinks} from './guide/GuideLinks';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'PlotDetail'>;
 
 const TABS = [
   {key: 'info', label: 'Thông tin'},
-  {key: 'cycles', label: 'Chu kỳ'},
+  {key: 'cycles', label: 'Vụ trồng'},
   {key: 'care', label: 'Chăm sóc'},
   {key: 'audit', label: 'Thay đổi'},
 ] as const;
@@ -180,83 +181,6 @@ function InfoTab({plot}: {plot: Plot}) {
   );
 }
 
-/* ----------------------------- tab 2: cycles ------------------------------ */
-
-function CyclesTab({plot}: {plot: Plot}) {
-  const rows = useObservable<CropCycle[]>(() => observeCycles(plot.id), [plot.id], []);
-  const activeCycle = rows.find(c => !c.endedAt);
-
-  const [sheetVisible, setSheetVisible] = useState(false);
-  const [sheetMode, setSheetMode] = useState<'create' | 'end'>('create');
-  const [selectedCycle, setSelectedCycle] = useState<CropCycle | undefined>(undefined);
-
-  const handleCreate = () => {
-    setSheetMode('create');
-    setSelectedCycle(undefined);
-    setSheetVisible(true);
-  };
-
-  const handleEnd = (cycle: CropCycle) => {
-    setSheetMode('end');
-    setSelectedCycle(cycle);
-    setSheetVisible(true);
-  };
-
-  return (
-    <>
-      <View style={styles.rowList}>
-        {!activeCycle ? (
-          <GhostButton label="+ Bắt đầu vụ mới" onPress={handleCreate} style={{marginBottom: space.md}} />
-        ) : null}
-
-        {rows.length === 0 ? (
-          <EmptyState
-            title="Chưa có chu kỳ canh tác"
-            body="Chu kỳ canh tác ghi lại từng vụ trên lô: ngày xuống giống, giai đoạn hiện tại và sản lượng thu được."
-          />
-        ) : (
-          rows.map(cycle => (
-            <Card key={cycle.id}>
-              <View style={styles.cycleHead}>
-                <Text style={[text('cardTitle'), styles.cycleTitle]} numberOfLines={1}>
-                  {cycle.name}
-                </Text>
-                <Badge label={STAGE_LABELS[cycle.stage]} tone="green" />
-              </View>
-              <Text style={[text('bodySm', colors.text.muted), styles.cycleLine]}>
-                {formatDate(cycle.startedAt)} → {cycle.endedAt ? formatDate(cycle.endedAt) : 'đang canh tác'}
-              </Text>
-              {cycle.varietyName ? (
-                <Text style={text('caption', colors.text.muted)}>Giống: {cycle.varietyName}</Text>
-              ) : null}
-              {cycle.yieldKg ? (
-                <Text style={text('caption', colors.text.muted)}>Sản lượng: {cycle.yieldKg} kg</Text>
-              ) : null}
-              
-              {!cycle.endedAt ? (
-                <SecondaryButton
-                  small
-                  label="Kết thúc vụ"
-                  onPress={() => handleEnd(cycle)}
-                  style={{marginTop: space.md}}
-                />
-              ) : null}
-            </Card>
-          ))
-        )}
-      </View>
-      
-      <CropCycleFormSheet
-        visible={sheetVisible}
-        onClose={() => setSheetVisible(false)}
-        plot={plot}
-        cycle={selectedCycle}
-        mode={sheetMode}
-      />
-    </>
-  );
-}
-
 /* ------------------------------ tab 3: care ------------------------------- */
 
 function CareTab({plot}: {plot: Plot}) {
@@ -325,6 +249,8 @@ function CareTab({plot}: {plot: Plot}) {
         </View>
       </Card>
 
+      <GuideLinks cropType={plot.cropType} />
+
       {current ? (
         <CareStageAccordion protocol={protocol} plotId={plot.id} currentStageCode={current.stage_code} onlyStage={current.stage_code} />
       ) : (
@@ -338,6 +264,8 @@ function CareTab({plot}: {plot: Plot}) {
           action={{label: 'Xem toàn bộ quy trình', onPress: () => navigation.navigate('CareProtocol', {plotId: plot.id})}}
         />
       )}
+
+      <TaskHistorySection protocol={protocol} plotId={plot.id} />
 
       {/* Không dán địa chỉ web vào giữa câu: chỉ nêu cơ quan ban hành, còn
           trang gốc mở bằng dòng dẫn ngay dưới. */}
@@ -439,25 +367,6 @@ const styles = StyleSheet.create({
     marginTop: space.md,
   },
   noteBody: {
-    marginTop: space.xs,
-  },
-  rowList: {
-    gap: space.md,
-  },
-  cyclesHeader: {
-    marginBottom: space.md,
-    alignItems: 'flex-start',
-  },
-  cycleHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: space.sm,
-  },
-  cycleTitle: {
-    flexShrink: 1,
-  },
-  cycleLine: {
     marginTop: space.xs,
   },
   stageHeader: {

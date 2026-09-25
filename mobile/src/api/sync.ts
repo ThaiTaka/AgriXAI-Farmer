@@ -85,6 +85,12 @@ export async function runSync(token: string): Promise<SyncOutcome> {
           const body = (await response.json()) as {conflicts?: SyncConflict[]};
           if (Array.isArray(body.conflicts)) conflicts.push(...body.conflicts);
         },
+        // Migration syncs (V2.1). A phone that pulled rows on the old app
+        // version stored them without the columns that version did not have;
+        // after upgrading, the first pull names the new tables and columns and
+        // the server re-sends those tables whole. 6 is the last schema before
+        // the first migration the server knows how to re-send (v7).
+        migrationsEnabledAtVersion: 6,
         // Deliberately NOT setting `sendCreatedAsUpdated`: that flag is for
         // servers which cannot tell a create from an update, and WatermelonDB
         // rejects a response containing `created` when it is on. Ours reports

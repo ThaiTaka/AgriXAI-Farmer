@@ -14,6 +14,8 @@ import {FertilizerBudgetScreen} from '../screens/fertilizer/FertilizerBudgetScre
 import {FertilizerGroupsScreen} from '../screens/fertilizer/FertilizerGroupsScreen';
 import {FertilizerProductsScreen} from '../screens/fertilizer/FertilizerProductsScreen';
 import {FinanceScreen} from '../screens/finance/FinanceScreen';
+import {CareGuideListScreen} from '../screens/guide/CareGuideListScreen';
+import {CareGuideScreen} from '../screens/guide/CareGuideScreen';
 import {HomeScreen} from '../screens/HomeScreen';
 import {LoginScreen} from '../screens/LoginScreen';
 import {PlotDetailScreen} from '../screens/PlotDetailScreen';
@@ -22,6 +24,7 @@ import {PlotFormScreen} from '../screens/PlotFormScreen';
 import {ReportExportScreen} from '../screens/report/ReportExportScreen';
 import {SettingsScreen} from '../screens/SettingsScreen';
 import {StockCheckScreen} from '../screens/stock/StockCheckScreen';
+import {TaskDetailScreen} from '../screens/task/TaskDetailScreen';
 import {ToolsScreen} from '../screens/ToolsScreen';
 import {VarietyCategoryScreen} from '../screens/variety/VarietyCategoryScreen';
 import {VarietyCropTypeScreen} from '../screens/variety/VarietyCropTypeScreen';
@@ -109,6 +112,9 @@ export function RootNavigator() {
             <Stack.Screen name="Warehouse" component={WarehouseScreen} />
             <Stack.Screen name="Finance" component={FinanceScreen} />
             <Stack.Screen name="ReportExport" component={ReportExportScreen} />
+            <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
+            <Stack.Screen name="CareGuides" component={CareGuideListScreen} />
+            <Stack.Screen name="CareGuide" component={CareGuideScreen} />
           </>
         )}
       </Stack.Navigator>

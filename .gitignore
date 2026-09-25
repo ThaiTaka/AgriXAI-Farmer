@@ -39,6 +39,8 @@ backend/*.db-journal
 # SQLite chạy ở chế độ WAL (app/core/database.py) nên có thêm hai file phụ.
 backend/*.db-wal
 backend/*.db-shm
+# Ảnh/video nông hộ tải lên (MEDIA_DIR) — dữ liệu người dùng, không vào git.
+backend/media/
 
 # ---- Env & secrets ----
 .env

@@ -20,7 +20,7 @@
 
 import {appSchema, tableSchema} from '@nozbe/watermelondb';
 
-export const SCHEMA_VERSION = 6;
+export const SCHEMA_VERSION = 7;
 
 export const schema = appSchema({
   version: SCHEMA_VERSION,
@@ -78,13 +78,17 @@ export const schema = appSchema({
         {name: 'plot_id', type: 'string', isIndexed: true},
         {name: 'name', type: 'string'},
         {name: 'crop_type', type: 'string'},
+        {name: 'crop_name', type: 'string', isOptional: true},
         {name: 'variety_id', type: 'string', isOptional: true},
         {name: 'variety_name', type: 'string', isOptional: true},
         {name: 'stage', type: 'string'},
+        {name: 'season', type: 'string', isOptional: true},
         {name: 'started_at', type: 'number'},
         {name: 'ended_at', type: 'number', isOptional: true},
+        {name: 'area_m2', type: 'number', isOptional: true},
         {name: 'yield_kg', type: 'number', isOptional: true},
         {name: 'notes', type: 'string', isOptional: true},
+        {name: 'media_json', type: 'string', isOptional: true},
         {name: 'owner_id', type: 'string', isIndexed: true},
         {name: 'updated_by', type: 'string', isOptional: true},
         {name: 'created_at', type: 'number'},
@@ -211,6 +215,12 @@ export const schema = appSchema({
         {name: 'plot_id', type: 'string', isOptional: true},
         {name: 'checked', type: 'boolean'},
         {name: 'warehouse_in_id', type: 'string', isOptional: true},
+        // V2.1 hired labour: workers x quantity (hours/days) x unit_price = amount.
+        {name: 'task_id', type: 'string', isOptional: true, isIndexed: true},
+        {name: 'workers', type: 'number', isOptional: true},
+        {name: 'quantity', type: 'number', isOptional: true},
+        {name: 'unit', type: 'string', isOptional: true},
+        {name: 'unit_price', type: 'number', isOptional: true},
         {name: 'owner_id', type: 'string', isIndexed: true},
         {name: 'updated_by', type: 'string', isOptional: true},
         {name: 'created_at', type: 'number'},
@@ -232,6 +242,48 @@ export const schema = appSchema({
         {name: 'remind_at', type: 'number', isOptional: true},
         {name: 'note', type: 'string', isOptional: true},
         {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+
+    // ---- V2.1: how a task was done, and the crop how-to guides ----
+
+    // Notes, photos and videos on one care task (a tasks_history row). No
+    // bytes here — media_json lists media ids; see domain/media.ts.
+    tableSchema({
+      name: 'task_notes',
+      columns: [
+        {name: 'task_id', type: 'string', isIndexed: true},
+        {name: 'plot_id', type: 'string', isOptional: true, isIndexed: true},
+        {name: 'note_text', type: 'string'},
+        {name: 'media_json', type: 'string', isOptional: true},
+        {name: 'occurred_at', type: 'number'},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+
+    // Admin-written, read by every farm (shared like crop_varieties). The
+    // phone never writes these; the server refuses it if it tried.
+    tableSchema({
+      name: 'care_guides',
+      columns: [
+        {name: 'crop_type', type: 'string', isIndexed: true},
+        {name: 'stage_code', type: 'string', isOptional: true},
+        {name: 'title', type: 'string'},
+        {name: 'summary', type: 'string', isOptional: true},
+        {name: 'youtube_id', type: 'string', isOptional: true},
+        {name: 'steps_json', type: 'string', isOptional: true},
+        {name: 'images_json', type: 'string', isOptional: true},
+        {name: 'source_name', type: 'string', isOptional: true},
+        {name: 'source_url', type: 'string', isOptional: true},
+        {name: 'published', type: 'boolean'},
+        {name: 'sort_order', type: 'number'},
+        {name: 'created_by', type: 'string', isOptional: true},
         {name: 'updated_by', type: 'string', isOptional: true},
         {name: 'created_at', type: 'number'},
         {name: 'updated_at', type: 'number'},
@@ -273,6 +325,8 @@ export const SYNC_TABLES = [
   'income',
   'expense',
   'tasks_history',
+  'task_notes',
+  'care_guides',
 ] as const;
 
 /** Tables that stay on the device and have no server counterpart. */
