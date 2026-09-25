@@ -1,0 +1,79 @@
+AgriLog V2.1 — Tóm tắt hoàn thành
+==================================
+
+Dự án: AgriLog v2 (đồ án tốt nghiệp)
+Phạm vi: 5 tính năng canh tác nâng cao (theo PROMPT_CHINH_SUA_CHUC_NANG.md)
+Trạng thái: HOÀN THÀNH & ĐÃ KIỂM THỬ — chưa merge vào main
+Thời gian làm: 17–25/09/2026
+Nhánh: feat/v2.1-canh-tac-media-nhan-cong (5 commit: cc2acaa..cd6316f)
+PR: #8 https://github.com/ThaiTaka/AgriXAI-Farmer/pull/8 (đang chờ merge)
+Ngày bảo vệ: 30/09/2026
+
+TÍNH NĂNG (5)
+-------------
+1. Lịch sử trồng trọt — tách khỏi lịch sử công việc, mở rộng crop_cycles
+   (crop_name, season, area_m2, media_json), biểu đồ năng suất theo vụ
+2. Hướng dẫn chăm sóc có video — YouTube nhúng (youtube-nocookie) + ảnh từng
+   bước, quản trị viên soạn trên web-admin /care-guides
+3. Ghi chú công việc kèm ảnh/video — bảng mới task_notes, lưu máy trước, tự
+   tải lên qua POST /media khi có sóng, không qua /sync
+4. Gợi ý cây theo mùa — chỉ xếp hạng cây đã từng trồng trên chính lô đó theo
+   năng suất thật; có chủ đích KHÔNG gợi ý trồng xen (chưa có nguồn chính thống)
+5. Tiền công nhân công — mở rộng expense kind labor (workers, quantity, unit,
+   unit_price), tự vào báo cáo Thu – Chi
+
+3 LỖI CÓ SẴN ĐƯỢC VÁ CÙNG ĐỢT
+-----------------------------
+- /sync không kiểm tra chủ sở hữu khi sửa/xoá (một hộ xoá được bản ghi hộ
+  khác nếu đoán được id) — nay chỉ chủ hoặc admin mới sửa/xoá được
+- Mất dữ liệu khi app cũ nâng schema (migration sync) — cột mới không rỗng
+  vĩnh viễn nữa
+- Làm tròn lệch giữa Python (về số chẵn) và JavaScript (lên) cho tiền công/
+  năng suất — thống nhất luật nửa lên ở cả hai phía
+
+KIỂM THỬ
+--------
+- Backend: 235 test xanh (SQLite + PostgreSQL 16)
+- Mobile: 236 test / 24 bộ, phủ 94% dòng, tsc --noEmit và eslint sạch
+- Web-admin: build sạch
+- Chạy thật trên EMULATOR Pixel 6a (Android 13) — KHÔNG PHẢI thiết bị vật lý
+- Quay video bằng camera trên emulator bị crash (lỗi emulator, không phải
+  app) — chọn video từ thư viện chạy đúng; cần thử trên máy thật
+
+THAY ĐỔI PHÁ VỠ TƯƠNG THÍCH
+----------------------------
+- Schema điện thoại v6 → v7 (bảng mới task_notes, care_guides; thêm cột cho
+  crop_cycles, expense) — có migration sync, chỉ cộng thêm
+- nginx cần client_max_body_size 110m (mặc định 1MB chặn hết ảnh/video)
+- MEDIA_DIR phải là ổ gắn ngoài / Docker volume
+
+VIỆC ĐÃ LÀM (deliverables của đợt này)
+---------------------------------------
+[x] PR #8 tạo xong (feat/v2.1-canh-tac-media-nhan-cong → main) — CHƯA MERGE,
+    chờ xác nhận (xem ghi chú bên dưới)
+[x] RELEASE_NOTES_v2.1.0.md
+[x] AgriLog_V2.1_Defense_Prep.md (kịch bản demo, câu hỏi dự kiến, checklist)
+[x] V2.1_SUMMARY.txt (file này)
+[ ] Slide bảo vệ (PowerPoint) — làm riêng, xem AgriLog_V2.1_Defense_Slides.pptx
+[ ] Merge PR #8 vào main — theo lệ cũ (PR #7) người dùng tự bấm merge, Claude
+    không tự merge; hỏi lại trước khi làm
+
+GHI CHÚ SỬA SO VỚI YÊU CẦU GỐC
+-------------------------------
+Bản yêu cầu gốc (đưa vào cuộc trò chuyện) có vài chi tiết không khớp thực tế,
+đã sửa lại trong các tài liệu trên:
+- "Real device: Pixel 6a" → thực ra là EMULATOR Pixel 6a, không phải máy thật
+- "Closes #7" → PR #7 đã merge từ trước (23/09/2026), là một tính năng khác
+  (Giai đoạn 5 backend), không liên quan đến PR #8 này
+- Ví dụ "cà rốt 80kg vs khoai tây 90kg" → dữ liệu demo thật dùng Cà chua/Bắp
+  cải/Cà rốt trên lô demo của tài khoản lethanhthai (xem Defense Prep)
+- "API rate limiting on upload endpoints" → CHƯA có, chỉ có rate limit cho
+  đăng nhập sai mật khẩu; ghi vào mục giới hạn thay vì mục đã làm
+- "CSP policy cho YouTube" → không có CSP; dùng domain youtube-nocookie.com
+  để tránh cookie theo dõi, WebView originWhitelist vẫn để '*'
+
+VIỆC CHƯA LÀM CỦA DỰ ÁN NÓI CHUNG (không thuộc phạm vi V2.1)
+--------------------------------------------------------------
+- Nhận dạng giọng nói (ASR) — DummyAsrEngine, chọn Vosk/whisper.cpp sau
+- Push notification cho nhắc việc
+- Build iOS (máy phát triển là Windows)
