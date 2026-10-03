@@ -1,0 +1,390 @@
+{
+  "$meta": {
+    "crop_type": "lisianthus",
+    "crop_name": "Hoa cát tường",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây hoa cát tường trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "lisianthus_lamdong_2025",
+      "crop_type": "lisianthus",
+      "crop_name": "Hoa cát tường",
+      "category_ids": null,
+      "name": "Hoa cát tường — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây hoa cát tường trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục IV, quy trình 8 — mục Phân bón và cách bón phân; 2.4 Kỹ thuật trồng và chăm sóc; 4. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Trồng quanh năm, thích hợp nhất trồng tháng 2–3 (thu tháng 6–7) và tháng 7–8 (thu tháng 12–1). Mật độ 30.000–40.000 cây/ha.",
+      "scenarios": [
+        {
+          "id": "phuc_hop",
+          "name": "Phân phức hợp (có lịch bón)",
+          "description": "Các loại phân và lịch bón quy trình khuyến cáo cho năng suất, chất lượng hoa tốt.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 80,
+              "max": 100,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 800,
+              "max": 1000,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "lan_vi_sinh",
+              "name": "Phân lân vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 300,
+              "max": 300,
+              "price_product_id": null
+            },
+            {
+              "key": "trichoderma",
+              "name": "Chế phẩm Trichoderma",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 30,
+              "max": 30,
+              "price_product_id": null
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 500,
+              "max": 500,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "npk_16_16_8",
+              "name": "NPK 16-16-8",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 900,
+              "max": 900,
+              "price_product_id": "npk_16_16_8_ca_mau"
+            },
+            {
+              "key": "npk_20_20_15",
+              "name": "NPK 20-20-15",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 600,
+              "max": 600,
+              "price_product_id": "npk_20_20_15_binh_dien"
+            },
+            {
+              "key": "npk_15_5_20",
+              "name": "NPK 15-5-20",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 300,
+              "max": 300,
+              "price_product_id": null
+            },
+            {
+              "key": "k2so4",
+              "name": "Kali sunfat (kali trắng)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 400,
+              "max": 400,
+              "price_product_id": null
+            }
+          ]
+        },
+        {
+          "id": "phan_don",
+          "name": "Phân đơn (chỉ có tổng lượng)",
+          "description": "310 kg N – 360 kg P₂O₅ – 440 kg K₂O quy ra phân đơn; quy trình không ghi lịch chia lần cho phương án này.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 80,
+              "max": 100,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 800,
+              "max": 1000,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "lan_vi_sinh",
+              "name": "Phân lân vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 300,
+              "max": 300,
+              "price_product_id": null
+            },
+            {
+              "key": "trichoderma",
+              "name": "Chế phẩm Trichoderma",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 30,
+              "max": 30,
+              "price_product_id": null
+            },
+            {
+              "key": "ure_don",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 670,
+              "max": 670,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan_don",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 2250,
+              "max": 2250,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl_don",
+              "name": "Kali đỏ (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 740,
+              "max": 740,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón lót toàn bộ vôi, Trichoderma, phân chuồng, lân vi sinh, 500 kg super lân và 500 kg NPK 16-16-8; rải đều, xăm trộn lớp đất mặt 20–30 cm rồi trồng.",
+        "applications": [
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "trichoderma",
+            "pct": 100
+          },
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "lan_vi_sinh",
+            "pct": 100
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 100
+          },
+          {
+            "item_key": "npk_16_16_8",
+            "pct": 55.56
+          }
+        ],
+        "note": "Bón lót 500/900 kg NPK 16-16-8 (phương án phân phức hợp)."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Bén rễ — thúc 3 tuần sau trồng",
+          "source_stage_name_vi": "Bón thúc 3 tuần sau trồng",
+          "timing": "3 tuần sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "npk_16_16_8",
+              "pct": 22.22
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 25
+            }
+          ],
+          "tasks": [
+            {
+              "key": "ct_tuoi_cay_con",
+              "title": "Tưới 2–3 lần/ngày sau trồng",
+              "detail": "Tưới lúc 5 giờ sáng, 10 giờ sáng và 2 giờ chiều; sau 10–15 ngày khi cây bén rễ giảm còn 1–2 lần/ngày.",
+              "type": "water"
+            },
+            {
+              "key": "ct_bon_thuc_1",
+              "title": "Thúc 3 tuần sau trồng: 200 kg NPK 16-16-8 + 100 kg kali sunfat (1 ha)",
+              "detail": "Không rải sát gốc; bón kết hợp xới xáo, làm cỏ; tưới đẫm cho tan phân.",
+              "type": "fertilize",
+              "timing": "3 tuần sau trồng"
+            },
+            {
+              "key": "ct_che_luoi",
+              "title": "Che lưới đen giảm 30–40% ánh sáng",
+              "detail": "Giúp tăng chiều dài cành hoa; tháng mưa nhiều ở Đà Lạt (7, 8, 9) tháo lưới để hạn chế nấm mốc đen.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Giăng lưới — thúc 6 tuần sau trồng",
+          "source_stage_name_vi": "Bón thúc 6 tuần sau trồng",
+          "timing": "6 tuần sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "npk_20_20_15",
+              "pct": 50
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 25
+            }
+          ],
+          "tasks": [
+            {
+              "key": "ct_giang_luoi",
+              "title": "Cắm cọc, giăng lưới đỡ cây",
+              "detail": "Khoảng 1 tháng sau trồng giăng lưới cước mắt 15 × 20 cm; lớp đầu cách mặt đất 30 cm.",
+              "type": "cultivate",
+              "timing": "1 tháng sau trồng"
+            },
+            {
+              "key": "ct_bon_thuc_2",
+              "title": "Thúc 6 tuần sau trồng: 300 kg NPK 20-20-15 + 100 kg kali sunfat (1 ha)",
+              "detail": "Bón kết hợp xới xáo, làm cỏ; tưới đẫm sau bón.",
+              "type": "fertilize",
+              "timing": "6 tuần sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 30
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Thúc 9 tuần sau trồng",
+          "source_stage_name_vi": "Bón thúc 9 tuần sau trồng",
+          "timing": "9 tuần sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 100
+            }
+          ],
+          "tasks": [
+            {
+              "key": "ct_bon_thuc_3",
+              "title": "Thúc 9 tuần sau trồng: 300 kg NPK 15-5-20 (1 ha)",
+              "detail": "Cuối giai đoạn trưởng thành tăng kali giúp cứng cây, bảo đảm chất lượng hoa.",
+              "type": "fertilize",
+              "timing": "9 tuần sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "flowering",
+            "fruiting"
+          ],
+          "start_day": 63
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu hoạch lứa 1 → thúc cho lứa sau",
+          "source_stage_name_vi": "Thu hoạch; bón thúc sau thu hoạch lần một",
+          "timing": "Thu khi có 2 hoa hé nở; thúc 2 và 4 tuần sau thu",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "npk_16_16_8",
+              "pct": 22.22
+            },
+            {
+              "item_key": "npk_20_20_15",
+              "pct": 50
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "ct_thu_hoach",
+              "title": "Thu hoạch cành hoa",
+              "detail": "Thu buổi sáng khi cành có 2 hoa hé nở (thị trường tại chỗ: 4 hoa nở); cắt cách mặt đất 2–3 cm để gốc nảy chồi lứa sau; ngâm cành vào nước sạch khoảng 10 giờ trước khi đóng thùng.",
+              "type": "harvest"
+            },
+            {
+              "key": "ct_bon_sau_thu",
+              "title": "Thúc sau thu hoạch lứa 1",
+              "detail": "2 tuần sau thu: 200 kg NPK 16-16-8 + 100 kg kali sunfat; 4 tuần sau thu: 300 kg NPK 20-20-15 + 100 kg kali sunfat (1 ha).",
+              "type": "fertilize",
+              "timing": "2 và 4 tuần sau thu"
+            }
+          ],
+          "growth_stages": [
+            "harvesting"
+          ],
+          "start_day": null
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % từng lần bón là phép chia số kg mỗi lần cho tổng số kg cả vụ ghi trong bảng của quy trình.",
+        "Quy trình còn có công thức bón qua tưới nhỏ giọt (hỗn hợp A: Ca(NO₃)₂ + KNO₃; hỗn hợp B: MAP/MKP + MgSO₄) — ứng dụng chưa mô tả cách bón này."
+      ]
+    }
+  ],
+  "unavailable": []
+}

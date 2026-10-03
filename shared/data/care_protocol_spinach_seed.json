@@ -1,0 +1,406 @@
+{
+  "$meta": {
+    "crop_type": "spinach",
+    "crop_name": "Bó xôi",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây bó xôi trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "spinach_lamdong_2025",
+      "crop_type": "spinach",
+      "crop_name": "Bó xôi",
+      "category_ids": null,
+      "name": "Bó xôi — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây bó xôi trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục III, quy trình 3 — mục 2.5 Phân bón và cách bón phân (Cách 1: phân đơn; Cách 2: phân hỗn hợp NPK); 2.6 Chăm sóc; III. Thu hoạch, sơ chế, bảo quản"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Bó xôi trồng được quanh năm ở Đà Lạt; từ trồng đến thu hoạch 35–40 ngày (cây ươm 16–18 ngày tuổi). Mật độ 180.000–200.000 cây/ha (hàng 20 cm, cây 15–18 cm), mỗi luống 5–6 hàng.",
+      "scenarios": [
+        {
+          "id": "phan_don",
+          "name": "Phân đơn (Cách 1)",
+          "description": "70 kg N – 110 kg P₂O₅ – 100 kg K₂O quy ra phân đơn.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 25,
+              "max": 30,
+              "price_product_id": null
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "trichoderma",
+              "name": "Chế phẩm Trichoderma",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 40,
+              "max": 60,
+              "price_product_id": null,
+              "note": "Xử lý luống sau khi lên luống"
+            },
+            {
+              "key": "mgso4",
+              "name": "Magiê sunfat (MgSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 20,
+              "max": 20,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 152,
+              "max": 152,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 688,
+              "max": 688,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 167,
+              "max": 167,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        },
+        {
+          "id": "npk_15_15_15",
+          "name": "Phân hỗn hợp NPK (Cách 2)",
+          "description": "467 kg NPK 15-15-15 + 250 kg super lân + 50 kg KCl (hoặc K₂SO₄) + 20 kg MgSO₄. Lịch chia NPK theo bảng Cách 2; KCl chỉ có tổng lượng.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 25,
+              "max": 30,
+              "price_product_id": null
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "trichoderma",
+              "name": "Chế phẩm Trichoderma",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 40,
+              "max": 60,
+              "price_product_id": null,
+              "note": "Xử lý luống sau khi lên luống"
+            },
+            {
+              "key": "mgso4",
+              "name": "Magiê sunfat (MgSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 20,
+              "max": 20,
+              "price_product_id": null
+            },
+            {
+              "key": "npk_15_15_15",
+              "name": "NPK 15-15-15",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 467,
+              "max": 467,
+              "price_product_id": null
+            },
+            {
+              "key": "super_lan_npk",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 250,
+              "max": 250,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl_npk",
+              "name": "Kali clorua (hoặc K₂SO₄)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 50,
+              "max": 50,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Lên luống xong xử lý chế phẩm Trichoderma; bón lót toàn bộ phân chuồng hoai, phân hữu cơ vi sinh, vôi và phần phân hoá học bón lót của bảng.",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "trichoderma",
+            "pct": 100
+          },
+          {
+            "item_key": "ure",
+            "pct": 34.21
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 100
+          },
+          {
+            "item_key": "kcl",
+            "pct": 52.1
+          },
+          {
+            "item_key": "mgso4",
+            "pct": 50
+          },
+          {
+            "item_key": "npk_15_15_15",
+            "pct": 35.76
+          },
+          {
+            "item_key": "super_lan_npk",
+            "pct": 100
+          }
+        ],
+        "note": "Cách 1: lót 52 kg urê, toàn bộ 688 kg super lân, 87 kg KCl, 10 kg MgSO₄. Cách 2: lót 167 kg NPK 15-15-15 và toàn bộ 250 kg super lân."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Bén rễ — trồng dặm",
+          "source_stage_name_vi": "Trồng",
+          "timing": "0–9 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "bx_trong_dam",
+              "title": "Kiểm tra, trồng dặm",
+              "detail": "Lấp kín bầu đất, không vùi quá sâu, tưới đủ ẩm; 3–5 ngày sau trồng kiểm tra, trồng dặm cây yếu, cây chết.",
+              "type": "cultivate",
+              "timing": "3–5 ngày sau trồng"
+            },
+            {
+              "key": "bx_tuoi",
+              "title": "Tưới giữ ẩm 70–75%",
+              "detail": "Mùa nắng tưới sáng sớm hoặc chiều mát 1 lần/ngày; mùa mưa tưới 1 lần/ngày hoặc không tưới, làm rãnh thoát nước tránh ngập úng vàng lá.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Thúc lần 1 (10 ngày sau trồng)",
+          "source_stage_name_vi": "Bón thúc lần 1 (10 NST)",
+          "timing": "10 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 13.16
+            },
+            {
+              "item_key": "kcl",
+              "pct": 17.96
+            },
+            {
+              "item_key": "mgso4",
+              "pct": 25
+            },
+            {
+              "item_key": "npk_15_15_15",
+              "pct": 21.41
+            }
+          ],
+          "tasks": [
+            {
+              "key": "bx_bon_thuc_1",
+              "title": "Thúc lần 1: 20 kg urê + 30 kg KCl + 5 kg MgSO₄/ha",
+              "detail": "Cách 2 thay bằng 100 kg NPK 15-15-15 + 5 kg MgSO₄/ha. Làm cỏ, xăm xới trước khi bón; tưới vừa đủ cho phân tan.",
+              "type": "fertilize",
+              "timing": "10 ngày sau trồng"
+            },
+            {
+              "key": "bx_lam_co",
+              "title": "Làm cỏ, xăm xới",
+              "detail": "Làm sạch cỏ trên luống, rãnh và quanh vườn trước khi bón phân, kết hợp xăm xới cho đất thoáng khí.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 10
+        },
+        {
+          "stage_code": "leaf_growth",
+          "stage_name_vi": "Thúc lần 2 — phát triển lá",
+          "source_stage_name_vi": "Bón thúc lần 2 (20 NST)",
+          "timing": "20 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 52.63
+            },
+            {
+              "item_key": "kcl",
+              "pct": 29.94
+            },
+            {
+              "item_key": "mgso4",
+              "pct": 25
+            },
+            {
+              "item_key": "npk_15_15_15",
+              "pct": 42.83
+            }
+          ],
+          "tasks": [
+            {
+              "key": "bx_bon_thuc_2",
+              "title": "Thúc lần 2: 80 kg urê + 50 kg KCl + 5 kg MgSO₄/ha",
+              "detail": "Cách 2 thay bằng 200 kg NPK 15-15-15 + 5 kg MgSO₄/ha; tưới vừa đủ cho phân tan.",
+              "type": "fertilize",
+              "timing": "20 ngày sau trồng"
+            },
+            {
+              "key": "bx_rua_la",
+              "title": "Tưới rửa sau mưa to",
+              "detail": "Tưới nước sau mưa to để rửa đất bám trên đọt non, lá, hạn chế bệnh phát sinh và lây lan, nhất là sau cơn mưa đầu mùa.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "flowering"
+          ],
+          "start_day": 20
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu hoạch (35–40 ngày sau trồng)",
+          "source_stage_name_vi": "III. Thu hoạch, sơ chế, bảo quản",
+          "timing": "35–40 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "bx_truoc_thu",
+              "title": "Rửa cây, phun nước vôi trong 1%",
+              "detail": "2 ngày trước thu tưới rửa đất cát bám trên cây và phun nước vôi trong 1%; 1 ngày trước thu tưới rửa lại bằng nước sạch.",
+              "type": "spray",
+              "timing": "1–2 ngày trước thu"
+            },
+            {
+              "key": "bx_thu_hoach",
+              "title": "Thu hoạch, sơ chế",
+              "detail": "Cắt tỉa lá già, lá sâu bệnh, đóng gói theo yêu cầu khách hàng; gói giấy, xếp thùng carton vừa đủ, không bọc rau trong túi nilon.",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "fruiting",
+            "harvesting"
+          ],
+          "start_day": 35
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % từng lần bón là phép chia số kg mỗi lần cho tổng số kg cả vụ ghi trong bảng của quy trình.",
+        "Cách 2: quy trình ghi 50 kg KCl (hoặc K₂SO₄) cả vụ nhưng bảng chia lại ghi 50 kg lót + 20 kg + 30 kg thúc (cộng ra 100 kg) — ứng dụng chỉ dùng tổng 50 kg, không tự chia.",
+        "Sau khi lên luống xử lý chế phẩm Trichoderma 40–60 kg/ha để đối kháng nấm bệnh trong đất (Rhizoctonia solani, Pythium, Fusarium…)."
+      ]
+    }
+  ],
+  "unavailable": []
+}

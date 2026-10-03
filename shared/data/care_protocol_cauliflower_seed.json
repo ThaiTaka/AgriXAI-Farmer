@@ -1,8 +1,8 @@
 {
   "$meta": {
-    "crop_type": "carrot",
-    "crop_name": "Cà rốt",
-    "description": "Quy trình kỹ thuật trồng, chăm sóc cây cà rốt trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "crop_type": "cauliflower",
+    "crop_name": "Súp lơ",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây súp lơ trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
     "format_version": 2,
     "collected_at": "2026-10-02",
     "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
@@ -13,19 +13,19 @@
   },
   "protocols": [
     {
-      "id": "carrot_lamdong_2025",
-      "crop_type": "carrot",
-      "crop_name": "Cà rốt",
+      "id": "cauliflower_lamdong_2025",
+      "crop_type": "cauliflower",
+      "crop_name": "Súp lơ",
       "category_ids": null,
-      "name": "Cà rốt — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "name": "Súp lơ — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
       "source": {
-        "title": "Quy trình kỹ thuật trồng, chăm sóc cây cà rốt trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây súp lơ trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
         "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
         "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
         "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
         "published_at": "2025-11-04",
         "collected_at": "2026-10-02",
-        "section": "Phụ lục III, quy trình 25 — mục 2.4 Phân bón và cách bón phân (Bảng 2); 2.3 Mật độ; IV. Thu hoạch"
+        "section": "Phụ lục III, quy trình 6 — mục 2.5 Phân bón và cách bón phân (bảng tỷ lệ); 2.6 Chăm sóc; III. Thu hoạch"
       },
       "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
       "stage_model": "growth",
@@ -35,28 +35,29 @@
         "unit": "ha",
         "m2": 10000
       },
-      "cycle_note": "Gieo thẳng 15–20 kg hạt/ha; ở Lâm Đồng trồng quanh năm, thích hợp nhất gieo vào mùa nắng (vụ sớm tháng 8–9, chính vụ giữa tháng 10–12, vụ muộn tháng 12–1). Thời điểm bón thúc tính theo ngày sau gieo.",
+      "cycle_note": "Vùng khí hậu mát mẻ trồng quanh năm; mật độ 55.000–57.000 cây/ha (hàng ba nanh sấu, 35 × 30 cm).",
       "scenarios": [
         {
           "id": "mot_vu",
           "name": "Lượng cho 1 ha",
-          "description": "150 kg N – 150 kg P₂O₅ – 240 kg K₂O quy ra phân thương phẩm.",
+          "description": "140 kg N – 85 kg P₂O₅ – 180 kg K₂O quy ra phân thương phẩm.",
           "items": [
             {
               "key": "phan_chuong",
               "name": "Phân chuồng hoai",
               "fertilizer_category": "huu_co",
-              "unit": "m³",
-              "min": 40,
-              "max": 40,
-              "price_product_id": null
+              "unit": "tấn",
+              "min": 30,
+              "max": 30,
+              "price_product_id": null,
+              "note": "Phân chuồng hoai mục"
             },
             {
               "key": "voi",
               "name": "Vôi bột",
               "fertilizer_category": "khac",
               "unit": "kg",
-              "min": 1000,
+              "min": 800,
               "max": 1000,
               "price_product_id": null,
               "note": "Tuỳ pH đất"
@@ -75,8 +76,8 @@
               "name": "Urê",
               "fertilizer_category": "dam",
               "unit": "kg",
-              "min": 326,
-              "max": 326,
+              "min": 304,
+              "max": 304,
               "price_product_id": "ure_ca_mau"
             },
             {
@@ -84,24 +85,24 @@
               "name": "Super lân",
               "fertilizer_category": "lan",
               "unit": "kg",
-              "min": 937,
-              "max": 937,
+              "min": 531,
+              "max": 531,
               "price_product_id": "sieu_lan_lam_thao"
             },
             {
               "key": "kcl",
-              "name": "Kali clorua",
+              "name": "Kali clorua (KCl)",
               "fertilizer_category": "kali",
               "unit": "kg",
-              "min": 400,
-              "max": 400,
+              "min": 300,
+              "max": 300,
               "price_product_id": "kali_bot_ca_mau"
             }
           ]
         }
       ],
       "base_application": {
-        "timing": "Bón lót toàn bộ phân chuồng, vôi, hữu cơ vi sinh + 20% urê + 70% super lân + 35% kali.",
+        "timing": "Bón lót toàn bộ phân chuồng hoai, vôi, phân hữu cơ vi sinh cùng 75% super lân, 40% KCl, 35% urê.",
         "applications": [
           {
             "item_key": "phan_chuong",
@@ -117,25 +118,25 @@
           },
           {
             "item_key": "ure",
-            "pct": 20
+            "pct": 35
           },
           {
             "item_key": "super_lan",
-            "pct": 70
+            "pct": 75
           },
           {
             "item_key": "kcl",
-            "pct": 35
+            "pct": 40
           }
         ],
-        "note": "Bón lót theo Bảng 2 của quy trình."
+        "note": "Bón lót theo bảng tỷ lệ của quy trình."
       },
       "stages": [
         {
           "stage_code": "seedling",
-          "stage_name_vi": "Cây con — thúc lần 1, tỉa thưa",
-          "source_stage_name_vi": "Bón thúc lần 1 (20 ngày sau gieo)",
-          "timing": "20 ngày sau gieo",
+          "stage_name_vi": "Hồi xanh — thúc lần 1",
+          "source_stage_name_vi": "Bón thúc lần 1 (10 NST)",
+          "timing": "10 ngày sau trồng",
           "duration_days": null,
           "pct_of_total_topdress": null,
           "applications": [
@@ -145,28 +146,22 @@
             },
             {
               "item_key": "super_lan",
-              "pct": 30
+              "pct": 25
             }
           ],
           "tasks": [
             {
-              "key": "cr_tuoi_gieo",
-              "title": "Tưới đến khi mọc đều",
-              "detail": "Gieo mùa nắng tưới 2 lần/ngày cho tới khi mọc đều; gieo mùa mưa không cần tưới.",
+              "key": "sl_tuoi",
+              "title": "Tưới nhẹ tuần đầu",
+              "detail": "Tuần đầu sau trồng tưới nhẹ 1–2 lần/ngày tuỳ thời tiết, sau đó mỗi ngày 1 lần và tưới đẫm; tưới nhỏ giọt là tốt nhất.",
               "type": "water"
             },
             {
-              "key": "cr_tia_thua",
-              "title": "Tỉa cây yếu, mọc dày",
-              "detail": "Khi cây mọc đều tỉa bỏ cây yếu, còi cọc hoặc mọc quá dày.",
-              "type": "cultivate"
-            },
-            {
-              "key": "cr_bon_thuc_1",
-              "title": "Thúc lần 1: 15% urê + 30% super lân",
-              "detail": "Sau gieo hạt 20 ngày bón 15% lượng N, 30% lượng P₂O₅.",
+              "key": "sl_bon_thuc_1",
+              "title": "Thúc lần 1: 15% urê + 25% super lân",
+              "detail": "Làm cỏ trước khi bón kết hợp xới xáo.",
               "type": "fertilize",
-              "timing": "20 ngày sau gieo"
+              "timing": "10 ngày sau trồng"
             }
           ],
           "growth_stages": [
@@ -177,102 +172,97 @@
         {
           "stage_code": "vegetative",
           "stage_name_vi": "Thúc lần 2",
-          "source_stage_name_vi": "Bón thúc lần 2 (40 ngày sau gieo)",
-          "timing": "40 ngày sau gieo",
+          "source_stage_name_vi": "Bón thúc lần 2 (25 NST)",
+          "timing": "25 ngày sau trồng",
           "duration_days": null,
           "pct_of_total_topdress": null,
           "applications": [
             {
               "item_key": "ure",
-              "pct": 25
+              "pct": 20
             },
             {
               "item_key": "kcl",
-              "pct": 30
+              "pct": 20
             }
           ],
           "tasks": [
             {
-              "key": "cr_bon_thuc_2",
-              "title": "Thúc lần 2: 25% urê + 30% kali",
-              "detail": "Sau gieo hạt 40 ngày bón 25% lượng N, 30% lượng K₂O.",
+              "key": "sl_bon_thuc_2",
+              "title": "Thúc lần 2: 20% urê + 20% KCl",
+              "detail": "Bón sau 25 ngày trồng; làm cỏ trước khi bón phân, kết hợp xới xáo cho đất thoáng khí.",
               "type": "fertilize",
-              "timing": "40 ngày sau gieo"
-            },
-            {
-              "key": "cr_lam_co",
-              "title": "Làm sạch cỏ",
-              "detail": "Cà rốt cần ánh sáng dài ngày: làm sạch cỏ luống, quanh gốc; ngoài tán dùng máy cắt cỏ.",
-              "type": "cultivate"
+              "timing": "25 ngày sau trồng"
             }
           ],
           "growth_stages": [
             "vegetative"
           ],
-          "start_day": 40
+          "start_day": 25
         },
         {
-          "stage_code": "root_growth",
-          "stage_name_vi": "Tỉa định cây — thúc lần 3",
-          "source_stage_name_vi": "Bón thúc lần 3 (55 ngày sau gieo)",
-          "timing": "55 ngày sau gieo",
+          "stage_code": "flowering",
+          "stage_name_vi": "Thúc lần 3 — che hoa",
+          "source_stage_name_vi": "Bón thúc lần 3 (45 NST)",
+          "timing": "45 ngày sau trồng",
           "duration_days": null,
           "pct_of_total_topdress": null,
           "applications": [
             {
               "item_key": "ure",
-              "pct": 40
+              "pct": 30
             },
             {
               "item_key": "kcl",
-              "pct": 35
+              "pct": 40
             }
           ],
           "tasks": [
             {
-              "key": "cr_dinh_cay",
-              "title": "Tỉa định cây trước thúc lần 3",
-              "detail": "Tỉa định cây kết hợp nhổ cỏ, khoảng cách 20 × 20 cm mùa mưa, 20 × 15 cm mùa khô.",
-              "type": "cultivate"
+              "key": "sl_bon_thuc_3",
+              "title": "Thúc lần 3: 30% urê + 40% KCl (phần còn lại)",
+              "detail": "Bón sau 45 ngày trồng lượng phân còn lại; làm cỏ trước khi bón phân, kết hợp xới xáo cho đất thoáng khí.",
+              "type": "fertilize",
+              "timing": "45 ngày sau trồng"
             },
             {
-              "key": "cr_bon_thuc_3",
-              "title": "Thúc lần 3: 40% urê + 35% kali",
-              "detail": "Sau gieo hạt 55 ngày bón 40% lượng N, 35% lượng K₂O.",
-              "type": "fertilize",
-              "timing": "55 ngày sau gieo"
+              "key": "sl_che_hoa",
+              "title": "Che hoa",
+              "detail": "Biện pháp cần thiết với súp lơ xanh để nụ hoa không chuyển sẫm, nâu do nắng; thời điểm che khoảng 45–50 ngày sau trồng.",
+              "type": "cultivate",
+              "timing": "45–50 ngày sau trồng"
             }
           ],
           "growth_stages": [
-            "flowering",
-            "fruiting"
+            "flowering"
           ],
-          "start_day": 55
+          "start_day": 45
         },
         {
           "stage_code": "harvest",
           "stage_name_vi": "Thu hoạch",
           "source_stage_name_vi": "Thu hoạch",
-          "timing": "Khi lá chân ngả vàng",
+          "timing": "Thu 2–3 đợt trong khoảng 15 ngày",
           "duration_days": null,
           "pct_of_total_topdress": null,
           "applications": [],
           "tasks": [
             {
-              "key": "cr_thu_hoach",
-              "title": "Thu hoạch khi lá chân ngả vàng",
-              "detail": "Thu khi lá chân ngả vàng, lá non ngừng sinh trưởng; không để quá già. Hạn chế xây xát củ; rửa sạch, hong khô, phân loại.",
+              "key": "sl_thu_hoach",
+              "title": "Thu hoạch 2–3 đợt",
+              "detail": "Bông nở đều thu 2–3 đợt, trong vòng 15 ngày; đựng sọt nhựa, tránh xây xát, dập nát.",
               "type": "harvest"
             }
           ],
           "growth_stages": [
+            "fruiting",
             "harvesting"
           ],
           "start_day": null
         }
       ],
       "extra_rules": [
-        "Tỷ lệ % chép nguyên Bảng 2 của quy trình. Bảng ghi 'NST' nhưng phần cách bón ghi 'sau gieo hạt' — cà rốt gieo thẳng nên ứng dụng tính theo ngày sau gieo."
+        "Tỷ lệ % chép nguyên bảng tỷ lệ của quy trình. Phần chữ của quy trình ghi số kg urê từng lần là 104/40/70/90 kg, hơi lệch với bảng tỷ lệ (35/15/20/30%) — ứng dụng theo bảng."
       ]
     }
   ],

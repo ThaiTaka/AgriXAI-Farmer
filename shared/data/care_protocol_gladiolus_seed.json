@@ -1,0 +1,315 @@
+{
+  "$meta": {
+    "crop_type": "gladiolus",
+    "crop_name": "Hoa lay ơn",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây hoa lay ơn trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "gladiolus_lamdong_2025",
+      "crop_type": "gladiolus",
+      "crop_name": "Hoa lay ơn",
+      "category_ids": null,
+      "name": "Hoa lay ơn — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây hoa lay ơn trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục IV, quy trình 5 — mục 2.5 Phân bón và cách bón phân (Bảng lượng phân từng giai đoạn); 2.6 Chăm sóc; IV. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Thu hoạch hoa khoảng 65–75 ngày sau trồng tuỳ giống, thời tiết. Không trồng lay ơn liên tiếp hai vụ trên một chân ruộng.",
+      "scenarios": [
+        {
+          "id": "mot_vu",
+          "name": "Lượng cho 1 ha",
+          "description": "235 kg N – 295 kg P₂O₅ – 180 kg K₂O; bón lót + 5 lần thúc theo số lá.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 20,
+              "max": 30,
+              "price_product_id": null
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 500,
+              "max": 500,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 400,
+              "max": 600,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "mgso4",
+              "name": "Magiê sunfat (MgSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 100,
+              "max": 100,
+              "price_product_id": null
+            },
+            {
+              "key": "npk_20_20_15",
+              "name": "NPK 20-20-15",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 600,
+              "max": 600,
+              "price_product_id": "npk_20_20_15_binh_dien"
+            },
+            {
+              "key": "npk_15_5_20",
+              "name": "NPK 15-5-20",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 300,
+              "max": 300,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 150,
+              "max": 150,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "kali",
+              "name": "Kali",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 50,
+              "max": 50,
+              "price_product_id": null,
+              "note": "Quy trình ghi '50 kg kali', không nói rõ loại kali"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Vôi rải đều khi làm đất; bón lót toàn bộ phân chuồng, hữu cơ vi sinh, super lân và magiê sunfat (theo bảng của quy trình).",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 100
+          },
+          {
+            "item_key": "mgso4",
+            "pct": 100
+          }
+        ],
+        "note": "Bón lót 100% phân chuồng, hữu cơ vi sinh, vôi, super lân, magiê sunfat."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Thúc lần 1, 2 — cây 1 đến 3 lá",
+          "source_stage_name_vi": "Bón thúc lần 1 (10–12 NST) và 2 (17–19 NST)",
+          "timing": "10–19 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "npk_20_20_15",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "lo_bon_thuc_1_2",
+              "title": "Thúc lần 1 và 2: mỗi lần 150 kg NPK 20-20-15 (1 ha)",
+              "detail": "Lần 1 khi cây lên khỏi mặt đất (1 lá); lần 2 khi cây được 2–3 lá.",
+              "type": "fertilize",
+              "timing": "10–19 ngày sau trồng"
+            },
+            {
+              "key": "lo_vun_1",
+              "title": "Vun xới lần 1 (cây 2–3 lá)",
+              "detail": "Xới nhẹ mặt luống sâu 2–3 cm, cách gốc 4–5 cm, kết hợp bón thúc và vun đất vào gốc.",
+              "type": "cultivate",
+              "timing": "Cây 2–3 lá"
+            },
+            {
+              "key": "lo_tuoi",
+              "title": "Tưới giữ ẩm khoảng 70%",
+              "detail": "Sau trồng tưới ngay; sau đó 1–2 ngày/lần, nắng nóng có thể tưới 2 lần/ngày. Lay ơn không chịu hạn nhưng đất quá ẩm củ dễ thối.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Thúc lần 3 — cây 3–4 lá",
+          "source_stage_name_vi": "Bón thúc lần 3 (25–27 NST)",
+          "timing": "25–27 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "npk_20_20_15",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "lo_bon_thuc_3",
+              "title": "Thúc lần 3: 300 kg NPK 20-20-15 (1 ha)",
+              "detail": "Bón khi cây phát triển được 3–4 lá.",
+              "type": "fertilize",
+              "timing": "Cây 3–4 lá"
+            },
+            {
+              "key": "lo_vun_2",
+              "title": "Vun xới lần 2 (cây 4–5 lá)",
+              "detail": "Xới mặt luống sâu 2–3 cm, cách gốc 5–7 cm; không xới sâu để tránh chạm rễ.",
+              "type": "cultivate",
+              "timing": "Cây 4–5 lá"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 25
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Thúc lần 4, 5 — phân hoá mầm hoa, trổ đòng",
+          "source_stage_name_vi": "Bón thúc lần 4 (43–45 NST) và 5 (55 NST)",
+          "timing": "43–55 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 100
+            },
+            {
+              "item_key": "ure",
+              "pct": 100
+            },
+            {
+              "item_key": "kali",
+              "pct": 100
+            }
+          ],
+          "tasks": [
+            {
+              "key": "lo_bon_thuc_4",
+              "title": "Thúc lần 4: 300 kg NPK 15-5-20 (1 ha)",
+              "detail": "Bón khi cây phát triển được 6–7 lá.",
+              "type": "fertilize",
+              "timing": "Cây 6–7 lá"
+            },
+            {
+              "key": "lo_bon_thuc_5",
+              "title": "Thúc lần 5: 150 kg urê + 50 kg kali (1 ha)",
+              "detail": "Bón khi cây bắt đầu trổ đòng.",
+              "type": "fertilize",
+              "timing": "Bắt đầu trổ đòng"
+            },
+            {
+              "key": "lo_tuoi_phan_hoa",
+              "title": "Tăng tưới lúc phân hoá mầm hoa",
+              "detail": "Giai đoạn phân hoá mầm hoa tăng lượng nước để ẩm độ đất đạt 75–80%.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "flowering"
+          ],
+          "start_day": 43
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu hoạch (65–75 ngày sau trồng)",
+          "source_stage_name_vi": "Thu hoạch",
+          "timing": "65–75 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "lo_thu_hoach",
+              "title": "Thu hoạch hoa",
+              "detail": "Thích hợp nhất khi trên gốc hoa có 1–2 hoa nhú thể hiện màu nhưng chưa nở; thu lúc trời mát, tránh nắng gắt.",
+              "type": "harvest"
+            },
+            {
+              "key": "lo_so_che",
+              "title": "Sơ chế, bảo quản",
+              "detail": "Loại bỏ hoa bệnh, héo, dập; bó theo giống, độ dài cành, cấp hoa. Chưa vận chuyển ngay thì giữ kho lạnh 4–6 °C, cắm trong dung dịch bảo quản.",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "fruiting",
+            "harvesting"
+          ],
+          "start_day": 65
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên bảng lượng phân từng giai đoạn của quy trình; giai đoạn đầu gộp lần thúc 1 và 2, giai đoạn ra hoa gộp lần 4 và 5."
+      ]
+    }
+  ],
+  "unavailable": []
+}

@@ -1,0 +1,50 @@
+{
+  "$meta": {
+    "crop_type": "phalaenopsis",
+    "crop_name": "Lan hồ điệp",
+    "description": "Lan hồ điệp — quy trình của tỉnh bón theo nồng độ pha và theo chậu; chỉ khai báo khoảng trống.",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [],
+  "unavailable": [
+    {
+      "category_id": "phalaenopsis_large",
+      "category_name": "Hồ điệp hoa to",
+      "reason": "Quy trình lan hồ điệp (QĐ 1972/QĐ-UBND, Phụ lục IV, quy trình 11) bón theo nồng độ pha và theo chậu — ví dụ giai đoạn xử lý ra hoa dùng NPK 9-45-15+TE pha 4 g/10 lít nước, 5–7 ngày phun và tưới một lần — không theo diện tích. Công cụ tính lượng phân theo ha, sào của ứng dụng không áp dụng được, nên lịch bón chưa được đưa vào. Xem trực tiếp quy trình.",
+      "suggested_sources": [
+        {
+          "title": "QĐ 1972/QĐ-UBND tỉnh Lâm Đồng — 120 quy trình kỹ thuật trồng, chăm sóc cây trồng (Phụ lục IV: cây hoa)",
+          "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx"
+        }
+      ]
+    },
+    {
+      "category_id": "phalaenopsis_medium",
+      "category_name": "Hồ điệp hoa trung bình",
+      "reason": "Quy trình lan hồ điệp (QĐ 1972/QĐ-UBND, Phụ lục IV, quy trình 11) bón theo nồng độ pha và theo chậu — ví dụ giai đoạn xử lý ra hoa dùng NPK 9-45-15+TE pha 4 g/10 lít nước, 5–7 ngày phun và tưới một lần — không theo diện tích. Công cụ tính lượng phân theo ha, sào của ứng dụng không áp dụng được, nên lịch bón chưa được đưa vào. Xem trực tiếp quy trình.",
+      "suggested_sources": [
+        {
+          "title": "QĐ 1972/QĐ-UBND tỉnh Lâm Đồng — 120 quy trình kỹ thuật trồng, chăm sóc cây trồng (Phụ lục IV: cây hoa)",
+          "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx"
+        }
+      ]
+    },
+    {
+      "category_id": "phalaenopsis_mini",
+      "category_name": "Hồ điệp hoa mini",
+      "reason": "Quy trình lan hồ điệp (QĐ 1972/QĐ-UBND, Phụ lục IV, quy trình 11) bón theo nồng độ pha và theo chậu — ví dụ giai đoạn xử lý ra hoa dùng NPK 9-45-15+TE pha 4 g/10 lít nước, 5–7 ngày phun và tưới một lần — không theo diện tích. Công cụ tính lượng phân theo ha, sào của ứng dụng không áp dụng được, nên lịch bón chưa được đưa vào. Xem trực tiếp quy trình.",
+      "suggested_sources": [
+        {
+          "title": "QĐ 1972/QĐ-UBND tỉnh Lâm Đồng — 120 quy trình kỹ thuật trồng, chăm sóc cây trồng (Phụ lục IV: cây hoa)",
+          "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx"
+        }
+      ]
+    }
+  ]
+}

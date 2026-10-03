@@ -1,0 +1,287 @@
+{
+  "$meta": {
+    "crop_type": "garden_pea",
+    "crop_name": "Đậu Hà Lan",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây đậu Hà Lan trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "garden_pea_lamdong_2025",
+      "crop_type": "garden_pea",
+      "crop_name": "Đậu Hà Lan",
+      "category_ids": null,
+      "name": "Đậu Hà Lan — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây đậu hà lan trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục III, quy trình 18 — mục 2.4 Phân bón và cách bón phân; 2.5 Chăm sóc; III. Thu hoạch, sơ chế, bảo quản"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Thích hợp nhất trồng tháng 9–12, thu tháng 12 đến tháng 3 năm sau; vụ tháng 3–4 thu tháng 6–7 nhưng mưa nhiều, dễ sâu bệnh. Gieo 15–20 kg hạt/ha, hai hàng trên luống (hàng 60 cm, hốc 15 cm, 2–3 hạt/hốc, tỉa còn 1–2 cây). Mốc bón thúc tính theo ngày sau gieo.",
+      "scenarios": [
+        {
+          "id": "mot_vu",
+          "name": "Lượng cho 1 ha",
+          "description": "200 kg N – 120 kg P₂O₅ – 150 kg K₂O quy ra phân thương phẩm.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 30,
+              "max": 40,
+              "price_product_id": null
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 190,
+              "max": 190,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 516,
+              "max": 516,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "npk_15_5_20",
+              "name": "NPK 15-5-20",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 750,
+              "max": 750,
+              "price_product_id": null
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Cày bừa sâu 25 cm, bón lót vôi, phân hữu cơ, lân; lên luống (vụ Đông Xuân rộng 0,8–1 m, vụ Hè Thu 1–1,2 m).",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "ure",
+            "pct": 20
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 60
+          },
+          {
+            "item_key": "npk_15_5_20",
+            "pct": 30
+          }
+        ],
+        "note": "Bón lót theo bảng: 100% phân chuồng, hữu cơ vi sinh, vôi; 20% urê, 60% super lân, 30% NPK 15-5-20."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Mọc — xới phá váng",
+          "source_stage_name_vi": "Sau gieo",
+          "timing": "0–14 ngày sau gieo",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "dhl_tuoi",
+              "title": "Giữ ẩm sau gieo",
+              "detail": "Tuần đầu tưới nhẹ 1–2 lần, sau đó mỗi ngày 1 lần; vụ mưa tưới ít hơn. Dùng nước giếng khoan, suối đầu nguồn, không dùng nước thải, ao tù.",
+              "type": "water"
+            },
+            {
+              "key": "dhl_pha_vang",
+              "title": "Làm cỏ, xới phá váng",
+              "detail": "Khi cây lên khỏi mặt đất 4–7 cm làm cỏ, xăm xới phá váng; sau khi mọc 10–15 ngày xới phá váng cho đất tơi xốp.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Thúc lần 1 — làm giàn",
+          "source_stage_name_vi": "Bón thúc lần 1",
+          "timing": "15–20 ngày sau gieo, cây 3–4 lá thật",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "dhl_bon_thuc_1",
+              "title": "Thúc lần 1: 20% NPK 15-5-20",
+              "detail": "Bón khi cây có 3–4 lá thật.",
+              "type": "fertilize",
+              "timing": "15–20 ngày sau gieo"
+            },
+            {
+              "key": "dhl_lam_gian",
+              "title": "Làm giàn chữ A",
+              "detail": "Khi cây bắt đầu ra tua cuốn làm giàn kiểu chữ A, cọc dài 1,5–2 m (que, trúc, nứa tép già, hoặc cọc và dây chất dẻo). Làm giàn muộn thì thân lá che khuất nhau, giảm quang hợp và năng suất.",
+              "type": "cultivate"
+            },
+            {
+              "key": "dhl_vun",
+              "title": "Xới nhẹ, vun gốc",
+              "detail": "Sau lần xới thứ nhất 10–15 ngày xới nhẹ, nông, hẹp quanh gốc, vét đất ở rãnh vun vào gốc.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 15
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Thúc lần 2 — trước ra hoa",
+          "source_stage_name_vi": "Bón thúc lần 2",
+          "timing": "30–35 ngày sau gieo, trước khi cây ra hoa",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 40
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 40
+            },
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "dhl_bon_thuc_2",
+              "title": "Thúc lần 2: 40% urê + 40% super lân + 20% NPK 15-5-20",
+              "detail": "Ngay sau bón có thể dùng thêm phân vi lượng có Mg, Mn, Cu, Fe, Mo.",
+              "type": "fertilize",
+              "timing": "30–35 ngày sau gieo"
+            },
+            {
+              "key": "dhl_tia",
+              "title": "Tỉa lá, tỉa cành",
+              "detail": "Thường xuyên bỏ lá già, lá bệnh dưới gốc, tỉa cành trước lúc ra hoa; mỗi cây để 4–5 cành.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "flowering"
+          ],
+          "start_day": 30
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu quả — thúc lần 3",
+          "source_stage_name_vi": "Bón thúc lần 3; Thu hoạch",
+          "timing": "Sau khi đậu quả rộ, thu hái lứa đầu",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 40
+            },
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 30
+            }
+          ],
+          "tasks": [
+            {
+              "key": "dhl_bon_thuc_3",
+              "title": "Thúc lần 3: 40% urê + 30% NPK 15-5-20",
+              "detail": "Bón sau khi cây đậu quả rộ, thu hái lứa đầu; có thể dùng thêm phân vi lượng.",
+              "type": "fertilize",
+              "timing": "Sau thu lứa đầu"
+            },
+            {
+              "key": "dhl_thu_hoach",
+              "title": "Thu quả dài 6–7 cm",
+              "detail": "Dùng kéo sắc bấm cuống, chừa 1 cm cuống để vết thương không lan vào thân; 4–6 ngày thu một lần. Sản phẩm không dính đất cát, đóng gói theo yêu cầu khách hàng.",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "fruiting",
+            "harvesting"
+          ],
+          "start_day": null
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên bảng của quy trình.",
+        "Giống: đậu Hà Lan trồng ở Đà Lạt chủ yếu là giống địa phương do nông dân tự sản xuất giống; hạt giống phải sáng màu, tròn mẩy, nảy mầm từ 90% trở lên."
+      ]
+    }
+  ],
+  "unavailable": []
+}

@@ -1,0 +1,28 @@
+{
+  "$meta": {
+    "crop_type": "oncidium",
+    "crop_name": "Lan vũ nữ",
+    "description": "Lan vũ nữ — quy trình của tỉnh bón theo nồng độ pha và theo chậu; chỉ khai báo khoảng trống.",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [],
+  "unavailable": [
+    {
+      "category_id": "oncidium_cut",
+      "category_name": "Vũ nữ cắt cành",
+      "reason": "Quy trình lan vũ nữ (QĐ 1972/QĐ-UBND, Phụ lục IV, quy trình 7) dùng phân 30-10-10 tưới 5 ngày/lần với nồng độ một muỗng cà phê/4 lít nước, khi có nụ đổi sang 20-20-20 — tính theo nồng độ pha và theo chậu, không theo diện tích. Công cụ tính lượng phân theo ha, sào của ứng dụng không áp dụng được, nên lịch bón chưa được đưa vào. Xem trực tiếp quy trình.",
+      "suggested_sources": [
+        {
+          "title": "QĐ 1972/QĐ-UBND tỉnh Lâm Đồng — 120 quy trình kỹ thuật trồng, chăm sóc cây trồng (Phụ lục IV: cây hoa)",
+          "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx"
+        }
+      ]
+    }
+  ]
+}

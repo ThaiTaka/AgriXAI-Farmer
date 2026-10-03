@@ -1,0 +1,374 @@
+{
+  "$meta": {
+    "crop_type": "rose",
+    "crop_name": "Hoa hồng",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây hoa hồng trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "rose_lamdong_2025",
+      "crop_type": "rose",
+      "crop_name": "Hoa hồng",
+      "category_ids": null,
+      "name": "Hoa hồng — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây hoa hồng trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục IV, quy trình 2 — mục 2.5 Phân bón và cách bón phân (Bảng 1, thời kỳ kiến thiết cơ bản; định kỳ thời kỳ kinh doanh); 2.6 Chăm sóc; IV. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Cây trồng được quanh năm ở vùng khí hậu mát mẻ Đà Lạt; mật độ 50.000 cây/ha (giống sinh trưởng mạnh, 40 × 50 cm) hoặc 70.000 cây/ha (35 × 40 cm).",
+      "scenarios": [
+        {
+          "id": "ktcb_phan_don",
+          "name": "Kiến thiết cơ bản (trồng mới) — phân đơn",
+          "description": "Lượng cho 1 ha giai đoạn trồng mới: lót + 2 lần thúc (Bảng 1).",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 70,
+              "max": 70,
+              "price_product_id": null,
+              "note": "Định kỳ 1–2 năm bón bổ sung 40–60 m³/ha; hoặc dùng phân hữu cơ vi sinh 2–3 tấn/ha"
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1500,
+              "max": 1500,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1560,
+              "max": 1560,
+              "price_product_id": "sieu_lan_lam_thao",
+              "note": "Định mức nguồn tương đương 250 kg P₂O₅/ha"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 652,
+              "max": 652,
+              "price_product_id": "ure_ca_mau",
+              "note": "Định mức nguồn tương đương 300 kg N/ha"
+            },
+            {
+              "key": "k2so4",
+              "name": "Kali sunfat (K₂SO₄) hoặc KCl",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 330,
+              "max": 330,
+              "price_product_id": null,
+              "note": "Định mức nguồn tương đương 200 kg K₂O/ha"
+            }
+          ]
+        },
+        {
+          "id": "ktcb_phuc_hop",
+          "name": "Kiến thiết cơ bản — phân phức hợp",
+          "description": "Lượng phân phức hợp quy trình cho phép thay thế (chỉ có tổng lượng, không có bảng chia lần).",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 70,
+              "max": 70,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1500,
+              "max": 1500,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "npk_16_16_8",
+              "name": "NPK 16-16-8",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 200,
+              "max": 200,
+              "price_product_id": "npk_16_16_8_ca_mau"
+            },
+            {
+              "key": "dap",
+              "name": "DAP",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 200,
+              "max": 200,
+              "price_product_id": "dap_han_quoc"
+            },
+            {
+              "key": "ure_phuc_hop",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 500,
+              "max": 500,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan_phuc_hop",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 800,
+              "max": 800,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "k2so4_phuc_hop",
+              "name": "Kali sunfat (K₂SO₄)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 370,
+              "max": 370,
+              "price_product_id": null
+            }
+          ]
+        },
+        {
+          "id": "kinh_doanh_moi_lan",
+          "name": "Kinh doanh — lượng cho MỖI lần bón (20–25 ngày/lần)",
+          "description": "Định kỳ 20–25 ngày bón 1 lần (65 kg N, 50 kg P₂O₅, 60 kg K₂O mỗi lần).",
+          "items": [
+            {
+              "key": "ure_kd",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 100,
+              "max": 100,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "dap_kd",
+              "name": "DAP",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 100,
+              "max": 100,
+              "price_product_id": "dap_han_quoc"
+            },
+            {
+              "key": "k2so4_kd",
+              "name": "Kali sunfat (K₂SO₄)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 120,
+              "max": 120,
+              "price_product_id": null,
+              "note": "Hoặc 300 kg NPK 16-16-8 + 40 kg urê + 75 kg K₂SO₄ mỗi lần"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón lót: vôi trước trồng ít nhất 10 ngày (hoặc lúc cày, phơi ải); trước khi cày bừa lên luống bón toàn bộ phân chuồng và 50% super lân.",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 50
+          }
+        ],
+        "note": "Bón lót 100% phân chuồng, 100% vôi, 50% super lân (Bảng 1)."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Trồng mới — chăm cây con",
+          "source_stage_name_vi": "Bón lót; trồng",
+          "timing": "Sau trồng đến khi chồi ghép cao 7–10 cm",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "hong_lam_co",
+              "title": "Làm cỏ định kỳ 25–30 ngày",
+              "detail": "Làm sạch cỏ dại, nhất là giai đoạn cây non; sau mưa làm cỏ kết hợp xới cho đất tơi xốp.",
+              "type": "cultivate",
+              "timing": "25–30 ngày/lần"
+            },
+            {
+              "key": "hong_tuoi",
+              "title": "Tưới giữ ẩm",
+              "detail": "Thường xuyên tưới giữ ẩm; tưới phun mưa trên mặt lá là cách hợp lý nhất.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Thúc lần 1 — chồi ghép cao 7–10 cm",
+          "source_stage_name_vi": "Bón thúc lần 1",
+          "timing": "Lúc chồi ghép cao 7–10 cm",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 45
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 45
+            }
+          ],
+          "tasks": [
+            {
+              "key": "hong_bon_thuc_1",
+              "title": "Thúc lần 1: 45% urê + 45% kali",
+              "detail": "Trộn đều, bón cách gốc tối thiểu 10 cm; bón xong tưới nhẹ cho phân thấm. Không xăm xới sâu làm đứt rễ.",
+              "type": "fertilize",
+              "timing": "Chồi ghép cao 7–10 cm"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Thúc lần 2 — tạo tán",
+          "source_stage_name_vi": "Bón thúc lần 2",
+          "timing": "Lúc chồi ghép cao 20–25 cm",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "super_lan",
+              "pct": 50
+            },
+            {
+              "item_key": "ure",
+              "pct": 55
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 55
+            }
+          ],
+          "tasks": [
+            {
+              "key": "hong_bon_thuc_2",
+              "title": "Thúc lần 2: 50% super lân + 55% urê + 55% kali",
+              "detail": "Bón cách gốc tối thiểu 10 cm, tưới nhẹ sau bón.",
+              "type": "fertilize",
+              "timing": "Chồi ghép cao 20–25 cm"
+            },
+            {
+              "key": "hong_bam_ngon",
+              "title": "Bấm ngọn tạo khung tán",
+              "detail": "Khi mầm chính cao 20–25 cm bấm ngọn, chỉ để 4–5 cành cấp 1 toả đều làm khung; thường xuyên tỉa cành tăm, cành hương cho thông thoáng.",
+              "type": "cultivate",
+              "timing": "Mầm chính cao 20–25 cm"
+            }
+          ],
+          "growth_stages": [
+            "flowering"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "business",
+          "stage_name_vi": "Kinh doanh — bón định kỳ, thu hoa",
+          "source_stage_name_vi": "Thời kỳ kinh doanh; Thu hoạch",
+          "timing": "Định kỳ 20–25 ngày bón 1 lần",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "hong_bon_dinh_ky",
+              "title": "Bón định kỳ 20–25 ngày/lần",
+              "detail": "Mỗi lần (1 ha): 100 kg urê + 100 kg DAP + 120 kg K₂SO₄, hoặc 300 kg NPK 16-16-8 + 40 kg urê + 75 kg K₂SO₄. Có thể phun thêm phân bón lá (Ca, Mg, S, Bo, Mo, Zn, Cu…).",
+              "type": "fertilize",
+              "timing": "20–25 ngày/lần"
+            },
+            {
+              "key": "hong_tia_nu",
+              "title": "Tỉa cành, tỉa nụ",
+              "detail": "Thường xuyên tỉa nụ để ổn định số nụ trên cành, giúp bông to, giảm sâu bệnh.",
+              "type": "cultivate"
+            },
+            {
+              "key": "hong_thu_hoach",
+              "title": "Thu hoa",
+              "detail": "Thu khi cánh ngoài vừa hé nở, vào chiều mát hoặc sáng sớm. Cắt cách gốc cành chừa 2–3 lá chính; chọn 1–2 chồi khoẻ cho lứa hoa sau.",
+              "type": "harvest"
+            },
+            {
+              "key": "hong_sau_benh",
+              "title": "Thăm vườn: nhện đỏ",
+              "detail": "Nhện đỏ hại mạnh lúc nắng nóng: cắt bỏ cành, lá bị hại nặng; vệ sinh vườn; dùng thuốc trong danh mục được phép khi cần.",
+              "type": "scout"
+            }
+          ],
+          "growth_stages": [
+            "fruiting",
+            "harvesting"
+          ],
+          "start_day": null
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % bón lót và hai lần thúc thời kỳ kiến thiết cơ bản chép nguyên Bảng 1 của quy trình.",
+        "Phân chuồng ghi theo m³ như quy trình; ứng dụng không tự quy đổi sang tấn.",
+        "Cây từ 2 năm tuổi bộ rễ kém hơn — quy trình khuyên tăng phun phân bón lá định kỳ để kích thích rễ."
+      ]
+    }
+  ],
+  "unavailable": []
+}

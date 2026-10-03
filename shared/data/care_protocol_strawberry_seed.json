@@ -1,0 +1,296 @@
+{
+  "$meta": {
+    "crop_type": "strawberry",
+    "crop_name": "Dâu tây",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây dâu tây trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "strawberry_lamdong_2025",
+      "crop_type": "strawberry",
+      "crop_name": "Dâu tây",
+      "category_ids": null,
+      "name": "Dâu tây trồng trên đất — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây dâu tây trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục III, quy trình 31 — mục 2.5 a) Trồng dâu tây trên đất (bảng cách bón, năm thứ nhất); 2.6 Chăm sóc; IV. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Thời vụ ở Lâm Đồng thường từ tháng 8–9, thu hoạch tháng 12 hoặc tháng 1 năm sau; Đà Lạt có thể trồng và thu quanh năm. Chu kỳ kinh doanh kéo dài đến 2 năm hoặc hơn.",
+      "scenarios": [
+        {
+          "id": "nam_thu_nhat",
+          "name": "Năm thứ nhất (1 ha)",
+          "description": "100 kg N – 120 kg P₂O₅ – 120 kg K₂O; MgSO₄ 40 kg; boric 80 kg.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 40,
+              "max": 50,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1500,
+              "max": 1500,
+              "price_product_id": null,
+              "note": "Bón 2 đợt: lót 1.000 kg; 6 tháng sau trồng bổ sung 500 kg"
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 1000,
+              "max": 2000,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 220,
+              "max": 220,
+              "price_product_id": "ure_ca_mau",
+              "note": "Bảng ghi 220 kg; phần quy đổi ghi 217 kg"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 750,
+              "max": 750,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "KCl",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 200,
+              "max": 200,
+              "price_product_id": "kali_bot_ca_mau"
+            },
+            {
+              "key": "boric",
+              "name": "Acid boric",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 80,
+              "max": 80,
+              "price_product_id": null
+            },
+            {
+              "key": "mgso4",
+              "name": "Magiê sunfat (MgSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 40,
+              "max": 40,
+              "price_product_id": null
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón lót: phân chuồng, 1.000 kg vôi, hữu cơ vi sinh, toàn bộ super lân, 40 kg boric, 15 kg MgSO₄.",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 66.67
+          },
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 100
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 100
+          },
+          {
+            "item_key": "boric",
+            "pct": 50
+          },
+          {
+            "item_key": "mgso4",
+            "pct": 37.5
+          }
+        ],
+        "note": "Theo bảng cách bón của quy trình (năm thứ nhất)."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Bén rễ — thúc 20 ngày sau trồng",
+          "source_stage_name_vi": "Bón thúc 20 ngày sau trồng",
+          "timing": "20 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 9.09
+            },
+            {
+              "item_key": "kcl",
+              "pct": 10
+            },
+            {
+              "item_key": "boric",
+              "pct": 5
+            },
+            {
+              "item_key": "mgso4",
+              "pct": 6.25
+            }
+          ],
+          "tasks": [
+            {
+              "key": "dt_tay_bon_20",
+              "title": "Thúc 20 ngày sau trồng: 20 kg urê + 20 kg KCl + 4 kg boric + 2,5 kg MgSO₄ (1 ha)",
+              "detail": "Acid boric và MgSO₄ có thể phun qua lá định kỳ.",
+              "type": "fertilize",
+              "timing": "20 ngày sau trồng"
+            },
+            {
+              "key": "dt_tay_ngat_hoa_boi",
+              "title": "Ngắt chùm hoa bói đầu tiên",
+              "detail": "Để cây sinh trưởng mạnh và ổn định giai đoạn đầu, ngắt bỏ chùm hoa bói đầu tiên.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Bón định kỳ hằng tháng — cắt ngó",
+          "source_stage_name_vi": "Bón thúc định kỳ 1 tháng/lần",
+          "timing": "Mỗi tháng 1 lần",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "dt_tay_bon_dinh_ky",
+              "title": "Bón định kỳ mỗi tháng: 20 kg urê + 20 kg KCl (1 ha)",
+              "detail": "Năm thứ nhất bón định kỳ 10 lần; nếu 2 tháng bón 1 lần thì dùng lượng gấp đôi. Bón ít nhưng nhiều lần trong năm.",
+              "type": "fertilize",
+              "timing": "1 tháng/lần"
+            },
+            {
+              "key": "dt_tay_cat_ngo",
+              "title": "Cắt ngó",
+              "detail": "Nếu không tận dụng ngó để nhân giống thì cắt bỏ toàn bộ ngó.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Ra hoa, đậu quả — tỉa, bổ sung vôi",
+          "source_stage_name_vi": "Chăm sóc; bón vôi đợt 2 (6 tháng sau trồng)",
+          "timing": "Giai đoạn ra hoa — đậu quả",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "voi",
+              "pct": 33.33
+            }
+          ],
+          "tasks": [
+            {
+              "key": "dt_tay_tia_nu",
+              "title": "Tỉa nụ, hoa, trái dị dạng",
+              "detail": "Cân đối khung tán với số hoa trái; tỉa bỏ nụ, hoa, trái dị dạng và sâu bệnh để trái lớn đều.",
+              "type": "cultivate"
+            },
+            {
+              "key": "dt_tay_voi_dot_2",
+              "title": "Bón bổ sung 500 kg vôi (1 ha)",
+              "detail": "6 tháng sau khi trồng bón bổ sung đợt vôi thứ hai.",
+              "type": "fertilize",
+              "timing": "6 tháng sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "flowering",
+            "fruiting"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu hoạch quả chín",
+          "source_stage_name_vi": "Thu hoạch",
+          "timing": "Khi quả chín đỏ đều",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "dt_tay_thu_hoach",
+              "title": "Thu quả chín đỏ đều",
+              "detail": "Thu khi quả đỏ đều, căng mọng, không còn xanh ở đầu cuống; thu sáng sớm hoặc chiều mát; hái nhẹ tay, giữ cuống khoảng 1 cm.",
+              "type": "harvest"
+            },
+            {
+              "key": "dt_tay_phan_bon_la",
+              "title": "Phun phân bón lá cho cây trên 1 năm",
+              "detail": "Dâu tây trên 1 năm tuổi rễ hấp thụ kém, bổ sung phân qua lá định kỳ 10–15 ngày/lần.",
+              "type": "spray",
+              "timing": "10–15 ngày/lần"
+            }
+          ],
+          "growth_stages": [
+            "harvesting"
+          ],
+          "start_day": null
+        }
+      ],
+      "extra_rules": [
+        "Lượng định kỳ hằng tháng ghi trực tiếp trong công việc (quy trình bón theo tháng, không chia % theo giai đoạn).",
+        "Dâu tây trồng trên giá thể bón qua hệ thống tưới (công thức A/B) — ứng dụng chưa mô tả cách bón này."
+      ]
+    }
+  ],
+  "unavailable": []
+}

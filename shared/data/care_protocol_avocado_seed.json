@@ -1,0 +1,527 @@
+{
+  "$meta": {
+    "crop_type": "avocado",
+    "crop_name": "Bơ",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây bơ trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "avocado_ktcb_lamdong_2025",
+      "crop_type": "avocado",
+      "crop_name": "Bơ",
+      "category_ids": null,
+      "name": "Bơ — kiến thiết cơ bản (năm 1–5)",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây bơ trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục I, quy trình 1 — mục 2.6.1 Thời kỳ kiến thiết cơ bản; 2.6.3 Kỹ thuật bón phân; 2.7 Chăm sóc"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "calendar",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Mật độ trồng thuần 7 × 8 m (178 cây/ha) hoặc 6 × 8 m (208 cây/ha); trồng xen 70–100 cây/ha. Thời vụ trồng thích hợp đầu mùa mưa, tháng 5–8. Bón lót mỗi hố 10–15 kg phân chuồng hoai + 0,5 kg lân nung chảy + 0,5 kg vôi, trước trồng 20–30 ngày.",
+      "scenarios": [
+        {
+          "id": "nam_1",
+          "name": "Năm thứ 1",
+          "description": "50 kg N – 51 kg P₂O₅ – 64 kg K₂O (bảng thời kỳ KTCB).",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 10,
+              "max": 10,
+              "price_product_id": null,
+              "note": "Hữu cơ (tấn/ha/năm) theo bảng của quy trình"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 109,
+              "max": 109,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 283,
+              "max": 283,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 107,
+              "max": 107,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        },
+        {
+          "id": "nam_2_5",
+          "name": "Năm thứ 2 đến 5",
+          "description": "50 kg N – 51 kg P₂O₅ – 64 kg K₂O; hữu cơ 15 tấn/ha (bảng thời kỳ KTCB).",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 15,
+              "max": 15,
+              "price_product_id": null,
+              "note": "Hữu cơ (tấn/ha/năm) theo bảng của quy trình"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 109,
+              "max": 109,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 283,
+              "max": 283,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 107,
+              "max": 107,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Phân hữu cơ bón bổ sung hằng năm trong đợt bón lần 1; đào sâu 10–15 cm, cách gốc 30–40 cm hoặc theo hình chiếu tán, rải phân rồi lấp đất, tưới đủ ẩm.",
+        "applications": [],
+        "note": "Phân vô cơ chia 3 lần/năm theo bảng kỹ thuật bón thời kỳ KTCB."
+      },
+      "stages": [
+        {
+          "stage_code": "lan_1",
+          "stage_name_vi": "Lần 1 — tháng 4",
+          "source_stage_name_vi": "Lần 1",
+          "timing": "Tháng 4",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "phan_chuong",
+              "pct": 100
+            },
+            {
+              "item_key": "ure",
+              "pct": 30
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 100
+            },
+            {
+              "item_key": "kcl",
+              "pct": 40
+            }
+          ],
+          "tasks": [
+            {
+              "key": "bo_ktcb_bon_1",
+              "title": "Bón lần 1: 30% urê + 100% super lân + 40% KCl, kèm phân hữu cơ",
+              "detail": "Đào sâu 10–15 cm, cách gốc 30–40 cm hoặc theo hình chiếu tán, rải đều phân rồi lấp đất, tưới đủ ẩm. Tỉa cành xong mới bón phân.",
+              "type": "fertilize",
+              "timing": "Tháng 4"
+            },
+            {
+              "key": "bo_ktcb_tao_tan",
+              "title": "Tạo hình, tạo tán",
+              "detail": "Năm thứ 2, 3 tỉa bỏ cành bị che khuất, cành yếu, sâu bệnh, cành quá sát đất; chỉ để 1 ngọn với các cành ngang khoẻ phân bố đều. Quét thuốc chống nấm lên vết cắt lớn hơn 1 cm.",
+              "type": "cultivate"
+            }
+          ],
+          "months": [
+            4
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "trong_moi",
+          "stage_name_vi": "Trồng mới — đầu mùa mưa",
+          "source_stage_name_vi": "Thời vụ trồng; trồng dặm",
+          "timing": "Tháng 5–8 (đầu mùa mưa)",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "bo_ktcb_trong",
+              "title": "Trồng, cắm cọc, che mát",
+              "detail": "Xé bỏ bầu không làm vỡ bầu, lấp đất ngang mặt bầu, dậm chặt; cắm cọc buộc giữ; vun mô chống đọng nước; tủ rơm cách gốc; che mát thời gian đầu nhưng không quá 50% ánh sáng.",
+              "type": "cultivate",
+              "timing": "Tháng 5–8"
+            },
+            {
+              "key": "bo_ktcb_dam",
+              "title": "Trồng dặm",
+              "detail": "Trong tháng đầu sau trồng thường xuyên kiểm tra, trồng dặm cây chết bằng cây cùng giống, cùng tuổi (dự phòng 5–10%).",
+              "type": "cultivate",
+              "timing": "Tháng đầu sau trồng"
+            },
+            {
+              "key": "bo_ktcb_tuoi",
+              "title": "Tưới giữ ẩm cây non",
+              "detail": "Năm 1–3 sau trồng tưới 50–100 lít/cây/lần, 2–3 lần vào giữa và cuối mùa khô; tốt nhất tưới phun, không tưới quá đẫm vào bồn gốc.",
+              "type": "water"
+            }
+          ],
+          "months": [
+            5,
+            6,
+            8
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_2",
+          "stage_name_vi": "Lần 2 — tháng 7",
+          "source_stage_name_vi": "Lần 2",
+          "timing": "Tháng 7",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 30
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "bo_ktcb_bon_2",
+              "title": "Bón lần 2: 30% urê + 20% KCl",
+              "detail": "Đào rãnh theo hình chiếu tán, rải phân, lấp đất, tưới ẩm.",
+              "type": "fertilize",
+              "timing": "Tháng 7"
+            },
+            {
+              "key": "bo_ktcb_lam_co",
+              "title": "Làm cỏ quanh gốc",
+              "detail": "Mùa mưa làm sạch cỏ 3–4 lần theo băng trên hàng; giữ gốc khô ráo vì ẩm cao dễ phát sinh nấm Phytophthora palmivora.",
+              "type": "cultivate"
+            }
+          ],
+          "months": [
+            7
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_3",
+          "stage_name_vi": "Lần 3 — tháng 10",
+          "source_stage_name_vi": "Lần 3",
+          "timing": "Tháng 10",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 40
+            },
+            {
+              "item_key": "kcl",
+              "pct": 40
+            }
+          ],
+          "tasks": [
+            {
+              "key": "bo_ktcb_bon_3",
+              "title": "Bón lần 3: 40% urê + 40% KCl",
+              "detail": "Đào rãnh theo hình chiếu tán, rải phân, lấp đất, tưới ẩm.",
+              "type": "fertilize",
+              "timing": "Tháng 10"
+            }
+          ],
+          "months": [
+            10
+          ],
+          "growth_stages": []
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên bảng kỹ thuật bón thời kỳ KTCB (4 năm đầu chia 3 lần/năm).",
+        "Giai đoạn 'Trồng mới' lấy theo thời vụ trồng tháng 5–8 của quy trình; tháng 7 trùng lần bón 2 nên ứng dụng xếp tháng 5, 6, 8 cho giai đoạn này.",
+        "Bảng KTCB ghi năm 1 hữu cơ 10 tấn/ha, năm 2–5 hữu cơ 15 tấn/ha, lượng vô cơ như nhau."
+      ]
+    },
+    {
+      "id": "avocado_kd_lamdong_2025",
+      "crop_type": "avocado",
+      "crop_name": "Bơ",
+      "category_ids": null,
+      "name": "Bơ — kinh doanh",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây bơ trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục I, quy trình 1 — mục 2.6.2 Thời kỳ kinh doanh; 2.6.3 Kỹ thuật bón phân; 2.7 Chăm sóc"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "calendar",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Thời kỳ kinh doanh: phân vô cơ bón 3 lần/năm, phân hữu cơ bón cùng lần 1. Mỗi năm tăng lượng phân vô cơ khoảng 10% đến khi năng suất ổn định. Thu hái: chỉ hái quả chín sinh lý (vỏ đổi từ xanh sáng bóng sang xanh đậm, hoặc lắc nhẹ nghe hạt va vào thành quả), cắt cuống chừa 1–2 cm; quy trình không ghi tháng thu hoạch.",
+      "scenarios": [
+        {
+          "id": "kinh_doanh",
+          "name": "Thời kỳ kinh doanh",
+          "description": "270 kg N – 272 kg P₂O₅ – 256 kg K₂O (bảng thời kỳ kinh doanh).",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 15,
+              "max": 15,
+              "price_product_id": null,
+              "note": "Hữu cơ (tấn/ha/năm) theo bảng của quy trình"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 587,
+              "max": 587,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1511,
+              "max": 1511,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 427,
+              "max": 427,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Phân hữu cơ (15 tấn/ha) bón cùng lần 1 với urê, super lân và KCl.",
+        "applications": [],
+        "note": "Phân vô cơ chia 3 lần/năm theo bảng kỹ thuật bón thời kỳ kinh doanh."
+      },
+      "stages": [
+        {
+          "stage_code": "lan_2",
+          "stage_name_vi": "Lần 2 — tháng 4–5",
+          "source_stage_name_vi": "Lần 2",
+          "timing": "Tháng 4–5",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 30
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "bo_kd_bon_2",
+              "title": "Bón lần 2: 30% urê + 50% super lân",
+              "detail": "Đào rãnh theo hình chiếu tán, rải phân, lấp đất, tưới ẩm.",
+              "type": "fertilize",
+              "timing": "Tháng 4–5"
+            },
+            {
+              "key": "bo_kd_tia_trai",
+              "title": "Tỉa trái",
+              "detail": "Sau đậu trái, mỗi chùm hoa để trung bình 5–7 trái; chùm rìa tán để nhiều hơn, sâu trong tán để ít hơn; bỏ trái nhỏ, dị dạng.",
+              "type": "cultivate"
+            },
+            {
+              "key": "bo_kd_bon_la",
+              "title": "Phun bón lá khi ra hoa, đậu quả non",
+              "detail": "Trước khi xổ nhụy phun phân bón lá có canxi – bo + kali theo hướng dẫn nhà sản xuất để tăng tỷ lệ đậu quả.",
+              "type": "spray"
+            }
+          ],
+          "months": [
+            4,
+            5
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_3",
+          "stage_name_vi": "Lần 3 — tháng 9–10",
+          "source_stage_name_vi": "Lần 3",
+          "timing": "Tháng 9–10",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 25
+            },
+            {
+              "item_key": "kcl",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "bo_kd_bon_3",
+              "title": "Bón lần 3: 25% urê + 50% KCl",
+              "detail": "Đào rãnh theo hình chiếu tán, rải phân, lấp đất, tưới ẩm.",
+              "type": "fertilize",
+              "timing": "Tháng 9–10"
+            }
+          ],
+          "months": [
+            9
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_1",
+          "stage_name_vi": "Lần 1 — tháng 10–12",
+          "source_stage_name_vi": "Lần 1",
+          "timing": "Tháng 10–12",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "phan_chuong",
+              "pct": 100
+            },
+            {
+              "item_key": "ure",
+              "pct": 45
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 50
+            },
+            {
+              "item_key": "kcl",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "bo_kd_bon_1",
+              "title": "Bón lần 1: 45% urê + 50% super lân + 50% KCl, kèm 15 tấn phân hữu cơ/ha",
+              "detail": "Tỉa cành khô, cành yếu sau thu hoạch rồi mới bón; đào rãnh theo hình chiếu tán, rải phân, lấp đất, tưới ẩm.",
+              "type": "fertilize",
+              "timing": "Tháng 10–12"
+            },
+            {
+              "key": "bo_kd_bon_la_mam",
+              "title": "Phun bón lá giai đoạn tạo mầm hoa",
+              "detail": "Bổ sung phân bón lá giàu lân, kali (MKP, KNO₃, 10-60-10) theo hướng dẫn nhà sản xuất để lá sớm thành thục, phân hoá mầm hoa hiệu quả.",
+              "type": "spray"
+            }
+          ],
+          "months": [
+            10
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "tuoi_ra_hoa",
+          "stage_name_vi": "Tưới tăng ra hoa — tháng 11–12",
+          "source_stage_name_vi": "Tưới nước thời kỳ kinh doanh",
+          "timing": "Tháng 11–12",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "bo_kd_tuoi",
+              "title": "Tưới đủ nước để cây ra hoa, kết quả",
+              "detail": "Thời kỳ kinh doanh, nhất là tháng 11–12, cần tưới đủ nước để tăng khả năng ra hoa và kết quả: 100–200 lít/cây/lần, 2–3 lần từ sau khi hoa bắt đầu nở. Mùa mưa phá bồn tưới để tránh ngập úng.",
+              "type": "water",
+              "timing": "Tháng 11–12"
+            },
+            {
+              "key": "bo_kd_hoan_tat_bon_1",
+              "title": "Hoàn tất lần bón 1 (nếu chưa bón)",
+              "detail": "Lần bón 1 có thể làm trong tháng 10–12.",
+              "type": "fertilize",
+              "timing": "Tháng 10–12"
+            }
+          ],
+          "months": [
+            11,
+            12
+          ],
+          "growth_stages": []
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên bảng kỹ thuật bón thời kỳ kinh doanh.",
+        "Lần 1 (tháng 10–12) và lần 3 (tháng 9–10) trùng tháng 10 trong quy trình; ứng dụng xếp tháng 9 cho lần 3, tháng 10 cho lần 1, và tháng 11–12 cho giai đoạn tưới tăng ra hoa (vẫn nhắc hoàn tất lần 1).",
+        "Mỗi năm tăng lượng phân vô cơ khoảng 10% đến khi năng suất ổn định — ứng dụng hiện lượng gốc của bảng."
+      ]
+    }
+  ],
+  "unavailable": []
+}

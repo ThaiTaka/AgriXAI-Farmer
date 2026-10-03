@@ -16,17 +16,48 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 
 SEED_FILES = [
+    # Hoa — làng hoa Vạn Thành và Đà Lạt. Nguồn: QĐ 1972/QĐ-UBND ngày 04/11/2025
+    # của UBND tỉnh Lâm Đồng (120 quy trình kỹ thuật trồng, chăm sóc cây trồng).
+    "care_protocol_chrysanthemum_seed.json",
+    "care_protocol_rose_seed.json",
+    "care_protocol_carnation_seed.json",
+    "care_protocol_gerbera_seed.json",
+    "care_protocol_lily_seed.json",
+    "care_protocol_gladiolus_seed.json",
+    "care_protocol_lisianthus_seed.json",
+    "care_protocol_limonium_seed.json",
+    # Lan hồ điệp, lan vũ nữ: quy trình của tỉnh bón theo nồng độ pha và theo
+    # chậu, không theo diện tích — file chỉ khai báo khoảng trống.
+    "care_protocol_phalaenopsis_seed.json",
+    "care_protocol_oncidium_seed.json",
+    # Rau, củ, quả — cùng nguồn QĐ 1972/QĐ-UBND.
     "care_protocol_tomato_seed.json",
-    "care_protocol_coffee_seed.json",
-    "care_protocol_cucumber_seed.json",
     "care_protocol_pepper_seed.json",
-    # Cây có danh mục giống nhưng CHƯA có quy trình định mức: các file này chỉ
-    # khai báo khoảng trống, không mang protocol nào.
-    "care_protocol_carrot_seed.json",
-    "care_protocol_water_spinach_seed.json",
+    "care_protocol_cucumber_seed.json",
     "care_protocol_cabbage_seed.json",
-    "care_protocol_corn_seed.json",
+    "care_protocol_napa_cabbage_seed.json",
+    "care_protocol_cauliflower_seed.json",
+    "care_protocol_lettuce_seed.json",
+    # Rau muống: QĐ 1972 không có quy trình — file chỉ khai báo khoảng trống.
+    "care_protocol_water_spinach_seed.json",
+    "care_protocol_carrot_seed.json",
+    "care_protocol_potato_seed.json",
+    "care_protocol_strawberry_seed.json",
+    "care_protocol_spinach_seed.json",
+    "care_protocol_garden_pea_seed.json",
+    "care_protocol_beetroot_seed.json",
+    "care_protocol_leek_seed.json",
+    "care_protocol_celery_seed.json",
+    "care_protocol_chayote_seed.json",
+    # Cây lương thực — cùng nguồn QĐ 1972/QĐ-UBND.
     "care_protocol_rice_seed.json",
+    "care_protocol_corn_seed.json",
+    # Đặc sản và cây lâu năm.
+    "care_protocol_artichoke_seed.json",
+    "care_protocol_coffee_seed.json",
+    "care_protocol_tea_seed.json",
+    "care_protocol_avocado_seed.json",
+    "care_protocol_persimmon_seed.json",
 ]
 
 STAGE_CODES = ["seedling", "vegetative", "flowering", "fruiting", "harvesting"]
@@ -98,7 +129,9 @@ def main() -> int:
             return 1
         print("care_protocols.json is up to date")
         return 0
-    out.write_text(text, encoding="utf-8")
+    # Explicit "\n": on Windows write_text would otherwise turn every line
+    # ending into CRLF and the merged file would differ from the seeds' style.
+    out.write_text(text, encoding="utf-8", newline="\n")
     print(f"wrote {out} ({len(merged['protocols'])} protocols, {len(merged['unavailable'])} unavailable)")
     return 0
 

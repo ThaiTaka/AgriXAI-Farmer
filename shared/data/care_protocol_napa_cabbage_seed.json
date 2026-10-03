@@ -1,8 +1,8 @@
 {
   "$meta": {
-    "crop_type": "cabbage",
-    "crop_name": "Bắp cải",
-    "description": "Quy trình kỹ thuật trồng, chăm sóc cây cải bắp trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "crop_type": "napa_cabbage",
+    "crop_name": "Cải thảo",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây cải thảo trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
     "format_version": 2,
     "collected_at": "2026-10-02",
     "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
@@ -13,19 +13,19 @@
   },
   "protocols": [
     {
-      "id": "cabbage_lamdong_2025",
-      "crop_type": "cabbage",
-      "crop_name": "Bắp cải",
+      "id": "napa_cabbage_lamdong_2025",
+      "crop_type": "napa_cabbage",
+      "crop_name": "Cải thảo",
       "category_ids": null,
-      "name": "Bắp cải — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "name": "Cải thảo — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
       "source": {
-        "title": "Quy trình kỹ thuật trồng, chăm sóc cây cải bắp trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây cải thảo trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
         "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
         "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
         "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
         "published_at": "2025-11-04",
         "collected_at": "2026-10-02",
-        "section": "Phụ lục III, quy trình 1 — mục 2.5 Phân bón và cách bón phân (Bảng 1); 2.6 Chăm sóc; IV. Thu hoạch"
+        "section": "Phụ lục III, quy trình 2 — mục 2.5 Phân bón và cách bón phân (Bảng 1); 2.6 Chăm sóc; IV. Thu hoạch"
       },
       "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
       "stage_model": "growth",
@@ -35,12 +35,12 @@
         "unit": "ha",
         "m2": 10000
       },
-      "cycle_note": "Vùng khí hậu mát mẻ trồng quanh năm; mật độ 33.000–35.000 cây/ha; thu hoạch sau trồng 90–110 ngày.",
+      "cycle_note": "Vùng khí hậu mát mẻ trồng quanh năm; mật độ khoảng 40.000 cây/ha; thu hoạch 60–70 ngày sau trồng tuỳ giống.",
       "scenarios": [
         {
           "id": "mot_vu",
           "name": "Lượng cho 1 ha",
-          "description": "140 kg N – 70 kg P₂O₅ – 150 kg K₂O quy ra phân thương phẩm.",
+          "description": "70 kg N – 50 kg P₂O₅ – 60 kg K₂O quy ra phân thương phẩm.",
           "items": [
             {
               "key": "phan_chuong",
@@ -49,7 +49,8 @@
               "unit": "m³",
               "min": 40,
               "max": 40,
-              "price_product_id": null
+              "price_product_id": null,
+              "note": "Phân chuồng hoai mục"
             },
             {
               "key": "huu_co_vi_sinh",
@@ -65,8 +66,8 @@
               "name": "Vôi bột",
               "fertilizer_category": "khac",
               "unit": "kg",
-              "min": 1000,
-              "max": 1000,
+              "min": 1500,
+              "max": 1500,
               "price_product_id": null,
               "note": "Tuỳ pH đất"
             },
@@ -75,8 +76,8 @@
               "name": "Urê",
               "fertilizer_category": "dam",
               "unit": "kg",
-              "min": 304,
-              "max": 304,
+              "min": 152,
+              "max": 152,
               "price_product_id": "ure_ca_mau"
             },
             {
@@ -84,8 +85,8 @@
               "name": "Super lân",
               "fertilizer_category": "lan",
               "unit": "kg",
-              "min": 437.5,
-              "max": 437.5,
+              "min": 312,
+              "max": 312,
               "price_product_id": "sieu_lan_lam_thao"
             },
             {
@@ -93,15 +94,15 @@
               "name": "Kali clorua (KCl)",
               "fertilizer_category": "kali",
               "unit": "kg",
-              "min": 250,
-              "max": 250,
+              "min": 100,
+              "max": 100,
               "price_product_id": "kali_bot_ca_mau"
             }
           ]
         }
       ],
       "base_application": {
-        "timing": "Bón lót toàn bộ phân chuồng, hữu cơ vi sinh, vôi và 80% super lân; rạch hàng rắc phân, lấp kín, bón trước trồng ít nhất 5–10 ngày.",
+        "timing": "Bón lót toàn bộ phân chuồng, hữu cơ vi sinh, vôi, super lân và 50% kali; bón trước trồng ít nhất 5–10 ngày.",
         "applications": [
           {
             "item_key": "phan_chuong",
@@ -116,55 +117,48 @@
             "pct": 100
           },
           {
-            "item_key": "ure",
-            "pct": 20
+            "item_key": "super_lan",
+            "pct": 100
           },
           {
-            "item_key": "super_lan",
-            "pct": 80
+            "item_key": "ure",
+            "pct": 35
           },
           {
             "item_key": "kcl",
-            "pct": 40
+            "pct": 50
           }
         ],
-        "note": "Bón lót 100% hữu cơ và vôi; 20% urê; 80% super lân; 40% kali (Bảng 1)."
+        "note": "Bón lót theo Bảng 1 của quy trình."
       },
       "stages": [
         {
           "stage_code": "seedling",
           "stage_name_vi": "Hồi xanh — thúc lần 1",
-          "source_stage_name_vi": "Bón thúc lần 1 (10 NST, sau khi cây hồi xanh)",
+          "source_stage_name_vi": "Bón thúc lần 1 (10 NST)",
           "timing": "10 ngày sau trồng",
           "duration_days": null,
           "pct_of_total_topdress": null,
           "applications": [
             {
               "item_key": "ure",
-              "pct": 20
-            },
-            {
-              "item_key": "super_lan",
-              "pct": 20
-            },
-            {
-              "item_key": "kcl",
-              "pct": 20
+              "pct": 10
             }
           ],
           "tasks": [
             {
-              "key": "bc_tuoi",
-              "title": "Tưới 2 lần/ngày đến khi hồi xanh",
-              "detail": "Tưới sáng sớm hoặc chiều mát cho đến khi cây hồi xanh, sau đó ngày 1 lần.",
-              "type": "water"
+              "key": "ct_thao_trong_dam",
+              "title": "Kiểm tra trồng dặm",
+              "detail": "Từ 5–7 ngày sau trồng kiểm tra trồng dặm cây chết.",
+              "type": "cultivate",
+              "timing": "5–7 ngày sau trồng"
             },
             {
-              "key": "bc_bon_thuc_1",
-              "title": "Thúc lần 1: 20% urê + 20% super lân + 20% kali",
-              "detail": "Làm cỏ trước khi bón, kết hợp xăm xới cho đất thoáng khí.",
+              "key": "ct_thao_bon_1",
+              "title": "Thúc lần 1: 10% urê",
+              "detail": "Bón sau khi cây hồi xanh; làm cỏ trước khi bón, xăm xới cho đất thoáng.",
               "type": "fertilize",
-              "timing": "Sau khi cây hồi xanh"
+              "timing": "Sau khi hồi xanh"
             }
           ],
           "growth_stages": [
@@ -174,34 +168,35 @@
         },
         {
           "stage_code": "vegetative",
-          "stage_name_vi": "Trải lá bàng — thúc lần 2",
-          "source_stage_name_vi": "Bón thúc lần 2 (25 NST)",
-          "timing": "25 ngày sau trồng",
+          "stage_name_vi": "Trải lá bàng, cuốn lá — thúc lần 2, 3",
+          "source_stage_name_vi": "Bón thúc lần 2 (25 NST) và 3 (35 NST)",
+          "timing": "25 và 35 ngày sau trồng",
           "duration_days": null,
           "pct_of_total_topdress": null,
           "applications": [
             {
               "item_key": "ure",
-              "pct": 30
+              "pct": 55
             },
             {
               "item_key": "kcl",
-              "pct": 20
+              "pct": 50
             }
           ],
           "tasks": [
             {
-              "key": "bc_bon_thuc_2",
-              "title": "Thúc lần 2: 30% urê + 20% kali",
-              "detail": "Bón khi cây trải lá bàng; xới nhẹ quanh gốc, tránh tổn thương rễ.",
+              "key": "ct_thao_bon_2",
+              "title": "Thúc lần 2: 30% urê + 25% kali",
+              "detail": "Bón khi cây trải lá bàng.",
               "type": "fertilize",
-              "timing": "Khi cây trải lá bàng"
+              "timing": "Khi trải lá bàng"
             },
             {
-              "key": "bc_sau_to",
-              "title": "Thăm ruộng: sâu tơ",
-              "detail": "Dùng bẫy màu vàng, bẫy pheromone; luân canh với cây khác họ thập tự (cà rốt, khoai tây, bó xôi, xà lách); nhổ bỏ cây bệnh.",
-              "type": "scout"
+              "key": "ct_thao_bon_3",
+              "title": "Thúc lần 3: 25% urê + 25% kali",
+              "detail": "Bón khi cây bắt đầu cuốn lá.",
+              "type": "fertilize",
+              "timing": "Khi bắt đầu cuốn lá"
             }
           ],
           "growth_stages": [
@@ -211,60 +206,50 @@
         },
         {
           "stage_code": "heading",
-          "stage_name_vi": "Cuốn bắp — thúc lần 3",
-          "source_stage_name_vi": "Bón thúc lần 3 (45 NST)",
-          "timing": "45 ngày sau trồng",
-          "duration_days": null,
-          "pct_of_total_topdress": null,
-          "applications": [
-            {
-              "item_key": "ure",
-              "pct": 30
-            },
-            {
-              "item_key": "kcl",
-              "pct": 20
-            }
-          ],
-          "tasks": [
-            {
-              "key": "bc_bon_thuc_3",
-              "title": "Thúc lần 3: 30% urê + 20% kali",
-              "detail": "Bón khi cây bắt đầu cuốn bắp.",
-              "type": "fertilize",
-              "timing": "Khi bắt đầu cuốn bắp"
-            }
-          ],
-          "growth_stages": [
-            "flowering",
-            "fruiting"
-          ],
-          "start_day": 45
-        },
-        {
-          "stage_code": "harvest",
-          "stage_name_vi": "Thu hoạch (90–110 ngày)",
-          "source_stage_name_vi": "Thu hoạch",
-          "timing": "90–110 ngày sau trồng",
+          "stage_name_vi": "Cuốn chặt",
+          "source_stage_name_vi": "Chăm sóc",
+          "timing": "41–60 ngày sau trồng",
           "duration_days": null,
           "pct_of_total_topdress": null,
           "applications": [],
           "tasks": [
             {
-              "key": "bc_thu_hoach",
-              "title": "Thu hoạch khi bắp cuốn chắc",
-              "detail": "Thu khi bắp cuốn chắc, mặt mịn, lá xếp phẳng và căng, gốc chuyển trắng đục; thu sáng sớm hoặc chiều, chặt cao sát thân bắp; loại bỏ lá ngoài già, dập.",
+              "key": "ct_thao_tuoi",
+              "title": "Tưới đủ ẩm, tránh úng",
+              "detail": "Cải thảo ưa ẩm nhưng không chịu ngập úng.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "flowering"
+          ],
+          "start_day": 41
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu hoạch (60–70 ngày)",
+          "source_stage_name_vi": "Thu hoạch",
+          "timing": "60–70 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "ct_thao_thu",
+              "title": "Thu hoạch khi cây cuốn chặt",
+              "detail": "Chặt sát gốc, tỉa bỏ lá già, lá sâu bệnh, hạn chế dập nát; bảo quản nơi khô ráo, thoáng mát.",
               "type": "harvest"
             }
           ],
           "growth_stages": [
+            "fruiting",
             "harvesting"
           ],
-          "start_day": 90
+          "start_day": 60
         }
       ],
       "extra_rules": [
-        "Tỷ lệ % chép nguyên Bảng 1 của quy trình."
+        "Tỷ lệ % chép nguyên Bảng 1 của quy trình; giai đoạn sinh trưởng gộp lần thúc 2 và 3."
       ]
     }
   ],

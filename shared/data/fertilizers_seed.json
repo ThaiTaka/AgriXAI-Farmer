@@ -2,12 +2,13 @@
   "meta": {
     "description": "Dữ liệu giá phân bón THẬT, thu thập từ các nguồn thị trường Việt Nam công khai. Dùng làm seed ban đầu cho shared/data/fertilizer_recommendations.json. Giá biến động theo vùng/thời điểm — BẮT BUỘC có màn hình Admin để cập nhật lại, không được hard-code trong code.",
     "currency": "VND",
-    "collected_at": "2026-09-06 / 2026-09-07",
+    "collected_at": "2026-09-06 / 2026-09-07; đối chiếu lại 2026-10-02",
     "sources": [
-      "https://sfarm.vn/bang-gia-phan-bon-hom-nay-phan-vo-co-huu-co-sll1/ (cập nhật 06/09/2026)",
-      "https://vietnambiz.vn/gia-phan-bon.html — dẫn nguồn giacaphe.com (cập nhật 07/09/2026)"
+      "https://sfarm.vn/bang-gia-phan-bon-hom-nay-phan-vo-co-huu-co-sll1/ (cập nhật 06/09/2026; đối chiếu lại bài cập nhật 02/10/2026, bảng khu vực Đông Nam Bộ – Tây Nguyên và miền Bắc)",
+      "https://vietnambiz.vn/gia-phan-bon.html — dẫn nguồn giacaphe.com (cập nhật 07/09/2026; đối chiếu lại 02/10/2026 14:33)"
     ],
-    "warning": "Đây là GIÁ THAM KHẢO tại thời điểm thu thập, KHÔNG phải giá niêm yết chính thức và sẽ thay đổi theo ngày/vùng miền. Trước khi dùng cho sản phẩm thật, bắt buộc có cơ chế (màn hình admin + price_history) để người dùng tự cập nhật giá mới nhất thay vì tin tuyệt đối vào file này."
+    "warning": "Đây là GIÁ THAM KHẢO tại thời điểm thu thập, KHÔNG phải giá niêm yết chính thức và sẽ thay đổi theo ngày/vùng miền. Trước khi dùng cho sản phẩm thật, bắt buộc có cơ chế (màn hình admin + price_history) để người dùng tự cập nhật giá mới nhất thay vì tin tuyệt đối vào file này.",
+    "recheck_note": "Đối chiếu lại toàn bộ 17 sản phẩm với hai nguồn ngày 02/10/2026: 16 sản phẩm giữ nguyên khoảng giá; NPK 16-16-8 Đầu Trâu nay có thêm giá khu vực Đông Nam Bộ – Tây Nguyên của sfarm.vn (670.000–750.000₫/bao) nên khoảng giá gộp hai nguồn thành 670.000–820.000₫/bao. Khoảng giá của mỗi sản phẩm là khoảng gộp (thấp nhất – cao nhất) của các nguồn ghi ở trường `source`."
   },
   "categories": [
     { "code": "dam", "name": "Phân đạm (N)", "description": "Cung cấp đạm cho cây, thúc đẩy sinh trưởng thân lá." },
@@ -28,7 +29,7 @@
       "price_max": 690000,
       "region": "Toàn quốc (dao động theo miền)",
       "source": "sfarm.vn; giacaphe.com qua vietnambiz.vn",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "ure_phu_my",
@@ -40,7 +41,7 @@
       "price_max": 660000,
       "region": "Đông Nam Bộ / Tây Nguyên",
       "source": "sfarm.vn",
-      "updated_at": "2026-09-06"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "ure_ha_bac",
@@ -52,7 +53,7 @@
       "price_max": 590000,
       "region": "Miền Bắc",
       "source": "sfarm.vn",
-      "updated_at": "2026-09-06"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "dap_han_quoc",
@@ -64,7 +65,7 @@
       "price_max": 1120000,
       "region": "Toàn quốc",
       "source": "giacaphe.com qua vietnambiz.vn",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "dap_nga",
@@ -76,7 +77,7 @@
       "price_max": 1270000,
       "region": "Toàn quốc",
       "source": "giacaphe.com qua vietnambiz.vn",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "sieu_lan_lam_thao",
@@ -88,7 +89,7 @@
       "price_max": 330000,
       "region": "Toàn quốc",
       "source": "sfarm.vn; giacaphe.com",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "lan_nung_chay_van_dien",
@@ -100,7 +101,7 @@
       "price_max": 320000,
       "region": "Miền Bắc",
       "source": "giacaphe.com qua vietnambiz.vn",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "kali_bot_ca_mau",
@@ -112,7 +113,7 @@
       "price_max": 600000,
       "region": "Toàn quốc",
       "source": "sfarm.vn; giacaphe.com",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "kali_bot_phu_my",
@@ -124,7 +125,7 @@
       "price_max": 580000,
       "region": "Đông Nam Bộ / Tây Nguyên",
       "source": "sfarm.vn",
-      "updated_at": "2026-09-06"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "npk_16_16_8_ca_mau",
@@ -136,7 +137,7 @@
       "price_max": 750000,
       "region": "Toàn quốc",
       "source": "sfarm.vn; giacaphe.com",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "npk_16_16_8_phu_my",
@@ -148,7 +149,7 @@
       "price_max": 750000,
       "region": "Toàn quốc",
       "source": "sfarm.vn; giacaphe.com",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "npk_16_16_8_dau_trau",
@@ -156,11 +157,11 @@
       "category": "npk",
       "npk_ratio": "16-16-8",
       "unit": "bao 50kg",
-      "price_min": 780000,
+      "price_min": 670000,
       "price_max": 820000,
-      "region": "Toàn quốc",
-      "source": "giacaphe.com qua vietnambiz.vn",
-      "updated_at": "2026-09-07"
+      "region": "Toàn quốc; Đông Nam Bộ – Tây Nguyên",
+      "source": "giacaphe.com qua vietnambiz.vn; sfarm.vn (Đông Nam Bộ – Tây Nguyên)",
+      "updated_at": "2026-10-02"
     },
     {
       "id": "npk_18_8_18_ca_mau",
@@ -172,7 +173,7 @@
       "price_max": 750000,
       "region": "Toàn quốc",
       "source": "giacaphe.com qua vietnambiz.vn",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "npk_20_20_15_binh_dien",
@@ -184,7 +185,7 @@
       "price_max": 980000,
       "region": "Toàn quốc",
       "source": "sfarm.vn; giacaphe.com",
-      "updated_at": "2026-09-07"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "phan_trun_que_pb01_2kg",
@@ -196,7 +197,7 @@
       "price_max": 29000,
       "region": "TP.HCM và lân cận",
       "source": "sfarm.vn",
-      "updated_at": "2026-09-06"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "phan_trun_que_pb01_5kg",
@@ -208,7 +209,7 @@
       "price_max": 63000,
       "region": "TP.HCM và lân cận",
       "source": "sfarm.vn",
-      "updated_at": "2026-09-06"
+      "updated_at": "2026-10-02"
     },
     {
       "id": "phan_ga_huu_co",
@@ -220,7 +221,7 @@
       "price_max": 25000,
       "region": "TP.HCM và lân cận",
       "source": "sfarm.vn",
-      "updated_at": "2026-09-06"
+      "updated_at": "2026-10-02"
     }
   ]
 }

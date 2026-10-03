@@ -1,26 +1,274 @@
 {
   "$meta": {
-    "description": "Quy trình chăm sóc ngô — hiện chỉ khai báo phần CHƯA có dữ liệu.",
     "crop_type": "corn",
     "crop_name": "Ngô",
-    "sources": []
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây ngô trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
   },
-  "protocols": [],
-  "unavailable": [
+  "protocols": [
     {
-      "category_id": "corn_nep",
-      "category_name": "Ngô nếp",
-      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho ngô nếp ăn tươi từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Ngô nếp thu khi bắp còn sữa, khác hẳn ngô lấy hạt khô, nên không dùng chung định mức.",
-      "suggested_sources": [
+      "id": "corn_lamdong_2025",
+      "crop_type": "corn",
+      "crop_name": "Ngô",
+      "category_ids": null,
+      "name": "Ngô — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây ngô trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục II, quy trình 2 — mục 2.5 Phân bón và cách bón phân (Bảng 1); 2.6 Chăm sóc; III. Thu hoạch, sơ chế, bảo quản"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Tại Lâm Đồng trồng quanh năm: Đông Xuân gieo tháng 11–12, Xuân Hè tháng 1–2, Hè Thu tháng 4–5. Lượng hạt 12 kg/ha; mật độ 44.000–53.000 cây/ha (hàng cách hàng 75 cm, cây cách cây 25–30 cm). Thời điểm bón thúc tính theo ngày sau khi gieo (NSKG).",
+      "scenarios": [
         {
-          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
-          "url": "https://khuyennongvn.gov.vn/"
+          "id": "mot_vu",
+          "name": "Lượng cho 1 ha",
+          "description": "200 kg N – 120 kg P₂O₅ – 120 kg K₂O quy ra phân đơn.",
+          "items": [
+            {
+              "key": "phan_huu_co",
+              "name": "Phân hữu cơ",
+              "fertilizer_category": "huu_co",
+              "unit": "kg",
+              "min": 1500,
+              "max": 1500,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 500,
+              "max": 500,
+              "price_product_id": null,
+              "note": "Bón khi làm đất, lên liếp lần cuối"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 435,
+              "max": 435,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 667,
+              "max": 667,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 200,
+              "max": 200,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Vôi bón khi làm đất, lên liếp lần cuối (trước khi gieo 7–10 ngày); phân hữu cơ và toàn bộ super lân bón lót trước khi gieo 3–5 ngày.",
+        "applications": [
+          {
+            "item_key": "phan_huu_co",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 100
+          }
+        ],
+        "note": "Bón lót 100% phân hữu cơ, vôi và super lân (Bảng 1)."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Cây con — dặm, tỉa, thúc lần 1",
+          "source_stage_name_vi": "Bón thúc lần 1 (15–20 NSKG)",
+          "timing": "15–20 ngày sau gieo",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 50
+            },
+            {
+              "item_key": "kcl",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "ngo_dam_tia",
+              "title": "Trồng dặm, tỉa cây",
+              "detail": "Sau gieo 1 tuần kiểm tra dặm lại cây chết để đảm bảo mật độ; tỉa bớt cây ốm yếu, để lại cây khoẻ.",
+              "type": "cultivate",
+              "timing": "1 tuần sau gieo"
+            },
+            {
+              "key": "ngo_lam_co_1",
+              "title": "Làm cỏ lần 1, xới phá váng (cây 2–3 lá)",
+              "detail": "Khi cây có 2–3 lá xới nhẹ phá váng, làm cỏ và bón phân đợt 1.",
+              "type": "cultivate",
+              "timing": "Cây 2–3 lá"
+            },
+            {
+              "key": "ngo_bon_thuc_1",
+              "title": "Thúc lần 1: 50% urê + 50% KCl",
+              "detail": "Bón kết hợp làm cỏ lần 1; tưới nước nên kết hợp với các kỳ bón phân.",
+              "type": "fertilize",
+              "timing": "15–20 ngày sau gieo"
+            },
+            {
+              "key": "ngo_tia_choi",
+              "title": "Tỉa chồi",
+              "detail": "Tỉa chồi với giống có nhiều chồi non ở giai đoạn 2–3 tuần sau khi xuống giống.",
+              "type": "cultivate",
+              "timing": "2–3 tuần sau gieo"
+            },
+            {
+              "key": "ngo_tuoi_cay_con",
+              "title": "Tưới khi cây con thiếu nước",
+              "detail": "Từ khi gieo đến 20 ngày tuổi, đất đủ ẩm thì không cần tưới; cây con có biểu hiện thiếu nước (lá nhỏ, lá quăn) thì tưới bổ sung bằng vòi sen.",
+              "type": "water",
+              "timing": "0–20 ngày sau gieo"
+            },
+            {
+              "key": "ngo_phun_la_1",
+              "title": "Phun phân bón lá lần 1",
+              "detail": "Phun bổ sung dinh dưỡng qua lá ở giai đoạn 20–25 ngày sau gieo, phun ướt đều toàn bộ cây.",
+              "type": "spray",
+              "timing": "20–25 ngày sau gieo"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
         },
         {
-          "title": "Viện Khoa học Nông nghiệp Việt Nam (VAAS)",
-          "url": "https://vaas.vn/"
+          "stage_code": "vegetative",
+          "stage_name_vi": "Thúc lần 2 — làm cỏ, vun gốc",
+          "source_stage_name_vi": "Bón thúc lần 2 (30–40 NSKG)",
+          "timing": "30–40 ngày sau gieo",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 50
+            },
+            {
+              "item_key": "kcl",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "ngo_bon_thuc_2",
+              "title": "Thúc lần 2: 50% urê + 50% KCl, vun gốc",
+              "detail": "Khi cây có 7–9 lá làm cỏ lần 2: cuốc xới trên hàng, bón phân lần 2 rồi vun đất.",
+              "type": "fertilize",
+              "timing": "30–40 ngày sau gieo (cây 7–9 lá)"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 30
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Trỗ cờ, phun râu",
+          "source_stage_name_vi": "Chăm sóc (phun phân bón lá lần 2, tưới)",
+          "timing": "Phun lá lần 2: 40–45 ngày sau gieo",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "ngo_phun_la_2",
+              "title": "Phun phân bón lá lần 2",
+              "detail": "Phun bổ sung dinh dưỡng qua lá ở giai đoạn 40–45 ngày sau gieo, phun ướt đều toàn bộ cây.",
+              "type": "spray",
+              "timing": "40–45 ngày sau gieo"
+            },
+            {
+              "key": "ngo_tuoi_ranh",
+              "title": "Tưới rãnh, giữ ẩm đất 70–80%",
+              "detail": "Sau 20 ngày tuổi có thể tưới tràn theo rãnh, thấy nước tràn giáp mặt đất thì rút cạn ngay; tưới 5–10 lần từ khi gieo đến sau trỗ 20 ngày, giữ ẩm đất 70–80%, không để đọng vũng nước.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "flowering",
+            "fruiting"
+          ],
+          "start_day": 40
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu hoạch",
+          "source_stage_name_vi": "III. Thu hoạch, sơ chế, bảo quản",
+          "timing": "Lấy hạt: vỏ bi vàng hết, ẩm độ hạt 28–32%",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "ngo_thu_hoach",
+              "title": "Thu hoạch",
+              "detail": "Trồng lấy hạt: thu khi vỏ bi bên ngoài đã vàng hết, độ ẩm hạt 28–32% (cắn nhẹ hạt không còn tươm sữa). Ngô nếp thu trái tươi sau phun râu 18–20 ngày (60–65 ngày sau gieo, tuỳ giống).",
+              "type": "harvest"
+            },
+            {
+              "key": "ngo_so_che",
+              "title": "Sơ chế, phơi sấy hạt",
+              "detail": "Bóc vỏ bi, loại lá bao ngoài, trái sâu, mốc hoặc lép; hạt làm khô ngay trong ngày, phơi hoặc sấy nhẹ không quá 40 °C đến độ ẩm bảo quản.",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "harvesting"
+          ],
+          "start_day": null
         }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên Bảng 1 của quy trình (thời điểm bón theo ngày sau khi gieo — NSKG).",
+        "Phun bổ sung phân bón lá 2 lần (20–25 và 40–45 ngày sau gieo) — quy trình không ghi lượng nên ứng dụng không tính."
       ]
     }
-  ]
+  ],
+  "unavailable": []
 }

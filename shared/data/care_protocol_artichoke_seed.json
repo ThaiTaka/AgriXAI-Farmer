@@ -1,0 +1,370 @@
+{
+  "$meta": {
+    "crop_type": "artichoke",
+    "crop_name": "Atisô",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây atiso trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "artichoke_lamdong_2025",
+      "crop_type": "artichoke",
+      "crop_name": "Atisô",
+      "category_ids": null,
+      "name": "Atisô — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây atiso trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục V, quy trình 3 — mục 2.5 Phân bón và cách bón phân (Bảng 1, Bảng 2); 2.6 Chăm sóc; IV. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Tại Đà Lạt, Lạc Dương trồng quanh năm, phù hợp nhất tháng 4–8. Bón thúc 6 lần: 20 ngày sau trồng, sau đó cách nhau 30 ngày. Thu lá từ 90–100 ngày sau trồng; thu hoa sau khoảng 7 tháng.",
+      "scenarios": [
+        {
+          "id": "phan_don",
+          "name": "Cách 1 — phân đơn",
+          "description": "450 kg N – 352 kg P₂O₅ – 400 kg K₂O quy ra phân đơn (Bảng 1).",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 10,
+              "max": 20,
+              "price_product_id": null,
+              "note": "Hoặc phân hữu cơ vi sinh 2.000–3.000 kg"
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1500,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 980,
+              "max": 980,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 2200,
+              "max": 2200,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "k2so4",
+              "name": "Kali sunfat (K₂SO₄)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 770,
+              "max": 770,
+              "price_product_id": null
+            }
+          ]
+        },
+        {
+          "id": "npk_ket_hop",
+          "name": "Cách 2 — NPK 15-5-20 kết hợp phân đơn",
+          "description": "Phân đơn bón lót toàn bộ; NPK 15-5-20 chia 6 lần thúc (Bảng 2).",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 10,
+              "max": 20,
+              "price_product_id": null,
+              "note": "Hoặc phân hữu cơ vi sinh 2.000–3.000 kg"
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1500,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "ure_lot",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 205,
+              "max": 205,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan_lot",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1450,
+              "max": 1450,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "k2so4_lot",
+              "name": "Kali sunfat (K₂SO₄)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 75,
+              "max": 75,
+              "price_product_id": null
+            },
+            {
+              "key": "npk_15_5_20",
+              "name": "NPK 15-5-20",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 2400,
+              "max": 2400,
+              "price_product_id": null
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón toàn bộ vôi lúc làm đất 20–30 ngày trước trồng; lúc làm luống bón rải đều phân hữu cơ và phân bón lót, đảo vào lớp đất mặt.",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "ure",
+            "pct": 15
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 55
+          },
+          {
+            "item_key": "k2so4",
+            "pct": 10
+          },
+          {
+            "item_key": "ure_lot",
+            "pct": 100
+          },
+          {
+            "item_key": "super_lan_lot",
+            "pct": 100
+          },
+          {
+            "item_key": "k2so4_lot",
+            "pct": 100
+          }
+        ],
+        "note": "Cách 1: lót 15% urê, 55% super lân, 10% K₂SO₄. Cách 2: lót toàn bộ phân đơn."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Thúc lần 1 (20 ngày sau trồng)",
+          "source_stage_name_vi": "Bón thúc lần 1",
+          "timing": "20 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 5
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 5
+            },
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 5
+            }
+          ],
+          "tasks": [
+            {
+              "key": "at_bon_thuc_1",
+              "title": "Thúc lần 1",
+              "detail": "Bón rải quanh gốc cách gốc 5 cm, kết hợp làm cỏ, xới phá váng; tưới nhẹ sau bón, tránh phân rơi lên đọt.",
+              "type": "fertilize",
+              "timing": "20 ngày sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Thúc lần 2 (50 ngày sau trồng)",
+          "source_stage_name_vi": "Bón thúc lần 2",
+          "timing": "50 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 10
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 5
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 10
+            },
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 10
+            }
+          ],
+          "tasks": [
+            {
+              "key": "at_bon_thuc_2",
+              "title": "Thúc lần 2",
+              "detail": "Bón rải quanh gốc cách gốc 5 cm; các lần sau cách nhau 30 ngày, rải đều lên mặt luống.",
+              "type": "fertilize",
+              "timing": "50 ngày sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 50
+        },
+        {
+          "stage_code": "leaf_harvest",
+          "stage_name_vi": "Thúc lần 3, 4 — thu lá",
+          "source_stage_name_vi": "Bón thúc lần 3, 4; Thu hoạch lá",
+          "timing": "80 và 110 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 25
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 20
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 30
+            },
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 35
+            }
+          ],
+          "tasks": [
+            {
+              "key": "at_bon_thuc_3_4",
+              "title": "Thúc lần 3 và 4",
+              "detail": "Rải đều lên mặt luống, kết hợp làm cỏ, vệ sinh vườn; tưới nhẹ cho phân tan.",
+              "type": "fertilize",
+              "timing": "Cách nhau 30 ngày"
+            },
+            {
+              "key": "at_thu_la",
+              "title": "Thu hoạch lá",
+              "detail": "Lần 1 sau trồng 90–100 ngày, lần 2 sau 115–120 ngày, sau đó cứ 20–25 ngày thu một lần; không làm ảnh hưởng cây và lá còn lại.",
+              "type": "harvest",
+              "timing": "Từ 90–100 ngày sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "flowering",
+            "fruiting"
+          ],
+          "start_day": 80
+        },
+        {
+          "stage_code": "flower_harvest",
+          "stage_name_vi": "Thúc lần 5, 6 — thu hoa, cuối vụ",
+          "source_stage_name_vi": "Bón thúc lần 5, 6; Thu hoạch hoa, thân, rễ",
+          "timing": "140 và 170 ngày sau trồng; thu hoa sau ~7 tháng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 45
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 20
+            },
+            {
+              "item_key": "k2so4",
+              "pct": 45
+            },
+            {
+              "item_key": "npk_15_5_20",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "at_bon_thuc_5_6",
+              "title": "Thúc lần 5 và 6",
+              "detail": "Rải đều lên mặt luống, tưới nhẹ sau bón.",
+              "type": "fertilize",
+              "timing": "Cách nhau 30 ngày"
+            },
+            {
+              "key": "at_thu_hoa",
+              "title": "Thu hoa, cuối vụ thu thân rễ",
+              "detail": "Sau trồng khoảng 7 tháng thu hoa, 2–3 ngày thu một lần; dao sắc, vết cắt nhẵn, dốc để không đọng nước. Cuối vụ nhổ cả cây, phân loại lá, thân, rễ. Chọn ngày nắng ráo.",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "harvesting"
+          ],
+          "start_day": 140
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên Bảng 1 (phân đơn) và Bảng 2 (NPK) của quy trình; mỗi giai đoạn sau gộp 2 lần thúc."
+      ]
+    }
+  ],
+  "unavailable": []
+}

@@ -1,24 +1,34 @@
 {
   "$meta": {
-    "description": "Quy trình chăm sóc rau muống — hiện chỉ khai báo phần CHƯA có dữ liệu.",
     "crop_type": "water_spinach",
     "crop_name": "Rau muống",
-    "sources": []
+    "description": "Rau muống — chưa có quy trình của tỉnh Lâm Đồng, chỉ khai báo khoảng trống.",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
   },
   "protocols": [],
   "unavailable": [
     {
       "category_id": "water_spinach_la_tre",
       "category_name": "Rau muống lá tre",
-      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho rau muống từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Rau ăn lá thu nhiều lứa nên định mức tính theo lứa cắt, không quy về một vụ như cây lấy quả được.",
+      "reason": "Bộ 120 quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025) không có quy trình cho rau muống. Hai quy trình chính thức khác đã đối chiếu (02/10/2026) đều không dùng được cho rau muống lá tre gieo hạt trồng ở Lâm Đồng: tiến bộ kỹ thuật TBKT 01-104:2021/BVTV của Cục Bảo vệ thực vật chỉ áp dụng cho các tỉnh phía Bắc (Hoà Bình, Hà Nội, Hưng Yên, Hà Nam…), còn quy trình của Chi cục Trồng trọt và BVTV TP.HCM là cho rau muống nước (trồng ngập nước). Ứng dụng không tự suy ra liều lượng từ các quy trình đó.",
       "suggested_sources": [
         {
-          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
-          "url": "https://khuyennongvn.gov.vn/"
+          "title": "Cục Bảo vệ thực vật — TBKT 01-104:2021/BVTV, quy trình phân bón cho rau an toàn ở các tỉnh phía Bắc (có rau muống)",
+          "url": "https://www.ppd.gov.vn/FileUpload/Documents/P.%20Ke%20hoach/TBKT/2.1.%20TBKT%20QT%20RAU%20AN%20TOAN.pdf"
         },
         {
-          "title": "Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia",
-          "url": "https://phanbonquocgia.gov.vn/"
+          "title": "Chi cục Trồng trọt và BVTV TP.HCM — Qui trình trồng rau muống nước an toàn",
+          "url": "https://chicucttbvtvhcm.gov.vn/chuyen-de-ky-thuat/qui-trinh-trong-rau-muong-nuoc-an-toan-408.html"
+        },
+        {
+          "title": "Trung tâm Khuyến nông tỉnh Lâm Đồng — tài liệu kỹ thuật trồng trọt",
+          "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx"
         }
       ]
     }

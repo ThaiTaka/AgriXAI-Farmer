@@ -1,0 +1,255 @@
+{
+  "$meta": {
+    "crop_type": "lily",
+    "crop_name": "Hoa lily",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây hoa lily trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "lily_lamdong_2025",
+      "crop_type": "lily",
+      "crop_name": "Hoa lily",
+      "category_ids": null,
+      "name": "Hoa lily — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây hoa lily trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục IV, quy trình 6 — mục Phân bón và cách bón phân (Cách 1 — bón thông thường); 2.8 Chăm sóc; IV. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Trồng quanh năm trong nhà kính; thời gian sinh trưởng tuỳ giống, ví dụ Sorbonne 90–95 ngày (Đông Xuân), 80–85 ngày (Hè Thu).",
+      "scenarios": [
+        {
+          "id": "tong_luong",
+          "name": "Tổng lượng cho 1 ha",
+          "description": "Tổng lượng theo quy trình; lượng vô cơ có thể dùng phân đơn quy đổi hoặc phân phức hợp.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "m³",
+              "min": 60,
+              "max": 80,
+              "price_product_id": null,
+              "note": "Phân chuồng hoai mục"
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1500,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1500,
+              "price_product_id": null
+            },
+            {
+              "key": "canxi",
+              "name": "Canxi",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 100,
+              "max": 150,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 260,
+              "max": 326,
+              "price_product_id": "ure_ca_mau",
+              "note": "Định mức nguồn tương đương 120–150 kg N/ha"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 727,
+              "max": 909,
+              "price_product_id": "sieu_lan_lam_thao",
+              "note": "Định mức nguồn tương đương 120–150 kg P₂O₅/ha"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 251,
+              "max": 301,
+              "price_product_id": "kali_bot_ca_mau",
+              "note": "Định mức nguồn tương đương 150–180 kg K₂O/ha"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón toàn bộ vôi trước khi trồng 10–15 ngày; khi làm đất lần cuối bón phân chuồng + phân hữu cơ vi sinh (kèm DAP và canxi nitrat theo quy trình).",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 100
+          }
+        ],
+        "note": "Quy trình không ghi cách chia tổng lượng urê, super lân, KCl giữa lót và thúc — các lần thúc dùng phân phức hợp (xem công việc)."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "2–3 tuần đầu — chưa bón",
+          "source_stage_name_vi": "Sau trồng",
+          "timing": "0–20 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "lily_giu_am",
+              "title": "Giữ ẩm, chưa bón phân",
+              "detail": "2–3 tuần đầu sau trồng không cần bón phân; đất khô thì phun nước giữ ẩm. Sau trồng tưới đẫm cho nước thấm sâu khoảng 20 cm, sau đó 3–5 ngày tưới 1 lần tuỳ ẩm độ đất.",
+              "type": "water"
+            },
+            {
+              "key": "lily_che_luoi",
+              "title": "Che lưới 60%, làm lưới đỡ cây",
+              "detail": "Nhà kính dùng lưới che nắng 60% (che sáng trước khi trồng 5–7 ngày để hạ nhiệt độ đất); làm hệ thống lưới đỡ cây.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Bón thúc lần 1, lần 2",
+          "source_stage_name_vi": "Bón thúc lần 1 (20 ngày) và lần 2 (35 ngày sau trồng)",
+          "timing": "20 và 35 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "lily_bon_thuc_1",
+              "title": "Thúc lần 1 (20 ngày sau trồng): NPK 15-9-20",
+              "detail": "Quy trình ghi 15 kg NPK 15-9-20 nhưng không ghi rõ diện tích áp dụng cho lượng này — kiểm tra lại với cán bộ khuyến nông trước khi bón.",
+              "type": "fertilize",
+              "timing": "20 ngày sau trồng"
+            },
+            {
+              "key": "lily_bon_thuc_2",
+              "title": "Thúc lần 2 (35 ngày sau trồng): Complex 12-11-17 + TE, làm cỏ",
+              "detail": "Quy trình ghi 15 kg Complex 12-11-17 + TE (không ghi rõ diện tích áp dụng); kết hợp xới xáo, làm cỏ.",
+              "type": "fertilize",
+              "timing": "35 ngày sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 20
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Thúc lần 3 — vun gốc; sau đó 15 ngày/lần",
+          "source_stage_name_vi": "Bón thúc lần 3 (50–55 ngày sau trồng)",
+          "timing": "50–55 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "lily_bon_thuc_3",
+              "title": "Thúc lần 3: Complex 12-11-17 + TE, NitraBor, MgSO₄; vun gốc 3–5 cm",
+              "detail": "Sau bón vun đất vào gốc cao 3–5 cm, tưới đẫm. Sau đó 15 ngày bón 1 lần NPK Complex hoặc NPK 7-7-14 cùng K₂SO₄; bổ sung phân bón lá, vi lượng (quy trình ghi số kg nhưng không ghi diện tích áp dụng).",
+              "type": "fertilize",
+              "timing": "50–55 ngày sau trồng"
+            },
+            {
+              "key": "lily_tuoi_ra_hoa",
+              "title": "Tưới thưa khi ra hoa",
+              "detail": "Giai đoạn ra hoa 5–7 ngày tưới 1 lần; ít tưới và tránh phun lên cây để không thối nụ, hoa. Nên tưới trước 10 giờ sáng.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "flowering",
+            "fruiting"
+          ],
+          "start_day": 50
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu hoạch",
+          "source_stage_name_vi": "Thu hoạch",
+          "timing": "Khi nụ bắt đầu lên màu",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "lily_ngung_bon",
+              "title": "Ngưng bón 1 tuần trước thu hoạch",
+              "detail": "Trước khi thu hoạch một tuần ngưng bón phân.",
+              "type": "fertilize"
+            },
+            {
+              "key": "lily_thu_hoach",
+              "title": "Thu hoạch khi nụ lên màu",
+              "detail": "Thu sáng sớm hoặc chiều mát khi hoa thứ nhất và thứ hai bắt đầu lên màu (Sorbonne, Tiber chỉ cần lên màu); để ngay trong bóng râm, ngâm xô nước sạch, đưa về phòng đóng gói trong tối đa 1 giờ.",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "harvesting"
+          ],
+          "start_day": null
+        }
+      ],
+      "extra_rules": [
+        "Các lần thúc theo Cách 1 của quy trình ghi số kg phân phức hợp (15 kg, 10 kg…) nhưng không nói lượng đó tính cho bao nhiêu diện tích, trong khi tổng lượng ghi 'tính cho 1 ha' — ứng dụng không tự quy đổi các con số này.",
+        "Quy trình còn có Cách 2: bón qua hệ thống tưới nhỏ giọt (CaNO₃, KNO₃, NH₄HPO₄, MgSO₄, urê, borax theo giai đoạn) — ứng dụng chưa mô tả cách bón này."
+      ]
+    }
+  ],
+  "unavailable": []
+}

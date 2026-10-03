@@ -1,0 +1,423 @@
+{
+  "$meta": {
+    "crop_type": "chrysanthemum",
+    "crop_name": "Hoa cúc",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây hoa cúc trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "chrysanthemum_lamdong_2025",
+      "crop_type": "chrysanthemum",
+      "crop_name": "Hoa cúc",
+      "category_ids": null,
+      "name": "Hoa cúc — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây hoa cúc trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục IV, quy trình 1 — mục 2.5 Phân bón và cách bón phân (Cách 1: bón thông thường, Bảng 1); 2.6 Chăm sóc; IV. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Thời gian sinh trưởng 10–12 tuần tuỳ giống, mùa vụ và số giờ chiếu sáng; từ lúc ngắt nụ đến thu hoạch khoảng 20–25 ngày. Trồng được quanh năm ở vùng cao nguyên Lâm Đồng.",
+      "scenarios": [
+        {
+          "id": "chuong",
+          "name": "Phân chuồng hoai (40–50 tấn/ha)",
+          "description": "Bón lót phân chuồng hoai, vôi; phân hoá học chia 1 lần lót + 4 lần thúc.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 40,
+              "max": 50,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 700,
+              "max": 1000,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "trichoderma",
+              "name": "Chế phẩm Trichoderma",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 10,
+              "max": 10,
+              "price_product_id": null,
+              "note": "Tuỳ điều kiện đầu tư"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 544,
+              "max": 544,
+              "price_product_id": "ure_ca_mau",
+              "note": "Định mức nguồn tương đương 250 kg N/ha"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": "sieu_lan_lam_thao",
+              "note": "Định mức nguồn tương đương 150 kg P₂O₅/ha"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 367,
+              "max": 367,
+              "price_product_id": "kali_bot_ca_mau",
+              "note": "Định mức nguồn tương đương 220 kg K₂O/ha"
+            }
+          ]
+        },
+        {
+          "id": "huu_co_vi_sinh",
+          "name": "Phân hữu cơ vi sinh (2.000–3.000 kg/ha)",
+          "description": "Thay phân chuồng bằng phân hữu cơ vi sinh (có thể dùng phân trùn quế…); phân hoá học giữ nguyên.",
+          "items": [
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 2000,
+              "max": 3000,
+              "price_product_id": null,
+              "note": "Có thể dùng phân trùn quế hoặc chế phẩm tương tự"
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 700,
+              "max": 1000,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "trichoderma",
+              "name": "Chế phẩm Trichoderma",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 10,
+              "max": 10,
+              "price_product_id": null,
+              "note": "Tuỳ điều kiện đầu tư"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 544,
+              "max": 544,
+              "price_product_id": "ure_ca_mau",
+              "note": "Định mức nguồn tương đương 250 kg N/ha"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1000,
+              "max": 1000,
+              "price_product_id": "sieu_lan_lam_thao",
+              "note": "Định mức nguồn tương đương 150 kg P₂O₅/ha"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 367,
+              "max": 367,
+              "price_product_id": "kali_bot_ca_mau",
+              "note": "Định mức nguồn tương đương 220 kg K₂O/ha"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón lót: vôi rải lúc cày ải; phân chuồng (hoặc hữu cơ vi sinh) và phân hoá học rải đều lên luống lúc làm luống, đảo vào lớp đất mặt.",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "ure",
+            "pct": 25
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 50
+          },
+          {
+            "item_key": "kcl",
+            "pct": 25
+          }
+        ],
+        "note": "Bón lót 100% phân hữu cơ và vôi, 25% urê, 50% super lân, 25% KCl (Bảng 1)."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Hồi xanh — thúc lần 1",
+          "source_stage_name_vi": "Bón thúc lần 1",
+          "timing": "10–15 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 15
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 15
+            },
+            {
+              "item_key": "kcl",
+              "pct": 15
+            }
+          ],
+          "tasks": [
+            {
+              "key": "cuc_trong_dam",
+              "title": "Kiểm tra, trồng dặm",
+              "detail": "Khoảng 5 ngày sau trồng kiểm tra, trồng dặm những cây chết, cây yếu.",
+              "type": "cultivate",
+              "timing": "5 ngày sau trồng"
+            },
+            {
+              "key": "cuc_tuoi_cay_moi",
+              "title": "Tưới giữ ẩm cây mới trồng",
+              "detail": "Tưới 2 lần/ngày (sáng sớm, chiều mát), mỗi lần khoảng 50–70 m³/ha; giữ ẩm đất 70–80%. Không dùng nước thải, nước ao tù.",
+              "type": "water",
+              "timing": "Giai đoạn cây con"
+            },
+            {
+              "key": "cuc_bon_thuc_1",
+              "title": "Thúc lần 1: 15% urê + 15% super lân + 15% KCl",
+              "detail": "Bón rải đều, cách gốc; bón xong tưới nhẹ cho phân tan, không để phân dính lên lá, đọt. Bón sáng sớm hoặc chiều mát.",
+              "type": "fertilize",
+              "timing": "10–15 ngày sau trồng"
+            },
+            {
+              "key": "cuc_lam_co",
+              "title": "Làm cỏ, xới phá váng, vun gốc",
+              "detail": "Sau trồng 10–15 ngày làm sạch cỏ dại, xới phá váng, vun gốc kết hợp bón thúc lần 1. Không dùng thuốc trừ cỏ, không dùng cuốc làm cỏ.",
+              "type": "cultivate",
+              "timing": "10–15 ngày sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Sinh trưởng — thúc lần 2, giăng lưới, chiếu sáng",
+          "source_stage_name_vi": "Bón thúc lần 2",
+          "timing": "30–35 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 15
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "cuc_bon_thuc_2",
+              "title": "Thúc lần 2: 20% urê + 15% super lân + 20% KCl",
+              "detail": "Bón rải đều, cách gốc; bón xong tưới nhẹ cho phân tan, không để phân dính lên lá, đọt. Bón sáng sớm hoặc chiều mát.",
+              "type": "fertilize",
+              "timing": "30–35 ngày sau trồng"
+            },
+            {
+              "key": "cuc_gian_luoi",
+              "title": "Cắm cọc, giăng lưới đỡ cây",
+              "detail": "Mỗi luống cắm 4 cọc chính (2 đầu, 2 cuối), giữa luống 3–4 m một cặp cọc, cọc sâu 30–40 cm. Khi cây cao 25–30 cm giăng lưới đầu tiên, chỉnh cây vào mắt lưới cho thẳng.",
+              "type": "cultivate",
+              "timing": "Cây cao 25–30 cm"
+            },
+            {
+              "key": "cuc_chieu_sang",
+              "title": "Chiếu sáng bổ sung ban đêm",
+              "detail": "Chiếu 20–30 đêm, mỗi đêm 4–5 giờ (đèn LED 9W, khoảng 1.000 bóng/ha, cao 1,5–2,5 m). Ngắt điện khi cây cao 30–45 cm tuỳ tiêu chuẩn cành.",
+              "type": "cultivate",
+              "timing": "Theo giống, mùa vụ"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 30
+        },
+        {
+          "stage_code": "flowering",
+          "stage_name_vi": "Ra nụ — thúc lần 3, tỉa nụ",
+          "source_stage_name_vi": "Bón thúc lần 3",
+          "timing": "45–50 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 10
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "cuc_bon_thuc_3",
+              "title": "Thúc lần 3: 20% urê + 10% super lân + 20% KCl",
+              "detail": "Bón rải đều, cách gốc; bón xong tưới nhẹ cho phân tan, không để phân dính lên lá, đọt. Bón sáng sớm hoặc chiều mát.",
+              "type": "fertilize",
+              "timing": "45–50 ngày sau trồng"
+            },
+            {
+              "key": "cuc_tia_nu",
+              "title": "Tỉa nụ",
+              "detail": "Cúc chùm: ngắt nụ chính, để lại 4–6 nụ nhánh tuỳ giống. Cúc đơn: ngắt bỏ nụ phụ, để 1 nụ chính. Từ lúc ngắt điện đến lúc ngắt nụ khoảng 4–5 tuần.",
+              "type": "cultivate",
+              "timing": "4–5 tuần sau ngắt điện"
+            },
+            {
+              "key": "cuc_tuoi_cay_lon",
+              "title": "Tưới hạn chế trên lá, nụ",
+              "detail": "Cây lớn và sau ngắt điện: hạn chế tưới lên lá, nụ, hoa để giảm ẩm độ, hạn chế bệnh; mỗi lần khoảng 70–80 m³/ha.",
+              "type": "water"
+            },
+            {
+              "key": "cuc_sau_benh",
+              "title": "Thăm vườn: bọ trĩ, nhện đỏ, ruồi đục lá",
+              "detail": "Áp dụng quản lý dịch hại tổng hợp: dùng lưới côn trùng, bẫy dính màu vàng, thiên địch; khi tới ngưỡng mới dùng thuốc có trong danh mục được phép, theo nguyên tắc 4 đúng và đảm bảo thời gian cách ly.",
+              "type": "scout"
+            }
+          ],
+          "growth_stages": [
+            "flowering"
+          ],
+          "start_day": 45
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thúc lần 4 → thu hoạch",
+          "source_stage_name_vi": "Bón thúc lần 4; Thu hoạch",
+          "timing": "65–70 ngày sau trồng; thu hoạch sau 10–12 tuần",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 10
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "cuc_bon_thuc_4",
+              "title": "Thúc lần 4: 20% urê + 10% super lân + 20% KCl",
+              "detail": "Bón rải đều, cách gốc; bón xong tưới nhẹ cho phân tan, không để phân dính lên lá, đọt. Bón sáng sớm hoặc chiều mát.",
+              "type": "fertilize",
+              "timing": "65–70 ngày sau trồng"
+            },
+            {
+              "key": "cuc_thu_hoach",
+              "title": "Thu hoạch cành hoa",
+              "detail": "Hoa chùm tối thiểu 4 nụ cùng độ nở; hoa chuẩn (đơn) độ nở 50–60%. Thu lúc sáng sớm, chiều mát; kéo sắc, vết cắt phẳng, không dập gốc.",
+              "type": "harvest",
+              "timing": "20–25 ngày sau ngắt nụ"
+            },
+            {
+              "key": "cuc_so_che",
+              "title": "Sơ chế, bó hoa",
+              "detail": "Bó 5 hoặc 10 cành/bó, cành dài khoảng 70 cm (tuỳ giống, thị trường); bỏ lá già, lá sâu bệnh và lá sát gốc (20–25 cm dưới gốc).",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "fruiting",
+            "harvesting"
+          ],
+          "start_day": 65
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % các lần bón chép nguyên Bảng 1 của quy trình (Cách 1: bón thông thường).",
+        "Quy trình còn hướng dẫn bón qua hệ thống tưới tự động (hỗn hợp A: Ca(NO₃)₂ + KNO₃; hỗn hợp B: MAP hoặc MKP + MgSO₄, theo tuổi cây) — ứng dụng chưa mô tả cách bón này.",
+        "Có thể bổ sung phân bón qua lá tuỳ tình hình sinh trưởng của cây.",
+        "Mật độ: cúc đơn 550.000–600.000 cây/ha; cúc chùm 450.000–500.000 cây/ha; giống cao cây, tán rộng khoảng 350.000 cây/ha."
+      ]
+    }
+  ],
+  "unavailable": []
+}

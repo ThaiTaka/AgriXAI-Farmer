@@ -1,26 +1,353 @@
 {
   "$meta": {
-    "description": "Quy trình chăm sóc lúa — hiện chỉ khai báo phần CHƯA có dữ liệu.",
     "crop_type": "rice",
     "crop_name": "Lúa",
-    "sources": []
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây lúa trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
   },
-  "protocols": [],
-  "unavailable": [
+  "protocols": [
     {
-      "category_id": "rice_thuan",
-      "category_name": "Lúa thuần",
-      "reason": "Chưa tìm được quy trình bón phân / chăm sóc chính thức cho lúa từ cơ quan nhà nước hoặc viện nghiên cứu Việt Nam ở dạng định mức theo diện tích (tra cứu 23/09/2026). Danh mục giống đã có nguồn, nhưng ứng dụng không suy ra liều lượng từ đó. Định mức cho lúa thay đổi theo vụ, chân đất và vùng miền; đưa một con số chung vào ứng dụng sẽ sai ở phần lớn các vùng.",
-      "suggested_sources": [
+      "id": "rice_lamdong_2025",
+      "crop_type": "rice",
+      "crop_name": "Lúa",
+      "category_ids": null,
+      "name": "Lúa gieo sạ — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây lúa trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục II, quy trình 1 — mục 2.6 Phân bón và cách bón phân (Bảng 2); 2.7 Quản lý nước; 3. Phòng trừ sâu bệnh; III. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Thời vụ xuống giống: Đông xuân tháng 11–02, Hè thu tháng 4–6, vụ Mùa tháng 6–9. Lượng giống sạ cụm 40–60 kg/ha, sạ hàng 80–120 kg/ha, sạ lan 120–150 kg/ha. Thời điểm bón thúc tính theo ngày sau sạ (NSS).",
+      "scenarios": [
         {
-          "title": "Trung tâm Khuyến nông Quốc gia (Bộ Nông nghiệp và Môi trường)",
-          "url": "https://khuyennongvn.gov.vn/"
+          "id": "phan_don",
+          "name": "Phân đơn (1 ha)",
+          "description": "90 kg N – 70 kg P₂O₅ – 70 kg K₂O quy ra phân đơn.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 5,
+              "max": 10,
+              "price_product_id": null
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 2000,
+              "max": 2000,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 300,
+              "max": 500,
+              "price_product_id": null,
+              "note": "Đất phèn bón thêm 250–1.000 kg vôi/ha khi làm đất"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 195,
+              "max": 195,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 437,
+              "max": 437,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 116,
+              "max": 116,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
         },
         {
-          "title": "Viện Khoa học Nông nghiệp Việt Nam (VAAS)",
-          "url": "https://vaas.vn/"
+          "id": "npk_20_20_15",
+          "name": "NPK 20-20-15 + urê + KCl (1 ha)",
+          "description": "Quy trình cho phép thay phân đơn bằng phương án này (cùng lượng nguyên chất) nhưng không ghi cách chia lần bón — lượng dưới đây là tổng cả vụ; lịch chia lần ở tab Chăm sóc là của phương án phân đơn.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 5,
+              "max": 10,
+              "price_product_id": null
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 2000,
+              "max": 2000,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 300,
+              "max": 500,
+              "price_product_id": null,
+              "note": "Đất phèn bón thêm 250–1.000 kg vôi/ha khi làm đất"
+            },
+            {
+              "key": "npk_20_20_15",
+              "name": "NPK 20-20-15",
+              "fertilizer_category": "npk",
+              "unit": "kg",
+              "min": 350,
+              "max": 350,
+              "price_product_id": "npk_20_20_15_binh_dien"
+            },
+            {
+              "key": "ure_npk",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 43,
+              "max": 43,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "kcl_npk",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 29,
+              "max": 29,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
         }
+      ],
+      "base_application": {
+        "timing": "Trước khi làm đất lần cuối bón lót toàn bộ phân hữu cơ và phân lân để chôn vùi phân trong đất.",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 100
+          }
+        ],
+        "note": "Bón lót 100% phân chuồng, hữu cơ vi sinh, vôi và lân super (Bảng 2)."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Mạ — thúc lần 1",
+          "source_stage_name_vi": "Bón thúc lần 1 (7–10 NSS)",
+          "timing": "7–10 ngày sau sạ",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 35
+            },
+            {
+              "item_key": "kcl",
+              "pct": 30
+            }
+          ],
+          "tasks": [
+            {
+              "key": "lua_nuoc_sau_sa",
+              "title": "Cho nước láng mặt ruộng 1–3 cm",
+              "detail": "Sau sạ 3–4 ngày cho nước vào láng mặt ruộng với mực nước 1–3 cm; giữ nước liên tục theo sinh trưởng của cây đến lúc bón phân thúc đẻ (cây 4–5 lá).",
+              "type": "water",
+              "timing": "3–4 ngày sau sạ"
+            },
+            {
+              "key": "lua_bon_thuc_1",
+              "title": "Thúc lần 1: 35% urê + 30% KCl",
+              "detail": "Bón theo nhu cầu của cây vào thời điểm xung yếu, đúng liều lượng, không bón thừa đạm; có thể dựa vào bảng so màu lá lúa.",
+              "type": "fertilize",
+              "timing": "7–10 ngày sau sạ"
+            },
+            {
+              "key": "lua_oc_buou_vang",
+              "title": "Thăm ruộng: ốc bươu vàng",
+              "detail": "Ốc cắn lúa non từ sau sạ đến 30 ngày tuổi, hoạt động sáng sớm, chập tối và ban đêm. Thu lượm ốc và phá ổ trứng 7–10 ngày/lần, cắm cọc tre, sậy chỗ ngập nước để thu hút ốc đẻ trứng, giữ mực nước thấp 2–3 cm; khi cần dùng thuốc có trong danh mục được phép.",
+              "type": "scout",
+              "timing": "0–30 ngày sau sạ"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "tillering",
+          "stage_name_vi": "Đẻ nhánh — thúc lần 2",
+          "source_stage_name_vi": "Bón thúc lần 2 (18–22 NSS)",
+          "timing": "18–22 ngày sau sạ",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 40
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "lua_bon_thuc_2",
+              "title": "Thúc lần 2: 40% urê + 20% KCl",
+              "detail": "Bón đạm theo nguyên tắc nặng đầu nhẹ cuối, có gia giảm theo thực trạng cây lúa.",
+              "type": "fertilize",
+              "timing": "18–22 ngày sau sạ"
+            },
+            {
+              "key": "lua_phoi_ruong",
+              "title": "Phơi ruộng cuối đẻ nhánh",
+              "detail": "Vùng chưa chủ động tưới tiêu: từ mạ đến đẻ nhánh giữ nước 3–5 cm; cuối đẻ nhánh phơi ruộng 10–15 ngày, khi đất 'nứt chân chim' cho nước vào 5–7 cm để bón đón đòng. Vùng chủ động tưới tiêu: sau bón thúc lần 2 đến làm đòng tưới khô – ướt xen kẽ.",
+              "type": "water",
+              "timing": "Cuối đẻ nhánh"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 18
+        },
+        {
+          "stage_code": "panicle",
+          "stage_name_vi": "Làm đòng — thúc lần 3 (đón đòng)",
+          "source_stage_name_vi": "Bón thúc lần 3 (38–42 NSS)",
+          "timing": "38–42 ngày sau sạ",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 25
+            },
+            {
+              "item_key": "kcl",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "lua_bon_thuc_3",
+              "title": "Thúc lần 3 (đón đòng): 25% urê + 50% KCl",
+              "detail": "Kali tập trung cho đợt đón đòng. Khi lúa bị bệnh đạo ôn ngừng bón đạm, kali.",
+              "type": "fertilize",
+              "timing": "38–42 ngày sau sạ"
+            },
+            {
+              "key": "lua_sau_cuon_la",
+              "title": "Thăm ruộng: sâu cuốn lá nhỏ",
+              "detail": "Chỉ trừ giai đoạn trước và sau trổ nếu mật độ cao; phun sau khi bướm rộ 5–7 ngày. Chỉ dùng thuốc khi dịch hại đạt ngưỡng hành động, thuốc có trong danh mục được phép.",
+              "type": "scout",
+              "timing": "Trước và sau trổ"
+            }
+          ],
+          "growth_stages": [
+            "flowering",
+            "fruiting"
+          ],
+          "start_day": 38
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Trổ — chín — thu hoạch",
+          "source_stage_name_vi": "III. Thu hoạch",
+          "timing": "Thu khi trên 90% hạt chín vàng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "lua_thao_nuoc",
+              "title": "Tháo cạn nước trước thu hoạch 10 ngày",
+              "detail": "Giữ mực nước 5–7 cm đến khi lúa trổ chín; trước thu hoạch khoảng 10 ngày tháo cạn nước để thuận lợi cho thu hoạch.",
+              "type": "water",
+              "timing": "10 ngày trước thu hoạch"
+            },
+            {
+              "key": "lua_thu_hoach",
+              "title": "Thu hoạch khi trên 90% hạt chín vàng",
+              "detail": "Thu hoạch đồng loạt, đúng độ chín; nơi đập tuốt lót bạt hoặc ở sân phơi sạch rác, sạn và không để lẫn giống khác.",
+              "type": "harvest"
+            },
+            {
+              "key": "lua_phoi_say",
+              "title": "Phơi sấy đến độ ẩm hạt dưới 13%",
+              "detail": "Phơi nắng lớp hạt dày 3–7 cm, đảo thường xuyên, tránh nắng quá gắt; hoặc sấy bằng không khí nóng 40–45 °C. Quạt sạch trấu, hạt lép rồi đóng bao, bảo quản nơi khô ráo, thoáng mát.",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "harvesting"
+          ],
+          "start_day": null
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên Bảng 2 của quy trình (thời điểm bón theo ngày sau sạ — NSS).",
+        "Phương án NPK (350 kg NPK 20-20-15 + 43 kg urê + 29 kg KCl, cùng lượng nguyên chất) là của quy trình; quy trình không ghi cách chia lần cho phương án này nên máy tính chỉ cho tổng cả vụ, lịch chia lần theo phương án phân đơn.",
+        "Lượng phân thay đổi theo đặc điểm từng loại đất, mùa vụ và giống; kỹ thuật bón có thể dựa vào bảng so màu lá lúa."
       ]
     }
-  ]
+  ],
+  "unavailable": []
 }

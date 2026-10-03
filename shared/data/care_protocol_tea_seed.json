@@ -1,0 +1,815 @@
+{
+  "$meta": {
+    "crop_type": "tea",
+    "crop_name": "Chè",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây chè cành và chè Đài Loan trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "tea_cutting_ktcb_lamdong_2025",
+      "crop_type": "tea",
+      "crop_name": "Chè",
+      "category_ids": [
+        "tea_cutting"
+      ],
+      "name": "Chè cành — kiến thiết cơ bản (năm 1–3)",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây chè cành trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục I, quy trình 2 — mục 2.6.2 Thời kỳ kiến thiết cơ bản; 2.6.4 Kỹ thuật bón phân (bảng thời kỳ KTCB); 2.7 Chăm sóc"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "calendar",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Thời kỳ kiến thiết cơ bản 3 năm; phân vô cơ bón 5–6 lần/năm theo tháng. Chè mới trồng hoặc KTCB phải bón cách xa gốc trên 10 cm.",
+      "scenarios": [
+        {
+          "id": "nam_1",
+          "name": "Năm thứ 1",
+          "description": "391 kg N – 128 kg P₂O₅ – 10–12 kg K₂O (theo bảng).",
+          "items": [
+            {
+              "key": "huu_co",
+              "name": "Phân hữu cơ",
+              "fertilizer_category": "huu_co",
+              "unit": "kg",
+              "min": 10000,
+              "max": 10000,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 848,
+              "max": 848,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 776,
+              "max": 776,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 215,
+              "max": 215,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        },
+        {
+          "id": "nam_2",
+          "name": "Năm thứ 2",
+          "description": "460 kg N – 152 kg P₂O₅ – 10–12 kg K₂O (theo bảng).",
+          "items": [
+            {
+              "key": "huu_co",
+              "name": "Phân hữu cơ",
+              "fertilizer_category": "huu_co",
+              "unit": "kg",
+              "min": 10000,
+              "max": 10000,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 998,
+              "max": 998,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 921,
+              "max": 921,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 256,
+              "max": 256,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        },
+        {
+          "id": "nam_3",
+          "name": "Năm thứ 3",
+          "description": "522 kg N – 160 kg P₂O₅ – 10–12 kg K₂O (theo bảng).",
+          "items": [
+            {
+              "key": "huu_co",
+              "name": "Phân hữu cơ",
+              "fertilizer_category": "huu_co",
+              "unit": "kg",
+              "min": 15000,
+              "max": 15000,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 1133,
+              "max": 1133,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 970,
+              "max": 970,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 306,
+              "max": 306,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Phân hữu cơ bón vào đầu mùa mưa, rạch hàng, bón lấp.",
+        "applications": [
+          {
+            "item_key": "huu_co",
+            "pct": 100
+          }
+        ],
+        "note": "Phân vô cơ chia 5 lần theo tháng (bảng kỹ thuật bón thời kỳ KTCB)."
+      },
+      "stages": [
+        {
+          "stage_code": "lan_1",
+          "stage_name_vi": "Lần 1 — tháng 3",
+          "source_stage_name_vi": "Lần 1",
+          "timing": "Tháng 3",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 25
+            },
+            {
+              "item_key": "kcl",
+              "pct": 15
+            }
+          ],
+          "tasks": [
+            {
+              "key": "che_ktcb_bon_1",
+              "title": "Bón lần 1: 20% urê + 25% super lân + 15% kali",
+              "detail": "Bón cách xa gốc trên 10 cm; thường xuyên thay đổi các loại phân, không bón quá nhiều đạm và lân.",
+              "type": "fertilize",
+              "timing": "Tháng 3"
+            }
+          ],
+          "months": [
+            3
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_2",
+          "stage_name_vi": "Lần 2 — tháng 4–5",
+          "source_stage_name_vi": "Lần 2",
+          "timing": "Tháng 4–5",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 20
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "che_ktcb_bon_2",
+              "title": "Bón lần 2: 20% urê + 20% super lân + 20% kali",
+              "detail": "Bón cách xa gốc trên 10 cm.",
+              "type": "fertilize",
+              "timing": "Tháng 4–5"
+            },
+            {
+              "key": "che_ktcb_lam_co",
+              "title": "Làm cỏ 4–6 lần/năm",
+              "detail": "Giữ vườn sạch cỏ, cỏ trong gốc nhổ bằng tay; kết hợp xới xáo với các lần làm cỏ, bón phân.",
+              "type": "cultivate"
+            }
+          ],
+          "months": [
+            4,
+            5
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_3",
+          "stage_name_vi": "Lần 3 — tháng 6–7",
+          "source_stage_name_vi": "Lần 3",
+          "timing": "Tháng 6–7",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 25
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 25
+            },
+            {
+              "item_key": "kcl",
+              "pct": 25
+            }
+          ],
+          "tasks": [
+            {
+              "key": "che_ktcb_bon_3",
+              "title": "Bón lần 3: 25% urê + 25% super lân + 25% kali",
+              "detail": "Bón cách xa gốc trên 10 cm.",
+              "type": "fertilize",
+              "timing": "Tháng 6–7"
+            }
+          ],
+          "months": [
+            6,
+            7
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_4_5",
+          "stage_name_vi": "Lần 4–5 — tháng 8–11; tủ gốc, đốn tạo hình",
+          "source_stage_name_vi": "Lần 4, 5",
+          "timing": "Tháng 8–9 và 10–11",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 35
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 30
+            },
+            {
+              "item_key": "kcl",
+              "pct": 40
+            }
+          ],
+          "tasks": [
+            {
+              "key": "che_ktcb_bon_4_5",
+              "title": "Bón lần 4 (tháng 8–9) và lần 5 (tháng 10–11)",
+              "detail": "Lần 4: 20% urê + 20% super lân + 25% kali; lần 5: 15% urê + 10% super lân + 15% kali.",
+              "type": "fertilize",
+              "timing": "Tháng 8–11"
+            },
+            {
+              "key": "che_ktcb_tu_goc",
+              "title": "Tủ gốc giữ ẩm cuối mùa mưa",
+              "detail": "Tháng 11–12 tủ giữ ẩm, cách gốc 5–7 cm để tránh mối, không lấp gốc.",
+              "type": "cultivate",
+              "timing": "Tháng 11–12"
+            },
+            {
+              "key": "che_ktcb_don",
+              "title": "Đốn tạo hình",
+              "detail": "Lần 1: cây 1 năm tuổi, đường kính gốc trên 1 cm, cắt thân chính cao 20–25 cm, cành cấp 1–2 cao 45–50 cm. Lần 2 trước khi đưa vào kinh doanh: vết đốn cao 40–45 cm. Thời vụ đốn tháng 11–12.",
+              "type": "cultivate",
+              "timing": "Tháng 11–12"
+            }
+          ],
+          "months": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "growth_stages": []
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên bảng kỹ thuật bón thời kỳ KTCB của quy trình; giai đoạn cuối gộp lần 4 và 5.",
+        "Quy trình còn ghi chè trồng mới: sau khi trồng bón 150 kg urê + 83 kg KCl/ha chia 5–6 lần, bón nhử cách gốc trên 10 cm.",
+        "Cột K₂O nguyên chất thời kỳ KTCB ghi 10–12 kg/ha/năm trong khi lượng kali thương phẩm là 215–306 kg — ứng dụng dùng lượng thương phẩm như bảng ghi."
+      ]
+    },
+    {
+      "id": "tea_cutting_kd_lamdong_2025",
+      "crop_type": "tea",
+      "crop_name": "Chè",
+      "category_ids": [
+        "tea_cutting"
+      ],
+      "name": "Chè cành — kinh doanh (từ năm 4)",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây chè cành trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục I, quy trình 2 — mục 2.6.3 Thời kỳ kinh doanh; 2.6.4 Kỹ thuật bón phân (bảng thời kỳ kinh doanh); 2.7 Chăm sóc"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "calendar",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Thời kỳ kinh doanh: bón N:P:K theo tỷ lệ 3:1:1, 30 kg N/tấn búp tươi; đạm bón 5–6 lần/năm từ tháng 4–11; lân bón 1 lần đầu vụ.",
+      "scenarios": [
+        {
+          "id": "nam_4",
+          "name": "Năm thứ 4",
+          "description": "599 kg N – 181 kg P₂O₅ – 203 kg K₂O.",
+          "items": [
+            {
+              "key": "huu_co",
+              "name": "Phân hữu cơ",
+              "fertilizer_category": "huu_co",
+              "unit": "kg",
+              "min": 5000,
+              "max": 5000,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 1299,
+              "max": 1299,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1097,
+              "max": 1097,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 339,
+              "max": 339,
+              "price_product_id": "kali_bot_ca_mau"
+            },
+            {
+              "key": "mgso4",
+              "name": "Magiê sunfat (MgSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 100,
+              "max": 130,
+              "price_product_id": null
+            },
+            {
+              "key": "znso4",
+              "name": "Kẽm sunfat (ZnSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 20,
+              "max": 20,
+              "price_product_id": null
+            }
+          ]
+        },
+        {
+          "id": "nam_5",
+          "name": "Năm thứ 5",
+          "description": "760 kg N – 231 kg P₂O₅ – 251 kg K₂O.",
+          "items": [
+            {
+              "key": "huu_co",
+              "name": "Phân hữu cơ",
+              "fertilizer_category": "huu_co",
+              "unit": "kg",
+              "min": 5000,
+              "max": 5000,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 1649,
+              "max": 1649,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1399,
+              "max": 1399,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 419,
+              "max": 419,
+              "price_product_id": "kali_bot_ca_mau"
+            },
+            {
+              "key": "mgso4",
+              "name": "Magiê sunfat (MgSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 100,
+              "max": 130,
+              "price_product_id": null
+            },
+            {
+              "key": "znso4",
+              "name": "Kẽm sunfat (ZnSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 20,
+              "max": 20,
+              "price_product_id": null
+            }
+          ]
+        },
+        {
+          "id": "nam_6",
+          "name": "Năm thứ 6",
+          "description": "898 kg N – 280 kg P₂O₅ – 299 kg K₂O.",
+          "items": [
+            {
+              "key": "huu_co",
+              "name": "Phân hữu cơ",
+              "fertilizer_category": "huu_co",
+              "unit": "kg",
+              "min": 5000,
+              "max": 5000,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 1948,
+              "max": 1948,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 1697,
+              "max": 1697,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 499,
+              "max": 499,
+              "price_product_id": "kali_bot_ca_mau"
+            },
+            {
+              "key": "mgso4",
+              "name": "Magiê sunfat (MgSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 100,
+              "max": 130,
+              "price_product_id": null
+            },
+            {
+              "key": "znso4",
+              "name": "Kẽm sunfat (ZnSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 20,
+              "max": 20,
+              "price_product_id": null
+            }
+          ]
+        },
+        {
+          "id": "nam_7",
+          "name": "Năm thứ 7",
+          "description": "1.198 kg N – 412 kg P₂O₅ – 398 kg K₂O.",
+          "items": [
+            {
+              "key": "huu_co",
+              "name": "Phân hữu cơ",
+              "fertilizer_category": "huu_co",
+              "unit": "kg",
+              "min": 5000,
+              "max": 5000,
+              "price_product_id": null
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 2599,
+              "max": 2599,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 2497,
+              "max": 2497,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 665,
+              "max": 665,
+              "price_product_id": "kali_bot_ca_mau"
+            },
+            {
+              "key": "mgso4",
+              "name": "Magiê sunfat (MgSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 100,
+              "max": 130,
+              "price_product_id": null
+            },
+            {
+              "key": "znso4",
+              "name": "Kẽm sunfat (ZnSO₄)",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 20,
+              "max": 20,
+              "price_product_id": null
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Phân hữu cơ (hoặc hữu cơ sinh học) 5.000 kg/ha, nên bón 2 năm/lần: rạch hàng, bón kết hợp phân lân, MgSO₄, ZnSO₄ rồi cày lấp.",
+        "applications": [
+          {
+            "item_key": "huu_co",
+            "pct": 100
+          },
+          {
+            "item_key": "znso4",
+            "pct": 100
+          }
+        ],
+        "note": "Magiê sunfat chia 2 lần/năm; kẽm sunfat bón 1 lần/năm."
+      },
+      "stages": [
+        {
+          "stage_code": "lan_1",
+          "stage_name_vi": "Lần 1 — tháng 4 (đầu vụ)",
+          "source_stage_name_vi": "Lần 1",
+          "timing": "Tháng 4",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "super_lan",
+              "pct": 100
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            },
+            {
+              "item_key": "mgso4",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "che_kd_bon_1",
+              "title": "Bón lần 1: 20% urê + 100% lân + 20% kali",
+              "detail": "Lân bón 1 lần đầu vụ cùng phân khác. Đạm bón theo tán khi ẩm độ đất 70–80%, vùi sâu 6–8 cm.",
+              "type": "fertilize",
+              "timing": "Tháng 4"
+            }
+          ],
+          "months": [
+            4
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_2",
+          "stage_name_vi": "Lần 2 — tháng 5–6",
+          "source_stage_name_vi": "Lần 2",
+          "timing": "Tháng 5–6",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "che_kd_bon_2",
+              "title": "Bón lần 2: 20% urê + 20% kali",
+              "detail": "Kali bón cùng phân đạm.",
+              "type": "fertilize",
+              "timing": "Tháng 5–6"
+            },
+            {
+              "key": "che_kd_phan_bon_la",
+              "title": "Phun phân bón lá sau lứa hái",
+              "detail": "Phun ngay sau lứa hái (2–3 lứa hái/lần), sáng sớm hoặc chiều mát, không mưa.",
+              "type": "spray"
+            }
+          ],
+          "months": [
+            5,
+            6
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_3",
+          "stage_name_vi": "Lần 3 — tháng 7–8",
+          "source_stage_name_vi": "Lần 3",
+          "timing": "Tháng 7–8",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            },
+            {
+              "item_key": "mgso4",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "che_kd_bon_3",
+              "title": "Bón lần 3: 20% urê + 20% kali",
+              "detail": "Bón theo tán chè khi đất đủ ẩm.",
+              "type": "fertilize",
+              "timing": "Tháng 7–8"
+            }
+          ],
+          "months": [
+            7,
+            8
+          ],
+          "growth_stages": []
+        },
+        {
+          "stage_code": "lan_4_5",
+          "stage_name_vi": "Lần 4–5 — tháng 9–11",
+          "source_stage_name_vi": "Lần 4, 5",
+          "timing": "Tháng 9–10 và 11",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 40
+            },
+            {
+              "item_key": "kcl",
+              "pct": 40
+            }
+          ],
+          "tasks": [
+            {
+              "key": "che_kd_bon_4_5",
+              "title": "Bón lần 4 (tháng 9–10) và lần 5 (tháng 11)",
+              "detail": "Mỗi lần 20% urê + 20% kali.",
+              "type": "fertilize",
+              "timing": "Tháng 9–11"
+            },
+            {
+              "key": "che_kd_lam_co",
+              "title": "Làm cỏ 4–6 lần/năm",
+              "detail": "Mùa khô dãy cỏ gom vào gốc, mùa mưa gom ra ngoài hàng chè.",
+              "type": "cultivate"
+            }
+          ],
+          "months": [
+            9,
+            10,
+            11
+          ],
+          "growth_stages": []
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên bảng kỹ thuật bón thời kỳ kinh doanh; giai đoạn cuối gộp lần 4 và 5.",
+        "Magiê sunfat 100–130 kg/ha/năm chia 2 lần (ứng dụng đặt vào lần 1 và lần 3); kẽm sunfat 20 kg/ha/năm bón 1 lần cùng phân hữu cơ.",
+        "Tưới mùa khô nếu có điều kiện: 20–25 ngày tưới 1 lần, mỗi lần 500–700 m³/ha."
+      ]
+    }
+  ],
+  "unavailable": [
+    {
+      "category_id": "tea_taiwan",
+      "category_name": "Chè Đài Loan (nguyên liệu chè Ô long)",
+      "reason": "Quy trình chè Đài Loan (QĐ 1972/QĐ-UBND, Phụ lục I, quy trình 3) có lượng phân theo tuổi cây nhưng bón theo lứa hái (3 lần mỗi lứa: hái xong bón ngay, lần 2 kết thúc trước thu hái 10–15 ngày), không theo tháng hay giai đoạn sinh trưởng — ứng dụng chưa mô tả được kiểu lịch này nên chưa đưa vào. Xem trực tiếp quy trình.",
+      "suggested_sources": [
+        {
+          "title": "QĐ 1972/QĐ-UBND tỉnh Lâm Đồng — 120 quy trình kỹ thuật trồng, chăm sóc cây trồng",
+          "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx"
+        }
+      ]
+    }
+  ]
+}

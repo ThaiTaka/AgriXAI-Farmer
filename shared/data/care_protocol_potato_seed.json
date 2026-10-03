@@ -1,0 +1,252 @@
+{
+  "$meta": {
+    "crop_type": "potato",
+    "crop_name": "Khoai tây",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây khoai tây trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "potato_lamdong_2025",
+      "crop_type": "potato",
+      "crop_name": "Khoai tây",
+      "category_ids": null,
+      "name": "Khoai tây — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây khoai tây trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục II, quy trình 5 — mục 2.5 Phân bón và cách bón phân (Bảng 2); 2.6 Chăm sóc; IV. Thu hoạch"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Trồng quanh năm, thời vụ tốt nhất từ tháng 9 đến tháng 5 năm sau. Bón lót và 2 lần thúc; không bón thêm sau lần vun thứ hai.",
+      "scenarios": [
+        {
+          "id": "mot_vu",
+          "name": "Lượng cho 1 ha",
+          "description": "150 kg N – 150 kg P₂O₅ – 180 kg K₂O quy ra phân thương phẩm.",
+          "items": [
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 2000,
+              "max": 2000,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 2000,
+              "max": 2000,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 326,
+              "max": 326,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 937,
+              "max": 937,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 300,
+              "max": 300,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Rải, phay đều phân hữu cơ vi sinh và vôi; làm luống, xẻ 2 rãnh cách 50 cm, bón toàn bộ lân + 1/4 kali + 1/4 đạm vào rãnh, đảo trộn trước khi trồng.",
+        "applications": [
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 100
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "ure",
+            "pct": 25
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 100
+          },
+          {
+            "item_key": "kcl",
+            "pct": 25
+          }
+        ],
+        "note": "Bón lót theo Bảng 2 của quy trình."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Mọc — thúc lần 1",
+          "source_stage_name_vi": "Bón thúc lần 1 (7–10 ngày sau mọc)",
+          "timing": "7–10 ngày sau khi cây mọc",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 25
+            },
+            {
+              "item_key": "kcl",
+              "pct": 25
+            }
+          ],
+          "tasks": [
+            {
+              "key": "kt_bon_thuc_1",
+              "title": "Thúc lần 1: 1/4 đạm + 1/4 kali",
+              "detail": "Kết hợp xăm xới, làm cỏ, vun nhẹ. 2–3 ngày sau phun bổ sung vi lượng (Mg, Cu, Mn, Fe, Mo).",
+              "type": "fertilize",
+              "timing": "7–10 ngày sau mọc"
+            },
+            {
+              "key": "kt_tuoi_dau",
+              "title": "Tưới ít (1–15 ngày sau trồng)",
+              "detail": "Giai đoạn đầu cây cần ít nước; khoai tây không chịu ngập, quá ẩm.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Thúc lần 2 — vun cao",
+          "source_stage_name_vi": "Bón thúc lần 2 (20–25 ngày sau mọc)",
+          "timing": "20–25 ngày sau mọc",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 50
+            },
+            {
+              "item_key": "kcl",
+              "pct": 50
+            }
+          ],
+          "tasks": [
+            {
+              "key": "kt_bon_thuc_2",
+              "title": "Thúc lần 2: toàn bộ đạm và kali còn lại",
+              "detail": "Kết hợp làm cỏ, vun luống cao thêm 5–10 cm, vun đầy gốc tránh hở củ. Không bón thêm phân sau lần này.",
+              "type": "fertilize",
+              "timing": "20–25 ngày sau mọc"
+            },
+            {
+              "key": "kt_tia_mam",
+              "title": "Tỉa bớt mầm",
+              "detail": "Khoai có nhiều mầm mọc nhiều cây thì tỉa, chừa 2–3 mầm mạnh.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "tuber",
+          "stage_name_vi": "Phình củ — cần nhiều nước nhất",
+          "source_stage_name_vi": "Chăm sóc (35–70 ngày sau trồng)",
+          "timing": "35–70 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "kt_tuoi_phinh_cu",
+              "title": "Tưới đủ nước giai đoạn phình củ",
+              "detail": "Từ 35–70 ngày sau trồng thân lá và củ cùng phát triển mạnh — cần nhiều nước nhất. Sau 70 ngày vẫn tưới nhưng ít hơn để củ không nhăn.",
+              "type": "water"
+            }
+          ],
+          "growth_stages": [
+            "flowering",
+            "fruiting"
+          ],
+          "start_day": null
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thu hoạch",
+          "source_stage_name_vi": "Thu hoạch",
+          "timing": "Khi 2/3 số cây chuyển vàng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [],
+          "tasks": [
+            {
+              "key": "kt_ngung_tuoi",
+              "title": "Ngưng tưới, cắt thân lá",
+              "detail": "Ngưng tưới 2–3 tuần trước thu; 5–7 ngày trước thu cắt toàn bộ thân lá, chừa 10–15 cm.",
+              "type": "cultivate",
+              "timing": "2–3 tuần trước thu"
+            },
+            {
+              "key": "kt_thu_hoach",
+              "title": "Thu hoạch ngày nắng ráo",
+              "detail": "Thu khi 2/3 số cây chuyển vàng và củ rời tia củ khi rũ nhẹ; hạn chế xây xát, loại củ thối, sứt.",
+              "type": "harvest"
+            }
+          ],
+          "growth_stages": [
+            "harvesting"
+          ],
+          "start_day": null
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên Bảng 2 của quy trình."
+      ]
+    }
+  ],
+  "unavailable": []
+}

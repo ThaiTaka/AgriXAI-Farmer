@@ -1,0 +1,300 @@
+{
+  "$meta": {
+    "crop_type": "leek",
+    "crop_name": "Tỏi tây",
+    "description": "Quy trình kỹ thuật trồng, chăm sóc cây Tỏi tây trên địa bàn tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND).",
+    "format_version": 2,
+    "collected_at": "2026-10-02",
+    "data_policy": "Số liệu chép đúng quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày 04/11/2025), không suy diễn. Chỗ quy trình không nói → null / ghi chú rõ. Mọi liều lượng chỉ là THAM KHẢO.",
+    "sources": [
+      "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+      "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view"
+    ]
+  },
+  "protocols": [
+    {
+      "id": "leek_lamdong_2025",
+      "crop_type": "leek",
+      "crop_name": "Tỏi tây",
+      "category_ids": null,
+      "name": "Tỏi tây — QĐ 1972/QĐ-UBND tỉnh Lâm Đồng",
+      "source": {
+        "title": "Quy trình kỹ thuật trồng, chăm sóc cây Tỏi tây trên địa bàn tỉnh Lâm Đồng (ban hành kèm theo Quyết định số 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng)",
+        "publisher": "UBND tỉnh Lâm Đồng (Sở Nông nghiệp và Môi trường soạn thảo); đăng tại Trung tâm Khuyến nông tỉnh Lâm Đồng",
+        "url": "https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx",
+        "document_url": "https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view",
+        "published_at": "2025-11-04",
+        "collected_at": "2026-10-02",
+        "section": "Phụ lục III, quy trình 28 — mục 2.5 Phân bón và cách bón phân (Bảng 2); 2.6 Chăm sóc; III. Thu hoạch, sơ chế, bảo quản"
+      },
+      "disclaimer": "Lượng phân tính cho 1 ha theo quy trình kỹ thuật do UBND tỉnh Lâm Đồng ban hành; tuỳ đất, giống, mùa vụ và tình hình sinh trưởng mà điều chỉnh. Chỉ để tham khảo.",
+      "stage_model": "growth",
+      "basis": "commercial",
+      "reference_area": {
+        "value": 1,
+        "unit": "ha",
+        "m2": 10000
+      },
+      "cycle_note": "Tốt nhất trồng vụ thu (tháng 9–10, thu tháng 11–12) và vụ xuân (tháng 2–3, thu tháng 4–5); trồng được quanh năm. Ươm cây con 0,5–0,7 kg hạt/ha; mật độ 300.000–350.000 cây/ha (cây 10–12 cm, hàng 20–25 cm). Thu sau khoảng 90–120 ngày tuỳ giống và thời tiết.",
+      "scenarios": [
+        {
+          "id": "mot_vu",
+          "name": "Lượng cho 1 ha",
+          "description": "90 kg N – 40 kg P₂O₅ – 120 kg K₂O quy ra phân đơn.",
+          "items": [
+            {
+              "key": "phan_chuong",
+              "name": "Phân chuồng hoai",
+              "fertilizer_category": "huu_co",
+              "unit": "tấn",
+              "min": 10,
+              "max": 10,
+              "price_product_id": null
+            },
+            {
+              "key": "huu_co_vi_sinh",
+              "name": "Phân hữu cơ vi sinh",
+              "fertilizer_category": "vi_sinh",
+              "unit": "kg",
+              "min": 2000,
+              "max": 2000,
+              "price_product_id": null
+            },
+            {
+              "key": "voi",
+              "name": "Vôi bột",
+              "fertilizer_category": "khac",
+              "unit": "kg",
+              "min": 300,
+              "max": 300,
+              "price_product_id": null,
+              "note": "Tuỳ pH đất"
+            },
+            {
+              "key": "ure",
+              "name": "Urê",
+              "fertilizer_category": "dam",
+              "unit": "kg",
+              "min": 195,
+              "max": 195,
+              "price_product_id": "ure_ca_mau"
+            },
+            {
+              "key": "super_lan",
+              "name": "Super lân",
+              "fertilizer_category": "lan",
+              "unit": "kg",
+              "min": 242,
+              "max": 242,
+              "price_product_id": "sieu_lan_lam_thao"
+            },
+            {
+              "key": "kcl",
+              "name": "Kali clorua (KCl)",
+              "fertilizer_category": "kali",
+              "unit": "kg",
+              "min": 200,
+              "max": 200,
+              "price_product_id": "kali_bot_ca_mau"
+            }
+          ]
+        }
+      ],
+      "base_application": {
+        "timing": "Bón lót: rải đều trên mặt luống 100% phân chuồng, 100% super lân, 100% vôi, 50% phân hữu cơ vi sinh, 30% urê, 20% KCl.",
+        "applications": [
+          {
+            "item_key": "phan_chuong",
+            "pct": 100
+          },
+          {
+            "item_key": "huu_co_vi_sinh",
+            "pct": 50
+          },
+          {
+            "item_key": "voi",
+            "pct": 100
+          },
+          {
+            "item_key": "super_lan",
+            "pct": 100
+          },
+          {
+            "item_key": "ure",
+            "pct": 30
+          },
+          {
+            "item_key": "kcl",
+            "pct": 20
+          }
+        ],
+        "note": "Bón lót theo Bảng 2."
+      },
+      "stages": [
+        {
+          "stage_code": "seedling",
+          "stage_name_vi": "Bén rễ — thúc lần 1",
+          "source_stage_name_vi": "Bón thúc lần 1 (15 NST)",
+          "timing": "15 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "huu_co_vi_sinh",
+              "pct": 50
+            },
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "tt_tuoi_moi",
+              "title": "Tưới đủ ẩm sau trồng",
+              "detail": "Sau trồng mỗi ngày tưới đủ ẩm 1 lần vào sáng sớm hoặc chiều mát; khi cây hồi xanh 2–3 ngày tưới 1 lần, tưới nhẹ bằng vòi phun mưa hoặc nhỏ giọt.",
+              "type": "water"
+            },
+            {
+              "key": "tt_bon_thuc_1",
+              "title": "Thúc lần 1: 50% hữu cơ vi sinh + 20% urê + 20% KCl",
+              "detail": "Rắc vào giữa các hàng khi đất đủ ẩm, bón xong tưới ngay; hoặc pha loãng tưới vào chiều mát, sáng sớm.",
+              "type": "fertilize",
+              "timing": "15 ngày sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "seedling"
+          ],
+          "start_day": 0
+        },
+        {
+          "stage_code": "vegetative",
+          "stage_name_vi": "Thúc lần 2 — vun gốc",
+          "source_stage_name_vi": "Bón thúc lần 2 (30 NST)",
+          "timing": "30 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 20
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "tt_bon_thuc_2",
+              "title": "Thúc lần 2: 20% urê + 20% KCl",
+              "detail": "Rắc vào giữa các hàng rồi tưới ngay, hoặc pha loãng tưới.",
+              "type": "fertilize",
+              "timing": "30 ngày sau trồng"
+            },
+            {
+              "key": "tt_vun_goc",
+              "title": "Vun đất kéo dài bẹ trắng",
+              "detail": "Định kỳ 15–20 ngày, khi ngọn vươn cao thêm 7–10 cm thì vun đất đến sát ngọn cho thân vùi trong đất — tăng chất lượng bẹ trắng và chống đổ.",
+              "type": "cultivate",
+              "timing": "15–20 ngày/lần"
+            }
+          ],
+          "growth_stages": [
+            "vegetative"
+          ],
+          "start_day": 30
+        },
+        {
+          "stage_code": "stem_growth",
+          "stage_name_vi": "Thúc lần 3 — nuôi bẹ",
+          "source_stage_name_vi": "Bón thúc lần 3 (45 NST)",
+          "timing": "45 ngày sau trồng",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "ure",
+              "pct": 30
+            },
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "tt_bon_thuc_3",
+              "title": "Thúc lần 3: 30% urê + 20% KCl",
+              "detail": "Có thể bổ sung phân bón qua lá khi cây có hiện tượng thiếu dinh dưỡng.",
+              "type": "fertilize",
+              "timing": "45 ngày sau trồng"
+            },
+            {
+              "key": "tt_lam_co",
+              "title": "Nhổ cỏ nhẹ nhàng",
+              "detail": "Làm sạch cỏ trên luống để cỏ không tranh dinh dưỡng; nhổ nhẹ tay, tránh ảnh hưởng cây.",
+              "type": "cultivate"
+            }
+          ],
+          "growth_stages": [
+            "flowering",
+            "fruiting"
+          ],
+          "start_day": 45
+        },
+        {
+          "stage_code": "harvest",
+          "stage_name_vi": "Thúc lần 4 → thu hoạch",
+          "source_stage_name_vi": "Bón thúc lần 4 (65 NST); Thu hoạch",
+          "timing": "Thúc 65 ngày sau trồng; thu sau khoảng 90–120 ngày",
+          "duration_days": null,
+          "pct_of_total_topdress": null,
+          "applications": [
+            {
+              "item_key": "kcl",
+              "pct": 20
+            }
+          ],
+          "tasks": [
+            {
+              "key": "tt_bon_thuc_4",
+              "title": "Thúc lần 4: 20% KCl",
+              "detail": "Bón như các lần trước.",
+              "type": "fertilize",
+              "timing": "65 ngày sau trồng"
+            },
+            {
+              "key": "tt_ngung_tuoi",
+              "title": "Ngừng tưới trước thu",
+              "detail": "Ngừng tưới 5–7 ngày trước thu hoạch để dễ nhổ và bảo quản (mục phân bón còn ghi ngưng tưới 7–10 ngày trước thu để bảo đảm an toàn cho người dùng).",
+              "type": "water",
+              "timing": "5–10 ngày trước thu"
+            },
+            {
+              "key": "tt_thu_hoach",
+              "title": "Thu khi thân đạt khoảng 2,5 cm",
+              "detail": "Thu khi thân đạt đường kính khoảng 2,5 cm, bẹ cao 20–30 cm, cứng, trắng sáng, có mùi thơm và chưa ra hoa. Rửa sạch, cắt gốc, rễ và lá già, chừa 5–10 cm.",
+              "type": "harvest",
+              "timing": "90–120 ngày sau trồng"
+            }
+          ],
+          "growth_stages": [
+            "harvesting"
+          ],
+          "start_day": 65
+        }
+      ],
+      "extra_rules": [
+        "Tỷ lệ % chép nguyên Bảng 2 của quy trình; mốc bón thúc lấy theo bảng (15, 30, 45, 65 ngày sau trồng) — phần cách bón ghi lần đầu 10–15 ngày, các lần sau cách nhau 15–20 ngày.",
+        "Có thể quy đổi sang phân NPK có tỷ lệ tương ứng, liều và cách bón theo khuyến cáo của nhà sản xuất."
+      ]
+    }
+  ],
+  "unavailable": []
+}
