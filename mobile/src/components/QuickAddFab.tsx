@@ -3,11 +3,13 @@ import {AccessibilityInfo, Animated, Easing, Modal, Pressable, StyleSheet, Text,
 import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
 
 import {colors, radius, shadows, size, space, text} from '../theme';
-import {CoinsIcon, PlusIcon, WarehouseIcon} from './icons';
+import {CoinsIcon, MicIcon, PlusIcon, WarehouseIcon} from './icons';
 
 interface Props {
   onRecordMoney: () => void;
   onRecordStock: () => void;
+  /** Nói để ghi — offline speech, one sentence → one entry. */
+  onRecordVoice?: () => void;
 }
 
 /**
@@ -17,7 +19,7 @@ interface Props {
  * trên mọi thứ kể cả khi trang đang cuộn, và chạm ra ngoài phải đóng được.
  * Nền mờ cũng là thứ chặn chạm nhầm vào nội dung phía sau.
  */
-export function QuickAddFab({onRecordMoney, onRecordStock}: Props) {
+export function QuickAddFab({onRecordMoney, onRecordStock, onRecordVoice}: Props) {
   const insets = useContext(SafeAreaInsetsContext);
   const [open, setOpen] = useState(false);
   const spin = useRef(new Animated.Value(0)).current;
@@ -62,6 +64,15 @@ export function QuickAddFab({onRecordMoney, onRecordStock}: Props) {
       <Modal visible={open} transparent animationType="fade" onRequestClose={() => toggle(false)}>
         <Pressable style={styles.scrim} accessibilityLabel="Đóng" onPress={() => toggle(false)}>
           <View style={[styles.menu, {bottom: (insets?.bottom ?? 0) + space.lg + size.minTouchTarget + space.xl}]}>
+            {onRecordVoice ? (
+              <MenuItem
+                testID="quick-add-voice"
+                label="Nói để ghi"
+                hint="Nói một câu, máy điền sẵn — không cần mạng"
+                icon={<MicIcon size={24} color={colors.primary.default} />}
+                onPress={() => choose(onRecordVoice)}
+              />
+            ) : null}
             <MenuItem
               testID="quick-add-money"
               label="Ghi thu chi"

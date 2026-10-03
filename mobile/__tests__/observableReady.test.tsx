@@ -43,8 +43,8 @@ test('một emission rỗng mới thật sự là "không có gì"', () => {
 test('có dữ liệu thì vừa ready vừa mang giá trị', () => {
   const subject = new Subject<string[]>();
   const tree = render(<Probe subject={subject} />);
-  ReactTestRenderer.act(() => subject.next(['PUC-001-HB']));
-  expect(JSON.stringify(tree.toJSON())).toContain('ready:PUC-001-HB');
+  ReactTestRenderer.act(() => subject.next(['PUC-001-VT']));
+  expect(JSON.stringify(tree.toJSON())).toContain('ready:PUC-001-VT');
 });
 
 test('lỗi cũng bật ready — không kẹt ở vòng quay vĩnh viễn', () => {

@@ -14,11 +14,10 @@ import {isEmptyReport, noteLines, reportFileName, reportHtml, reportNotes, trail
 import {ageLabel, bannerFor, clockLabel, conflictTitle, tableStatusLine} from '../src/domain/syncStatus';
 import {stockSummary} from '../src/domain/warehouse';
 import {formatDate, formatVnd} from '../src/utils/format';
-import {inferGrowthStage} from '../src/utils/growthStage';
 
 const day = (iso: string, hour = 8) => new Date(`${iso}T${String(hour).padStart(2, '0')}:00:00+07:00`).getTime();
 
-// The demo farm: Lê Thành Thái, PUC-001-HB.
+// The demo farm: Lê Thành Thái, PUC-001-VT.
 const INS = [
   {fertilizerId: 'ure_ca_mau', fertilizerName: 'Urê Cà Mau', category: 'dam', quantityKg: 50, unitPrice: 13_600, occurredAt: day('2026-09-10')},
   {fertilizerId: 'dap_han_quoc', fertilizerName: 'DAP Hàn Quốc (nhập khẩu)', category: 'lan', quantityKg: 50, unitPrice: 22_000, occurredAt: day('2026-09-10')},
@@ -27,7 +26,7 @@ const OUTS = [
   {fertilizerId: 'ure_ca_mau', fertilizerName: 'Urê Cà Mau', category: 'dam', quantityKg: 20, unitPrice: 13_600, totalCost: 272_000, occurredAt: day('2026-09-14')},
 ];
 const INCOMES: LedgerEntry[] = [
-  {kind: 'product', description: 'Bán cà chua MV1 50kg', amount: 1_500_000, occurredAt: day('2026-09-01'), note: 'Bán cho cửa hàng Kim Hạnh', checked: true},
+  {kind: 'product', description: 'Bán hoa cúc cắt cành', amount: 1_500_000, occurredAt: day('2026-09-01'), note: 'Bán cho cửa hàng Kim Hạnh', checked: true},
 ];
 const EXPENSES: LedgerEntry[] = [
   {kind: 'labor', description: 'Công bón phân (3 công)', amount: 300_000, occurredAt: day('2026-09-05')},
@@ -57,24 +56,26 @@ describe('dashboard', () => {
 
   test('công việc: pending = tasks of the current stage without a done row', () => {
     const now = day('2026-09-14');
-    const infer = (plantedAt: number | null, at: number) => inferGrowthStage(plantedAt, at)?.stage ?? null;
     const plots = [
-      {id: 'p1', name: 'Ruộng cà chua', cropType: 'tomato', cropName: 'Cà chua', categoryId: 'tomato_round', plantedAt: day('2026-08-20'), status: 'active'},
+      {id: 'p1', name: 'Ruộng cà chua', cropType: 'tomato', cropName: 'Cà chua', categoryId: 'tomato_large', plantedAt: day('2026-08-20'), status: 'active'},
       {id: 'p2', name: 'Vườn ớt', cropType: 'chili', cropName: 'Ớt', categoryId: 'chili_chi_thien', plantedAt: day('2026-08-10'), status: 'active'},
       {id: 'p3', name: 'Bỏ hoá', cropType: 'tomato', cropName: 'Cà chua', categoryId: null, plantedAt: day('2026-08-01'), status: 'fallow'},
-      {id: 'p4', name: 'Cà phê mít', cropType: 'coffee', cropName: 'Cà phê', categoryId: 'coffee_liberica', plantedAt: null, status: 'active'},
+      // Chè Ô long has no protocol the app can follow (declared unavailable).
+      {id: 'p4', name: 'Chè Ô long', cropType: 'tea', cropName: 'Chè', categoryId: 'tea_taiwan', plantedAt: null, status: 'active'},
     ];
-    const none = pendingTasks(plots, [], now, infer);
+    const none = pendingTasks(plots, [], now);
+    // 14/09: cà chua trồng 20/08 (ngày 25) và ớt cay trồng 10/08 (ngày 35)
+    // đều ở giai đoạn sinh trưởng của quy trình QĐ 1972/QĐ-UBND.
     expect(none.map(g => [g.plotId, g.stageName, g.pending])).toEqual([
-      ['p1', 'Ra hoa đợt đầu', 4],
-      ['p2', 'Sinh trưởng (20–25 ngày sau trồng)', 3],
+      ['p1', 'Thúc lần 2 — vun luống, làm giàn', 3],
+      ['p2', 'Vun gốc — làm giàn', 3],
     ]);
-    expect(pendingTotal(none)).toBe(7);
-    expect(pendingSubtext(none)).toBe('Cà chua · Ra hoa đợt đầu: 4; Ớt · Sinh trưởng: 3');
+    expect(pendingTotal(none)).toBe(6);
+    expect(pendingSubtext(none)).toBe('Cà chua · Thúc lần 2: 3; Ớt · Vun gốc: 3');
 
-    const done = [{plotId: 'p1', protocolId: 'tomato_default', stageCode: 'flowering', taskKey: 'lam_gian'}];
-    const some = pendingTasks(plots, done, now, infer);
-    expect(some[0].pending).toBe(3);
+    const done = [{plotId: 'p1', protocolId: 'tomato_lamdong_2025', stageCode: 'vegetative', taskKey: 'cachua_lam_gian'}];
+    const some = pendingTasks(plots, done, now);
+    expect(some[0].pending).toBe(2);
     expect(pendingSubtext([])).toBe('Không có việc nào chờ ở giai đoạn hiện tại');
   });
 
@@ -180,7 +181,7 @@ describe('pdf report', () => {
   test('HTML carries summary, both detail tables, notes, footer and Unicode', () => {
     const html = reportHtml({
       farmerName: 'Lê Thành Thái',
-      address: 'Xã Hòa Bình, Huyện Thanh Trì, Hà Nội',
+      address: 'Làng hoa Vạn Thành, Đà Lạt, Lâm Đồng',
       report,
       notes,
       generatedAt: day('2026-09-14'),
@@ -193,7 +194,7 @@ describe('pdf report', () => {
     expect(html).toContain('Kỳ: Tháng 9, Năm 2026');
     expect(html).toContain('Lãi/Lỗ [LỖ]');
     expect(html).toContain('−700.000₫');
-    expect(html).toContain('<td class="day">01/09</td><td>Bán cà chua MV1 50kg</td><td class="num">1.500.000₫</td>');
+    expect(html).toContain('<td class="day">01/09</td><td>Bán hoa cúc cắt cành</td><td class="num">1.500.000₫</td>');
     expect(html).toContain('Tổng chi</td><td class="num">2.200.000₫');
     expect(html).toContain('Chi phí phân bón: 680.000₫ + 1.100.000₫ = 1.780.000₫');
     expect(html).toContain('support@agrilog.vn');

@@ -12,12 +12,12 @@ import {formatDate, formatVnd} from '../src/utils/format';
 const day = (iso: string) => new Date(`${iso}T08:00:00+07:00`).getTime();
 
 const INCOMES: LedgerEntry[] = [
-  {kind: 'product', description: 'Bán cà chua MV1 50kg', amount: 1_500_000, occurredAt: day('2026-09-01'), note: 'Bán cho cửa hàng Kim Hạnh', checked: true},
+  {kind: 'product', description: 'Bán hoa cúc cắt cành', amount: 1_500_000, occurredAt: day('2026-09-01'), note: 'Bán cho cửa hàng Kim Hạnh', checked: true},
 ];
 const EXPENSES: LedgerEntry[] = [
   {kind: 'labor', description: 'Công bón phân (3 công)', amount: 300_000, occurredAt: day('2026-09-05')},
   {kind: 'utilities', description: 'Điện nước', amount: 120_000, occurredAt: day('2026-09-10')},
-  {kind: 'fertilizer', description: 'Mua Urê Cà Mau 50 kg', amount: 680_000, occurredAt: day('2026-09-10'), note: 'Mua ở sfarm Hà Nội'},
+  {kind: 'fertilizer', description: 'Mua Urê Cà Mau 50 kg', amount: 680_000, occurredAt: day('2026-09-10'), note: 'Mua ở Đại lý vật tư nông nghiệp Vạn Thành'},
   {kind: 'fertilizer', description: 'Mua DAP 50 kg', amount: 1_100_000, occurredAt: day('2026-09-10'), note: 'East-West hạt giống'},
   {kind: 'other', description: 'Ngoài kỳ', amount: 999, occurredAt: day('2026-08-30')},
 ];
@@ -56,7 +56,7 @@ test('CSV: line 1 period, line 2 Thu/Chi/Lãi lỗ, details, totals', () => {
   expect(lines[0]).toBe('"Tháng 9, Năm 2026"');
   expect(lines[1]).toBe('Thu,1.500.000₫,Chi,2.200.000₫,Lãi lỗ,-700.000₫');
   expect(lines[3]).toBe('Loại,Ngày,Nhóm,Mô tả,Số tiền,Ghi chú,Đã kiểm tra');
-  expect(lines).toContain('Thu,01/09/2026,Sản phẩm,Bán cà chua MV1 50kg,1.500.000₫,Bán cho cửa hàng Kim Hạnh,x');
+  expect(lines).toContain('Thu,01/09/2026,Sản phẩm,Bán hoa cúc cắt cành,1.500.000₫,Bán cho cửa hàng Kim Hạnh,x');
   expect(lines).toContain('Chi,05/09/2026,Công nhân,Công bón phân (3 công),300.000₫,,');
   expect(lines[lines.length - 1]).toBe('Tổng,,,,Thu 1.500.000₫,Chi 2.200.000₫,Lãi lỗ -700.000₫');
 });

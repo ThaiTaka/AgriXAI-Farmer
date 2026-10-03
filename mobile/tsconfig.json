@@ -2,7 +2,6 @@
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
     "resolveJsonModule": true,
-    "baseUrl": ".",
     "paths": {
       "@shared/*": [
         "../shared/*"

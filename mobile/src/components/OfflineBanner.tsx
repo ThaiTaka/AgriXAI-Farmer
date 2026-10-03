@@ -4,6 +4,7 @@ import {SafeAreaInsetsContext} from 'react-native-safe-area-context';
 
 import type {BannerMessage} from '../domain/syncStatus';
 import {bannerFor} from '../domain/syncStatus';
+import {summaryLine} from '../domain/syncSummary';
 import {useSync} from '../sync/SyncContext';
 import {colors, space, text} from '../theme';
 import {CheckCircleIcon, CloseIcon, OfflineIcon} from './icons';
@@ -13,11 +14,13 @@ import {useClaimTopInset} from './TopInset';
  * One line at the top of the app that says where the data stands:
  *   offline  → amber "Chế độ offline — thay đổi sẽ lưu khi online" (auto-hides after 8 s, dismissible)
  *   syncing  → "Đang đồng bộ…"
- *   synced   → "Cập nhật lúc 14:35" (3 s)
+ *   synced   → "Cập nhật lúc 14:35" (3 s), or what the pass moved:
+ *              "Đã gửi 3 thay đổi lên máy chủ — dữ liệu đã an toàn · 14:35" (5 s)
  * Never a modal, never blocks a tap: being offline is a normal working state.
  */
 export function OfflineBanner() {
-  const {state, lastSyncedAt} = useSync();
+  const {state, lastSyncedAt, lastSummary} = useSync();
+  const detail = summaryLine(lastSummary ?? null);
   // The banner renders above every SafeAreaView, so it pads past the notch
   // itself. Read the context rather than useSafeAreaInsets(), which throws
   // when no provider is mounted.
@@ -34,7 +37,7 @@ export function OfflineBanner() {
       return;
     }
     first.current = false;
-    const next = bannerFor(state, lastSyncedAt);
+    const next = bannerFor(state, lastSyncedAt, detail);
     setMessage(next);
     if (next?.hideAfterMs) {
       timer.current = setTimeout(() => setMessage(null), next.hideAfterMs);
@@ -42,7 +45,7 @@ export function OfflineBanner() {
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
-  }, [state, lastSyncedAt]);
+  }, [state, lastSyncedAt, detail]);
 
   // Dải này tự phủ nền lên dưới đồng hồ/pin, nên nó "nhận" phần tai thỏ:
   // các màn hình bên dưới sẽ không cộng inset lần thứ hai.

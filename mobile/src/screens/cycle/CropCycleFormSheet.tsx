@@ -321,7 +321,7 @@ export function CropCycleFormSheet({visible, onClose, plot, cycle, mode, history
                   label="Giống cây"
                   value={varietyName}
                   onChangeText={setVarietyName}
-                  placeholder="Không bắt buộc — VD: MV1"
+                  placeholder="Không bắt buộc — VD: Makoto"
                 />
                 <DateField
                   label="Ngày xuống giống"

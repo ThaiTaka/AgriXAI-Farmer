@@ -136,7 +136,7 @@ export function PlotFormScreen() {
     if (!form.name.trim()) next.name = 'Tên lô đất là bắt buộc.';
 
     // A code the plot already carries (issued by the back office, e.g.
-    // "PUC-001-HB") is valid as it is; only a newly typed code has to follow
+    // "PUC-001-VT") is valid as it is; only a newly typed code has to follow
     // the app's own PUC-YYMM-XXXX shape.
     const codeUnchanged = existing != null && form.code.trim() === (existing.code ?? '');
     if (form.code.trim() && !codeUnchanged && !isWellFormedPlotCode(form.code)) {

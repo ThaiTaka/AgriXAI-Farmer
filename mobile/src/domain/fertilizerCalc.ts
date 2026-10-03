@@ -28,7 +28,7 @@ export interface CalcLine {
   /** The item as named in the source (differs only for nutrient-basis rows). */
   sourceName: string;
   fertilizerCategory: string;
-  unit: 'kg' | 'tấn';
+  unit: 'kg' | 'tấn' | 'm³';
   min: number;
   max: number;
   nutrient: Nutrient | null;
@@ -97,9 +97,10 @@ export function calculate({protocol, scenario, areaM2, factors, findProduct}: Ca
       priceProductId = priceProductId ?? conv.price_product_id;
     }
 
-    const product = priceProductId ? findProduct(priceProductId) : undefined;
+    // A volume (m³ of manure) has no weight to multiply a per-kg price by.
+    const kgMultiplier = item.unit === 'tấn' ? KG_PER_TAN : item.unit === 'kg' ? 1 : null;
+    const product = priceProductId && kgMultiplier !== null ? findProduct(priceProductId) : undefined;
     const pricePerKg = product?.price_per_kg_avg ?? null;
-    const kgMultiplier = item.unit === 'tấn' ? KG_PER_TAN : 1;
 
     lines.push({
       key: item.key,
@@ -116,8 +117,8 @@ export function calculate({protocol, scenario, areaM2, factors, findProduct}: Ca
       priceProductId: product ? product.id : null,
       priceProductName: product ? product.name : null,
       pricePerKg,
-      costMin: pricePerKg === null ? null : min * kgMultiplier * pricePerKg,
-      costMax: pricePerKg === null ? null : max * kgMultiplier * pricePerKg,
+      costMin: pricePerKg === null || kgMultiplier === null ? null : min * kgMultiplier * pricePerKg,
+      costMax: pricePerKg === null || kgMultiplier === null ? null : max * kgMultiplier * pricePerKg,
       note: item.note ?? null,
     });
   }

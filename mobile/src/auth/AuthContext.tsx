@@ -1,6 +1,7 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 
 import {login as loginRequest} from '../api/auth';
+import {prepareDeviceFor} from './deviceOwner';
 import type {StoredSession} from './tokenStore';
 import {clearSession, loadSession, saveSession} from './tokenStore';
 
@@ -32,6 +33,9 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
 
   const signIn = useCallback(async (identifier: string, password: string) => {
     const next = await loginRequest(identifier, password);
+    // Before the session exists: if another account's unsent rows are on this
+    // phone, the sign-in stops here and nothing is synced under the wrong name.
+    await prepareDeviceFor(next.user);
     await saveSession(next);
     setSession(next);
     setStatus('signedIn');

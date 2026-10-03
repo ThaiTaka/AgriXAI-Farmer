@@ -29,9 +29,10 @@ import {
 } from '../../db/repositories/varietyRepository';
 import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
-import {colors, space, text} from '../../theme';
+import {colors, radius, space, text} from '../../theme';
 import {cropCategory, cropTypeById, VARIETY_BADGE_LABELS} from '../../utils/staticData';
 import {AddVarietySheet} from './AddVarietySheet';
+import {CropPhotoImage} from './CropPhoto';
 import {useVarietyCatalogue} from './useVarietyCatalogue';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -91,9 +92,12 @@ export function VarietyPickScreen() {
       />
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <Text style={[text('bodySm', colors.text.muted), styles.intro]} numberOfLines={2}>
-          {cropName} › {categoryName}
-        </Text>
+        <View style={styles.intro}>
+          <CropPhotoImage cropTypeId={params.cropTypeId} style={styles.thumb} testID="variety-crop-photo" />
+          <Text style={[text('bodySm', colors.text.muted), styles.introText]} numberOfLines={2}>
+            {cropName} › {categoryName}
+          </Text>
+        </View>
         {varieties.length === 0 ? (
           <EmptyState
             title="Chưa có dữ liệu"
@@ -191,7 +195,18 @@ const styles = StyleSheet.create({
     paddingBottom: space['3xl'],
   },
   intro: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space.md,
     marginBottom: space.md,
+  },
+  thumb: {
+    width: 48,
+    height: 48,
+    borderRadius: radius.sm,
+  },
+  introText: {
+    flex: 1,
   },
   item: {
     marginBottom: space.md,

@@ -14,13 +14,20 @@ export interface BannerMessage {
 
 export const OFFLINE_HIDE_MS = 8_000;
 export const SYNCED_HIDE_MS = 3_000;
+/** Long enough to read "Đã gửi 3 thay đổi lên máy chủ — dữ liệu đã an toàn". */
+export const SYNCED_DETAIL_HIDE_MS = 5_000;
 
 export function clockLabel(at: number): string {
   const d = new Date(at);
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
-export function bannerFor(state: SyncState, lastSyncedAt: number | null): BannerMessage | null {
+/**
+ * `detail` is what the pass moved, in words (domain/syncSummary.ts) — when the
+ * sync actually sent or received something the banner says that instead of
+ * only the time.
+ */
+export function bannerFor(state: SyncState, lastSyncedAt: number | null, detail: string | null = null): BannerMessage | null {
   switch (state) {
     case 'offline':
       return {kind: 'offline', text: 'Chế độ offline — thay đổi sẽ lưu khi online', hideAfterMs: OFFLINE_HIDE_MS};
@@ -29,7 +36,9 @@ export function bannerFor(state: SyncState, lastSyncedAt: number | null): Banner
     case 'error':
       return {kind: 'error', text: 'Đồng bộ gặp lỗi — sẽ thử lại', hideAfterMs: OFFLINE_HIDE_MS};
     case 'idle':
-      return lastSyncedAt ? {kind: 'synced', text: `Cập nhật lúc ${clockLabel(lastSyncedAt)}`, hideAfterMs: SYNCED_HIDE_MS} : null;
+      if (!lastSyncedAt) return null;
+      if (detail) return {kind: 'synced', text: `${detail} · ${clockLabel(lastSyncedAt)}`, hideAfterMs: SYNCED_DETAIL_HIDE_MS};
+      return {kind: 'synced', text: `Cập nhật lúc ${clockLabel(lastSyncedAt)}`, hideAfterMs: SYNCED_HIDE_MS};
     default:
       return null;
   }
@@ -64,6 +73,9 @@ export const TABLE_NAMES_VI: Record<string, string> = {
   income: 'khoản thu',
   expense: 'khoản chi',
   tasks_history: 'công việc',
+  task_notes: 'ghi chép công việc',
+  care_guides: 'hướng dẫn chăm sóc',
+  notifications: 'thông báo',
 };
 
 /** A short label for a conflicting record, from whatever naming column it has. */
@@ -117,4 +129,18 @@ export function tableStatusLine(
     return `Offline ${age} · ${info.pending} thay đổi chờ đồng bộ`;
   }
   return lastSyncedAt ? `Đã lưu trên server ${formatDateTime(lastSyncedAt)}` : 'Chưa đồng bộ lần nào';
+}
+
+/**
+ * The sign-out confirmation. Signing out keeps unsent changes on the phone,
+ * but only this account can send them — and another account cannot sign in
+ * here until they are sent (auth/deviceOwner.ts) — so the farmer is told.
+ */
+export function signOutMessage(tables: readonly TableSyncInfo[]): string {
+  const unsent = tables.reduce((sum, t) => sum + t.pending, 0);
+  if (unsent === 0) return 'Bạn có chắc muốn đăng xuất khỏi ứng dụng?';
+  return (
+    `Còn ${unsent} thay đổi chưa gửi lên máy chủ. Chúng vẫn được giữ trên máy, ` +
+    'nhưng phải đăng nhập lại tài khoản này khi có mạng mới gửi được. Vẫn đăng xuất?'
+  );
 }

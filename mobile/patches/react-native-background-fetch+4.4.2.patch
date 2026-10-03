@@ -1,0 +1,71 @@
+diff --git a/node_modules/react-native-background-fetch/android/src/main/java/com/transistorsoft/rnbackgroundfetch/RNBackgroundFetchModule.java b/node_modules/react-native-background-fetch/android/src/main/java/com/transistorsoft/rnbackgroundfetch/RNBackgroundFetchModule.java
+index caee803..e68e8ba 100644
+--- a/node_modules/react-native-background-fetch/android/src/main/java/com/transistorsoft/rnbackgroundfetch/RNBackgroundFetchModule.java
++++ b/node_modules/react-native-background-fetch/android/src/main/java/com/transistorsoft/rnbackgroundfetch/RNBackgroundFetchModule.java
+@@ -5,6 +5,9 @@ import android.content.Intent;
+ import android.util.Log;
+ 
+ import com.facebook.react.bridge.*;
++import com.facebook.react.common.LifecycleState;
++import com.facebook.react.jstasks.HeadlessJsTaskConfig;
++import com.facebook.react.jstasks.HeadlessJsTaskContext;
+ import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
+ import com.facebook.fbreact.specs.NativeBackgroundFetchSpec;
+ import com.transistorsoft.tsbackgroundfetch.BackgroundFetch;
+@@ -31,16 +34,10 @@ public class RNBackgroundFetchModule extends NativeBackgroundFetchSpec implement
+ 
+         BackgroundFetch.Callback callback = new BackgroundFetch.Callback() {
+             @Override public void onFetch(String taskId) {
+-                WritableMap params = new WritableNativeMap();
+-                params.putString("taskId", taskId);
+-                params.putBoolean("timeout", false);
+-                getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(EVENT_FETCH, params);
++                deliver(taskId, false);
+             }
+             @Override public void onTimeout(String taskId) {
+-                WritableMap params = new WritableNativeMap();
+-                params.putString("taskId", taskId);
+-                params.putBoolean("timeout", true);
+-                getReactApplicationContext().getJSModule(RCTNativeAppEventEmitter.class).emit(EVENT_FETCH, params);
++                deliver(taskId, true);
+             }
+         };
+         adapter.configure(buildConfig(options)
+@@ -51,6 +48,37 @@ public class RNBackgroundFetchModule extends NativeBackgroundFetchSpec implement
+         promise.resolve(BackgroundFetch.STATUS_AVAILABLE);
+     }
+ 
++    private static WritableMap eventParams(String taskId, boolean timeout) {
++        WritableMap params = new WritableNativeMap();
++        params.putString("taskId", taskId);
++        params.putBoolean("timeout", timeout);
++        return params;
++    }
++
++    /**
++     * AgriLog patch: with the activity paused (app in the background but not
++     * terminated) React Native stops driving JS timers, so a handler that
++     * awaits fetch() or setTimeout never finishes until the app is reopened.
++     * A headless JS task keeps timers running, so in that state the event is
++     * delivered to the registered headless task ("BackgroundFetch") instead.
++     * In the foreground the event goes to the configure() listener as before.
++     */
++    private void deliver(final String taskId, final boolean timeout) {
++        final ReactApplicationContext context = getReactApplicationContext();
++        if (context.getLifecycleState() == LifecycleState.RESUMED || !context.hasActiveReactInstance()) {
++            context.getJSModule(RCTNativeAppEventEmitter.class).emit(EVENT_FETCH, eventParams(taskId, timeout));
++            return;
++        }
++        UiThreadUtil.runOnUiThread(() -> {
++            try {
++                HeadlessJsTaskContext.getInstance(context)
++                        .startTask(new HeadlessJsTaskConfig("BackgroundFetch", eventParams(taskId, timeout), 30000));
++            } catch (IllegalStateException e) {
++                context.getJSModule(RCTNativeAppEventEmitter.class).emit(EVENT_FETCH, eventParams(taskId, timeout));
++            }
++        });
++    }
++
+     @ReactMethod
+     public void scheduleTask(ReadableMap options, final Promise promise) {
+         BackgroundFetch adapter = getAdapter();

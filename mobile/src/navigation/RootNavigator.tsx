@@ -8,6 +8,7 @@ import {ConflictDialog} from '../components/ConflictDialog';
 import {OfflineBanner} from '../components/OfflineBanner';
 import {Screen} from '../components/Screen';
 import {ScreenErrorBoundary} from '../components/ScreenErrorBoundary';
+import {NotificationCenter} from '../notify/NotificationCenter';
 import {FertilizerCalculatorScreen} from '../screens/calculator/FertilizerCalculatorScreen';
 import {CareProtocolScreen} from '../screens/care/CareProtocolScreen';
 import {FertilizerBudgetScreen} from '../screens/fertilizer/FertilizerBudgetScreen';
@@ -15,9 +16,11 @@ import {FertilizerGroupsScreen} from '../screens/fertilizer/FertilizerGroupsScre
 import {FertilizerProductsScreen} from '../screens/fertilizer/FertilizerProductsScreen';
 import {FinanceScreen} from '../screens/finance/FinanceScreen';
 import {CareGuideListScreen} from '../screens/guide/CareGuideListScreen';
+import {VoiceEntryScreen} from '../screens/voice/VoiceEntryScreen';
 import {CareGuideScreen} from '../screens/guide/CareGuideScreen';
 import {HomeScreen} from '../screens/HomeScreen';
 import {LoginScreen} from '../screens/LoginScreen';
+import {NotificationsScreen} from '../screens/notifications/NotificationsScreen';
 import {PlotDetailScreen} from '../screens/PlotDetailScreen';
 import {PlotPickerScreen} from '../screens/PlotPickerScreen';
 import {PlotFormScreen} from '../screens/PlotFormScreen';
@@ -30,7 +33,9 @@ import {VarietyCategoryScreen} from '../screens/variety/VarietyCategoryScreen';
 import {VarietyCropTypeScreen} from '../screens/variety/VarietyCropTypeScreen';
 import {VarietyPickScreen} from '../screens/variety/VarietyPickScreen';
 import {WarehouseScreen} from '../screens/warehouse/WarehouseScreen';
+import {WeatherScreen} from '../screens/weather/WeatherScreen';
 import {colors} from '../theme';
+import {flushPendingNavigation, navigationRef} from './navigationRef';
 import type {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -67,7 +72,7 @@ function useScreenLayout() {
 }
 
 export function RootNavigator() {
-  const {status} = useAuth();
+  const {status, session} = useAuth();
   const layout = useScreenLayout();
 
   if (status === 'loading') {
@@ -81,8 +86,9 @@ export function RootNavigator() {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef} onReady={flushPendingNavigation}>
       {status === 'signedIn' ? <OfflineBanner /> : null}
+      {status === 'signedIn' && session ? <NotificationCenter userId={session.user.id} /> : null}
       <Stack.Navigator
         screenLayout={layout}
         screenOptions={{
@@ -115,6 +121,9 @@ export function RootNavigator() {
             <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
             <Stack.Screen name="CareGuides" component={CareGuideListScreen} />
             <Stack.Screen name="CareGuide" component={CareGuideScreen} />
+            <Stack.Screen name="VoiceEntry" component={VoiceEntryScreen} options={{animation: 'slide_from_bottom'}} />
+            <Stack.Screen name="Notifications" component={NotificationsScreen} />
+            <Stack.Screen name="Weather" component={WeatherScreen} />
           </>
         )}
       </Stack.Navigator>

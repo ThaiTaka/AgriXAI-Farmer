@@ -10,6 +10,7 @@ import cropVarietiesJson from '@shared/data/crop_varieties.json';
 import fertilizerJson from '@shared/data/fertilizer_recommendations.json';
 
 import type {VarietyBadge} from '../db/models/CropVariety';
+import {livePrice} from '../live/priceIndex';
 import {humanizeCropSlug, slugifyCropName} from './cropSlug';
 
 /* ------------------------------ care protocols ----------------------------- */
@@ -22,11 +23,13 @@ export {
   citation,
   conversionFactors,
   conversionNote,
+  currentStage,
   protocolAvailability,
   protocolById,
   protocolsFor,
   stageForGrowth,
   stageForMonth,
+  stageForDay,
   STAGE_LABELS,
   TASK_TYPE_LABELS,
   unavailableEntries,
@@ -60,7 +63,18 @@ export interface CropCategory {
   varieties: SeedVariety[];
 }
 
-export type CropIcon = 'tomato' | 'coffee' | 'cucumber' | 'chili' | 'other';
+export type CropIcon = 'tomato' | 'coffee' | 'cucumber' | 'chili' | 'flower' | 'other';
+
+/** Credit for the crop's bundled photo (Wikimedia Commons, free licence). */
+export interface CropImage {
+  file: string;
+  author: string;
+  license: string;
+  license_url: string;
+  source_url: string;
+  /** What was changed from the original, when anything was (e.g. cropped). */
+  changes?: string;
+}
 
 export interface CropType {
   id: string;
@@ -68,6 +82,7 @@ export interface CropType {
   icon: CropIcon;
   scientific_name: string;
   description: string;
+  image?: CropImage;
   categories: CropCategory[];
 }
 
@@ -188,6 +203,11 @@ export interface FertilizerProduct {
   price_per_kg_max: number | null;
   price_per_kg_avg: number | null;
   budget_tier: BudgetTierCode | null;
+  /**
+   * The admin's newer price (live/prices.ts). When set, price_per_kg_avg holds
+   * it — so every cost estimate uses it — and the survey's average stays here.
+   */
+  live_price?: {per_kg: number; from: number; survey_avg: number | null};
 }
 
 export interface BudgetTier {
@@ -214,17 +234,29 @@ export function fertilizerCategory(code: string): FertilizerCategory | undefined
   return fertilizers.categories.find(c => c.code === code);
 }
 
+/** A product with the admin's current price laid over the survey's, if there is one. */
+function withLivePrice(product: FertilizerProduct): FertilizerProduct {
+  const live = livePrice(product.id);
+  if (!live) return product;
+  return {
+    ...product,
+    price_per_kg_avg: live.pricePerKg,
+    live_price: {per_kg: live.pricePerKg, from: live.effectiveFrom, survey_avg: product.price_per_kg_avg},
+  };
+}
+
 export function fertilizerProducts(categoryCode?: string): FertilizerProduct[] {
-  const rows = categoryCode
-    ? fertilizers.products.filter(p => p.category === categoryCode)
-    : fertilizers.products;
-  return [...rows].sort(
+  const rows = (
+    categoryCode ? fertilizers.products.filter(p => p.category === categoryCode) : fertilizers.products
+  ).map(withLivePrice);
+  return rows.sort(
     (a, b) => (a.price_per_kg_avg ?? Number.MAX_SAFE_INTEGER) - (b.price_per_kg_avg ?? Number.MAX_SAFE_INTEGER),
   );
 }
 
 export function fertilizerProduct(id: string): FertilizerProduct | undefined {
-  return fertilizers.products.find(p => p.id === id);
+  const product = fertilizers.products.find(p => p.id === id);
+  return product ? withLivePrice(product) : undefined;
 }
 
 export function budgetTiers(): BudgetTier[] {

@@ -31,7 +31,7 @@ import {observePlots} from '../../db/repositories/plotRepository';
 import {useObservable} from '../../db/useObservable';
 import {AREA_UNITS, areaUnitInfo, plotAreaUnit, toSquareMetres, type AreaUnit} from '../../domain/areaUnits';
 import type {CareProtocol, Scenario} from '../../domain/careProtocol';
-import {citation, conversionFactors, conversionNote, protocolAvailability} from '../../domain/careProtocol';
+import {citation, conversionFactors, conversionNote, protocolAvailability, protocolChoiceLabel} from '../../domain/careProtocol';
 import type {CalcResult} from '../../domain/fertilizerCalc';
 import {calculate, formatRange} from '../../domain/fertilizerCalc';
 import type {PickedVariety, RootStackParamList} from '../../navigation/types';
@@ -242,9 +242,8 @@ export function FertilizerCalculatorScreen() {
             error={error}
             hint={areaM2 > 0 && unit !== 'm2' ? `= ${formatNumber(areaM2)} m²` : undefined}
           />
-          {/* Sáu đơn vị không vừa một dòng máy 320pt: để wrap thì "ha" rơi
-              một mình xuống dòng dưới, trông như nút lạc. Cuộn ngang giữ
-              chúng thành một dải liền, thứ tự không đổi. */}
+          {/* Ba đơn vị dùng ở Lâm Đồng (m², sào, ha) vừa một dòng; cuộn ngang
+              giữ chúng thành một dải liền nếu cỡ chữ hệ thống phóng to. */}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -270,7 +269,7 @@ export function FertilizerCalculatorScreen() {
               <View style={styles.field}>
                 <Text style={[text('meta', colors.text.secondary), styles.label]}>Nguồn quy trình</Text>
                 <SegmentedControl
-                  items={protocols.map(p => ({key: p.id, label: p.source.publisher.split(/[—(,]/)[0].trim().split(/\s+/).slice(0, 4).join(' ')}))}
+                  items={protocols.map(p => ({key: p.id, label: protocolChoiceLabel(p, protocols)}))}
                   value={protocol.id}
                   onChange={id => {
                     setProtocolId(id);

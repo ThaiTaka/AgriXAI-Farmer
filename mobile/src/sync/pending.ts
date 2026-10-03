@@ -9,13 +9,14 @@
 import {Q} from '@nozbe/watermelondb';
 
 import {database} from '../db';
-import {SYNC_TABLES} from '../db/schema';
+import {BACKGROUND_TABLES, SYNC_TABLES} from '../db/schema';
 import type {TableSyncInfo} from '../domain/syncStatus';
 import {TABLE_LABELS} from '../domain/syncStatus';
 
 export async function pendingByTable(): Promise<TableSyncInfo[]> {
   const infos: TableSyncInfo[] = [];
   for (const table of SYNC_TABLES) {
+    if (BACKGROUND_TABLES.includes(table)) continue;
     let pending = 0;
     let oldest: number | null = null;
     try {

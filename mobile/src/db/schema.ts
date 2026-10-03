@@ -20,7 +20,7 @@
 
 import {appSchema, tableSchema} from '@nozbe/watermelondb';
 
-export const SCHEMA_VERSION = 7;
+export const SCHEMA_VERSION = 8;
 
 export const schema = appSchema({
   version: SCHEMA_VERSION,
@@ -290,6 +290,44 @@ export const schema = appSchema({
       ],
     }),
 
+    // ---- V2.2: notifications ----
+    // Written by an admin in web-admin, or by the server itself (a weather
+    // warning, a price change). Read-only here: they arrive through /sync and
+    // the server refuses any change the phone might push. owner_id is null
+    // for a message meant for every farm.
+    tableSchema({
+      name: 'notifications',
+      columns: [
+        {name: 'owner_id', type: 'string', isOptional: true, isIndexed: true},
+        {name: 'kind', type: 'string'},
+        {name: 'level', type: 'string'},
+        {name: 'title', type: 'string'},
+        {name: 'body', type: 'string'},
+        {name: 'link', type: 'string', isOptional: true},
+        {name: 'source_name', type: 'string', isOptional: true},
+        {name: 'source_url', type: 'string', isOptional: true},
+        {name: 'expires_at', type: 'number', isOptional: true},
+        {name: 'created_by', type: 'string', isOptional: true},
+        {name: 'updated_by', type: 'string', isOptional: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number', isIndexed: true},
+      ],
+    }),
+
+    // The farmer's "đã xem" marks — their own rows, synced like any farm
+    // record so a second phone shows the same badge and web-admin can count
+    // how many farms a message reached.
+    tableSchema({
+      name: 'notification_reads',
+      columns: [
+        {name: 'notification_id', type: 'string', isIndexed: true},
+        {name: 'read_at', type: 'number'},
+        {name: 'owner_id', type: 'string', isIndexed: true},
+        {name: 'created_at', type: 'number'},
+        {name: 'updated_at', type: 'number'},
+      ],
+    }),
+
     // ---- Giai đoạn 4: local-only error log ----
     // Written by the screen error boundary, uploaded to POST /logs when the
     // phone is online, never pulled back. Not part of the sync protocol, so
@@ -327,7 +365,16 @@ export const SYNC_TABLES = [
   'tasks_history',
   'task_notes',
   'care_guides',
+  'notifications',
+  'notification_reads',
 ] as const;
+
+/**
+ * Synced tables that never hold the farmer's own work: a "đã xem" mark that
+ * has not reached the server yet is not worth a "chưa đồng bộ" flag, and must
+ * not stop another account from signing in on this phone.
+ */
+export const BACKGROUND_TABLES: readonly string[] = ['notification_reads'];
 
 /** Tables that stay on the device and have no server counterpart. */
 export const LOCAL_ONLY_TABLES = ['error_logs'] as const;

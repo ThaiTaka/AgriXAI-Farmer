@@ -19,7 +19,7 @@ import {
 } from '../src/domain/cultivation';
 import {cropNameOf} from '../src/utils/staticData';
 
-/** 08:00 Hà Nội time on a given day, as epoch ms. */
+/** 08:00 Vietnam time on a given day, as epoch ms. */
 const ms = (day: string, time = '08:00') => Date.parse(`${day}T${time}:00+07:00`);
 
 let n = 0;
@@ -44,7 +44,7 @@ describe('seasons', () => {
     expect(seasonOf(ms('2025-04-01'))).toBe('summer');
     expect(seasonOf(ms('2025-09-30'))).toBe('autumn');
     expect(seasonOf(ms('2025-12-31'))).toBe('winter');
-    // 00:30 on 1 April in Hà Nội is still 31 March in UTC.
+    // 00:30 on 1 April in Vietnam is still 31 March in UTC.
     expect(seasonOf(ms('2025-04-01', '00:30'))).toBe('summer');
     expect(yearOf(ms('2026-01-01', '00:30'))).toBe(2026);
   });

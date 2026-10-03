@@ -16,6 +16,7 @@ import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 
 import {migrations} from './migrations';
 import {
+  AppNotification,
   CareGuide,
   ChangeLog,
   CropCycle,
@@ -23,6 +24,7 @@ import {
   ErrorLogEntry,
   Expense,
   Income,
+  NotificationRead,
   Plan,
   Plot,
   TaskHistory,
@@ -59,6 +61,8 @@ export const database = new Database({
     TaskHistory,
     TaskNote,
     CareGuide,
+    AppNotification,
+    NotificationRead,
     ErrorLogEntry,
   ],
 });
@@ -76,8 +80,10 @@ export const collections = {
   tasksHistory: database.get<TaskHistory>('tasks_history'),
   taskNotes: database.get<TaskNote>('task_notes'),
   careGuides: database.get<CareGuide>('care_guides'),
+  notifications: database.get<AppNotification>('notifications'),
+  notificationReads: database.get<NotificationRead>('notification_reads'),
   errorLogs: database.get<ErrorLogEntry>('error_logs'),
 };
 
-export {schema, SCHEMA_VERSION, SYNC_TABLES, LOCAL_ONLY_TABLES} from './schema';
+export {schema, SCHEMA_VERSION, SYNC_TABLES, LOCAL_ONLY_TABLES, BACKGROUND_TABLES} from './schema';
 export * from './models';

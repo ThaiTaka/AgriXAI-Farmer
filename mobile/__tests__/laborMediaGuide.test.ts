@@ -2,7 +2,17 @@
  * V2.1 — tiền công, danh sách ảnh/video của một ghi chú, và hướng dẫn chăm sóc.
  */
 
-import {isYoutubeId, parseImageIds, parseSteps, videoPlayerHtml, youtubeEmbedHtml, youtubeWatchUrl} from '../src/domain/careGuide';
+import type {GrowthStage} from '../src/db/models/CropCycle';
+import {
+  guidesForStage,
+  isYoutubeId,
+  parseImageIds,
+  parseSteps,
+  videoPlayerHtml,
+  youtubeEmbedHtml,
+  youtubeThumbnailUrl,
+  youtubeWatchUrl,
+} from '../src/domain/careGuide';
 import {describeLabor, laborAmount, parseDecimal} from '../src/domain/labor';
 import {
   describeMedia,
@@ -117,6 +127,19 @@ describe('care guides', () => {
     expect(parseImageIds(null)).toEqual([]);
   });
 
+  test('guides beside a task: its round first (by code or growth stage), then the general ones', () => {
+    const guides = [
+      {id: 'general', stageCode: null},
+      {id: 'by-growth-stage', stageCode: 'harvesting'},
+      {id: 'by-round-code', stageCode: 'harvest'},
+      {id: 'other-round', stageCode: 'seedling'},
+    ];
+    // Cà chua's last round is coded "harvest" and covers two growth stages.
+    const round = {growth_stages: ['fruiting', 'harvesting'] as GrowthStage[]};
+    expect(guidesForStage(guides, 'harvest', round).map(g => g.id)).toEqual(['by-growth-stage', 'by-round-code', 'general']);
+    expect(guidesForStage(guides, 'harvest', undefined).map(g => g.id)).toEqual(['by-round-code', 'general']);
+  });
+
   test('YouTube embed', () => {
     expect(isYoutubeId('dQw4w9WgXcQ')).toBe(true);
     expect(isYoutubeId('short')).toBe(false);
@@ -124,7 +147,11 @@ describe('care guides', () => {
     const html = youtubeEmbedHtml('dQw4w9WgXcQ');
     expect(html).toContain('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?playsinline=1');
     expect(html).toContain('referrerpolicy="strict-origin-when-cross-origin"');
+    expect(html).not.toContain('autoplay=1');
+    expect(youtubeEmbedHtml('dQw4w9WgXcQ', {autoplay: true})).toContain('autoplay=1');
     expect(() => youtubeEmbedHtml('"><script>')).toThrow();
+    expect(youtubeThumbnailUrl('dQw4w9WgXcQ')).toBe('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg');
+    expect(() => youtubeThumbnailUrl('../x')).toThrow();
     expect(youtubeWatchUrl('dQw4w9WgXcQ')).toBe('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
   });
 

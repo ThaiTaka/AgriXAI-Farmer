@@ -1,13 +1,15 @@
 /**
  * Trang chủ — dashboard nông hộ.
  *
- * Greeting, three summary cards (tồn kho · tháng này · công việc), six tool
- * buttons, then the plot list. Every number comes from local observables
- * through useDashboard, so the screen is complete with the network off and
- * updates the instant a row is written (Điều 1).
+ * Greeting, three summary cards (tồn kho · tháng này · công việc), the
+ * village weather, six tool buttons, then the plot list. Every number comes
+ * from local observables through useDashboard, so the screen is complete with
+ * the network off and updates the instant a row is written (Điều 1). The
+ * weather card shows the last forecast kept on the phone; the bell counts
+ * unread messages from the admin and the server.
  */
 
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback} from 'react';
 import {ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
@@ -36,12 +38,17 @@ import {QuickAddFab} from '../components/QuickAddFab';
 import {Screen} from '../components/Screen';
 import {SyncStatus} from '../components/SyncStatus';
 import {useTopInset} from '../components/TopInset';
+import {WeatherCard} from '../components/WeatherCard';
 import type Plot from '../db/models/Plot';
 import type TaskHistory from '../db/models/TaskHistory';
 import {observeUpcomingReminders} from '../db/repositories/taskHistoryRepository';
 import {useObservable} from '../db/useObservable';
 import {pendingSubtext, pendingTotal} from '../domain/dashboard';
+import {signOutMessage} from '../domain/syncStatus';
+import {refreshForecast} from '../live/weather';
+import {useForecast} from '../live/weatherIndex';
 import type {RootStackParamList} from '../navigation/types';
+import {useUnreadCount} from '../notify/useUnreadCount';
 import {useSync} from '../sync/SyncContext';
 import {colors, radius, size, space, text} from '../theme';
 import {formatDate, formatNumber, formatVnd, formatWeekdayDate} from '../utils/format';
@@ -64,10 +71,20 @@ const TOOLS: {route: ToolRoute; title: string; meta: string; icon: React.ReactNo
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
   const user = useCurrentUser();
-  const {signOut} = useAuth();
+  const {signOut, session} = useAuth();
   const {pending: pendingSync} = useSync();
   const data = useDashboard(user.id);
   const reminders = useObservable<TaskHistory[]>(() => observeUpcomingReminders(user.id), [user.id], []);
+  const forecast = useForecast();
+  const unread = useUnreadCount(user.id);
+  const token = session?.token ?? null;
+
+  // A forecast older than half an hour is refreshed on the way in (offline: kept as is).
+  useFocusEffect(
+    useCallback(() => {
+      if (token) refreshForecast(token).catch(() => {});
+    }, [token]),
+  );
 
   const openPlot = useCallback((plot: Plot) => navigation.navigate('PlotDetail', {plotId: plot.id}), [navigation]);
 
@@ -75,7 +92,7 @@ export function HomeScreen() {
   const topInset = useTopInset();
 
   const confirmSignOut = useCallback(() => {
-    Alert.alert('Đăng xuất', 'Bạn có chắc muốn đăng xuất khỏi ứng dụng?', [
+    Alert.alert('Đăng xuất', signOutMessage(pendingSync), [
       {text: 'Huỷ', style: 'cancel'},
       {
         text: 'Đăng xuất',
@@ -85,7 +102,7 @@ export function HomeScreen() {
         },
       },
     ]);
-  }, [signOut]);
+  }, [signOut, pendingSync]);
 
   // Vietnamese names put the given name last, so the avatar shows the first
   // letter of the final word: "Lê Thành Thái" -> "T".
@@ -113,6 +130,18 @@ export function HomeScreen() {
             {user.region ? ` · ${user.region}` : ''}
           </Text>
         </View>
+        <IconButton
+          accessibilityLabel={unread > 0 ? `Thông báo, ${unread} chưa xem` : 'Thông báo'}
+          onPress={() => navigation.navigate('Notifications')}>
+          <View>
+            <BellIcon size={22} color={colors.primary.onPrimary} />
+            {unread > 0 ? (
+              <View style={styles.badge} testID="home-unread-badge">
+                <Text style={styles.badgeText}>{unread > 9 ? '9+' : unread}</Text>
+              </View>
+            ) : null}
+          </View>
+        </IconButton>
         <IconButton
           accessibilityLabel="Cài đặt"
           onPress={() => navigation.navigate('Settings')}>
@@ -170,6 +199,8 @@ export function HomeScreen() {
             onPress={() => navigation.navigate('CareProtocol', data.pending[0] ? {plotId: data.pending[0].plotId} : undefined)}
           />
         </View>
+
+        <WeatherCard forecast={forecast} onPress={() => navigation.navigate('Weather')} />
 
         <Text style={[text('eyebrow', colors.text.secondary), styles.sectionLabel]}>Công cụ</Text>
         <View style={styles.toolGrid}>
@@ -274,6 +305,7 @@ export function HomeScreen() {
       <QuickAddFab
         onRecordMoney={() => navigation.navigate('Finance', {tab: 'income'})}
         onRecordStock={() => navigation.navigate('Warehouse', {tab: 'in'})}
+        onRecordVoice={() => navigation.navigate('VoiceEntry')}
       />
     </Screen>
   );
@@ -317,6 +349,25 @@ const styles = StyleSheet.create({
   },
   avatarPressed: {
     backgroundColor: colors.primary.pressed,
+  },
+  badge: {
+    position: 'absolute',
+    top: -6,
+    right: -8,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 4,
+    borderRadius: 9,
+    backgroundColor: colors.accent.coral,
+    borderWidth: 1.5,
+    borderColor: colors.primary.default,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeText: {
+    ...text('badge', colors.white),
+    fontSize: 10.5,
+    lineHeight: 13,
   },
   cards: {
     gap: space.md,

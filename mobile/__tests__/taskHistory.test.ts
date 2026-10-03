@@ -6,7 +6,7 @@
 import {allProtocols} from '../src/domain/careProtocol';
 import {describeRecords, taskHistoryFor} from '../src/domain/taskHistory';
 import {migrations} from '../src/db/migrations';
-import {schema, SCHEMA_VERSION, SYNC_TABLES} from '../src/db/schema';
+import {BACKGROUND_TABLES, schema, SCHEMA_VERSION, SYNC_TABLES} from '../src/db/schema';
 import {formatVnd} from '../src/utils/format';
 
 const protocol = allProtocols().find(p => p.crop_type === 'tomato')!;
@@ -55,7 +55,7 @@ describe('taskHistoryFor', () => {
 
 describe('schema v7', () => {
   test('bumped, and the new tables sync', () => {
-    expect(SCHEMA_VERSION).toBe(7);
+    expect(SCHEMA_VERSION).toBeGreaterThanOrEqual(7);
     expect(SYNC_TABLES).toEqual(expect.arrayContaining(['task_notes', 'care_guides']));
   });
 
@@ -80,5 +80,25 @@ describe('schema v7', () => {
       .filter(s => s.type === 'create_table')
       .map(s => s.schema!.name);
     expect(created.sort()).toEqual(['care_guides', 'task_notes']);
+  });
+});
+
+describe('schema v8', () => {
+  test('notifications and read marks sync; read marks never hold the farmer up', () => {
+    expect(SCHEMA_VERSION).toBe(8);
+    expect(SYNC_TABLES).toEqual(expect.arrayContaining(['notifications', 'notification_reads']));
+    expect(BACKGROUND_TABLES).toEqual(['notification_reads']);
+  });
+
+  test('the v8 migration creates exactly the tables schema.ts declares', () => {
+    const step = migrations.sortedMigrations.find(m => m.toVersion === 8)!;
+    const columnsOf = (table: string) =>
+      Object.keys((schema.tables as Record<string, {columns: Record<string, unknown>}>)[table].columns).sort();
+    const created = step.steps as {type: string; schema?: {name: string; columns: Record<string, unknown>}}[];
+    expect(created.map(s => s.type)).toEqual(['create_table', 'create_table']);
+    for (const s of created) {
+      expect(Object.keys(s.schema!.columns).sort()).toEqual(columnsOf(s.schema!.name));
+    }
+    expect(created.map(s => s.schema!.name).sort()).toEqual(['notification_reads', 'notifications']);
   });
 });

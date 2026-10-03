@@ -20,6 +20,7 @@ import {
 
 import {ApiError, NetworkError} from '../api/client';
 import {useAuth} from '../auth/AuthContext';
+import {DeviceInUseError} from '../auth/deviceOwner';
 import {
   clearRememberedIdentifier,
   loadRememberedIdentifier,
@@ -76,7 +77,7 @@ export function LoginScreen() {
     } catch (e) {
       if (e instanceof NetworkError) {
         setError('Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.');
-      } else if (e instanceof ApiError) {
+      } else if (e instanceof ApiError || e instanceof DeviceInUseError) {
         setError(e.message);
       } else {
         setError('Đăng nhập không thành công. Thử lại sau.');

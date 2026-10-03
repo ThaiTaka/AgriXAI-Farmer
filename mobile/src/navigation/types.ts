@@ -74,9 +74,15 @@ export type RootStackParamList = {
     cropType: string;
     plotId: string | null;
   };
+  /** Nói để ghi — one spoken sentence becomes a thu / chi / nhập / xuất entry. */
+  VoiceEntry: undefined;
   /** V2.1 — care guides with video, for one crop or all. */
   CareGuides: {cropType?: string} | undefined;
   CareGuide: {guideId: string};
+  /** V2.2 — messages from the admin and the server; `focusId` scrolls to and opens one. */
+  Notifications: {focusId?: string} | undefined;
+  /** V2.2 — the village forecast for 7 days and the official warnings. */
+  Weather: undefined;
 };
 
 declare global {

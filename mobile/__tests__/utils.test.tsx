@@ -66,7 +66,7 @@ describe('format', () => {
 
 describe('growth stage', () => {
   const now = new Date(2026, 8, 14).getTime();
-  test('day thresholds of the MV1 cycle', () => {
+  test('day thresholds of a ~90–100 day annual cycle', () => {
     expect(inferGrowthStage(null, now)).toBeNull();
     expect(inferGrowthStage(now - 5 * 86_400_000, now)?.stage).toBe('seedling');
     expect(inferGrowthStage(now - 25 * 86_400_000, now)?.stage).toBe('vegetative');

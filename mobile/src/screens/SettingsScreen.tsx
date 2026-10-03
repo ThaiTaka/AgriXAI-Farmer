@@ -19,7 +19,7 @@ import type ErrorLogEntry from '../db/models/ErrorLogEntry';
 import {APP_VERSION, clearUploadedLogs, observeErrorLogs} from '../db/repositories/errorLogRepository';
 import {SUPPORT_EMAIL} from '../utils/version';
 import {useObservable} from '../db/useObservable';
-import {tableStatusLine} from '../domain/syncStatus';
+import {signOutMessage, tableStatusLine} from '../domain/syncStatus';
 import {useSync} from '../sync/SyncContext';
 import {colors, size, space, text} from '../theme';
 import {formatDateTime} from '../utils/format';
@@ -45,11 +45,11 @@ export function SettingsScreen() {
   }, [refreshPending]);
 
   const confirmSignOut = useCallback(() => {
-    Alert.alert('Đăng xuất', 'Bạn có chắc muốn đăng xuất khỏi ứng dụng?', [
+    Alert.alert('Đăng xuất', signOutMessage(pending), [
       {text: 'Huỷ', style: 'cancel'},
       {text: 'Đăng xuất', style: 'destructive', onPress: () => signOut().catch(() => {})},
     ]);
-  }, [signOut]);
+  }, [signOut, pending]);
 
   const openSupportMail = useCallback(() => {
     // Subject carries the version so a report arrives already saying which

@@ -1,0 +1,17 @@
+{
+  "$comment": "Từ vựng cho ghi bằng giọng nói (Vosk grammar). Mô hình nhỏ tiếng Việt nghe tự do hay nhầm số và tên phân ('nghìn' thành 'nghiện', 'hai' thành 'hay'); giới hạn vào các từ của việc ghi sổ ruộng vườn làm câu nhận ra khớp hơn hẳn. Từ ghép và tên hãng khai báo thành CỤM ('phú mỹ', 'hoa cúc') để chữ của chúng không chen vào chỗ khác ('hai mươi' thành 'hai mỹ'). Từ ngoài danh sách thành [unk] và bị bỏ qua. Mọi từ phải có trong từ điển của mô hình — kiểm tra bằng mobile/scripts/asr_check.py.",
+  "words": [
+    "không", "một", "mốt", "hai", "ba", "bốn", "tư", "năm", "lăm", "nhăm", "sáu", "bảy", "tám", "chín", "mười", "mươi", "chục", "trăm", "nghìn", "ngàn", "triệu", "tỷ", "linh", "lẻ", "rưỡi", "củ", "số",
+    "ký", "kí", "cân", "tạ", "tấn", "yến", "bao", "bó", "cành", "thùng", "két", "giỏ", "sọt", "cây", "chậu", "trái", "quả", "túi", "gói", "bịch", "xe", "người", "công", "đồng",
+    "bán", "mua", "nhập", "xuất", "bón", "rải", "lấy", "trả", "chi", "tốn", "hết", "thuê", "đóng", "thu", "được", "về", "ra", "dùng", "giá", "mỗi", "tiền", "là", "cho", "ở", "với", "lô", "vườn", "ruộng", "khách",
+    "phân", "đạm", "lân", "vôi", "giống", "hạt", "điện", "nước", "xăng", "dầu", "thuốc", "thợ",
+    "hoa", "ớt", "lúa", "ngô", "chè", "dâu"
+  ],
+  "phrases": [
+    "u rê", "ka li", "super lân", "siêu lân", "lân nung chảy", "trùn quế", "phân gà", "phân bò", "phân chuồng", "hữu cơ", "vi sinh",
+    "cà mau", "phú mỹ", "hà bắc", "hàn quốc", "lâm thao", "văn điển", "đầu trâu", "bình điền",
+    "hoa cúc", "hoa hồng", "cẩm chướng", "đồng tiền", "lay ơn", "cát tường", "cà chua", "ớt ngọt", "ớt cay", "ớt chuông", "dưa leo", "dưa chuột", "bắp cải", "cải thảo", "súp lơ", "xà lách", "rau muống", "cà rốt", "khoai tây", "dâu tây", "cà phê",
+    "tiền điện", "tiền nước", "tiền công", "nhân công", "làm cỏ", "vận chuyển", "cây giống", "hạt giống", "nhà màng", "nhà kính",
+    "hôm nay", "hôm qua", "hôm kia", "sáng nay", "chiều nay", "tổng cộng", "đại lý", "ngoài chợ"
+  ]
+}

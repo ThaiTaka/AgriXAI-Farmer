@@ -11,6 +11,7 @@
 import careProtocolsJson from '@shared/data/care_protocols.json';
 
 import type {GrowthStage} from '../db/models/CropCycle';
+import {daysSince, growthStageForDay} from '../utils/growthStage';
 
 export type CareTaskType = 'fertilize' | 'water' | 'cultivate' | 'scout' | 'spray' | 'harvest';
 export type StageModel = 'growth' | 'calendar';
@@ -40,6 +41,12 @@ export interface CareStage {
   months?: number[];
   /** Growth protocols (annuals): which app growth stages map onto this round. */
   growth_stages: GrowthStage[];
+  /**
+   * Growth protocols: the day after planting this round starts on, where the
+   * procedure dates it; null where it does not (by shoot height, "khi lá chân
+   * ngả vàng"…). See `stageForDay`.
+   */
+  start_day?: number | null;
   pct_of_total_topdress: number | null;
   applications: Application[];
   tasks: CareTask[];
@@ -51,7 +58,8 @@ export interface ScenarioItem {
   /** Present on nutrient-basis protocols: the amount is kg of pure N / P₂O₅ / K₂O. */
   nutrient?: Nutrient;
   fertilizer_category: string;
-  unit: 'kg' | 'tấn';
+  /** m³ is how the source measures some manure; it has no kg equivalent, so it is never priced. */
+  unit: 'kg' | 'tấn' | 'm³';
   min: number;
   max: number;
   price_product_id: string | null;
@@ -174,6 +182,44 @@ export function stageForGrowth(protocol: CareProtocol, stage: GrowthStage): Care
   return protocol.stages.find(s => s.growth_stages.includes(stage));
 }
 
+/**
+ * The round an annual crop is in on a given day after planting.
+ *
+ * A procedure that dates its rounds ("thúc lần 2: 25 ngày sau trồng") decides
+ * on its own dates: the round in force is the last one whose start day has
+ * come. Where it does not date a round — typically the harvest, "thu khi quả
+ * chín" — the generic day ladder may move the plot on to that undated round,
+ * but never past a round the procedure dates and never backwards. With no
+ * dates at all the ladder decides, as before ADR 0009.
+ */
+export function stageForDay(protocol: CareProtocol, day: number): CareStage | undefined {
+  if (protocol.stage_model !== 'growth') return undefined;
+  const stages = protocol.stages;
+  const byLadder = stages.findIndex(s => s.growth_stages.includes(growthStageForDay(day)));
+  if (!stages.some(s => s.start_day != null)) return byLadder >= 0 ? stages[byLadder] : undefined;
+
+  let current = 0;
+  stages.forEach((s, i) => {
+    if (s.start_day != null && s.start_day <= day) current = i;
+  });
+  const reachable = stages.slice(current + 1, byLadder + 1).every(s => s.start_day == null);
+  return byLadder > current && reachable ? stages[byLadder] : stages[current];
+}
+
+/**
+ * The round a plot is in now — one rule for the care tab, the protocol screen
+ * and the dashboard. A stage the farmer recorded on an open crop cycle wins;
+ * otherwise annual crops go by days since planting and perennials by month.
+ */
+export function currentStage(
+  protocol: CareProtocol,
+  {cycleStage = null, plantedAt = null, now = Date.now()}: {cycleStage?: GrowthStage | null; plantedAt?: number | null; now?: number},
+): CareStage | undefined {
+  if (protocol.stage_model === 'calendar') return stageForMonth(protocol, new Date(now).getMonth() + 1);
+  if (cycleStage) return stageForGrowth(protocol, cycleStage);
+  return plantedAt ? stageForDay(protocol, daysSince(plantedAt, now)) : undefined;
+}
+
 /** The protocol round a perennial is in for a calendar month (1–12). */
 export function stageForMonth(protocol: CareProtocol, month: number): CareStage | undefined {
   if (protocol.stage_model !== 'calendar') return undefined;
@@ -202,6 +248,32 @@ export const TASK_TYPE_LABELS: Record<CareTaskType, string> = {
   spray: 'Phun',
   harvest: 'Thu hoạch',
 };
+
+/** Publisher's short name + year: "UBND tỉnh Lâm Đồng 2025", "Cục Trồng trọt 2010". */
+function publisherLabel(protocol: CareProtocol): string {
+  const year = protocol.source.published_at?.slice(0, 4);
+  const publisher = protocol.source.publisher.split(/[—(,]/)[0].trim();
+  const words = publisher.split(/\s+/);
+  // Cắt 4 từ hay để lại từ nối treo ("Báo Nông nghiệp và") — bỏ nó đi.
+  const short = words.length > 4 ? words.slice(0, 4).join(' ').replace(/\s+(và|các|của|thuộc|tại)$/i, '') : publisher;
+  return year ? `${short} ${year}` : `${protocol.crop_name} · ${short}`;
+}
+
+/**
+ * The label that tells one protocol apart from the others offered for the
+ * same crop. Different sources → the publisher and year. The same source
+ * (ớt ngọt / ớt cay, chè kiến thiết cơ bản / kinh doanh — all QĐ 1972) would
+ * give identical labels, so those are told apart by what the protocol is for,
+ * read from its name.
+ */
+export function protocolChoiceLabel(protocol: CareProtocol, offered: readonly CareProtocol[]): string {
+  const byPublisher = publisherLabel(protocol);
+  if (offered.filter(p => publisherLabel(p) === byPublisher).length <= 1) return byPublisher;
+  const [head, tail] = protocol.name.split(' — ');
+  const sharedHead = offered.filter(p => p.name.split(' — ')[0] === head).length > 1;
+  const part = (sharedHead && tail ? tail : head).replace(/\s*\(.*\)\s*$/, '').trim();
+  return part.charAt(0).toUpperCase() + part.slice(1);
+}
 
 /** Short citation line for a protocol: publisher · date. */
 export function citation(protocol: CareProtocol): string {

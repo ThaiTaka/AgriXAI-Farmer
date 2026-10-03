@@ -14,7 +14,6 @@ import {useObservable, useObservableReady} from '../../db/useObservable';
 import type {MonthOverview, PendingGroup, StockOverview} from '../../domain/dashboard';
 import {monthOverview, pendingTasks, stockOverview} from '../../domain/dashboard';
 import {stockSummary} from '../../domain/warehouse';
-import {inferGrowthStage} from '../../utils/growthStage';
 import {seedVarietyCategory} from '../../utils/staticData';
 import {useVarietyCatalogue} from '../variety/useVarietyCatalogue';
 
@@ -65,7 +64,6 @@ export function useDashboard(userId: string, now: number = Date.now()): Dashboar
         })),
         done.map(d => ({plotId: d.plotId, protocolId: d.protocolId, stageCode: d.stageCode, taskKey: d.taskKey})),
         now,
-        (plantedAt, at) => inferGrowthStage(plantedAt, at)?.stage ?? null,
       ),
     [plots, done, catalogue, now],
   );

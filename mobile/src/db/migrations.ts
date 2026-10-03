@@ -16,6 +16,42 @@ import {
 export const migrations = schemaMigrations({
   migrations: [
     {
+      // v7 -> v8 (V2.2): notifications from the admin and the server, and the
+      // farmer's "đã xem" marks. New tables only; the first pull after the
+      // upgrade names them and the server sends them whole.
+      toVersion: 8,
+      steps: [
+        createTable({
+          name: 'notifications',
+          columns: [
+            {name: 'owner_id', type: 'string', isOptional: true, isIndexed: true},
+            {name: 'kind', type: 'string'},
+            {name: 'level', type: 'string'},
+            {name: 'title', type: 'string'},
+            {name: 'body', type: 'string'},
+            {name: 'link', type: 'string', isOptional: true},
+            {name: 'source_name', type: 'string', isOptional: true},
+            {name: 'source_url', type: 'string', isOptional: true},
+            {name: 'expires_at', type: 'number', isOptional: true},
+            {name: 'created_by', type: 'string', isOptional: true},
+            {name: 'updated_by', type: 'string', isOptional: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number', isIndexed: true},
+          ],
+        }),
+        createTable({
+          name: 'notification_reads',
+          columns: [
+            {name: 'notification_id', type: 'string', isIndexed: true},
+            {name: 'read_at', type: 'number'},
+            {name: 'owner_id', type: 'string', isIndexed: true},
+            {name: 'created_at', type: 'number'},
+            {name: 'updated_at', type: 'number'},
+          ],
+        }),
+      ],
+    },
+    {
       // v6 -> v7 (V2.1): cultivation history, task notes with media, hired
       // labour, care guides. Additive only — every existing row keeps its
       // data; an old crop cycle simply has no season/area until edited.

@@ -7,6 +7,10 @@
  * tiers are the percentile bands defined in the data file, not fixed amounts.
  *
  * A group without verified prices shows exactly that; no number is invented.
+ *
+ * V2.2: when the admin has entered a newer price on the server, it shows under
+ * the survey's range with its date, and it is the price every cost estimate
+ * uses (live/prices.ts).
  */
 
 import type {RouteProp} from '@react-navigation/native';
@@ -23,9 +27,10 @@ import {EmptyState} from '../../components/EmptyState';
 import {SelectChip} from '../../components/form';
 import {NumberText} from '../../components/NumberText';
 import {Screen} from '../../components/Screen';
+import {useLivePrices} from '../../live/priceIndex';
 import type {RootStackParamList} from '../../navigation/types';
-import {colors, size, space, text} from '../../theme';
-import {formatVnd, formatVndRange} from '../../utils/format';
+import {colors, radius, size, space, text} from '../../theme';
+import {formatDate, formatVnd, formatVndRange} from '../../utils/format';
 import type {BudgetTierCode} from '../../utils/staticData';
 import {
   budgetTiers,
@@ -50,6 +55,7 @@ export function FertilizerProductsScreen() {
   const navigation = useNavigation<Nav>();
   const {params} = useRoute<Route>();
   const [filter, setFilter] = useState<Filter>('all');
+  const live = useLivePrices();
 
   const category = fertilizerCategory(params.categoryCode);
   const missing = missingPriceMessage(params.categoryCode);
@@ -59,7 +65,9 @@ export function FertilizerProductsScreen() {
   const products = useMemo(() => {
     const rows = fertilizerProducts(params.categoryCode);
     return filter === 'all' ? rows : rows.filter(p => p.budget_tier === filter);
-  }, [params.categoryCode, filter]);
+    // `live` is read inside fertilizerProducts(); listed so new prices re-render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.categoryCode, filter, live]);
 
   const segments = useMemo(
     () => [{key: 'all' as Filter, label: 'Tất cả'}, ...tiers.map(t => ({key: t.code as Filter, label: t.name}))],
@@ -131,10 +139,18 @@ export function FertilizerProductsScreen() {
                   {product.price_per_kg_min !== null && product.price_per_kg_max !== null ? (
                     <Text style={text('bodySm', colors.text.secondary)}>
                       ≈ {formatVndRange(product.price_per_kg_min, product.price_per_kg_max)}/kg
-                      {product.price_per_kg_avg !== null
-                        ? ` · trung bình ${formatVnd(product.price_per_kg_avg)}/kg`
+                      {(product.live_price ? product.live_price.survey_avg : product.price_per_kg_avg) !== null
+                        ? ` · trung bình ${formatVnd((product.live_price ? product.live_price.survey_avg : product.price_per_kg_avg) ?? 0)}/kg`
                         : ''}
                     </Text>
+                  ) : null}
+                  {product.live_price ? (
+                    <View style={styles.live} testID={`fert-live-${product.id}`}>
+                      <Text style={text('meta', colors.badge.greenFg)}>
+                        Ban quản lý cập nhật {formatDate(product.live_price.from)}: {formatVnd(product.live_price.per_kg)}/kg
+                      </Text>
+                      <Text style={text('caption', colors.badge.greenFg)}>Giá này được dùng khi tính chi phí bón phân.</Text>
+                    </View>
                   ) : null}
 
                   <Text style={[text('caption', colors.text.muted), styles.source]} numberOfLines={2}>
@@ -163,6 +179,13 @@ export function FertilizerProductsScreen() {
 }
 
 const styles = StyleSheet.create({
+  live: {
+    marginTop: space.sm,
+    paddingHorizontal: space.md,
+    paddingVertical: space.sm,
+    borderRadius: radius.md,
+    backgroundColor: colors.badge.greenBg,
+  },
   scroll: {
     paddingHorizontal: space.lg,
     paddingBottom: space['3xl'],

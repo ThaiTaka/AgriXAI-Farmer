@@ -5,6 +5,10 @@
  * farmer created themselves and a final "Cây trồng khác" tile that opens the
  * add sheet. Picking a catalogue crop goes to step 2; a farmer-made crop has a
  * single implicit category, so it jumps straight to step 3.
+ *
+ * A catalogue tile leads with the crop's photo — a farmer finds "Hoa cẩm
+ * chướng" faster by sight than by reading twenty names. A crop without one
+ * (farmer-made) keeps its line icon in the same-sized frame.
  */
 
 import type {RouteProp} from '@react-navigation/native';
@@ -13,6 +17,7 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useCallback, useMemo, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
+import {cropPhoto} from '../../assets/crops';
 import {AppHeader} from '../../components/AppHeader';
 import {Card} from '../../components/Card';
 import {CropIcon, PlusIcon} from '../../components/icons';
@@ -23,10 +28,13 @@ import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
 import {colors, radius, space, text} from '../../theme';
 import {AddVarietySheet} from './AddVarietySheet';
+import {CropPhotoImage} from './CropPhoto';
 import {useVarietyCatalogue} from './useVarietyCatalogue';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'VarietyCropType'>;
+
+const TILE_MEDIA_HEIGHT = 96;
 
 export function VarietyCropTypeScreen() {
   const navigation = useNavigation<Nav>();
@@ -86,18 +94,27 @@ export function VarietyCropTypeScreen() {
                       returnTo,
                     })
               }
+              flush
               style={styles.tile}>
-              <View style={styles.tileIcon}>
-                <CropIcon name={crop.icon} />
+              {cropPhoto(crop.id) ? (
+                <CropPhotoImage testID={`crop-photo-${crop.id}`} cropTypeId={crop.id} style={styles.tilePhoto} />
+              ) : (
+                <View style={styles.tileFrame}>
+                  <View style={styles.tileIcon}>
+                    <CropIcon name={crop.icon} />
+                  </View>
+                </View>
+              )}
+              <View style={styles.tileBody}>
+                <Text style={text('cardTitle')} numberOfLines={1}>
+                  {crop.name}
+                </Text>
+                <Text style={[text('caption', colors.text.muted), styles.tileMeta]} numberOfLines={1}>
+                  {crop.isCatalogue
+                    ? `${crop.categoryCount} loại · ${crop.varietyCount} giống`
+                    : `${crop.varietyCount} giống tự thêm`}
+                </Text>
               </View>
-              <Text style={text('cardTitle')} numberOfLines={1}>
-                {crop.name}
-              </Text>
-              <Text style={[text('caption', colors.text.muted), styles.tileMeta]} numberOfLines={1}>
-                {crop.isCatalogue
-                  ? `${crop.categoryCount} loại · ${crop.varietyCount} giống`
-                  : `${crop.varietyCount} giống tự thêm`}
-              </Text>
             </Card>
           ))}
 
@@ -105,23 +122,30 @@ export function VarietyCropTypeScreen() {
             testID="crop-other"
             accessibilityLabel="Thêm cây trồng khác"
             onPress={() => setAdding(true)}
+            flush
             style={[styles.tile, styles.tileOther]}>
-            <View style={[styles.tileIcon, styles.tileIconOther]}>
-              <PlusIcon size={22} color={colors.text.muted} />
+            <View style={styles.tileFrame}>
+              <View style={[styles.tileIcon, styles.tileIconOther]}>
+                <PlusIcon size={22} color={colors.text.muted} />
+              </View>
             </View>
-            <Text style={text('cardTitle', colors.text.secondary)} numberOfLines={1}>
-              Cây trồng khác
-            </Text>
-            <Text style={[text('caption', colors.text.muted), styles.tileMeta]} numberOfLines={2}>
-              Tự đặt tên cây và giống
-            </Text>
+            <View style={styles.tileBody}>
+              <Text style={text('cardTitle', colors.text.secondary)} numberOfLines={1}>
+                Cây trồng khác
+              </Text>
+              <Text style={[text('caption', colors.text.muted), styles.tileMeta]} numberOfLines={2}>
+                Tự đặt tên cây và giống
+              </Text>
+            </View>
           </Card>
         </View>
 
         <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
-          Danh mục giống lấy từ Viện Eakmat (WASI), công ty giống Rạng Đông, East-West Seed, Phú
-          Điền, Chánh Phong, Rijk Zwaan và các nguồn nông nghiệp công khai. Số liệu chép đúng theo
-          nguồn — chỗ chưa có dữ liệu được ghi rõ.
+          Danh mục cây trồng và giống của tỉnh Lâm Đồng, lấy từ bộ quy trình kỹ thuật của UBND tỉnh
+          (QĐ 1972/QĐ-UBND, 2025), Địa chí Đà Lạt, Trung tâm Nghiên cứu Khoai tây, Rau và Hoa Đà Lạt,
+          Viện KHKT Nông Lâm nghiệp Tây Nguyên và Báo Lâm Đồng. Số liệu chép đúng theo nguồn — chỗ
+          chưa có dữ liệu được ghi rõ. Ảnh minh hoạ từ Wikimedia Commons; tác giả và giấy phép ghi
+          dưới ảnh ở bước 2.
         </Text>
       </ScrollView>
 
@@ -148,10 +172,25 @@ const styles = StyleSheet.create({
   },
   tile: {
     width: '48%',
-    minHeight: 132,
+    overflow: 'hidden',
   },
   tileOther: {
     backgroundColor: colors.surface.page,
+  },
+  // Photo and icon frame share one height so the grid rows stay level.
+  tilePhoto: {
+    width: '100%',
+    height: TILE_MEDIA_HEIGHT,
+  },
+  tileFrame: {
+    height: TILE_MEDIA_HEIGHT,
+    paddingHorizontal: space.lg,
+    justifyContent: 'center',
+  },
+  tileBody: {
+    paddingHorizontal: space.lg,
+    paddingTop: space.md,
+    paddingBottom: space.lg,
   },
   tileIcon: {
     width: 44,
@@ -160,7 +199,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary.soft,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: space.md,
   },
   tileIconOther: {
     backgroundColor: colors.surface.subtle,

@@ -34,14 +34,7 @@ import {CyclesTab} from './cycle/CyclesTab';
 import {colors, size, space, text} from '../theme';
 import {formatArea, formatDate, formatDateTime, formatRelative} from '../utils/format';
 import {inferGrowthStage} from '../utils/growthStage';
-import {
-  citation,
-  cropNameOf,
-  protocolAvailability,
-  stageForGrowth,
-  stageForMonth,
-  STAGE_LABELS,
-} from '../utils/staticData';
+import {citation, cropNameOf, currentStage, protocolAvailability, STAGE_LABELS} from '../utils/staticData';
 import {CareStageAccordion} from './care/CareStageAccordion';
 import {TaskHistorySection} from './care/TaskHistorySection';
 import {ProtocolUnavailable} from './care/ProtocolUnavailable';
@@ -200,11 +193,10 @@ function CareTab({plot}: {plot: Plot}) {
   const growth = active?.stage ?? inferred?.stage ?? null;
   const month = new Date().getMonth() + 1;
 
-  const current = useMemo(() => {
-    if (!protocol) return null;
-    if (protocol.stage_model === 'calendar') return stageForMonth(protocol, month) ?? null;
-    return growth ? (stageForGrowth(protocol, growth) ?? null) : null;
-  }, [protocol, growth, month]);
+  const current = useMemo(
+    () => (protocol ? (currentStage(protocol, {cycleStage: active?.stage ?? null, plantedAt: plot.plantedAt}) ?? null) : null),
+    [protocol, active?.stage, plot.plantedAt],
+  );
 
   if (!protocol) {
     return <ProtocolUnavailable cropName={cropName} entry={unavailable} />;

@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Ghi bằng giọng nói: chỉ xin khi bà con bấm nút micro; âm thanh nhận dạng
+         ngay trên máy (Vosk), không gửi đi đâu. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Android 13+: thông báo nhắc việc, đồng bộ xong, giá, thời tiết. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
       android:name=".MainApplication"

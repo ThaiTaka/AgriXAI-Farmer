@@ -288,7 +288,28 @@ export function SproutIcon({size = 26, color = colors.primary.default}: IconProp
   );
 }
 
-export type CropIconName = 'tomato' | 'coffee' | 'cucumber' | 'chili' | 'other';
+/** A cut flower — the Vạn Thành flowers (cúc, hồng, cẩm chướng…). */
+export function FlowerIcon({size = 26, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M7 4.5c0 4.2 2.2 8 5 8s5-3.8 5-8l-2.5 2.2L12 3.5 9.5 6.7Z"
+        stroke={color}
+        strokeWidth={STROKE}
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M12 12.5V21M12 17c-1-1.8-2.9-2.8-5.2-2.5.6 2 2.6 3 5.2 2.5Z"
+        stroke={color}
+        strokeWidth={STROKE}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
+export type CropIconName = 'tomato' | 'coffee' | 'cucumber' | 'chili' | 'flower' | 'other';
 
 export function CropIcon({name, size, color}: {name: CropIconName} & IconProps) {
   switch (name) {
@@ -300,9 +321,30 @@ export function CropIcon({name, size, color}: {name: CropIconName} & IconProps) 
       return <CucumberIcon size={size} color={color} />;
     case 'chili':
       return <ChiliIcon size={size} color={color} />;
+    case 'flower':
+      return <FlowerIcon size={size} color={color} />;
     default:
       return <SproutIcon size={size} color={color} />;
   }
+}
+
+/** Microphone — ghi bằng giọng nói. */
+export function MicIcon({size = 24, color = colors.primary.default}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+/** Stop square — dừng nghe. */
+export function StopIcon({size = 24, color = colors.white}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M7 7h10v10H7Z" fill={color} stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+    </Svg>
+  );
 }
 
 /* ---------------------------- Giai đoạn 3 icons ---------------------------- */
@@ -431,6 +473,15 @@ export function AlertIcon({size = 20, color = colors.badge.yellowFg}: IconProps)
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path d="M12 3 2.5 20h19L12 3Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
       <Path d="M12 9v5M12 17h.01" stroke={color} strokeWidth={2.4} strokeLinecap="round" />
+    </Svg>
+  );
+}
+
+export function ThermometerIcon({size = 20, color = colors.badge.blueFg}: IconProps) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <Path d="M10 13.5V5a2 2 0 1 1 4 0v8.5a4 4 0 1 1-4 0Z" stroke={color} strokeWidth={STROKE} strokeLinejoin="round" />
+      <Path d="M12 9v7" stroke={color} strokeWidth={STROKE} strokeLinecap="round" />
     </Svg>
   );
 }

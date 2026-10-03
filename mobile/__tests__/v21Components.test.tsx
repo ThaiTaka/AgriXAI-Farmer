@@ -10,12 +10,18 @@ import ReactTestRenderer from 'react-test-renderer';
 const scripted = {state: 'idle' as string};
 jest.mock('../src/sync/SyncContext', () => ({useSync: () => ({state: scripted.state})}));
 jest.mock('../src/auth/AuthContext', () => ({useAuth: () => ({session: {token: 'login-token', user: {id: 'u1'}}})}));
+// The navigation package ships untranspiled ESM; the player only needs its
+// context, so a real React context stands in for it.
+jest.mock('@react-navigation/native', () => ({
+  NavigationContext: jest.requireActual('react').createContext(undefined),
+}));
 jest.mock('../src/api/media', () => ({
   mediaToken: jest.fn(async () => 'media-token'),
   mediaUrl: (id: string, token?: string) => `http://api/media/${id}${token ? `?t=${token}` : ''}`,
 }));
 
 import * as fs from '@dr.pogodin/react-native-fs';
+import {NavigationContext} from '@react-navigation/native';
 import * as picker from 'react-native-image-picker';
 
 import {MediaCaptureBar} from '../src/components/MediaCaptureBar';
@@ -124,12 +130,50 @@ describe('MediaStrip', () => {
 });
 
 describe('YouTubePlayer', () => {
-  test('plays inside the app from YouTube’s own origin', async () => {
+  test('shows only the poster until tapped — no player is loaded up front', async () => {
     const tree = await render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Bón thúc" />);
+    expect(tree.root.findAllByProps({testID: 'youtube-player'})).toHaveLength(0);
+    const json = JSON.stringify(tree.toJSON());
+    expect(json).toContain('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg');
+    expect(json).toContain('Mở bằng YouTube');
+    expect(byLabel(tree, 'Phát video: Bón thúc')).toBeDefined();
+  });
+
+  test('one tap plays inside the app from YouTube’s own origin', async () => {
+    const tree = await render(<YouTubePlayer videoId="dQw4w9WgXcQ" title="Bón thúc" />);
+    await ReactTestRenderer.act(async () => {
+      tree.root.findByProps({testID: 'youtube-poster'}).props.onPress();
+    });
     const web = tree.root.findByProps({testID: 'youtube-player'});
     expect(web.props.source.baseUrl).toBe('https://www.youtube-nocookie.com');
     expect(web.props.source.html).toContain('/embed/dQw4w9WgXcQ');
-    expect(JSON.stringify(tree.toJSON())).toContain('Mở bằng YouTube');
+    expect(web.props.source.html).toContain('autoplay=1');
+    expect(web.props.mediaPlaybackRequiresUserAction).toBe(false);
+    expect(web.props.androidLayerType).toBe('hardware');
+  });
+
+  test('leaving the screen releases the player', async () => {
+    const listeners: Record<string, () => void> = {};
+    const navigation = {
+      addListener: (event: string, cb: () => void) => {
+        listeners[event] = cb;
+        return () => delete listeners[event];
+      },
+    } as unknown as React.ContextType<typeof NavigationContext>;
+    const tree = await render(
+      <NavigationContext.Provider value={navigation}>
+        <YouTubePlayer videoId="dQw4w9WgXcQ" />
+      </NavigationContext.Provider>,
+    );
+    await ReactTestRenderer.act(async () => {
+      tree.root.findByProps({testID: 'youtube-poster'}).props.onPress();
+    });
+    expect(tree.root.findAllByProps({testID: 'youtube-player'}).length).toBeGreaterThan(0);
+    await ReactTestRenderer.act(async () => {
+      listeners.blur();
+    });
+    expect(tree.root.findAllByProps({testID: 'youtube-player'})).toHaveLength(0);
+    expect(tree.root.findAllByProps({testID: 'youtube-poster'}).length).toBeGreaterThan(0);
   });
 
   test('offline: says so instead of a grey box', async () => {

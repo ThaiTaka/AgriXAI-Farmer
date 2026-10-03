@@ -6,7 +6,9 @@ import type {SyncConflict, SyncOutcome} from '../api/sync';
 import {runSync} from '../api/sync';
 import {useAuth} from '../auth/AuthContext';
 import type {TableSyncInfo} from '../domain/syncStatus';
+import type {SyncSummary} from '../domain/syncSummary';
 import {uploadPendingMedia} from '../media/uploader';
+import {afterSync} from '../notify/afterSync';
 import {keepLocalVersion, takeServerVersion} from './conflicts';
 import {pendingByTable} from './pending';
 
@@ -15,6 +17,8 @@ export type SyncState = 'idle' | 'syncing' | 'offline' | 'error';
 interface SyncContextValue {
   state: SyncState;
   lastSyncedAt: number | null;
+  /** What the last good pass moved — the banner turns it into a sentence. */
+  lastSummary: SyncSummary | null;
   sync: () => Promise<SyncOutcome>;
   /** Rows the server refused on the last push, awaiting the farmer's choice. */
   conflicts: SyncConflict[];
@@ -41,6 +45,7 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
   const {session, signOut} = useAuth();
   const [state, setState] = useState<SyncState>('idle');
   const [lastSyncedAt, setLastSyncedAt] = useState<number | null>(null);
+  const [lastSummary, setLastSummary] = useState<SyncSummary | null>(null);
   const [conflicts, setConflicts] = useState<SyncConflict[]>([]);
   const [pending, setPending] = useState<TableSyncInfo[]>([]);
   const token = session?.token ?? null;
@@ -66,11 +71,14 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
     if (!current) return {ok: false, reason: 'unauthorised'};
 
     setState('syncing');
-    const outcome = await runSync(current);
+    const outcome = await runSync(current, userRef.current);
 
     if (outcome.ok) {
       setState('idle');
+      setLastSummary(outcome.summary ?? null);
       setLastSyncedAt(Date.now());
+      // New messages ring the phone; prices and the forecast catch up. Never fatal.
+      afterSync(outcome, current).catch(error => console.warn('[notify] after sync failed', error));
       if (outcome.conflicts && outcome.conflicts.length > 0) {
         setConflicts(prev => {
           const seen = new Set(prev.map(c => `${c.table}/${c.id}`));
@@ -121,6 +129,7 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
     if (!token) {
       setConflicts([]);
       setPending([]);
+      setLastSummary(null);
       return;
     }
 
@@ -143,8 +152,8 @@ export function SyncProvider({children}: {children: React.ReactNode}) {
   }, [token, sync]);
 
   const value = useMemo<SyncContextValue>(
-    () => ({state, lastSyncedAt, sync, conflicts, resolveConflict, pending, refreshPending}),
-    [state, lastSyncedAt, sync, conflicts, resolveConflict, pending, refreshPending],
+    () => ({state, lastSyncedAt, lastSummary, sync, conflicts, resolveConflict, pending, refreshPending}),
+    [state, lastSyncedAt, lastSummary, sync, conflicts, resolveConflict, pending, refreshPending],
   );
 
   return <SyncContext.Provider value={value}>{children}</SyncContext.Provider>;

@@ -1,8 +1,9 @@
 /**
  * Chọn giống — bước 2/3: loại con của một loại cây.
  *
- * A single white group of full-width rows separated by hairlines: name, a
- * one-to-two-line description, the variety count and a chevron.
+ * The crop's photo and its credit lead the screen, then a single white group
+ * of full-width rows separated by hairlines: name, a one-to-two-line
+ * description, the variety count and a chevron.
  */
 
 import type {RouteProp} from '@react-navigation/native';
@@ -21,6 +22,7 @@ import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
 import {colors, space, text} from '../../theme';
 import {cropTypeById} from '../../utils/staticData';
+import {CropPhotoHero} from './CropPhoto';
 import {useVarietyCatalogue} from './useVarietyCatalogue';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -51,6 +53,7 @@ export function VarietyCategoryScreen() {
       />
 
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        {crop ? <CropPhotoHero crop={crop} /> : null}
         {crop?.description ? (
           <Text style={[text('bodySm', colors.text.muted), styles.intro]}>{crop.description}</Text>
         ) : null}

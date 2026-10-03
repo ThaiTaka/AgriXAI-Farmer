@@ -27,11 +27,10 @@ import type Plot from '../../db/models/Plot';
 import {observePlots} from '../../db/repositories/plotRepository';
 import {useObservable} from '../../db/useObservable';
 import type {CareProtocol} from '../../domain/careProtocol';
-import {citation, protocolAvailability, stageForGrowth, stageForMonth} from '../../domain/careProtocol';
+import {citation, currentStage, protocolAvailability, protocolChoiceLabel} from '../../domain/careProtocol';
 import type {PickedVariety, RootStackParamList} from '../../navigation/types';
 import {colors, space, text} from '../../theme';
-import {inferGrowthStage} from '../../utils/growthStage';
-import {cropNameOf, cropTypeById} from '../../utils/staticData';
+import {cropNameOf} from '../../utils/staticData';
 import {GuideLinks} from '../guide/GuideLinks';
 import {CareStageAccordion} from './CareStageAccordion';
 import {ProtocolUnavailable} from './ProtocolUnavailable';
@@ -93,14 +92,10 @@ export function CareProtocolScreen() {
   const protocol: CareProtocol | undefined =
     protocols.find(p => p.id === protocolId) ?? protocols[0];
 
-  const currentStage = useMemo(() => {
-    if (!protocol) return null;
-    if (protocol.stage_model === 'calendar') {
-      return stageForMonth(protocol, new Date().getMonth() + 1) ?? null;
-    }
-    const inferred = selection?.plantedAt ? inferGrowthStage(selection.plantedAt) : null;
-    return inferred ? (stageForGrowth(protocol, inferred.stage) ?? null) : null;
-  }, [protocol, selection?.plantedAt]);
+  const stageNow = useMemo(
+    () => (protocol ? (currentStage(protocol, {plantedAt: selection?.plantedAt ?? null}) ?? null) : null),
+    [protocol, selection?.plantedAt],
+  );
 
   const openPicker = useCallback(() => {
     navigation.navigate('VarietyCropType', {selectedId: selection?.varietyId ?? null, returnTo: 'CareProtocol'});
@@ -165,7 +160,7 @@ export function CareProtocolScreen() {
                   {protocols.map(p => (
                     <SelectChip
                       key={p.id}
-                      label={shortName(p)}
+                      label={protocolChoiceLabel(p, protocols)}
                       selected={protocol.id === p.id}
                       onPress={() => setProtocolId(p.id)}
                       style={styles.chip}
@@ -183,11 +178,11 @@ export function CareProtocolScreen() {
                 <Badge label={protocol.stage_model === 'calendar' ? '4 đợt/năm' : '4 giai đoạn'} tone="green" />
               </View>
               <Text style={[text('bodySm', colors.text.muted), styles.sourceLine]}>{citation(protocol)}</Text>
-              {currentStage ? (
+              {stageNow ? (
                 <Text style={[text('bodySm', colors.text.secondary), styles.sourceLine]}>
                   {protocol.stage_model === 'calendar'
-                    ? `Tháng ${new Date().getMonth() + 1} rơi vào: ${currentStage.stage_name_vi}`
-                    : `Ước tính từ ngày trồng: ${currentStage.stage_name_vi}`}
+                    ? `Tháng ${new Date().getMonth() + 1} rơi vào: ${stageNow.stage_name_vi}`
+                    : `Ước tính từ ngày trồng: ${stageNow.stage_name_vi}`}
                 </Text>
               ) : selection.plotId && protocol.stage_model === 'growth' ? (
                 <Text style={[text('bodySm', colors.text.muted), styles.sourceLine]}>
@@ -205,7 +200,7 @@ export function CareProtocolScreen() {
             <CareStageAccordion
               protocol={protocol}
               plotId={selection.plotId}
-              currentStageCode={currentStage?.stage_code ?? null}
+              currentStageCode={stageNow?.stage_code ?? null}
             />
 
             {protocol.base_application.note ? (
@@ -250,17 +245,6 @@ function fromPlot(plot: Plot): Selection {
     plotId: plot.id,
     plantedAt: plot.plantedAt,
   };
-}
-
-/** Segment label: publisher's short name + year. */
-function shortName(protocol: CareProtocol): string {
-  const year = protocol.source.published_at?.slice(0, 4);
-  const crop = cropTypeById(protocol.crop_type)?.name ?? protocol.crop_name;
-  const publisher = protocol.source.publisher.split(/[—(,]/)[0].trim();
-  const words = publisher.split(/\s+/);
-  // Cắt 4 từ hay để lại từ nối treo ("Báo Nông nghiệp và") — bỏ nó đi.
-  const short = words.length > 4 ? words.slice(0, 4).join(' ').replace(/\s+(và|các|của|thuộc|tại)$/i, '') : publisher;
-  return year ? `${short} ${year}` : `${crop} · ${short}`;
 }
 
 const styles = StyleSheet.create({

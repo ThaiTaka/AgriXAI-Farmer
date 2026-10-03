@@ -73,3 +73,10 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Offline speech model, fetched by scripts/fetch-vosk-model.js on npm install
+/assets/model-*/
+/assets/model-*.partial/
+
+# Synthesised speech samples cached by scripts/asr_check.py
+/scripts/.asr-samples/

@@ -9,12 +9,19 @@
  * Giai đoạn 4: the push reply lists rows the server refused (another device
  * of the same account wrote a newer version). They come back in
  * `SyncOutcome.conflicts` so the app can ask the farmer which copy to keep.
+ *
+ * V2.2: every pass also reports what it moved (`SyncOutcome.summary`) — how
+ * many of the farmer's changes reached the server, how many arrived from
+ * elsewhere, and which notifications are new — for the sync banner and the
+ * phone's system notifications.
  */
 
 import {synchronize} from '@nozbe/watermelondb/sync';
 
 import {database} from '../db';
 import {SCHEMA_VERSION} from '../db/schema';
+import type {ChangeSet, SyncSummary} from '../domain/syncSummary';
+import {countReceived, countSent, pulledNotifications, retractedNotifications} from '../domain/syncSummary';
 import {API_BASE_URL, NetworkError} from './client';
 
 export interface SyncConflict {
@@ -31,6 +38,8 @@ export interface SyncOutcome {
   reason?: 'offline' | 'unauthorised' | 'error';
   detail?: string;
   conflicts?: SyncConflict[];
+  /** What the pass moved — present when `ok`. */
+  summary?: SyncSummary;
 }
 
 let inFlight: Promise<SyncOutcome> | null = null;
@@ -42,11 +51,12 @@ let inFlight: Promise<SyncOutcome> | null = null;
  * than starting a second one. Two overlapping passes would push the same rows
  * twice and race on `last_pulled_at`.
  */
-export async function runSync(token: string): Promise<SyncOutcome> {
+export async function runSync(token: string, userId: string | null = null): Promise<SyncOutcome> {
   if (inFlight) return inFlight;
 
   inFlight = (async (): Promise<SyncOutcome> => {
     const conflicts: SyncConflict[] = [];
+    const summary: SyncSummary = {sent: 0, received: 0, newNotifications: [], firstSync: false};
     try {
       await synchronize({
         database,
@@ -66,6 +76,11 @@ export async function runSync(token: string): Promise<SyncOutcome> {
           if (!response.ok) throw new Error(`pull failed: ${response.status}`);
 
           const body = await response.json();
+          const changes = body.changes as ChangeSet;
+          summary.firstSync = !lastPulledAt;
+          summary.received = countReceived(changes, userId);
+          summary.newNotifications = pulledNotifications(changes);
+          summary.retractedNotifications = retractedNotifications(changes);
           return {changes: body.changes, timestamp: body.timestamp};
         },
         pushChanges: async ({changes, lastPulledAt}) => {
@@ -82,8 +97,12 @@ export async function runSync(token: string): Promise<SyncOutcome> {
           );
           if (response.status === 401) throw new UnauthorisedError();
           if (!response.ok) throw new Error(`push failed: ${response.status}`);
-          const body = (await response.json()) as {conflicts?: SyncConflict[]};
+          const body = (await response.json()) as {conflicts?: SyncConflict[]; rejected?: {table: string}[]};
           if (Array.isArray(body.conflicts)) conflicts.push(...body.conflicts);
+          summary.sent = countSent(changes as unknown as ChangeSet, [
+            ...(body.conflicts ?? []),
+            ...(Array.isArray(body.rejected) ? body.rejected : []),
+          ]);
         },
         // Migration syncs (V2.1). A phone that pulled rows on the old app
         // version stored them without the columns that version did not have;
@@ -98,7 +117,7 @@ export async function runSync(token: string): Promise<SyncOutcome> {
         log: __DEV__ ? {} : undefined,
       });
 
-      return {ok: true, conflicts};
+      return {ok: true, conflicts, summary};
     } catch (error) {
       if (error instanceof UnauthorisedError) {
         return {ok: false, reason: 'unauthorised'};

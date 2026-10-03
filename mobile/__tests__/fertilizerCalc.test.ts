@@ -19,56 +19,86 @@ function scenario(protocolId: string, scenarioId: string) {
   return {protocol, scenario: found};
 }
 
-describe('F1 — cà chua MV1', () => {
-  test('500 m², phương án 2 (50% phân chuồng) scales every item by 0,05', () => {
-    const {protocol, scenario: sc} = scenario('tomato_default', 'scenario_50_phan_chuong');
+describe('F1 — cà chua trồng trên đất (QĐ 1972/QĐ-UBND tỉnh Lâm Đồng)', () => {
+  test('500 m² scales every item by 0,05', () => {
+    const {protocol, scenario: sc} = scenario('tomato_lamdong_2025', 'tren_dat');
     const result = calculate({protocol, scenario: sc, areaM2: 500, findProduct});
 
     expect(result.factor).toBeCloseTo(0.05);
     const byKey = Object.fromEntries(result.lines.map(l => [l.key, l]));
     expect(byKey.phan_chuong.unit).toBe('tấn');
-    expect(byKey.phan_chuong.min).toBeCloseTo(0.3);
-    expect(byKey.phan_chuong.max).toBeCloseTo(0.4);
-    expect(byKey.ure.min).toBeCloseTo(3.75);
-    expect(byKey.ure.max).toBeCloseTo(4.25);
-    expect(byKey.super_lan.min).toBeCloseTo(8);
-    expect(byKey.super_lan.max).toBeCloseTo(9.5);
-    expect(byKey.kali_clorua.min).toBeCloseTo(7.5);
-    expect(byKey.kali_clorua.max).toBeCloseTo(8.25);
-    expect(byKey.npk_5_10_3.min).toBeCloseTo(20);
-    expect(byKey.npk_5_10_3.max).toBeCloseTo(30);
-  });
-
-  test('500 m², phương án 1 (25% hữu cơ) has no manure line and more urê', () => {
-    const {protocol, scenario: sc} = scenario('tomato_default', 'scenario_25_huu_co');
-    const result = calculate({protocol, scenario: sc, areaM2: 500, findProduct});
-    expect(result.lines.map(l => l.key)).toEqual(['npk_5_10_3', 'ure', 'super_lan', 'kali_clorua']);
-    const ure = result.lines.find(l => l.key === 'ure')!;
-    expect(ure.min).toBeCloseTo(7);
-    expect(ure.max).toBeCloseTo(7.5);
+    expect(byKey.phan_chuong.min).toBeCloseTo(2);
+    expect(byKey.voi.min).toBeCloseTo(50);
+    expect(byKey.voi.max).toBeCloseTo(75);
+    expect(byKey.ure.min).toBeCloseTo(26.1);
+    expect(byKey.super_lan.min).toBeCloseTo(28.125);
+    expect(byKey.kcl.min).toBeCloseTo(22.9);
   });
 
   test('prices come from the catalogue and unpriced items are named, not guessed', () => {
-    const {protocol, scenario: sc} = scenario('tomato_default', 'scenario_50_phan_chuong');
+    const {protocol, scenario: sc} = scenario('tomato_lamdong_2025', 'tren_dat');
     const result = calculate({protocol, scenario: sc, areaM2: 10_000, findProduct});
 
     const ure = result.lines.find(l => l.key === 'ure')!;
     expect(ure.priceProductId).toBe('ure_ca_mau');
     expect(ure.pricePerKg).toBe(13_000);
-    expect(ure.costMin).toBe(75 * 13_000);
-    expect(ure.costMax).toBe(85 * 13_000);
+    expect(ure.costMin).toBe(522 * 13_000);
 
     const priced = result.lines.filter(l => l.costMin !== null);
     expect(result.costMin).toBe(priced.reduce((s, l) => s + l.costMin!, 0));
-    expect(result.unpriced).toEqual(['Phân chuồng hoai mục', 'NPK 5-10-3']);
+    expect(result.unpriced).toEqual([
+      'Phân chuồng hoai',
+      'Phân hữu cơ vi sinh',
+      'Vôi bột',
+      'Borat',
+      'Canxi – Bo',
+      'Chế phẩm Trichoderma',
+    ]);
     expect(result.lines.find(l => l.key === 'phan_chuong')!.costMin).toBeNull();
   });
 
   test('1 ha reproduces the source figures exactly', () => {
-    const {protocol, scenario: sc} = scenario('tomato_default', 'scenario_25_huu_co');
+    const {protocol, scenario: sc} = scenario('tomato_lamdong_2025', 'tren_dat');
     const result = calculate({protocol, scenario: sc, areaM2: 10_000, findProduct});
-    const ure = result.lines.find(l => l.key === 'ure')!;
-    expect([ure.min, ure.max]).toEqual([140, 150]);
+    const byKey = Object.fromEntries(result.lines.map(l => [l.key, l]));
+    expect([byKey.ure.min, byKey.ure.max]).toEqual([522, 522]);
+    expect([byKey.super_lan.min, byKey.super_lan.max]).toEqual([562.5, 562.5]);
+    expect([byKey.kcl.min, byKey.kcl.max]).toEqual([458, 458]);
+  });
+});
+
+describe('F1 — hoa cúc, nhà màng 300 m² (lô demo PUC-001-VT)', () => {
+  test('urê 544 kg/ha and 40–50 tấn phân chuồng scale to 300 m²', () => {
+    const {protocol, scenario: sc} = scenario('chrysanthemum_lamdong_2025', 'chuong');
+    const result = calculate({protocol, scenario: sc, areaM2: 300, findProduct});
+    const byKey = Object.fromEntries(result.lines.map(l => [l.key, l]));
+    expect(byKey.ure.min).toBeCloseTo(16.32);
+    expect(byKey.phan_chuong.min).toBeCloseTo(1.2);
+    expect(byKey.phan_chuong.max).toBeCloseTo(1.5);
+  });
+});
+
+describe('F1 — phân chuồng tính bằng m³', () => {
+  test('a volume is listed but never priced per kg', () => {
+    const {protocol, scenario: sc} = scenario('bell_pepper_lamdong_2025', 'tren_dat');
+    const result = calculate({protocol, scenario: sc, areaM2: 1_000, findProduct});
+    const manure = result.lines.find(l => l.key === 'phan_chuong')!;
+    expect(manure.unit).toBe('m³');
+    expect([manure.min, manure.max]).toEqual([4, 5]);
+    expect(manure.costMin).toBeNull();
+    expect(result.unpriced).toContain('Phân chuồng hoai');
+  });
+
+  test('even with a price id, m³ is not multiplied by a per-kg price', () => {
+    const {protocol, scenario: sc} = scenario('bell_pepper_lamdong_2025', 'tren_dat');
+    const priced = {
+      ...sc,
+      items: sc.items.map(i => (i.key === 'phan_chuong' ? {...i, price_product_id: 'ure_ca_mau'} : i)),
+    };
+    const result = calculate({protocol, scenario: priced, areaM2: 1_000, findProduct});
+    const manure = result.lines.find(l => l.key === 'phan_chuong')!;
+    expect(manure.pricePerKg).toBeNull();
+    expect(manure.costMin).toBeNull();
   });
 });
 
@@ -112,29 +142,40 @@ describe('F1 — cà phê', () => {
   });
 });
 
-describe('F1 — dưa leo và ớt', () => {
-  test('VUSTA cucumber protocol is per 1.000 m², so 500 m² halves it', () => {
-    const {protocol, scenario: sc} = scenario('cucumber_vusta_2005', 'vusta_nam_bo');
-    expect(protocol.reference_area.m2).toBe(1000);
-    const result = calculate({protocol, scenario: sc, areaM2: 500, findProduct});
-    const dap = result.lines.find(l => l.key === 'dap')!;
-    expect([dap.min, dap.max]).toEqual([15, 17.5]);
-    expect(dap.priceProductId).toBe('dap_han_quoc');
+describe('F1 — dưa leo, ớt cay, lúa theo sào Lâm Đồng', () => {
+  test('dưa leo 1 sào (1.000 m²) is a tenth of the per-hectare table', () => {
+    const {protocol, scenario: sc} = scenario('cucumber_lamdong_2025', 'phan_don');
+    expect(protocol.reference_area.m2).toBe(10_000);
+    const result = calculate({protocol, scenario: sc, areaM2: toSquareMetres(1, 'sao_lam_dong'), findProduct});
+    const byKey = Object.fromEntries(result.lines.map(l => [l.key, l]));
+    expect(byKey.ure.min).toBeCloseTo(32.5);
+    expect(byKey.super_lan.min).toBeCloseTo(59.5);
+    expect(byKey.kcl.min).toBeCloseTo(25.8);
+    expect(byKey.phan_chuong.unit).toBe('m³');
+    expect(byKey.phan_chuong.min).toBeCloseTo(2);
   });
 
-  test('ớt cay 1 sào Bắc Bộ (360 m²)', () => {
-    const {protocol, scenario: sc} = scenario('chili_hot_lamdong', 'lamdong_1ha');
-    const areaM2 = toSquareMetres(1, 'sao_bac');
-    const result = calculate({protocol, scenario: sc, areaM2, findProduct});
-    const ure = result.lines.find(l => l.key === 'ure')!;
-    expect(ure.min).toBeCloseTo(7.2);
-    const voi = result.lines.find(l => l.key === 'voi')!;
-    expect(voi.min).toBeCloseTo(36);
-    expect(voi.pricePerKg).toBeNull();
+  test('ớt cay 2 sào (2.000 m²)', () => {
+    const {protocol, scenario: sc} = scenario('hot_chili_lamdong_2025', 'mot_vu');
+    const result = calculate({protocol, scenario: sc, areaM2: toSquareMetres(2, 'sao_lam_dong'), findProduct});
+    const byKey = Object.fromEntries(result.lines.map(l => [l.key, l]));
+    expect(byKey.ure.min).toBeCloseTo(60);
+    expect(byKey.kcl.min).toBeCloseTo(80);
+    expect(byKey.voi.min).toBeCloseTo(100);
+    expect(byKey.voi.pricePerKg).toBeNull();
+  });
+
+  test('lúa nửa héc-ta', () => {
+    const {protocol, scenario: sc} = scenario('rice_lamdong_2025', 'phan_don');
+    const result = calculate({protocol, scenario: sc, areaM2: toSquareMetres(0.5, 'ha'), findProduct});
+    const byKey = Object.fromEntries(result.lines.map(l => [l.key, l]));
+    expect(byKey.ure.min).toBeCloseTo(97.5);
+    expect(byKey.super_lan.min).toBeCloseTo(218.5);
+    expect(byKey.kcl.min).toBeCloseTo(58);
   });
 
   test('rejects a non-positive area', () => {
-    const {protocol, scenario: sc} = scenario('chili_hot_lamdong', 'lamdong_1ha');
+    const {protocol, scenario: sc} = scenario('hot_chili_lamdong_2025', 'mot_vu');
     expect(() => calculate({protocol, scenario: sc, areaM2: 0, findProduct})).toThrow();
   });
 });

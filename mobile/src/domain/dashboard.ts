@@ -8,9 +8,8 @@
  *                     that have no "done" row in tasks_history
  */
 
-import type {GrowthStage} from '../db/models/CropCycle';
 import type {CareProtocol} from './careProtocol';
-import {protocolsFor, stageForGrowth, stageForMonth} from './careProtocol';
+import {currentStage, protocolsFor} from './careProtocol';
 import {financialReport, type LedgerEntry} from './finance';
 import type {StockLine} from './warehouse';
 
@@ -71,24 +70,14 @@ export interface PendingGroup {
   pending: number;
 }
 
-export function currentStageOf(
-  protocol: CareProtocol,
-  plantedAt: number | null,
-  now: number,
-  inferGrowth: (plantedAt: number | null, now: number) => GrowthStage | null,
-) {
-  if (protocol.stage_model === 'calendar') {
-    return stageForMonth(protocol, new Date(now).getMonth() + 1) ?? null;
-  }
-  const growth = inferGrowth(plantedAt, now);
-  return growth ? (stageForGrowth(protocol, growth) ?? null) : null;
+export function currentStageOf(protocol: CareProtocol, plantedAt: number | null, now: number) {
+  return currentStage(protocol, {plantedAt, now}) ?? null;
 }
 
 export function pendingTasks(
   plots: readonly PlotLike[],
   done: readonly DoneTaskRef[],
   now: number,
-  inferGrowth: (plantedAt: number | null, now: number) => GrowthStage | null,
 ): PendingGroup[] {
   const doneKeys = new Set(done.map(d => `${d.plotId ?? ''}|${d.protocolId}|${d.stageCode}|${d.taskKey}`));
   const groups: PendingGroup[] = [];
@@ -96,7 +85,7 @@ export function pendingTasks(
     if (plot.status !== 'active') continue;
     const protocol = protocolsFor(plot.cropType, plot.categoryId)[0];
     if (!protocol) continue;
-    const stage = currentStageOf(protocol, plot.plantedAt, now, inferGrowth);
+    const stage = currentStageOf(protocol, plot.plantedAt, now);
     if (!stage) continue;
     const pending = stage.tasks.filter(
       t => !doneKeys.has(`${plot.id}|${protocol.id}|${stage.stage_code}|${t.key}`),
@@ -114,12 +103,13 @@ export function pendingTasks(
   return groups;
 }
 
-/** "Cà chua Ra hoa đợt đầu 4, Ớt Sinh trưởng 2" — at most three groups, then "+n". */
+/** "Cà chua · Thúc lần 2: 3; Ớt · Vun gốc: 3" — at most three groups, then "+n". */
 export function pendingSubtext(groups: readonly PendingGroup[]): string {
   if (groups.length === 0) return 'Không có việc nào chờ ở giai đoạn hiện tại';
-  // "Cà chua · Ra hoa đợt đầu: 3" — crop, stage, count. Long stage names are
-  // trimmed at the first parenthesis so the card caption stays on two lines.
-  const shown = groups.slice(0, 3).map(g => `${g.cropName} · ${g.stageName.split(' (')[0]}: ${g.pending}`);
+  // "Cà chua · Thúc lần 2: 3" — crop, stage, count. Stage names read
+  // "Thúc lần 2 — vun luống, làm giàn"; the caption keeps the part before the
+  // dash (or a parenthesis) so it stays on two lines.
+  const shown = groups.slice(0, 3).map(g => `${g.cropName} · ${g.stageName.split(/ \(| — /)[0]}: ${g.pending}`);
   const rest = groups.length - shown.length;
   return shown.join('; ') + (rest > 0 ? `; +${rest} lô` : '');
 }

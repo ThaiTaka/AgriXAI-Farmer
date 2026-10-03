@@ -39,6 +39,7 @@ import type {TaskRef} from '../../db/repositories/taskHistoryRepository';
 import {ensureTaskRow, observeTaskRow, setTaskDone} from '../../db/repositories/taskHistoryRepository';
 import {addNote, deleteNote, observeTaskNotes} from '../../db/repositories/taskNoteRepository';
 import {useObservable} from '../../db/useObservable';
+import {guidesForStage} from '../../domain/careGuide';
 import {protocolById, TASK_TYPE_LABELS} from '../../domain/careProtocol';
 import type {LaborUnit} from '../../domain/labor';
 import {describeLabor, LABOR_UNITS, laborAmount, parseDecimal} from '../../domain/labor';
@@ -73,13 +74,7 @@ export function TaskDetailScreen() {
   const labor = useObservable<Expense[]>(() => (row ? observeTaskLabor(row.id) : of([])), [row?.id], []);
   const guides = useObservable<CareGuide[]>(() => observeCareGuides(ref.cropType), [ref.cropType], []);
   // A guide written for this stage first, then the crop's general ones.
-  const relevant = useMemo(
-    () =>
-      guides
-        .filter(g => !g.stageCode || g.stageCode === ref.stageCode)
-        .sort((a, b) => Number(b.stageCode === ref.stageCode) - Number(a.stageCode === ref.stageCode)),
-    [guides, ref.stageCode],
-  );
+  const relevant = useMemo(() => guidesForStage(guides, ref.stageCode, stage), [guides, ref.stageCode, stage]);
 
   const laborTotal = labor.reduce((s, r) => s + r.amount, 0);
 
