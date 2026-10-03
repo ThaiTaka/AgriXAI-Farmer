@@ -94,9 +94,9 @@ def test_get_latest_prices(admin, farmer):
 
 
 def test_latest_returns_newest_price(admin):
-    """Gia moi nhat phai la dong co effective_from lon nhat."""
-    t1 = now_ms()
-    t2 = t1 + 60_000  # 1 phut sau
+    """Gia moi nhat phai la dong co effective_from lon nhat (da den ngay hieu luc)."""
+    t2 = now_ms() - 60_000  # 1 phut truoc
+    t1 = t2 - 60_000  # 2 phut truoc
 
     client.post("/fertilizer-prices", json={"fertilizer_id": "dap_han_quoc", "price_per_kg": 9000.0, "effective_from": t1}, headers=admin)
     client.post("/fertilizer-prices", json={"fertilizer_id": "dap_han_quoc", "price_per_kg": 9500.0, "effective_from": t2}, headers=admin)
@@ -176,3 +176,37 @@ def test_latest_contains_json_fallback(admin):
     for item in data:
         assert item["fertilizer_name"], "fertilizer_name khong duoc rong"
         assert item["price_per_kg"] > 0, "price_per_kg phai duong"
+
+
+def test_a_price_for_a_later_date_is_not_current_yet(admin):
+    """Gia nhap truoc cho ngay sau: chua phai gia hien hanh, nhung co trong lich su."""
+    fid = "lan_nung_chay_van_dien"
+    now = now_ms()
+    client.post("/fertilizer-prices", json={"fertilizer_id": fid, "price_per_kg": 4100.0, "effective_from": now - 1000}, headers=admin)
+    client.post("/fertilizer-prices", json={"fertilizer_id": fid, "price_per_kg": 4600.0, "effective_from": now + 7 * 86_400_000}, headers=admin)
+
+    latest = client.get("/fertilizer-prices/latest", headers=admin).json()
+    assert next(r for r in latest if r["fertilizer_id"] == fid)["price_per_kg"] == 4100.0
+    history = client.get(f"/fertilizer-prices/history/{fid}", headers=admin).json()
+    assert history[0]["price_per_kg"] == 4600.0
+
+
+def test_latest_carries_the_survey_it_replaces(admin):
+    """Moi dong co ten nhom va khoang gia khao sat (kem nguon) tu JSON catalogue."""
+    from app.services import static_data
+
+    data = static_data.load("fertilizer_recommendations")
+    groups = {c["code"]: c["name"] for c in data["categories"]}
+    products = {p["id"]: p for p in data["products"]}
+
+    latest = client.get("/fertilizer-prices/latest", headers=admin).json()
+    assert latest
+    for row in latest:
+        product = products[row["fertilizer_id"]]
+        assert row["group_name"] == groups[product["category"]]
+        assert row["survey_avg"] == product["price_per_kg_avg"]
+        assert row["survey_min"] == product["price_per_kg_min"]
+        assert row["survey_max"] == product["price_per_kg_max"]
+        assert row["survey_source"] == product["source"]
+        assert row["survey_date"] == product["updated_at"]
+        assert row["pack"] == product["unit"]

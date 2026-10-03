@@ -1,5 +1,7 @@
 """AgriLog v2 API entrypoint."""
 
+import asyncio
+import contextlib
 import logging
 import time
 from contextlib import asynccontextmanager
@@ -18,11 +20,14 @@ from app.routers import (
     health,
     ledger,
     media,
+    notifications,
     ops,
     plots,
     sync,
     task_records,
+    weather,
 )
+from app.services.weather import refresh_forever
 
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
@@ -45,6 +50,8 @@ TAGS_METADATA = [
     {"name": "care-guides", "description": "Hướng dẫn chăm sóc có video YouTube nhúng và ảnh từng bước — quản trị viên soạn."},
     {"name": "media", "description": "Ảnh và video: tải lên, xem, xoá."},
     {"name": "dashboard", "description": "Số liệu tổng hợp cho màn hình chính."},
+    {"name": "notifications", "description": "Thông báo gửi xuống điện thoại — quản trị viên soạn; máy chủ tự gửi cảnh báo thời tiết và giá phân."},
+    {"name": "weather", "description": "Thời tiết làng hoa Vạn Thành (Open-Meteo, CC BY 4.0) và cảnh báo theo QĐ 18/2021/QĐ-TTg."},
     {"name": "ops", "description": "Nhật ký lỗi từ điện thoại và quản lý tài khoản."},
     {"name": "health", "description": "Kiểm tra tình trạng dịch vụ và kết nối cơ sở dữ liệu."},
 ]
@@ -90,7 +97,14 @@ async def lifespan(_: FastAPI):
     logger.info(
         "started env=%s database=%s", settings.environment, engine.url.render_as_string(hide_password=True)
     )
+    # Forecast + official warnings every WEATHER_REFRESH_MINUTES, so a rain
+    # warning reaches the phones on their next sync without anyone asking.
+    refresher = asyncio.create_task(refresh_forever()) if settings.weather_enabled else None
     yield
+    if refresher is not None:
+        refresher.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await refresher
 
 
 app = FastAPI(
@@ -165,6 +179,8 @@ app.include_router(cultivation.router)
 app.include_router(task_records.router)
 app.include_router(care_guides.router)
 app.include_router(media.router)
+app.include_router(notifications.router)
+app.include_router(weather.router)
 
 
 @app.get("/", include_in_schema=False)

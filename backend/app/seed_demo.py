@@ -1,10 +1,14 @@
 """Demo farm for Giai đoạn 3 — the mock-up household from the brief.
 
-    Nông hộ: Lê Thành Thái — xã Hòa Bình, huyện Thanh Trì, Hà Nội
-    Lô đất : PUC-001-HB, 300 m² cà chua MV1 (có kho và thu-chi)
-             PUC-004-HB, 250 m² dưa leo Hunter 1.0 (lô mới, chưa ghi gì)
-    + hai hộ láng giềng cho Giai đoạn 4: Nguyễn Văn Anh (PUC-002-HB, dưa leo)
-      và Nguyễn Văn Hải (PUC-003-HB, ớt). Cùng mật khẩu demo.
+    Nông hộ: Lê Thành Thái — làng hoa Vạn Thành, Đà Lạt, Lâm Đồng
+    Lô đất : PUC-001-VT, 300 m² hoa cúc Makoto trong nhà màng (có kho và thu-chi)
+             PUC-004-VT, 250 m² hoa hồng đỏ Ý (lô mới, chưa ghi gì)
+    + hai hộ láng giềng cho Giai đoạn 4: Nguyễn Văn Anh (PUC-002-VT, cẩm chướng)
+      và Nguyễn Văn Hải (PUC-003-VT, ớt ngọt). Cùng mật khẩu demo.
+
+Crops and varieties are picked from the Lâm Đồng catalogue
+(shared/data/crop_varieties.json); cúc, hồng and cẩm chướng are the flowers
+Vạn Thành is known for.
 
 Rows are keyed by fixed ids so re-running the seeder updates rather than
 duplicates, and the phone that logs in as this account syncs the same
@@ -28,6 +32,9 @@ VN_TZ = timezone(timedelta(hours=7))
 DEMO_USERNAME = "lethanhthai"
 DEMO_PASSWORD = "matkhau123"
 DEMO_USER_ID = "demo-user-thai"
+# Ids are internal keys and stay as first seeded (the "-hb" suffix predates the
+# move to Vạn Thành): a phone that already synced must see the same rows
+# change, not a second set of plots appear beside the old ones.
 DEMO_PLOT_ID = "demo-plot-puc-001-hb"
 # Lô thứ hai: mới lập, chưa có phiếu nào — trạng thái bình thường của một lô
 # vừa xuống giống, và là chỗ để thử các màn hình khi số liệu còn rỗng.
@@ -42,7 +49,11 @@ LEGACY_USERNAMES = ("nguyenvancuong",)
 # Đổi nội dung một dòng seed mà để nguyên mốc thời gian cũ thì thay đổi đó
 # nằm lại trên máy chủ mãi mãi — điện thoại vẫn hiện tên cũ. Nên mỗi lần sửa
 # nội dung hộ demo, đóng dấu lại ngày sửa ở đây.
-DEMO_REVISION = "2026-09-24"
+DEMO_REVISION = "2026-10-02"
+
+# Every demo household sits in the same flower village.
+DEMO_REGION = "Làng hoa Vạn Thành, Đà Lạt, Lâm Đồng"
+DEMO_SUPPLIER = "Đại lý vật tư nông nghiệp Vạn Thành"
 
 
 def ms(day: str, hour: int = 8) -> int:
@@ -75,7 +86,7 @@ def seed_demo_farm(db) -> None:
     user.password_hash = hash_password(DEMO_PASSWORD)
     user.full_name = "Lê Thành Thái"
     user.role = UserRole.FARMER
-    user.region = "Xã Hòa Bình, Huyện Thanh Trì, Hà Nội"
+    user.region = DEMO_REGION
     user.phone = "0912000123"
     user.is_active = True
     db.flush()
@@ -87,18 +98,18 @@ def seed_demo_farm(db) -> None:
         db,
         Plot,
         DEMO_PLOT_ID,
-        code="PUC-001-HB",
-        name="Ruộng cà chua nhà ông Lê Thành Thái",
-        region="Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
+        code="PUC-001-VT",
+        name="Nhà màng hoa cúc nhà ông Lê Thành Thái",
+        region=DEMO_REGION,
         area=300.0,
         area_unit="m2",
-        crop_type="tomato",
-        crop_name="Cà chua",
-        variety_id="seed_ca_chua_mv1",
-        variety_name="MV1",
+        crop_type="chrysanthemum",
+        crop_name="Hoa cúc",
+        variety_id="seed_cuc_makoto",
+        variety_name="Makoto",
         planted_at=ms("2026-08-20"),
         status="active",
-        notes="Đất thịt nhẹ ven sông, tưới rãnh.",
+        notes="Trồng trong nhà màng, tưới phun.",
         owner_id=owner,
         updated_by=owner,
         created_at=ms("2026-08-20"),
@@ -109,18 +120,18 @@ def seed_demo_farm(db) -> None:
         db,
         Plot,
         DEMO_PLOT2_ID,
-        code="PUC-004-HB",
-        name="Vườn dưa leo nhà ông Lê Thành Thái",
-        region="Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
+        code="PUC-004-VT",
+        name="Vườn hoa hồng nhà ông Lê Thành Thái",
+        region=DEMO_REGION,
         area=250.0,
         area_unit="m2",
-        crop_type="cucumber",
-        crop_name="Dưa leo",
-        variety_id="seed_cucumber_hunter_1",
-        variety_name="Hunter 1.0",
+        crop_type="rose",
+        crop_name="Hoa hồng",
+        variety_id="seed_hong_do_y",
+        variety_name="Hồng đỏ Ý",
         planted_at=ms("2026-09-15"),
         status="active",
-        notes="Làm giàn lưới, tưới nhỏ giọt.",
+        notes="Trồng trong nhà màng, tưới nhỏ giọt.",
         owner_id=owner,
         updated_by=owner,
         created_at=ms("2026-09-15"),
@@ -130,7 +141,7 @@ def seed_demo_farm(db) -> None:
     # Nhập kho 10/09/2026 — the two purchases in the brief, each with its
     # linked "Phân bón" expense.
     purchases = [
-        ("demo-in-ure", "ure_ca_mau", "Urê Cà Mau", "dam", 50, 680_000, "Mua ở sfarm Hà Nội"),
+        ("demo-in-ure", "ure_ca_mau", "Urê Cà Mau", "dam", 50, 680_000, f"Mua ở {DEMO_SUPPLIER}"),
         ("demo-in-dap", "dap_han_quoc", "DAP Hàn Quốc (nhập khẩu)", "lan", 50, 1_100_000, "East-West hạt giống"),
     ]
     for row_id, fid, name, category, kg, price, note in purchases:
@@ -154,7 +165,7 @@ def seed_demo_farm(db) -> None:
             owner_id=owner,
             updated_by=owner,
             created_at=ms("2026-09-10"),
-            updated_at=ms("2026-09-10"),
+            updated_at=ms(DEMO_REVISION),
         )
         created += _upsert(
             db,
@@ -171,7 +182,7 @@ def seed_demo_farm(db) -> None:
             owner_id=owner,
             updated_by=owner,
             created_at=ms("2026-09-10"),
-            updated_at=ms("2026-09-10"),
+            updated_at=ms(DEMO_REVISION),
         )
 
     created += _upsert(
@@ -179,7 +190,7 @@ def seed_demo_farm(db) -> None:
         Income,
         "demo-income-1",
         kind="product",
-        description="Bán cà chua MV1 50kg",
+        description="Bán hoa cúc cắt cành",
         amount=1_500_000.0,
         occurred_at=ms("2026-09-01"),
         note="Bán cho cửa hàng Kim Hạnh",
@@ -188,7 +199,7 @@ def seed_demo_farm(db) -> None:
         owner_id=owner,
         updated_by=owner,
         created_at=ms("2026-09-01"),
-        updated_at=ms("2026-09-01"),
+        updated_at=ms(DEMO_REVISION),
     )
     # "3 công" = 3 người × 1 ngày × 100.000₫ — the V2.1 labour breakdown of the
     # same 300.000₫ the brief lists, so every report total stays as it was.
@@ -232,25 +243,29 @@ def seed_demo_farm(db) -> None:
 # channel below are what it returned). The steps are NOT written here: they are
 # read from the sourced tomato protocol (shared/data/care_protocols.json) at
 # seed time, so a guide never says more than the protocol's source does.
+DEMO_GUIDE_PROTOCOL = "tomato_lamdong_2025"
 DEMO_GUIDES = [
     {
         "id": "demo-guide-ca-chua-ra-hoa",
-        "stage_code": "flowering",
-        "title": "Cà chua ra hoa: làm giàn, tỉa lá gốc, bón thúc đợt 2",
+        "stage_code": "vegetative",
+        "title": "Cà chua: bón thúc lần 2, vun luống, làm giàn",
         # "Kỹ thuật trồng cà chua công nghệ cao trong nhà màng" — Báo Nông nghiệp và Môi trường
         "youtube_id": "M1fqC6tuXLI",
         "video_credit": "Video: Báo Nông nghiệp và Môi trường",
-        "tasks": ("flowering", ["lam_gian", "tia_la_goc", "bon_thuc_2", "kiem_tra_benh"]),
+        "tasks": ("vegetative", ["cachua_bon_thuc_2", "cachua_vun", "cachua_lam_gian"]),
+        "with_base": False,
         "sort_order": 2,
     },
     {
         "id": "demo-guide-u-phan-bon-lot",
         "stage_code": "seedling",
-        "title": "Bón lót phân hữu cơ trước khi trồng cà chua",
+        "title": "Cà chua: bón lót phân chuồng hoai, chăm sóc hồi xanh",
         # "Kỹ thuật ủ phân hữu cơ bón cho cây trồng | VTC16" — KÊNH VTC16
         "youtube_id": "nGqGU7yYO-c",
         "video_credit": "Video: Kênh VTC16",
-        "tasks": ("seedling", ["bon_lot", "tuoi_giu_am", "bon_thuc_1"]),
+        "tasks": ("seedling", ["cc_tuoi_hoi_xanh", "cachua_xoi", "cachua_bon_thuc_1"]),
+        # The protocol's basal dressing goes first: it is what the video is about.
+        "with_base": True,
         "sort_order": 1,
     },
 ]
@@ -258,10 +273,10 @@ DEMO_GUIDES = [
 
 def seed_demo_guides(db) -> None:
     protocol = next(
-        (p for p in static_data.load("care_protocols")["protocols"] if p["crop_type"] == "tomato"), None
+        (p for p in static_data.load("care_protocols")["protocols"] if p["id"] == DEMO_GUIDE_PROTOCOL), None
     )
     if protocol is None:
-        print("  care guides: no tomato protocol, skipped")
+        print(f"  care guides: protocol {DEMO_GUIDE_PROTOCOL} missing, skipped")
         return
     stages = {s["stage_code"]: s for s in protocol["stages"]}
     source = protocol["source"]
@@ -275,6 +290,17 @@ def seed_demo_guides(db) -> None:
         steps = [
             {"title": tasks[k]["title"], "body": tasks[k]["detail"], "image_id": None} for k in keys if k in tasks
         ]
+        if spec["with_base"]:
+            area = protocol["reference_area"]
+            base = protocol["base_application"]["timing"]
+            steps.insert(
+                0,
+                {
+                    "title": "Bón lót trước khi trồng",
+                    "body": f"{base} Lượng tính cho {area['value']:g} {area['unit']}.",
+                    "image_id": None,
+                },
+            )
         created += _upsert(
             db,
             CareGuide,
@@ -298,17 +324,17 @@ def seed_demo_guides(db) -> None:
     print(f"  care guides: {created} added, rest refreshed")
 
 
-# Past seasons on the demo tomato plot (300 m²), so the cultivation history and
-# the crop suggestion have something real to show: tomato did best in spring
-# twice, cabbage is the winter crop, carrot the weakest. Yields are demo
-# figures within the ordinary range for these crops (28–46 t/ha), not data.
-# No open cycle: the plot's current tomato is tracked by its planted_at, and an
-# open cycle would override that stage on the care tab.
+# Past seasons on the demo plot (300 m²) before it went over to chrysanthemum,
+# so the cultivation history and the crop suggestion have something real to
+# show: tomato did best in spring twice, cabbage is the winter crop, carrot the
+# weakest. Yields are demo figures within the ordinary range for these crops
+# (28–46 t/ha), not data. No open cycle: the plot's current crop is tracked by
+# its planted_at, and an open cycle would override that stage on the care tab.
 DEMO_CYCLES = [
     ("demo-cycle-2024-dong", "Vụ Đông 2024 — Bắp cải", "cabbage", "Bắp cải", "winter", "2024-10-10", "2025-01-15", 1_050.0),
-    ("demo-cycle-2025-xuan", "Vụ Xuân 2025 — Cà chua MV1", "tomato", "Cà chua", "spring", "2025-02-05", "2025-05-25", 1_380.0),
+    ("demo-cycle-2025-xuan", "Vụ Xuân 2025 — Cà chua NT1", "tomato", "Cà chua", "spring", "2025-02-05", "2025-05-25", 1_380.0),
     ("demo-cycle-2025-thu", "Vụ Thu 2025 — Cà rốt", "carrot", "Cà rốt", "autumn", "2025-08-01", "2025-11-05", 840.0),
-    ("demo-cycle-2026-xuan", "Vụ Xuân 2026 — Cà chua MV1", "tomato", "Cà chua", "spring", "2026-02-03", "2026-06-05", 1_230.0),
+    ("demo-cycle-2026-xuan", "Vụ Xuân 2026 — Cà chua NT1", "tomato", "Cà chua", "spring", "2026-02-03", "2026-06-05", 1_230.0),
 ]
 
 
@@ -323,8 +349,8 @@ def seed_demo_cycles(db, owner: str) -> int:
             name=name,
             crop_type=crop_type,
             crop_name=crop_name,
-            variety_id="seed_ca_chua_mv1" if crop_type == "tomato" else None,
-            variety_name="MV1" if crop_type == "tomato" else None,
+            variety_id="seed_ca_chua_nt1" if crop_type == "tomato" else None,
+            variety_name="NT1" if crop_type == "tomato" else None,
             stage="finished",
             season=season,
             started_at=ms(start),
@@ -343,7 +369,7 @@ def seed_demo_cycles(db, owner: str) -> int:
     return created
 
 
-# Two more households in the same commune for the multi-user tests of Giai
+# Two more households in the same village for the multi-user tests of Giai
 # đoạn 4 — each with its own plot code and a small ledger so isolation and
 # per-farm dashboards have something to show.
 NEIGHBOURS = [
@@ -353,17 +379,17 @@ NEIGHBOURS = [
         "full_name": "Nguyễn Văn Anh",
         "phone": "0912000124",
         "plot_id": "demo-plot-puc-002-hb",
-        "code": "PUC-002-HB",
-        "plot_name": "Ruộng dưa leo nhà anh Anh",
+        "code": "PUC-002-VT",
+        "plot_name": "Nhà kính cẩm chướng nhà anh Anh",
         "area": 500.0,
-        "crop_type": "cucumber",
-        "crop_name": "Dưa leo",
-        "variety_id": "seed_cucumber_hunter_1",
-        "variety_name": "Hunter 1.0",
+        "crop_type": "carnation",
+        "crop_name": "Hoa cẩm chướng",
+        "variety_id": "seed_cc_tundra",
+        "variety_name": "Tundra",
         "planted_at": "2026-09-01",
-        "purchase": ("demo-in-anh-npk", "npk_16_16_8_ca_mau", "NPK 16-16-8 Cà Mau", "npk", 50, 700_000, "Đại lý Thanh Trì"),
-        "income": ("demo-income-anh", "Bán dưa leo 120 kg", 1_440_000.0, "2026-09-08", "Chợ đầu mối Văn Điển"),
-        "expense": ("demo-expense-anh", "labor", "Công làm giàn (2 công)", 400_000.0, "2026-09-03"),
+        "purchase": ("demo-in-anh-npk", "npk_16_16_8_ca_mau", "NPK 16-16-8 Cà Mau", "npk", 50, 700_000, DEMO_SUPPLIER),
+        "income": ("demo-income-anh", "Bán hoa cẩm chướng", 1_440_000.0, "2026-09-08", "Chợ đầu mối nông sản Đà Lạt"),
+        "expense": ("demo-expense-anh", "labor", "Công giăng lưới đỡ cây (2 công)", 400_000.0, "2026-09-03"),
     },
     {
         "username": "nguyenvanhai",
@@ -371,16 +397,16 @@ NEIGHBOURS = [
         "full_name": "Nguyễn Văn Hải",
         "phone": "0912000125",
         "plot_id": "demo-plot-puc-003-hb",
-        "code": "PUC-003-HB",
-        "plot_name": "Vườn ớt nhà ông Hải",
+        "code": "PUC-003-VT",
+        "plot_name": "Nhà màng ớt ngọt nhà ông Hải",
         "area": 360.0,
         "crop_type": "chili",
-        "crop_name": "Ớt",
-        "variety_id": "seed_chili_vifon686",
-        "variety_name": "VIFON686 (chỉ thiên lai F1)",
+        "crop_name": "Ớt ngọt",
+        "variety_id": "seed_chili_bachata_rz",
+        "variety_name": "Bachata RZ F1",
         "planted_at": "2026-08-10",
-        "purchase": ("demo-in-hai-kali", "kali_bot_ca_mau", "Kali bột (MOP) Cà Mau", "kali", 25, 275_000, "Đại lý Thanh Trì"),
-        "income": ("demo-income-hai", "Bán ớt chỉ thiên 40 kg", 2_000_000.0, "2026-09-12", "Bán buôn chợ Hà Đông"),
+        "purchase": ("demo-in-hai-kali", "kali_bot_ca_mau", "Kali bột (MOP) Cà Mau", "kali", 25, 275_000, DEMO_SUPPLIER),
+        "income": ("demo-income-hai", "Bán ớt ngọt 40 kg", 2_000_000.0, "2026-09-12", "Bán buôn chợ Đà Lạt"),
         "expense": ("demo-expense-hai", "utilities", "Tiền điện bơm nước", 90_000.0, "2026-09-06"),
     },
 ]
@@ -396,7 +422,7 @@ def seed_neighbour_farms(db) -> None:
         user.password_hash = hash_password(DEMO_PASSWORD)
         user.full_name = spec["full_name"]
         user.role = UserRole.FARMER
-        user.region = "Xã Hòa Bình, Huyện Thanh Trì, Hà Nội"
+        user.region = DEMO_REGION
         user.phone = spec["phone"]
         user.is_active = True
         db.flush()
@@ -423,7 +449,7 @@ def seed_neighbour_farms(db) -> None:
             owner_id=owner,
             updated_by=owner,
             created_at=planted,
-            updated_at=planted,
+            updated_at=ms(DEMO_REVISION),
         )
 
         row_id, fid, name, category, kg, price, note = spec["purchase"]
@@ -446,7 +472,7 @@ def seed_neighbour_farms(db) -> None:
             owner_id=owner,
             updated_by=owner,
             created_at=ms("2026-09-02"),
-            updated_at=ms("2026-09-02"),
+            updated_at=ms(DEMO_REVISION),
         )
         created += _upsert(
             db,
@@ -463,7 +489,7 @@ def seed_neighbour_farms(db) -> None:
             owner_id=owner,
             updated_by=owner,
             created_at=ms("2026-09-02"),
-            updated_at=ms("2026-09-02"),
+            updated_at=ms(DEMO_REVISION),
         )
 
         inc_id, desc, amount, day, inc_note = spec["income"]
@@ -481,7 +507,7 @@ def seed_neighbour_farms(db) -> None:
             owner_id=owner,
             updated_by=owner,
             created_at=ms(day),
-            updated_at=ms(day),
+            updated_at=ms(DEMO_REVISION),
         )
         exp_id, kind, desc, amount, day = spec["expense"]
         created += _upsert(
@@ -499,6 +525,6 @@ def seed_neighbour_farms(db) -> None:
             owner_id=owner,
             updated_by=owner,
             created_at=ms(day),
-            updated_at=ms(day),
+            updated_at=ms(DEMO_REVISION),
         )
         print(f"  demo farm ({spec['username']}): {created} rows added, rest refreshed")

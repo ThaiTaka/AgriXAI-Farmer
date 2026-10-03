@@ -138,7 +138,7 @@ def test_pull_first_sync_returns_seed_varieties(token: str):
     assert all(v["is_seed"] for v in varieties)
     # Every seeded row carries the two upper catalogue levels.
     assert all(v["category_id"] and v["category_name"] and v["crop_name"] for v in varieties)
-    assert {v["crop_type"] for v in varieties} >= {"tomato", "coffee", "cucumber", "chili"}
+    assert {v["crop_type"] for v in varieties} >= {"chrysanthemum", "rose", "carnation", "tomato", "chili", "coffee"}
 
 
 def test_push_then_pull_roundtrip(token: str):
@@ -176,6 +176,8 @@ def test_farmer_cannot_create_a_plot_through_sync(token: str):
     assert body["applied"]["rejected"] == 1
     assert body["rejected"][0]["table"] == "plots"
     assert body["rejected"][0]["reason"] == "admin_only_create"
+    # Shown to the farmer as-is, so it must be proper Vietnamese.
+    assert body["rejected"][0]["message"] == "Lô đất do quản trị viên tạo và giao, ứng dụng không tự thêm được."
 
     pulled = client.get("/sync", params={"last_pulled_at": 1}, headers=auth(token))
     plots = pulled.json()["changes"]["plots"]

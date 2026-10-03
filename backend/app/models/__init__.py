@@ -32,6 +32,7 @@ from app.models.ledger import (
     WarehouseIn,
     WarehouseOut,
 )
+from app.models.notification import Notification, NotificationKind, NotificationLevel, NotificationRead
 from app.models.ops import ErrorLog, MediaFile
 from app.models.user import User, UserRole
 
@@ -60,6 +61,10 @@ __all__ = [
     "ErrorLog",
     "MediaFile",
     "FertilizerPrice",
+    "Notification",
+    "NotificationKind",
+    "NotificationLevel",
+    "NotificationRead",
 ]
 
 
@@ -85,6 +90,9 @@ SYNC_PULL_INDEXES = (
     Index("ix_expense_owner_updated", Expense.owner_id, Expense.updated_at),
     Index("ix_tasks_history_owner_updated", TaskHistory.owner_id, TaskHistory.updated_at),
     Index("ix_task_notes_owner_updated", TaskNote.owner_id, TaskNote.updated_at),
+    # notifications: one farm's own plus every broadcast (owner_id NULL).
+    Index("ix_notifications_owner_updated", Notification.owner_id, Notification.updated_at),
+    Index("ix_notification_reads_owner_updated", NotificationRead.owner_id, NotificationRead.updated_at),
     # change_logs is scoped by its author rather than by an owner column.
     Index("ix_change_logs_author_updated", ChangeLog.changed_by, ChangeLog.updated_at),
     # Reports and the dashboard filter one farm by business date, not by sync time.

@@ -1,7 +1,7 @@
 """Stock and finance arithmetic (app/services/ledger_service.py).
 
 The numbers here are the mock-up farm from the Giai đoạn 3 brief — Nguyễn Văn
-Thái, PUC-001-HB — so the same figures can be checked on the phone.
+Thái, PUC-001-VT — so the same figures can be checked on the phone.
 """
 
 from datetime import datetime
@@ -112,12 +112,12 @@ def test_period_bounds_are_vietnam_local_months_and_quarters():
 
 def _mock_farm():
     incomes = [
-        _Row(kind="product", description="Bán cà chua MV1 50kg", amount=1_500_000, occurred_at=ms("2026-09-01"), note="Bán cho cửa hàng Kim Hạnh", checked=True),
+        _Row(kind="product", description="Bán hoa cúc cắt cành", amount=1_500_000, occurred_at=ms("2026-09-01"), note="Bán cho cửa hàng Kim Hạnh", checked=True),
     ]
     expenses = [
         _Row(kind="labor", description="Công bón phân (3 công)", amount=300_000, occurred_at=ms("2026-09-05"), note=None, checked=False),
         _Row(kind="utilities", description="Điện nước", amount=120_000, occurred_at=ms("2026-09-10"), note=None, checked=False),
-        _Row(kind="fertilizer", description="Mua Urê Cà Mau 50 kg", amount=680_000, occurred_at=ms("2026-09-10"), note="Mua ở sfarm Hà Nội", checked=False),
+        _Row(kind="fertilizer", description="Mua Urê Cà Mau 50 kg", amount=680_000, occurred_at=ms("2026-09-10"), note="Mua ở Đại lý vật tư nông nghiệp Vạn Thành", checked=False),
         _Row(kind="fertilizer", description="Mua DAP 50 kg", amount=1_100_000, occurred_at=ms("2026-09-10"), note="East-West hạt giống", checked=False),
         _Row(kind="other", description="Ngoài kỳ", amount=999, occurred_at=ms("2026-08-30"), note=None, checked=False),
     ]
@@ -146,7 +146,7 @@ def test_financial_csv_layout():
     assert lines[0] == '"Tháng 9, Năm 2026"'
     assert lines[1] == "Thu,1.500.000₫,Chi,2.200.000₫,Lãi lỗ,-700.000₫"
     assert lines[3].startswith("Loại,Ngày,Nhóm,Mô tả,Số tiền")
-    assert "Thu,2026-09-01,Sản phẩm,Bán cà chua MV1 50kg,1.500.000₫,Bán cho cửa hàng Kim Hạnh,x" in lines
+    assert "Thu,2026-09-01,Sản phẩm,Bán hoa cúc cắt cành,1.500.000₫,Bán cho cửa hàng Kim Hạnh,x" in lines
     assert lines[-1].startswith("Tổng,")
     assert lines[-1].endswith("Lãi lỗ -700.000₫")
 

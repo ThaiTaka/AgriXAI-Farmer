@@ -78,6 +78,42 @@ def add_missing_indexes(engine: Engine) -> list[str]:
     return created
 
 
+# Columns made wider after release: (table, column) -> new VARCHAR length.
+# SQLite ignores VARCHAR lengths, so only PostgreSQL needs the ALTER.
+WIDENED_COLUMNS = {
+    ("plots", "area_unit"): 16,
+    # The demo guides cite QĐ 1972/QĐ-UBND in full (~300 characters).
+    ("care_guides", "source_name"): 500,
+}
+
+
+def widen_columns(engine: Engine) -> list[str]:
+    """Widens VARCHAR columns that grew after a database was created.
+
+    `plots.area_unit` was VARCHAR(8) until V2.2, but the Lâm Đồng unit code
+    `sao_lam_dong` is 12 characters: PostgreSQL rejects it, SQLite quietly
+    stores it. Widening is safe and idempotent — a column already wide enough
+    is left alone.
+    """
+    if engine.dialect.name != "postgresql":
+        return []
+    inspector = inspect(engine)
+    widened: list[str] = []
+    with engine.begin() as conn:
+        for (table, column), length in WIDENED_COLUMNS.items():
+            if not inspector.has_table(table):
+                continue
+            current = next((c for c in inspector.get_columns(table) if c["name"] == column), None)
+            if current is None or getattr(current["type"], "length", None) is None:
+                continue
+            if current["type"].length < length:
+                conn.execute(text(f'ALTER TABLE {table} ALTER COLUMN "{column}" TYPE VARCHAR({length})'))
+                widened.append(f"{table}.{column}")
+    if widened:
+        logger.info("widened column(s): %s", ", ".join(widened))
+    return widened
+
+
 def apply_data_fixes(engine: Engine) -> None:
     """One-off data moves that go with a schema step. Idempotent."""
     with engine.begin() as conn:
@@ -112,6 +148,7 @@ def apply_data_fixes(engine: Engine) -> None:
 def upgrade(engine: Engine) -> list[str]:
     Base.metadata.create_all(bind=engine)
     added = add_missing_columns(engine)
+    widen_columns(engine)
     add_missing_indexes(engine)
     apply_data_fixes(engine)
     return added

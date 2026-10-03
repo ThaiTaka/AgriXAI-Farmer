@@ -72,7 +72,7 @@ def make_plan(headers) -> dict:
     body = {
         "crop_type": "tomato",
         "crop_name": "Cà chua",
-        "protocol_id": "tomato_default",
+        "protocol_id": "tomato_lamdong_2025",
         "scenario_id": "scenario_50_phan_chuong",
         "scenario_name": "Phương án gốc",
         "area_input": 100,

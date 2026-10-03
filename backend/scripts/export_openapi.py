@@ -22,29 +22,24 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
+from fastapi.routing import APIRoute  # noqa: E402
+
 from app.main import app  # noqa: E402
+from app.services.auth_service import current_admin  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 JSON_OUT = REPO_ROOT / "docs" / "api" / "openapi.json"
 MD_OUT = REPO_ROOT / "docs" / "API_ENDPOINTS.md"
 
-# Quyền không nằm trong đặc tả OpenAPI (nó là logic trong dependency), nên ghi
-# ra đây để bảng endpoint nói được điều người đọc thật sự cần biết: ai gọi được.
+# Quyền không nằm trong đặc tả OpenAPI (nó là logic trong dependency). Endpoint
+# chỉ dành cho quản trị viên được nhận ra tự động qua dependency `current_admin`
+# (xem `_admin_only_routes`) — bảng ghi tay từng bỏ sót POST /fertilizer-prices
+# và ghi nó là "đã đăng nhập". Bảng dưới chỉ còn những quyền có sắc thái mà
+# dependency không nói được.
+ADMIN_ONLY = "**chỉ quản trị viên**"
 ACCESS = {
     ("POST", "/auth/login"): "công khai (giới hạn 5 lần sai/phút)",
     ("GET", "/health"): "công khai",
-    ("POST", "/plots"): "**chỉ quản trị viên**",
-    ("PATCH", "/crop-varieties/{variety_id}"): "**chỉ quản trị viên**",
-    ("DELETE", "/crop-varieties/{variety_id}"): "**chỉ quản trị viên**",
-    ("GET", "/logs"): "**chỉ quản trị viên**",
-    ("GET", "/users"): "**chỉ quản trị viên**",
-    ("POST", "/users"): "**chỉ quản trị viên**",
-    ("PATCH", "/users/{user_id}/status"): "**chỉ quản trị viên**",
-    # V2.1
-    ("POST", "/care-guides"): "**chỉ quản trị viên**",
-    ("PATCH", "/care-guides/{guide_id}"): "**chỉ quản trị viên**",
-    ("DELETE", "/care-guides/{guide_id}"): "**chỉ quản trị viên**",
-    ("POST", "/care-guides/{guide_id}/upload-image"): "**chỉ quản trị viên**",
     ("GET", "/care-guides"): "đã đăng nhập (bản nháp: chỉ quản trị viên)",
     ("GET", "/care-guides/{guide_id}"): "đã đăng nhập (bản nháp: chỉ quản trị viên)",
     ("GET", "/crops/{crop_type}/care-guides"): "đã đăng nhập (bản nháp: chỉ quản trị viên)",
@@ -53,6 +48,20 @@ ACCESS = {
     ("DELETE", "/media/{media_id}"): "chủ tệp hoặc quản trị viên",
 }
 DEFAULT_ACCESS = "đã đăng nhập (chỉ thấy dữ liệu của chính mình)"
+
+
+def _depends_on(dependant, target) -> bool:
+    return any(d.call is target or _depends_on(d, target) for d in dependant.dependencies)
+
+
+def _admin_only_routes() -> set[tuple[str, str]]:
+    """(METHOD, path) of every route that requires `current_admin`."""
+    return {
+        (method, route.path)
+        for route in app.routes
+        if isinstance(route, APIRoute) and _depends_on(route.dependant, current_admin)
+        for method in route.methods
+    }
 
 
 def main() -> int:
@@ -83,8 +92,9 @@ def main() -> int:
         "| Phương thức | Đường dẫn | Nhóm | Quyền | Mô tả |",
         "| --- | --- | --- | --- | --- |",
     ]
+    admin_only = _admin_only_routes()
     for verb, path, tag, summary in rows:
-        access = ACCESS.get((verb, path), DEFAULT_ACCESS)
+        access = ACCESS.get((verb, path)) or (ADMIN_ONLY if (verb, path) in admin_only else DEFAULT_ACCESS)
         lines.append(f"| `{verb}` | `{path}` | {tag} | {access} | {summary} |")
 
     lines += [

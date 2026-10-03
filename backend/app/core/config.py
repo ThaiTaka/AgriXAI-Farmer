@@ -69,6 +69,19 @@ class Settings(BaseSettings):
     # because a URL ends up in history and proxy logs.
     media_token_minutes: int = 360
 
+    # Weather for the village the farms are in — app/services/weather.py.
+    # One point for everyone: Làng hoa Vạn Thành, Đà Lạt (OpenStreetMap
+    # Nominatim). WEATHER_ENABLED=false stops every call to Open-Meteo,
+    # including the background refresh (the tests run that way).
+    weather_enabled: bool = True
+    weather_place: str = "Làng hoa Vạn Thành, Đà Lạt"
+    weather_latitude: float = 11.9473
+    weather_longitude: float = 108.4145
+    # 30 min = 48 calls a day whatever the number of phones; Open-Meteo's free
+    # tier allows 10 000.
+    weather_refresh_minutes: int = 30
+    weather_api_url: str = "https://api.open-meteo.com/v1/forecast"
+
     seed_admin_username: str = "admin"
     seed_admin_password: str = "admin123"
     seed_farmer_username: str = "thaitaka"

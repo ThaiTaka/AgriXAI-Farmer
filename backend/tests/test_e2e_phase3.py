@@ -1,7 +1,7 @@
 """End-to-end API cases for Giai đoạn 3, run through the real FastAPI app.
 
-Scenario: nông hộ Lê Thành Thái (xã Hòa Bình, Thanh Trì, Hà Nội), lô
-PUC-001-HB, 300 m² cà chua MV1 — the mock-up farm from the brief. Each test
+Scenario: nông hộ Lê Thành Thái (làng hoa Vạn Thành, Đà Lạt, Lâm Đồng), lô
+PUC-001-VT, 300 m² hoa cúc Makoto — the mock-up farm from the brief. Each test
 is one user story from the acceptance list; together they walk the full loop
 plan → purchase → stock check → issue → report → CSV.
 """
@@ -53,15 +53,15 @@ def plot(admin, farmer) -> dict:
         headers=admin,
         json={
             "owner_id": owner_id,
-            "code": "PUC-001-HB",
-            "name": "Ruộng cà chua nhà ông Lê Thành Thái",
-            "region": "Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
+            "code": "PUC-001-VT",
+            "name": "Nhà màng hoa cúc nhà ông Lê Thành Thái",
+            "region": "Làng hoa Vạn Thành, Đà Lạt, Lâm Đồng",
             "area": 300,
             "area_unit": "m2",
-            "crop_type": "tomato",
-            "crop_name": "Cà chua",
-            "variety_id": "seed_ca_chua_mv1",
-            "variety_name": "MV1",
+            "crop_type": "chrysanthemum",
+            "crop_name": "Hoa cúc",
+            "variety_id": "seed_cuc_makoto",
+            "variety_name": "Makoto",
         },
     )
     assert res.status_code == 201
@@ -72,25 +72,28 @@ def plot(admin, farmer) -> dict:
 
 
 def test_e2e_01_save_fertilizer_plan(farmer, plot):
-    """F1 — a plan for 300 m² of MV1, scenario 2, is stored with its scaled items."""
+    """F1 — a plan for 300 m² of Makoto, manure scenario, is stored with its scaled items.
+
+    Urê 544 kg/ha (QĐ 1972/QĐ-UBND, quy trình hoa cúc) × 300/10.000 = 16,32 kg.
+    """
     body = {
         "plot_id": plot["id"],
-        "crop_type": "tomato",
-        "crop_name": "Cà chua",
-        "category_id": "tomato_round",
-        "variety_id": "seed_ca_chua_mv1",
-        "variety_name": "MV1",
-        "protocol_id": "tomato_default",
-        "scenario_id": "scenario_50_phan_chuong",
-        "scenario_name": "Phương án 2 — 50% phân chuồng hoai + 50% vô cơ",
+        "crop_type": "chrysanthemum",
+        "crop_name": "Hoa cúc",
+        "category_id": "chrysanthemum_spray",
+        "variety_id": "seed_cuc_makoto",
+        "variety_name": "Makoto",
+        "protocol_id": "chrysanthemum_lamdong_2025",
+        "scenario_id": "chuong",
+        "scenario_name": "Phân chuồng hoai (40–50 tấn/ha)",
         "area_input": 300,
         "area_unit": "m2",
         "area_m2": 300,
         "items": [
-            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 2.25, "max": 2.55, "price_product_id": "ure_ca_mau", "price_per_kg": 13000, "cost_min": 29250, "cost_max": 33150},
+            {"key": "ure", "name": "Urê", "fertilizer_category": "dam", "unit": "kg", "min": 16.32, "max": 16.32, "price_product_id": "ure_ca_mau", "price_per_kg": 13600, "cost_min": 221952, "cost_max": 221952},
         ],
-        "cost_min": 29250,
-        "cost_max": 33150,
+        "cost_min": 221952,
+        "cost_max": 221952,
     }
     res = client.post("/plans", headers=farmer, json=body)
     assert res.status_code == 201, res.text
@@ -107,8 +110,8 @@ def test_e2e_02_plan_requires_at_least_one_item(farmer):
         "/plans",
         headers=farmer,
         json={
-            "crop_type": "tomato",
-            "protocol_id": "tomato_default",
+            "crop_type": "chrysanthemum",
+            "protocol_id": "chrysanthemum_lamdong_2025",
             "scenario_id": "x",
             "scenario_name": "x",
             "area_input": 1,
@@ -124,7 +127,7 @@ def test_e2e_02_plan_requires_at_least_one_item(farmer):
 
 
 def test_e2e_03_purchase_books_stock_and_a_linked_expense(farmer, plot):
-    """Kho nhập — Urê Cà Mau 50 kg, 680.000₫, 10/09/2026, 'Mua ở sfarm Hà Nội'."""
+    """Kho nhập — Urê Cà Mau 50 kg, 680.000₫, 10/09/2026, 'Mua ở Đại lý vật tư nông nghiệp Vạn Thành'."""
     res = client.post(
         "/warehouse/in",
         headers=farmer,
@@ -136,7 +139,7 @@ def test_e2e_03_purchase_books_stock_and_a_linked_expense(farmer, plot):
             "unit": "kg",
             "price": 680_000,
             "occurred_at": ms("2026-09-10"),
-            "note": "Mua ở sfarm Hà Nội",
+            "note": "Mua ở Đại lý vật tư nông nghiệp Vạn Thành",
             "plot_id": plot["id"],
         },
     )
@@ -202,7 +205,7 @@ def test_e2e_06_issue_uses_fifo_price_and_reduces_stock(farmer, plot):
             "category": "dam",
             "quantity_kg": 20,
             "occurred_at": ms("2026-09-12"),
-            "note": "Bón thúc đợt 1 lô PUC-001-HB",
+            "note": "Bón thúc đợt 1 lô PUC-001-VT",
             "plot_id": plot["id"],
         },
     )
@@ -254,7 +257,7 @@ def test_e2e_09_record_income_and_expenses(farmer, plot):
         headers=farmer,
         json={
             "kind": "product",
-            "description": "Bán cà chua MV1 50kg",
+            "description": "Bán hoa cúc cắt cành",
             "amount": 1_500_000,
             "occurred_at": ms("2026-09-01"),
             "note": "Bán cho cửa hàng Kim Hạnh",
@@ -372,7 +375,13 @@ def test_e2e_15_care_protocols_endpoint_serves_the_merged_file(farmer):
     assert res.status_code == 200
     body = res.json()
     ids = {p["id"] for p in body["protocols"]}
-    assert {"tomato_default", "coffee_robusta_ctt_2010", "cucumber_laichau_2025", "chili_hot_lamdong"} <= ids
+    assert {
+        "chrysanthemum_lamdong_2025",
+        "rose_lamdong_2025",
+        "tomato_lamdong_2025",
+        "bell_pepper_lamdong_2025",
+        "coffee_robusta_ctt_2010",
+    } <= ids
     # Tập khoảng trống đầy đủ được khoá ở test_static_data; ở đây chỉ cần biết
     # endpoint có trả phần "unavailable" của file đã gộp.
-    assert {"coffee_liberica", "coffee_excelsa", "chili_ornamental"} <= {u["category_id"] for u in body["unavailable"]}
+    assert {"tea_taiwan"} <= {u["category_id"] for u in body["unavailable"]}

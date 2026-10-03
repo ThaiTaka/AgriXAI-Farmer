@@ -6,9 +6,13 @@ Thiết kế bất biến (append-only):
 - "Giá hiện tại" = dòng mới nhất (MAX effective_from) theo từng fertilizer_id.
 - Lịch sử đầy đủ phục vụ phân tích chi phí nông hộ theo thời gian.
 
-Bảng fertilizer_prices KHÔNG tham gia /sync: mobile dùng giá từ JSON tĩnh
-(shared/data/fertilizer_recommendations.json). Nếu backend có giá DB mới hơn,
-endpoint GET /fertilizer-prices/latest phản ánh điều đó cho web-admin.
+Bảng fertilizer_prices KHÔNG tham gia /sync: điện thoại có sẵn giá khảo sát
+trong JSON tĩnh (shared/data/fertilizer_recommendations.json) và, sau mỗi lần
+đồng bộ thành công, tải GET /fertilizer-prices/latest để phủ giá quản trị viên
+nhập lên trên (lưu lại để dùng khi mất mạng).
+
+Mỗi giá mới còn sinh một thông báo cho mọi nông hộ; nhiều giá nhập liền nhau
+được gộp vào một thông báo (app/services/notification_service.py).
 """
 
 from typing import Any
@@ -21,8 +25,10 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.fertilizer import FertilizerPrice
 from app.models.user import User
-from app.services.auth_service import current_admin, current_user
+from app.services import notification_service as notices
 from app.services import static_data
+from app.services.auth_service import current_admin, current_user
+from app.services.sync_service import now_ms
 
 router = APIRouter(prefix="/fertilizer-prices", tags=["fertilizer-prices"])
 
@@ -49,19 +55,47 @@ class FertilizerPriceOut(BaseModel):
     effective_from: int
     updated_by: str | None
     created_at: int
+    # From the sourced catalogue, so a price can be read against the survey
+    # it replaces (None for an id the catalogue does not know).
+    group_name: str | None = None
+    npk_ratio: str | None = None
+    pack: str | None = None
+    survey_min: float | None = None
+    survey_max: float | None = None
+    survey_avg: float | None = None
+    survey_source: str | None = None
+    survey_date: str | None = None
 
 
 # ─── Helpers ────────────────────────────────────────────────────────────────
 
 
 def _catalogue_map() -> dict[str, dict[str, Any]]:
-    """fertilizer_id -> {name, category, price_per_kg_avg, ...} từ JSON tĩnh."""
+    """fertilizer_id -> {name, category, price_per_kg_avg, ...} từ JSON tĩnh.
+
+    Each product also carries "_group_name", the name of its category.
+    """
     try:
         data = static_data.load("fertilizer_recommendations")
         items: list[dict] = data.get("products", []) if isinstance(data, dict) else data
-        return {item["id"]: item for item in items if "id" in item}
+        groups = {c["code"]: c["name"] for c in data.get("categories", [])} if isinstance(data, dict) else {}
+        return {item["id"]: {**item, "_group_name": groups.get(item.get("category"))} for item in items if "id" in item}
     except Exception:
         return {}
+
+
+def _catalogue_fields(info: dict[str, Any]) -> dict[str, Any]:
+    """The survey figures of one catalogue product, for FertilizerPriceOut."""
+    return {
+        "group_name": info.get("_group_name"),
+        "npk_ratio": info.get("npk_ratio"),
+        "pack": info.get("unit"),
+        "survey_min": info.get("price_per_kg_min"),
+        "survey_max": info.get("price_per_kg_max"),
+        "survey_avg": info.get("price_per_kg_avg"),
+        "survey_source": info.get("source"),
+        "survey_date": info.get("updated_at"),
+    }
 
 
 def _enrich(row: FertilizerPrice, cat: dict[str, dict]) -> FertilizerPriceOut:
@@ -70,11 +104,12 @@ def _enrich(row: FertilizerPrice, cat: dict[str, dict]) -> FertilizerPriceOut:
         id=row.id,
         fertilizer_id=row.fertilizer_id,
         fertilizer_name=info.get("name", row.fertilizer_id),
-        group=info.get("category"),          # JSON dùng "category" (urea, phosphate, ...)
+        group=info.get("category"),          # JSON dùng "category" (dam, lan, kali, npk, ...)
         price_per_kg=row.price_per_kg,
         effective_from=row.effective_from,
         updated_by=row.updated_by,
         created_at=row.created_at,
+        **_catalogue_fields(info),
     )
 
 
@@ -97,10 +132,16 @@ def create_price(
     cat = _catalogue_map()
     if cat and body.fertilizer_id not in cat:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail=f"Mã phân bón '{body.fertilizer_id}' không có trong danh mục",
         )
 
+    previous = db.scalars(
+        select(FertilizerPrice)
+        .where(FertilizerPrice.fertilizer_id == body.fertilizer_id)
+        .order_by(FertilizerPrice.effective_from.desc(), FertilizerPrice.id.desc())
+        .limit(1)
+    ).first()
     row = FertilizerPrice(
         fertilizer_id=body.fertilizer_id,
         price_per_kg=body.price_per_kg,
@@ -108,6 +149,17 @@ def create_price(
         updated_by=admin.id,
     )
     db.add(row)
+    # Same transaction: a price is never saved without notice, nor announced
+    # without being saved.
+    notices.price_changed(
+        db,
+        admin,
+        fertilizer_id=body.fertilizer_id,
+        name=cat.get(body.fertilizer_id, {}).get("name", body.fertilizer_id),
+        new_price=body.price_per_kg,
+        old_price=previous.price_per_kg if previous else None,
+        effective_from=body.effective_from,
+    )
     db.commit()
     db.refresh(row)
     return _enrich(row, cat)
@@ -120,14 +172,23 @@ def get_latest_prices(
 ) -> list[FertilizerPriceOut]:
     """Trả về giá hiện hành (mới nhất theo effective_from) của mỗi loại phân bón.
 
-    Danh sách đủ để web-admin hiển thị bảng giá theo nhóm.
+    Danh sách đủ để web-admin hiển thị bảng giá theo nhóm, và để điện thoại
+    phủ giá quản trị viên nhập lên giá khảo sát.
     Các fertilizer_id chưa có giá trong DB thì dùng giá từ JSON catalogue.
+    Giá nhập trước cho một ngày sau chưa phải giá hiện hành: nó chỉ có trong
+    /history cho tới ngày đó.
     """
     cat = _catalogue_map()
 
     # Fetch all rows ordered by newest first, then deduplicate in Python.
     # SQLite không hỗ trợ DISTINCT ON nên ta group trong Python — đơn giản và đủ nhanh.
-    all_rows = list(db.scalars(select(FertilizerPrice).order_by(FertilizerPrice.effective_from.desc())))
+    all_rows = list(
+        db.scalars(
+            select(FertilizerPrice)
+            .where(FertilizerPrice.effective_from <= now_ms())
+            .order_by(FertilizerPrice.effective_from.desc(), FertilizerPrice.id.desc())
+        )
+    )
 
     # Lấy dòng mới nhất cho mỗi fertilizer_id
     seen: set[str] = set()
@@ -157,6 +218,7 @@ def get_latest_prices(
                     effective_from=0,
                     updated_by=None,
                     created_at=0,
+                    **_catalogue_fields(info),
                 )
             )
 

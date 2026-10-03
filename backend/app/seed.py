@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.core.database import SessionLocal, engine
 from app.core.schema_upgrade import upgrade
 from app.core.security import hash_password
+from app.models.base import now_ms
 from app.models.farm import CropVariety
 from app.models.user import User, UserRole
 from app.seed_demo import seed_demo_farm
@@ -33,7 +34,7 @@ SEED_USERS = [
         "password": settings.seed_farmer_password,
         "full_name": "Thái Taka",
         "role": UserRole.FARMER,
-        "region": "Cam Ly, Đà Lạt",
+        "region": "Làng hoa Vạn Thành, Đà Lạt, Lâm Đồng",
         "phone": "0900000001",
     },
 ]
@@ -76,15 +77,25 @@ def seed_varieties(db) -> None:
     mobile app reads from its bundled copy and the row seeded here are the SAME
     record. Otherwise the first sync would leave the farmer with two of every
     variety.
+
+    A seed variety that has left the file is soft-deleted, not kept: phones
+    merge the bundled catalogue with the rows they synced and a synced row wins,
+    so a retired variety would otherwise live on in every picker. The soft
+    delete reaches each phone in the next pull's `deleted` list. Plots that
+    still point at it keep the variety name they stored.
     """
     added = total = 0
+    current: set[str] = set()
     for crop, category, entry in iter_seed_varieties():
         total += 1
+        current.add(entry["id"])
         existing = db.scalar(select(CropVariety).where(CropVariety.seed_key == entry["id"]))
         if existing is None:
             existing = CropVariety(id=f"seed_{entry['id']}", seed_key=entry["id"])
             db.add(existing)
             added += 1
+        existing.is_deleted = False
+        existing.deleted_at = None
         existing.name = entry["name"]
         existing.crop_type = crop["id"]
         existing.crop_name = crop["name"]
@@ -97,7 +108,14 @@ def seed_varieties(db) -> None:
         existing.is_seed = True
         existing.approved = True
         existing.source = "seed"
-    print(f"  crop varieties: {added} added, {total - added} already present")
+
+    retired = 0
+    for row in db.scalars(select(CropVariety).where(CropVariety.is_seed.is_(True), CropVariety.is_deleted.is_(False))):
+        if row.seed_key not in current:
+            row.is_deleted = True
+            row.deleted_at = now_ms()
+            retired += 1
+    print(f"  crop varieties: {added} added, {total - added} already present, {retired} retired")
 
 
 def run() -> None:

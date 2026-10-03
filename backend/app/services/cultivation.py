@@ -43,7 +43,16 @@ def year_of(ms: int) -> int:
 
 
 # Same table as mobile/src/domain/areaUnits.ts (sources cited there).
-AREA_UNIT_M2 = {"m2": 1, "sao_bac": 360, "sao_trung": 500, "cong_nam": 1000, "mau_bac": 3600, "ha": 10_000}
+AREA_UNIT_M2 = {
+    "m2": 1,
+    "sao_lam_dong": 1000,
+    "ha": 10_000,
+    # No longer offered, still read back from plans saved before the move to Lâm Đồng.
+    "sao_bac": 360,
+    "sao_trung": 500,
+    "cong_nam": 1000,
+    "mau_bac": 3600,
+}
 
 
 def area_in_m2(area: float, unit: str) -> float:

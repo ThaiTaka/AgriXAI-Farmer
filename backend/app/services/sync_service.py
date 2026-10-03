@@ -30,7 +30,8 @@ REST endpoints are repeated here — otherwise a phone could sync around them:
   * a farmer cannot create a plot (land is assigned by management — see
     POST /plots);
   * no client can set the admin-controlled fields on a crop variety;
-  * care guides are written by admins only, in any direction;
+  * care guides and notifications are written by admins only, in any
+    direction (the server writes its own weather and price notices);
   * a row can only be changed or deleted by whoever owns it. Until V2.1 an
     update or delete was applied to any id the phone named, so one farm could
     overwrite or delete another's plot just by knowing its id — and the demo
@@ -49,12 +50,13 @@ import time
 from functools import lru_cache
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.models.farm import CareGuide, ChangeLog, CropCycle, CropVariety, Plot
 from app.models.ledger import Expense, Income, Plan, TaskHistory, TaskNote, WarehouseIn, WarehouseOut
+from app.models.notification import Notification, NotificationRead
 from app.models.user import User, UserRole
 
 logger = logging.getLogger("agrilog.sync")
@@ -90,7 +92,15 @@ SYNC_MODELS: dict[str, tuple[type, str | None]] = {
     "task_notes": (TaskNote, "owner_id"),
     # V2.1 — admin-written how-tos every farm reads (see _ADMIN_ONLY_WRITE).
     "care_guides": (CareGuide, None),
+    # V2.2 — messages for the phone: one farm's own plus every broadcast (see
+    # _BROADCAST_TABLES), and the farmer's own "đã xem" marks.
+    "notifications": (Notification, "owner_id"),
+    "notification_reads": (NotificationRead, "owner_id"),
 }
+
+# Owned tables whose rows with no owner are meant for every account. A pull
+# sends a farm its own rows plus these; nothing else changes.
+_BROADCAST_TABLES = {"notifications"}
 
 # Columns the client owns. `id`, `created_at` and `updated_at` are handled
 # separately; everything else is copied straight across.
@@ -110,10 +120,10 @@ _ADMIN_ONLY_CREATE = {"plots"}
 
 # Tables a non-admin may not touch at all through /sync — they read them, an
 # admin writes them in web-admin. Mirrors the admin-only REST endpoints.
-_ADMIN_ONLY_WRITE = {"care_guides"}
+_ADMIN_ONLY_WRITE = {"care_guides", "notifications"}
 
 _REJECT_MESSAGES = {
-    "admin_only_create": "Lo dat do quan tri vien tao va giao, ung dung khong tu them duoc.",
+    "admin_only_create": "Lô đất do quản trị viên tạo và giao, ứng dụng không tự thêm được.",
     "admin_only_write": "Chỉ quản trị viên được sửa nội dung này.",
     "not_owner": "Bản ghi này không thuộc tài khoản của bạn.",
 }
@@ -194,7 +204,11 @@ def pull_changes(
     for table, (model, owner_column) in SYNC_MODELS.items():
         stmt = select(model)
         if owner_column:
-            stmt = stmt.where(getattr(model, owner_column) == user.id)
+            owner = getattr(model, owner_column)
+            if table in _BROADCAST_TABLES:
+                stmt = stmt.where(or_(owner == user.id, owner.is_(None)))
+            else:
+                stmt = stmt.where(owner == user.id)
 
         created: list[dict] = []
         updated: list[dict] = []
@@ -407,7 +421,7 @@ def _build(model: type, raw: dict, user: User, owner_column: str | None, stamp: 
     try:
         return model(**values)
     except TypeError as exc:  # a payload shape the model cannot take
-        raise SyncPayloadError(f"Ban ghi {raw.get('id')} khong hop le") from exc
+        raise SyncPayloadError(f"Bản ghi {raw.get('id')} không hợp lệ") from exc
 
 
 def _apply_if_newer(

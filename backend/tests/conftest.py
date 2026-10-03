@@ -21,6 +21,8 @@ TEST_DB = Path(tempfile.gettempdir()) / "agrilog_test.db"
 # Must be set before app.core.config is imported anywhere.
 os.environ["DATABASE_URL"] = os.environ.get("TEST_DATABASE_URL") or f"sqlite:///{TEST_DB}"
 os.environ.setdefault("SECRET_KEY", "test-only-key")
+# No call to Open-Meteo from a test run: tests that need a forecast stub it.
+os.environ["WEATHER_ENABLED"] = "false"
 # Uploads land in a throwaway folder, never in backend/media next to real photos.
 os.environ["MEDIA_DIR"] = str(Path(tempfile.gettempdir()) / "agrilog_test_media")
 

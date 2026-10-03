@@ -35,7 +35,9 @@ class Plot(Base, SyncMixin):
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     region: Mapped[str | None] = mapped_column(String(160), default=None)
     area: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    area_unit: Mapped[str] = mapped_column(String(8), default="m2", nullable=False)
+    # 16, not 8: "sao_lam_dong" (12) is the unit Lâm Đồng farmers use — see
+    # schema_upgrade.widen_columns for databases created before.
+    area_unit: Mapped[str] = mapped_column(String(16), default="m2", nullable=False)
     # Catalogue crop id ("tomato", "coffee"...) or a slug the farmer created.
     crop_type: Mapped[str] = mapped_column(String(48), default="tomato", nullable=False)
     crop_name: Mapped[str | None] = mapped_column(String(64), default=None)
@@ -139,7 +141,9 @@ class CareGuide(Base, SyncMixin):
     steps_json: Mapped[str | None] = mapped_column(Text, default=None)
     # JSON [media id] — the picture strip above the steps.
     images_json: Mapped[str | None] = mapped_column(Text, default=None)
-    source_name: Mapped[str | None] = mapped_column(String(160), default=None)
+    # A full citation ("Các bước: UBND tỉnh Lâm Đồng … QĐ 1972/QĐ-UBND … Video: …")
+    # runs past 300 characters, hence 500 (was 160 until V2.2).
+    source_name: Mapped[str | None] = mapped_column(String(500), default=None)
     source_url: Mapped[str | None] = mapped_column(String(500), default=None)
     published: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     sort_order: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

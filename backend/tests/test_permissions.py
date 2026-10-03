@@ -140,3 +140,22 @@ def test_farmer_cannot_touch_another_farmers_plot(admin, farmer):
 
 def test_listing_plots_requires_a_token():
     assert client.get("/plots").status_code == 401
+
+
+def test_a_plot_measured_in_sao_lam_dong_can_be_created_and_edited():
+    """Regression: plots.area_unit was VARCHAR(8) and the schema capped it at
+    8 characters, but 'sao_lam_dong' — the unit Lâm Đồng farmers use — has 12."""
+    from v21_support import admin as admin_headers, client as c, make_farmer, user_id
+
+    farmer = make_farmer("v22_sao_owner")
+    res = c.post(
+        "/plots",
+        headers=admin_headers(),
+        json={"code": "VT-SAO-1", "name": "Lô đo bằng sào", "area": 2, "area_unit": "sao_lam_dong", "crop_type": "chrysanthemum", "owner_id": user_id(farmer)},
+    )
+    assert res.status_code == 201, res.text
+    assert res.json()["area_unit"] == "sao_lam_dong"
+    plot_id = res.json()["id"]
+    edited = c.patch(f"/plots/{plot_id}", headers=admin_headers(), json={"area": 2.5, "area_unit": "sao_lam_dong"})
+    assert edited.status_code == 200, edited.text
+    assert edited.json()["area"] == 2.5

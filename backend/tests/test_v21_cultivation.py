@@ -45,7 +45,7 @@ def test_season_follows_the_sowing_month_in_vietnam_time():
     assert cult.season_of(ms("2025-04-01")) == "summer"
     assert cult.season_of(ms("2025-09-30")) == "autumn"
     assert cult.season_of(ms("2025-12-31")) == "winter"
-    # 00:30 on 1 April in Hà Nội is still 31 March in UTC — Vietnam time wins.
+    # 00:30 on 1 April in Vietnam is still 31 March in UTC — Vietnam time wins.
     assert cult.season_of(int(datetime.fromisoformat("2025-04-01T00:30:00+07:00").timestamp() * 1000)) == "summer"
 
 
@@ -73,6 +73,7 @@ def test_vietnamese_number_format():
 
 
 def test_area_units_convert_to_square_metres():
+    assert cult.area_in_m2(3, "sao_lam_dong") == 3000
     assert cult.area_in_m2(2, "sao_bac") == 720
     assert cult.area_in_m2(0.5, "ha") == 5000
     assert cult.area_in_m2(300, "m2") == 300

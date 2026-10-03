@@ -5,6 +5,7 @@ farm from web-admin. Nothing here lets a farmer read another farm.
 """
 
 import uuid
+from dataclasses import asdict
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
@@ -20,7 +21,7 @@ from app.models.ledger import Expense, Income, WarehouseIn, WarehouseOut
 from app.models.ops import ErrorLog
 from app.models.user import User, UserRole
 from app.schemas.auth import UserCreate, UserOut, UserStatusUpdate
-from app.services import dashboard_service, ledger_service as ledger, report_pdf
+from app.services import dashboard_service, ledger_service as ledger, overview_service, report_pdf
 from app.services.auth_service import current_admin, current_user
 
 logs_router = APIRouter(prefix="/logs", tags=["ops"])
@@ -160,6 +161,60 @@ def dashboard_summary(
         pending_tasks=s.pending_tasks,
         pending_groups=[PendingGroupOut(**g.__dict__) for g in s.pending_groups],
     )
+
+
+class MonthTotalsOut(BaseModel):
+    year: int
+    month: int
+    income: float
+    expense: float
+
+
+class CropAreaOut(BaseModel):
+    crop_type: str
+    crop_name: str
+    plots: int
+    area_m2: float
+
+
+class FarmRowOut(BaseModel):
+    id: str
+    username: str
+    full_name: str
+    region: str | None
+    is_active: bool
+    plots: int
+    area_m2: float
+    month_income: float
+    month_expense: float
+    stock_value: float
+    pending_tasks: int
+    last_activity: int | None
+
+
+class OverviewOut(BaseModel):
+    year: int
+    month: int
+    farms_total: int
+    farms_active: int
+    plots: int
+    area_m2: float
+    month_income: float
+    month_expense: float
+    stock_value: float
+    pending_tasks: int
+    varieties_pending: int
+    errors_7d: int
+    months: list[MonthTotalsOut]
+    crops: list[CropAreaOut]
+    farms: list[FarmRowOut]
+
+
+@dashboard_router.get("/overview", response_model=OverviewOut)
+def dashboard_overview(_: User = Depends(current_admin), db: Session = Depends(get_db)) -> OverviewOut:
+    """Admin home of web-admin: every farm at once — land, money for the last
+    six months, crops by area, and what is waiting for the admin."""
+    return OverviewOut.model_validate(asdict(overview_service.overview(db)))
 
 
 # ---------------------------------- pdf ----------------------------------

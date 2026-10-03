@@ -1,7 +1,7 @@
 """Giai đoạn 4 — multi-user sync, error logs, dashboard, PDF.
 
-Three demo households (lethanhthai PUC-001-HB + PUC-004-HB, nguyenvananh PUC-002-HB,
-nguyenvanhai PUC-003-HB) plus admin. Each test is one case from the brief's
+Three demo households (lethanhthai PUC-001-VT + PUC-004-VT, nguyenvananh PUC-002-VT,
+nguyenvanhai PUC-003-VT) plus admin. Each test is one case from the brief's
 list; the e2e tests at the bottom chain them the way a farmer would.
 """
 
@@ -10,9 +10,12 @@ from datetime import datetime
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import select
 
 from app.core.config import settings
+from app.core.database import SessionLocal
 from app.main import app
+from app.models.user import User
 from app.seed import run as run_seed
 from app.seed_demo import DEMO_PASSWORD
 from app.services import dashboard_service, report_pdf
@@ -62,10 +65,10 @@ def plan_row(record_id: str, *, name: str, updated_at: int, created_at: int | No
         "plot_id": "demo-plot-puc-001-hb",
         "crop_type": "tomato",
         "crop_name": "Cà chua",
-        "category_id": "tomato_round",
-        "variety_id": "seed_ca_chua_mv1",
-        "variety_name": "MV1",
-        "protocol_id": "tomato_default",
+        "category_id": "tomato_large",
+        "variety_id": "seed_ca_chua_nt1",
+        "variety_name": "NT1",
+        "protocol_id": "tomato_lamdong_2025",
         "scenario_id": "scenario_25_huu_co",
         "scenario_name": name,
         "area_input": 300,
@@ -156,9 +159,9 @@ def test_mu_04_farmers_never_see_each_others_farms(thai, anh, hai):
     thai_plots = {p["code"] for p in client.get("/plots", headers=thai).json()}
     anh_plots = {p["code"] for p in client.get("/plots", headers=anh).json()}
     hai_plots = {p["code"] for p in client.get("/plots", headers=hai).json()}
-    assert "PUC-001-HB" in thai_plots and "PUC-001-HB" not in anh_plots and "PUC-001-HB" not in hai_plots
-    assert "PUC-002-HB" in anh_plots and "PUC-002-HB" not in thai_plots
-    assert "PUC-003-HB" in hai_plots and "PUC-003-HB" not in anh_plots
+    assert "PUC-001-VT" in thai_plots and "PUC-001-VT" not in anh_plots and "PUC-001-VT" not in hai_plots
+    assert "PUC-002-VT" in anh_plots and "PUC-002-VT" not in thai_plots
+    assert "PUC-003-VT" in hai_plots and "PUC-003-VT" not in anh_plots
 
     anh_id = me(anh)["id"]
     for path in ("/plans", "/warehouse/summary", "/income", "/expense", "/dashboard/summary"):
@@ -167,7 +170,7 @@ def test_mu_04_farmers_never_see_each_others_farms(thai, anh, hai):
 
     # A pulled sync carries only the caller's rows.
     pulled = client.get("/sync", headers=hai).json()["changes"]
-    assert {r["code"] for r in pulled["plots"]["created"]} == {"PUC-003-HB"}
+    assert {r["code"] for r in pulled["plots"]["created"]} == {"PUC-003-VT"}
     assert all(r["owner_id"] == me(hai)["id"] for r in pulled["warehouse_in"]["created"])
 
 
@@ -204,7 +207,7 @@ def test_mu_05_three_tables_in_one_push(anh):
                 {
                     "id": inc_id,
                     "kind": "product",
-                    "description": "Bán dưa leo 30 kg",
+                    "description": "Bán hoa cẩm chướng",
                     "amount": 360_000,
                     "occurred_at": ms("2026-09-14"),
                     "note": None,
@@ -339,18 +342,31 @@ def test_dashboard_summary_for_the_demo_farm(thai):
     assert body["month_income"] == 1_500_000
     assert body["month_expense"] == 300_000 + 120_000 + 680_000 + 1_100_000
     assert body["month_profit"] == -700_000
-    # Hộ này có hai lô: PUC-001-HB cà chua trồng 20/08 đang ở "Ra hoa đợt đầu"
-    # (4 việc) và PUC-004-HB dưa leo trồng 15/09 ở giai đoạn đầu (3 việc).
-    assert body["pending_tasks"] == 4 + 3
-    assert body["pending_groups"][0]["stage_name"] == "Ra hoa đợt đầu"
-    assert body["pending_groups"][0]["crop_name"] == "Cà chua"
+    # Việc chờ làm đi theo NGÀY HÔM NAY (số ngày từ lúc trồng), nên ở đây chỉ
+    # kiểm tổng khớp từng nhóm; số việc cụ thể được khoá ở một ngày cố định
+    # trong test kế tiếp.
+    assert body["pending_tasks"] == sum(g["pending"] for g in body["pending_groups"])
+    assert {g["crop_name"] for g in body["pending_groups"]} == {"Hoa cúc", "Hoa hồng"}
+
+
+def test_dashboard_pending_tasks_of_the_demo_farm_on_a_fixed_day():
+    with SessionLocal() as db:
+        user = db.scalar(select(User).where(User.username == "lethanhthai"))
+        groups = {g.crop_name: g for g in dashboard_service.pending_tasks(db, user, ms("2026-09-24"))}
+    # Ngày 24/09: PUC-001-VT hoa cúc trồng 20/08 (ngày 35) đang ở lần thúc 2
+    # (3 việc), PUC-004-VT hoa hồng trồng 15/09 (ngày 9) mới trồng (2 việc).
+    assert groups["Hoa cúc"].stage_name == "Sinh trưởng — thúc lần 2, giăng lưới, chiếu sáng"
+    assert groups["Hoa cúc"].pending == 3
+    assert groups["Hoa hồng"].stage_name == "Trồng mới — chăm cây con"
+    assert groups["Hoa hồng"].pending == 2
 
 
 def test_dashboard_pending_tasks_drop_when_ticked_and_calendar_crops_use_the_month():
     now = ms("2026-09-14")
     assert dashboard_service.infer_growth_stage(ms("2026-08-20"), now) == "vegetative"
     assert dashboard_service.infer_growth_stage(None, now) is None
-    assert dashboard_service.seed_variety_category("seed_ca_chua_mv1") == "tomato_round"
+    assert dashboard_service.seed_variety_category("seed_cuc_makoto") == "chrysanthemum_spray"
+    assert dashboard_service.seed_variety_category("seed_ca_chua_nt1") == "tomato_large"
     assert dashboard_service.seed_variety_category("coffee_arabica_tha1") == "coffee_arabica"
     robusta = dashboard_service.protocol_for("coffee", "coffee_robusta")
     assert robusta is not None
@@ -426,14 +442,14 @@ def test_pdf_unicode_text_survives_the_round_trip():
     """The document text must carry Vietnamese letters and ₫ — the reason
     Open Sans is embedded instead of Helvetica."""
     report = ledger.financial_report(
-        [type("R", (), {"kind": "product", "description": "Bán cà chua MV1 50kg", "amount": 1_500_000, "occurred_at": ms("2026-09-01"), "note": None, "checked": True})()],
+        [type("R", (), {"kind": "product", "description": "Bán hoa cúc cắt cành", "amount": 1_500_000, "occurred_at": ms("2026-09-01"), "note": None, "checked": True})()],
         [],
         ledger.Period(2026, month=9),
     )
     notes = report_pdf.report_notes(report, [], [], ledger.Period(2026, month=9))
     content = report_pdf.build_pdf(
         farmer_name="Lê Thành Thái",
-        address="Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
+        address="Làng hoa Vạn Thành, Đà Lạt, Lâm Đồng",
         report=report,
         notes=notes,
         generated_at=datetime(2026, 9, 14, tzinfo=ledger.VN_TZ),

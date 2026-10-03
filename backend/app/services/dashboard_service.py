@@ -27,7 +27,8 @@ from app.models.user import User
 from app.services import ledger_service as ledger
 from app.services import static_data
 
-# Day thresholds of mobile/src/utils/growthStage.ts (tomato MV1 ~90–100 days).
+# Day thresholds of mobile/src/utils/growthStage.ts (an annual crop of ~90–100 days);
+# only used where a procedure gives no day count (see stage_for_day).
 GROWTH_STAGE_DAYS = [
     ("seedling", 20),
     ("vegetative", 40),
@@ -68,14 +69,33 @@ def protocol_for(crop_type: str, category_id: str | None) -> dict | None:
     return None
 
 
+def stage_for_day(protocol: dict, day: int) -> dict | None:
+    """Twin of `stageForDay` in mobile/src/domain/careProtocol.ts (ADR 0009).
+
+    The procedure's own dated rounds decide; the generic ladder may only move a
+    plot on to an undated round (the harvest, typically), never past a dated
+    round and never backwards. With no dated rounds the ladder decides.
+    """
+    stages = protocol["stages"]
+    ladder = next((stage for stage, until in GROWTH_STAGE_DAYS if day <= until), "harvesting")
+    by_ladder = next((i for i, s in enumerate(stages) if ladder in s.get("growth_stages", [])), -1)
+    if not any(s.get("start_day") is not None for s in stages):
+        return stages[by_ladder] if by_ladder >= 0 else None
+    current = 0
+    for i, s in enumerate(stages):
+        if s.get("start_day") is not None and s["start_day"] <= day:
+            current = i
+    reachable = all(s.get("start_day") is None for s in stages[current + 1 : by_ladder + 1])
+    return stages[by_ladder] if by_ladder > current and reachable else stages[current]
+
+
 def current_stage(protocol: dict, planted_at: int | None, now_ms: int) -> dict | None:
     if protocol["stage_model"] == "calendar":
         month = datetime.fromtimestamp(now_ms / 1000, tz=ledger.VN_TZ).month
         return next((s for s in protocol["stages"] if month in (s.get("months") or [])), None)
-    growth = infer_growth_stage(planted_at, now_ms)
-    if growth is None:
+    if not planted_at:
         return None
-    return next((s for s in protocol["stages"] if growth in s.get("growth_stages", [])), None)
+    return stage_for_day(protocol, max(0, (now_ms - planted_at) // 86_400_000))
 
 
 @dataclass

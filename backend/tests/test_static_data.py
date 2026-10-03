@@ -17,6 +17,12 @@ from app.services import static_data
 
 ID_RE = re.compile(r"^[a-z0-9_]+$")
 SHARED_DATA = Path(__file__).resolve().parents[2] / "shared" / "data"
+CROP_IMAGES = Path(__file__).resolve().parents[2] / "mobile" / "src" / "assets" / "crops"
+# Units a protocol may quote an amount in. m³ is how Lâm Đồng's procedures
+# measure manure (QĐ 1972/QĐ-UBND); converting it to tonnes would need a bulk
+# density the source does not give, so the app keeps the source's unit.
+ITEM_UNITS = ("kg", "tấn", "m³")
+FREE_LICENCE = re.compile(r"^(CC0|CC BY(-SA)? [0-9.]+( us)?|Public domain)$", re.I)
 
 FERTILIZER_CATEGORIES = {"dam", "lan", "kali", "npk", "huu_co", "vi_sinh", "khac"}
 TASK_TYPES = {"fertilize", "water", "cultivate", "scout", "spray", "harvest"}
@@ -43,7 +49,7 @@ def _catalogue_categories() -> dict[str, set[str]]:
 def test_crop_catalogue_is_three_levels_deep_and_sourced():
     catalogue = static_data.load("crop_varieties")
     crop_types = catalogue["crop_types"]
-    assert len(crop_types) >= 4, "cà chua, cà phê, dưa leo, ớt là tối thiểu"
+    assert len(crop_types) >= 4, "tối thiểu: hoa cúc, hoa hồng, cà chua, cà phê"
 
     seen_variety_ids: set[str] = set()
     seen_crop_ids: set[str] = set()
@@ -68,22 +74,44 @@ def test_crop_catalogue_is_three_levels_deep_and_sourced():
                 assert variety.get("badge") in (None, "popular", "new", "premium")
 
 
-def test_tomato_keeps_the_original_eight_varieties():
-    """Plots already linked to a tomato variety must keep working after the
-    restructure, so the eight original ids from crop_varieties_seed.json stay."""
-    catalogue = static_data.load("crop_varieties")
-    tomato = next(c for c in catalogue["crop_types"] if c["id"] == "tomato")
-    ids = {v["id"] for cat in tomato["categories"] for v in cat["varieties"]}
-    assert ids == {
-        "ca_chua_bi_do",
-        "ca_chua_bi_vang",
-        "ca_chua_bi_lun",
-        "ca_chua_bi_socola",
-        "ca_chua_tim",
-        "ca_chua_bach_tuoc_leo_gian",
-        "ca_chua_trai_cay_nova",
-        "ca_chua_mv1",
+def test_catalogue_holds_lam_dong_crops_only():
+    """The catalogue was narrowed on 02/10/2026 to crops an official Lâm Đồng
+    source shows being grown there (QĐ 1972/QĐ-UBND, QĐ 704 & 729/QĐ-SNN, Địa
+    chí Đà Lạt, Báo Lâm Đồng). Adding a crop is fine — but it has to be a
+    deliberate change here, with a source, not a silent addition.
+
+    03/10/2026: + 11 Đà Lạt crops that each have their own procedure in QĐ
+    1972/QĐ-UBND (hoa salem, lan hồ điệp, lan vũ nữ, bó xôi, đậu Hà Lan, củ dền,
+    tỏi tây, cần tây, su su, bơ, hồng ăn trái)."""
+    crops = {c["id"] for c in static_data.load("crop_varieties")["crop_types"]}
+    assert crops == {
+        "chrysanthemum", "rose", "carnation", "gerbera", "lily", "gladiolus", "lisianthus",
+        "tomato", "chili", "cucumber", "cabbage", "napa_cabbage", "cauliflower", "lettuce", "water_spinach",
+        "carrot", "potato", "strawberry", "rice", "corn",
+        "artichoke", "coffee", "tea",
+        "limonium", "phalaenopsis", "oncidium",
+        "spinach", "garden_pea", "beetroot", "leek", "celery", "chayote",
+        "avocado", "persimmon",
     }
+
+
+def test_the_eight_required_crops_are_in_the_catalogue():
+    """Đồ án bắt buộc tám loài cây (xem mobile/__tests__/cropIdentity.test.ts);
+    lọc theo Lâm Đồng không được làm rơi loài nào — cả tám đều trồng ở tỉnh."""
+    names = {c["name"] for c in static_data.load("crop_varieties")["crop_types"]}
+    assert {"Cà chua", "Ớt", "Dưa leo", "Cà rốt", "Rau muống", "Bắp cải", "Lúa", "Ngô"} <= names
+
+
+def test_every_crop_has_a_credited_freely_licensed_photo():
+    """The variety picker shows a photo of the crop. Each one is bundled in the
+    app (works offline) and must carry author, licence and the Commons page, or
+    the app would be using someone's picture without the credit it requires."""
+    for crop in static_data.load("crop_varieties")["crop_types"]:
+        image = crop.get("image")
+        assert image, f"{crop['id']} chưa có ảnh"
+        assert image["author"] and image["source_url"].startswith("https://commons.wikimedia.org/"), crop["id"]
+        assert FREE_LICENCE.match(image["license"]), f"{crop['id']}: giấy phép {image['license']}"
+        assert (CROP_IMAGES / image["file"]).is_file(), f"thiếu tệp ảnh {image['file']}"
 
 
 # ------------------------------ care protocols ------------------------------
@@ -132,7 +160,7 @@ def test_every_care_protocol_is_sourced_and_well_formed():
             for item in scenario["items"]:
                 assert ID_RE.match(item["key"]) and item["key"] not in keys, f"{pid}/{scenario['id']}: {item}"
                 keys.add(item["key"])
-                assert item["name"] and item["unit"] in ("kg", "tấn"), item
+                assert item["name"] and item["unit"] in ITEM_UNITS, item
                 assert item["fertilizer_category"] in FERTILIZER_CATEGORIES, item
                 assert 0 <= item["min"] <= item["max"], item
                 assert item["price_product_id"] is None or item["price_product_id"] in products, (
@@ -191,22 +219,22 @@ def test_every_crop_category_is_covered_or_declared_unavailable():
 def test_the_declared_gaps_are_exactly_the_ones_we_know_about():
     """Khoảng trống phải được liệt kê ra, không được âm thầm mọc thêm.
 
-    Cà phê mít / cà phê excelsa và ớt kiểng: có giống trong danh mục nhưng
-    không có quy trình chính thức. Năm cây thêm ngày 23/09/2026 (cà rốt, rau
-    muống, bắp cải, ngô, lúa) cũng vậy — giống đều có nguồn, định mức bón thì
-    chưa, nên mọi loại con của chúng đều nằm ở đây thay vì được bịa ra.
+    Chè Đài Loan có quy trình (QĐ 1972/QĐ-UBND) nhưng bón theo lứa hái chứ
+    không theo tháng hay giai đoạn sinh trưởng, nên ứng dụng chưa mô tả được và
+    khai báo rõ ở đây thay vì ép số liệu vào một lịch không đúng. Rau muống có
+    trồng ở Lâm Đồng nhưng bộ 120 quy trình của tỉnh không có quy trình cho nó.
+    Lan hồ điệp và lan vũ nữ có quy trình nhưng bón theo nồng độ pha và theo
+    chậu (g/10 lít nước), không theo diện tích — công cụ tính theo ha, sào không
+    áp dụng được.
     """
     data = static_data.load("care_protocols")
     assert {u["category_id"] for u in data["unavailable"]} == {
-        "coffee_liberica",
-        "coffee_excelsa",
-        "chili_ornamental",
-        "carrot_cu_dai",
+        "tea_taiwan",
         "water_spinach_la_tre",
-        "cabbage_tron",
-        "cabbage_trai_tim",
-        "corn_nep",
-        "rice_thuan",
+        "phalaenopsis_large",
+        "phalaenopsis_medium",
+        "phalaenopsis_mini",
+        "oncidium_cut",
     }
 
 
@@ -225,16 +253,35 @@ def test_crops_without_a_protocol_still_carry_sourced_varieties():
 
 
 def test_tomato_scenario_scales_linearly_with_area():
-    """F1 reference: MV1 on 300 m², scenario 2 — urê 75–85 kg/ha -> 2,25–2,55 kg."""
+    """F1 reference: cà chua trồng trên đất (QĐ 1972/QĐ-UBND) — urê 522 kg/ha,
+    phân chuồng 40 tấn/ha — on a 300 m² plot."""
     data = static_data.load("care_protocols")
-    tomato = next(p for p in data["protocols"] if p["id"] == "tomato_default")
-    scenario = next(s for s in tomato["scenarios"] if s["id"] == "scenario_50_phan_chuong")
-    ure = next(i for i in scenario["items"] if i["key"] == "ure")
+    tomato = next(p for p in data["protocols"] if p["id"] == "tomato_lamdong_2025")
+    scenario = next(s for s in tomato["scenarios"] if s["id"] == "tren_dat")
     factor = 300 / tomato["reference_area"]["m2"]
-    assert ure["min"] * factor == pytest.approx(2.25)
-    assert ure["max"] * factor == pytest.approx(2.55)
+    ure = next(i for i in scenario["items"] if i["key"] == "ure")
+    assert ure["min"] * factor == pytest.approx(15.66)
     manure = next(i for i in scenario["items"] if i["key"] == "phan_chuong")
-    assert manure["unit"] == "tấn" and manure["min"] * factor == pytest.approx(0.18)
+    assert manure["unit"] == "tấn" and manure["min"] * factor == pytest.approx(1.2)
+
+
+def test_round_percentages_add_up_to_the_season():
+    """Base + stage applications never hand out more than the season's amount
+    of any fertiliser, and a table the source splits completely sums to 100."""
+    for protocol in static_data.load("care_protocols")["protocols"]:
+        totals: dict[str, float] = {}
+        for app in protocol["base_application"]["applications"]:
+            totals[app["item_key"]] = totals.get(app["item_key"], 0) + app["pct"]
+        for stage in protocol["stages"]:
+            for app in stage["applications"]:
+                totals[app["item_key"]] = totals.get(app["item_key"], 0) + app["pct"]
+        for key, total in totals.items():
+            assert total <= 100.0001, f"{protocol['id']}: {key} bón {total}% > 100%"
+    chrysanthemum = next(p for p in static_data.load("care_protocols")["protocols"] if p["id"] == "chrysanthemum_lamdong_2025")
+    for key in ("ure", "super_lan", "kcl"):
+        share = sum(a["pct"] for a in chrysanthemum["base_application"]["applications"] if a["item_key"] == key)
+        share += sum(a["pct"] for s in chrysanthemum["stages"] for a in s["applications"] if a["item_key"] == key)
+        assert share == pytest.approx(100), key
 
 
 def test_care_protocols_use_catalogue_crop_ids():
@@ -268,3 +315,49 @@ def test_budget_tiers_match_the_price_per_kg_bands():
         expected = "binh_dan" if avg <= binh_dan else "trung_binh" if avg <= trung_binh else "cao_cap"
         assert product["budget_tier"] == expected, f"{product['id']}: {avg}đ/kg phải là {expected}"
         assert product["price_per_kg_min"] == round(product["price_min"] / product["pack_size_kg"])
+
+
+def test_dalat_crops_added_on_03_10_2026_copy_their_procedures():
+    """Spot-check of the crops added on 03/10/2026 against QĐ 1972/QĐ-UBND —
+    the season totals each procedure states, kg/ha."""
+    protocols = {p["id"]: p for p in static_data.load("care_protocols")["protocols"]}
+
+    def amount(pid: str, key: str, scenario: int = 0) -> tuple[float, float]:
+        item = next(i for i in protocols[pid]["scenarios"][scenario]["items"] if i["key"] == key)
+        return item["min"], item["max"]
+
+    assert amount("limonium_lamdong_2025", "ure") == (240, 240)  # IV.9: 240 urê + 750 super lân + 183 KCl
+    assert amount("limonium_lamdong_2025", "kcl") == (183, 183)
+    assert amount("spinach_lamdong_2025", "ure") == (152, 152)  # III.3: 152 urê + 688 super lân + 167 KCl
+    assert amount("spinach_lamdong_2025", "npk_15_15_15", scenario=1) == (467, 467)
+    assert amount("garden_pea_lamdong_2025", "npk_15_5_20") == (750, 750)  # III.18
+    assert amount("beetroot_lamdong_2025", "super_lan") == (400, 400)  # III.30: 180 urê + 400 super lân + 150 KCl
+    assert amount("leek_lamdong_2025", "kcl") == (200, 200)  # III.28: 195 urê + 242 super lân + 200 KCl
+    assert amount("celery_lamdong_2025", "ure") == (350, 350)  # III.10: 350 urê + 600 super lân + 300 KCl
+    assert amount("chayote_fruit_lamdong_2025", "ure") == (390, 390)  # III.24, lấy quả
+    assert amount("chayote_shoot_lamdong_2025", "ure") == (434, 434)  # III.24, lấy đọt
+    assert amount("avocado_kd_lamdong_2025", "super_lan") == (1511, 1511)  # I.1, kinh doanh
+    assert amount("persimmon_kd_lamdong_2025", "kcl") == (500, 500)  # I.6, năm thứ 5 trở đi
+
+    # Su su: two procedures in one document — the farmer picks lấy quả or lấy đọt.
+    assert {p["id"] for p in protocols.values() if p["crop_type"] == "chayote"} == {
+        "chayote_fruit_lamdong_2025",
+        "chayote_shoot_lamdong_2025",
+    }
+    # Hồng kinh doanh: lần 1 tháng 11–12, lần 2 tháng 2–3, lần 3 tháng 4–5.
+    months = {s["stage_code"]: s["months"] for s in protocols["persimmon_kd_lamdong_2025"]["stages"]}
+    assert months["lan_1"] == [11, 12] and months["lan_2"] == [2, 3] and months["lan_3"] == [4, 5]
+
+
+def test_a_month_belongs_to_one_stage_at_most():
+    """The phone shows the stage of the current month; two stages claiming the
+    same month would hide one of them."""
+    for protocol in static_data.load("care_protocols")["protocols"]:
+        if protocol["stage_model"] != "calendar":
+            continue
+        seen: dict[int, str] = {}
+        for stage in protocol["stages"]:
+            for month in stage["months"]:
+                assert 1 <= month <= 12, protocol["id"]
+                assert month not in seen, f"{protocol['id']}: tháng {month} thuộc cả {seen[month]} và {stage['stage_code']}"
+                seen[month] = stage["stage_code"]

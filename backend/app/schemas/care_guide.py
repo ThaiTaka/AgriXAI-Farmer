@@ -58,7 +58,7 @@ class CareGuideBase(BaseModel):
     youtube: str | None = Field(default=None, description="Mã hoặc đường dẫn YouTube")
     steps: list[GuideStep] = Field(default_factory=list, max_length=30)
     image_ids: list[str] = Field(default_factory=list, max_length=30)
-    source_name: str | None = Field(default=None, max_length=160)
+    source_name: str | None = Field(default=None, max_length=500)
     source_url: str | None = Field(default=None, max_length=500)
     published: bool = False
     sort_order: int = 0
@@ -86,7 +86,7 @@ class CareGuideUpdate(BaseModel):
     youtube: str | None = None
     steps: list[GuideStep] | None = Field(default=None, max_length=30)
     image_ids: list[str] | None = Field(default=None, max_length=30)
-    source_name: str | None = Field(default=None, max_length=160)
+    source_name: str | None = Field(default=None, max_length=500)
     source_url: str | None = Field(default=None, max_length=500)
     published: bool | None = None
     sort_order: int | None = None

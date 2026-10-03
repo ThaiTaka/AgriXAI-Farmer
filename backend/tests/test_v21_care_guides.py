@@ -165,12 +165,32 @@ def test_demo_guides_take_their_steps_from_the_sourced_protocol(farmer):
     """The seeded guides only repeat what the protocol's source says."""
     from app.services import static_data
 
-    protocol = next(p for p in static_data.load("care_protocols")["protocols"] if p["crop_type"] == "tomato")
-    titles = {t["title"] for s in protocol["stages"] for t in s["tasks"]}
+    from app.seed_demo import DEMO_GUIDE_PROTOCOL
+
+    protocol = next(p for p in static_data.load("care_protocols")["protocols"] if p["id"] == DEMO_GUIDE_PROTOCOL)
+    tasks = {t["title"]: t["detail"] for s in protocol["stages"] for t in s["tasks"]}
     guides = client.get("/crops/tomato/care-guides", headers=farmer).json()
     demo = [g for g in guides if g["id"].startswith("demo-guide-")]
     assert {g["youtube_id"] for g in demo} == {"M1fqC6tuXLI", "nGqGU7yYO-c"}
     for guide in demo:
         assert guide["published"] and guide["steps"]
-        assert all(step["title"] in titles for step in guide["steps"])
+        for step in guide["steps"]:
+            if step["title"] == "Bón lót trước khi trồng":
+                # The basal dressing is the protocol's own line, scaled to nothing.
+                assert step["body"].startswith(protocol["base_application"]["timing"])
+            else:
+                assert tasks[step["title"]] == step["body"]
         assert guide["source_url"] == protocol["source"]["url"]
+
+
+def test_a_demo_guide_saves_back_unchanged_from_the_editor(farmer):
+    """Regression: source_name was capped at 160 characters, but the demo
+    guides cite QĐ 1972/QĐ-UBND in full (~300). PostgreSQL refused to seed them
+    and the web editor got 422 saving one back as it was."""
+    guides = client.get("/crops/tomato/care-guides", headers=farmer).json()
+    demo = next(g for g in guides if g["id"].startswith("demo-guide-"))
+    assert len(demo["source_name"]) > 160
+
+    res = client.patch(f"/care-guides/{demo['id']}", headers=admin(), json={"source_name": demo["source_name"], "title": demo["title"]})
+    assert res.status_code == 200, res.text
+    assert res.json()["source_name"] == demo["source_name"]
