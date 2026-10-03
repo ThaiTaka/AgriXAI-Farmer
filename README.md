@@ -5,16 +5,17 @@
 Nông hộ ghi vật tư, công việc và tiền nong vào sổ giấy hoặc vào trí nhớ. Cuối vụ, câu hỏi
 "vụ này lãi hay lỗ" thường không có câu trả lời. AgriLog v2 thay quyển sổ đó: lô đất, cây
 trồng và giống, quy trình chăm sóc theo giai đoạn, kho phân bón, thu và chi — ghi trên điện
-thoại, lưu ngay vào máy, tự đồng bộ lên máy chủ khi có mạng. Cán bộ quản lý xem cùng dữ liệu
-đó trên trang web.
+thoại (gõ hoặc **nói vào micro, nhận dạng ngay trên máy**), lưu ngay vào máy, tự đồng bộ lên
+máy chủ khi có mạng. Ban quản lý xem cùng dữ liệu đó trên trang web quản trị, gửi thông báo và
+giá phân bón mới tới mọi điện thoại; máy chủ tự cảnh báo mưa to, rét hại cho làng hoa.
 
 | | |
 |---|---|
 | **Người dùng** | Nông hộ (ghi trên điện thoại) và cán bộ quản lý (xem trên web) |
 | **Nền tảng** | React Native 0.81 (Android/iOS) · FastAPI + PostgreSQL · Next.js 16 |
-| **Trạng thái** | Giai đoạn 5 — backend sẵn sàng production; mobile đã qua 198 test |
-| **Kiểm thử** | 198 test mobile (91 % câu lệnh) · 163 test backend (95 %, chạy trên cả SQLite lẫn PostgreSQL 16) |
-| **Báo cáo đầy đủ** | [AGRILOG_V2_FINAL_REPORT.md](AGRILOG_V2_FINAL_REPORT.md) |
+| **Trạng thái** | V2.2 — ghi bằng giọng nói offline, thông báo, thời tiết, giá phân cập nhật, web quản trị đầy đủ; mobile schema v8 |
+| **Kiểm thử** | 456 test mobile (93,6 % câu lệnh) · 338 test backend (95 %; cả bộ chạy xanh trên SQLite lẫn PostgreSQL 16) · web-admin `tsc` + `lint` + `build` sạch — đo 03/10/2026 |
+| **Báo cáo** | Giai đoạn 1–5: [AGRILOG_V2_FINAL_REPORT.md](AGRILOG_V2_FINAL_REPORT.md) (số liệu ngày 23/09/2026) · V2.1–V2.2: [ADR 0008](docs/adr/0008-v2-1-canh-tac-media-nhan-cong.md)–[0011](docs/adr/0011-web-quan-tri.md) |
 
 ![Trang chủ AgriLog trên điện thoại: ba thẻ tồn kho, lãi lỗ tháng và công việc](docs/screenshots/71-p5-home-dashboard.png)
 
@@ -36,16 +37,30 @@ Nút tròn xanh góc dưới phải là **"Ghi nhanh"** (ghi tiền / ghi kho), 
 
 ### 2. Cây trồng, giống và quy trình chăm sóc — mọi con số đều có nguồn
 
-Danh mục giống ba cấp (loại cây → loại con → giống): **9 loại cây · 23 loại con · 46 giống**,
-mỗi giống ghi rõ trang đã tra cứu. Nông hộ thêm được cây và giống của riêng mình (trong ảnh:
-"Sau rieng · 1 giống tự thêm" do chính người dùng nhập), quản trị viên duyệt sau.
+Danh mục giống ba cấp (loại cây → loại con → giống) **chỉ gồm nông sản của Lâm Đồng, ưu tiên
+Đà Lạt và làng hoa Vạn Thành**: **34 loại cây · 60 loại con · 268 giống** — mười loài hoa (bảy
+hoa cắt cành cùng hoa salem, lan hồ điệp, lan vũ nữ), rau – củ – quả Đà Lạt (thêm bó xôi, đậu
+Hà Lan, củ dền, tỏi tây, cần tây, su su), lúa, ngô, atisô, cà phê, chè, bơ, hồng ăn trái. Mỗi giống ghi rõ trang đã tra cứu,
+chủ yếu là bộ 120 quy trình kỹ thuật của UBND tỉnh Lâm Đồng (QĐ 1972/QĐ-UBND ngày
+04/11/2025) và Địa chí Đà Lạt. Tám loài bắt buộc của đồ án (cà chua, ớt, dưa leo, cà rốt, rau
+muống, bắp cải, lúa, ngô) đều có mặt và đều có nguồn Lâm Đồng. Bấm vào một loại cây là thấy
+**ảnh của cây đó** — ảnh Wikimedia Commons giấy phép tự do, nhúng sẵn trong app để xem khi
+không có mạng, tác giả và giấy phép ghi ngay dưới ảnh. Nông hộ thêm được cây và giống của
+riêng mình (trong ảnh: "Sau rieng · 1 giống tự thêm" do chính người dùng nhập), quản trị viên
+duyệt sau. Quyết định và nguồn: [ADR 0009](docs/adr/0009-du-lieu-lam-dong.md); 11 cây thêm ngày
+03/10/2026 và lý do **không** thêm thạch thảo, hoàng anh, địa lan: §8 của ADR đó.
 
 Quy trình chăm sóc chia 4 giai đoạn, mỗi việc tick được và có thanh tiến độ. Chỗ nào chưa có
-nguồn chính thức thì ghi "Chưa có dữ liệu" kèm nơi tra cứu — **không bịa liều lượng**.
+nguồn chính thức thì ghi "Chưa có dữ liệu" kèm nơi tra cứu — **không bịa liều lượng**. Máy
+tính lượng phân nhận **sào Lâm Đồng (1.000 m²)** bên cạnh m² và ha.
 
 | Danh mục giống | Nguồn ghi ngay trong màn hình | Quy trình + nguồn |
 |---|---|---|
 | ![Chọn loại cây](docs/screenshots/81-p5-crop-picker.png) | ![Cây tự thêm và nguồn danh mục](docs/screenshots/82-p5-crop-picker-user-added-and-sources.png) | ![Quy trình chăm sóc với link nguồn](docs/screenshots/83-p5-care-protocol-source-link.png) |
+
+| Hoa thêm 03/10: salem, lan hồ điệp, lan vũ nữ | Cây lâu năm thêm: bơ, hồng ăn trái |
+|---|---|
+| ![Hoa salem, lan hồ điệp, lan vũ nữ trong danh mục](docs/screenshots/113-new-crops-flowers.png) | ![Bơ và hồng ăn trái trong danh mục](docs/screenshots/114-new-crops-perennial.png) |
 
 ### 3. Kho phân bón và thu – chi
 
@@ -93,7 +108,7 @@ nào đã làm, làm thế nào). Từ các vụ đã ghi sản lượng, ứng 
 những cây lô đã từng trồng, xếp theo năng suất thật, không bịa. Mỗi công việc có ghi chú kèm
 ảnh/video (lưu trên máy, tự tải lên khi có sóng) và tiền thuê người (số người × giờ/ngày × đơn
 giá, hoặc khoán) — tiền công là một khoản chi nên tự vào Thu – Chi. Hướng dẫn chăm sóc có video
-YouTube phát ngay trong ứng dụng; quản trị viên soạn trên web. Quyết định và giới hạn:
+YouTube phát ngay trong ứng dụng — khung video chỉ hiện ảnh bìa cho tới khi bấm phát, nên mở và cuộn màn hướng dẫn không còn giật ([ADR 0009](docs/adr/0009-du-lieu-lam-dong.md) §6); quản trị viên soạn trên web. Quyết định và giới hạn:
 [ADR 0008](docs/adr/0008-v2-1-canh-tac-media-nhan-cong.md).
 
 | Vụ trồng: gợi ý theo mùa | So sánh năng suất |
@@ -103,6 +118,86 @@ YouTube phát ngay trong ứng dụng; quản trị viên soạn trên web. Quy�
 | Video hướng dẫn trong app | Lịch sử công việc | Tiền công |
 |---|---|---|
 | ![YouTube phát ngay trong ứng dụng](docs/screenshots/89-v21-youtube-embedded-playing.png) | ![Đã làm kèm ghi chú, ảnh, tiền công](docs/screenshots/90-v21-task-history-done.png) | ![1 người × 2 giờ × 30.000₫](docs/screenshots/92-v21-labor-cost-60000.png) |
+
+### 7. Nói vào micro, ứng dụng tự ghi sổ — không cần mạng
+
+Bấm nút **+** → **Nói để ghi**, nói một câu như "bán năm mươi bó hoa cúc được một triệu rưỡi".
+Nhận dạng chạy **ngay trên máy** bằng Vosk (mô hình tiếng Việt `vosk-model-small-vn-0.4`,
+Apache-2.0, đóng vào APK) với từ vựng giới hạn theo sổ ruộng — âm thanh không rời khỏi điện
+thoại. Câu nghe được thành một **bản nháp** (thu / chi / nhập kho / xuất kho, số tiền, số lượng,
+loại phân, lô, ngày); nông dân xem, sửa rồi mới lưu, và có nút **Hoàn tác**. Đo trên 16 câu mẫu
+đọc bằng hai giọng tổng hợp: đúng loại phiếu 16/16, số tiền 15/16, số lượng 15/16, loại phân
+16/16 (đúng nguyên câu 7/16) — giọng tổng hợp sạch hơn giọng người trong nhà màng nên đây là mức
+trần ([ADR 0010](docs/adr/0010-giong-noi-thong-bao-thoi-tiet.md) §1).
+
+| Nút ghi nhanh | Đang nghe | Bản nháp từ câu nói | Đã ghi, có Hoàn tác |
+|---|---|---|---|
+| ![Menu ghi nhanh có Nói để ghi](docs/screenshots/103-voice-quick-add.png) | ![Đang nghe](docs/screenshots/104-voice-listening.png) | ![Câu nghe được thành khoản thu](docs/screenshots/105-voice-draft-income.png) | ![Đã ghi khoản thu 1.500.000đ](docs/screenshots/106-voice-saved-undo.png) |
+
+### 8. Thông báo, báo đã đồng bộ, thời tiết và giá phân bón
+
+- **Thông báo** là một bảng đồng bộ như mọi bảng khác, nên hộp thư mở được khi mất sóng. Điện
+  thoại đổ chuông (Notifee, 4 kênh: cảnh báo thời tiết, tin ban quản lý, nhắc việc, đồng bộ);
+  chạm vào thì mở đúng màn hình. Trang quản trị đếm mỗi tin đã tới bao nhiêu hộ.
+- **Đã đồng bộ**: dải trên cùng nói rõ "Đã gửi 3 thay đổi lên máy chủ — dữ liệu đã an toàn"
+  hoặc "Đã nhận 1 cập nhật từ máy chủ"; nếu đồng bộ chạy lúc app ở nền thì báo bằng thông báo
+  im lặng.
+- **"Push" không cần Firebase**: Android chạy đồng bộ nền khoảng 15 phút một lần, kể cả khi app
+  đã bị vuốt tắt hay máy vừa khởi động lại (`react-native-background-fetch`, kèm bản vá để chạy
+  được khi app ở nền — [ADR 0010](docs/adr/0010-giong-noi-thong-bao-thoi-tiet.md) §4). Đẩy tức
+  thì qua FCM cần dự án Firebase riêng của chủ sản phẩm, chưa làm.
+- **Thời tiết** cho làng hoa Vạn Thành từ Open-Meteo (CC BY 4.0) qua máy chủ, 30 phút làm mới
+  một lần. Máy chủ tự gửi cảnh báo **mưa to / mưa rất to / rét hại** theo ngưỡng của
+  **QĐ 18/2021/QĐ-TTg**, Điều 5 khoản 17–18 (mưa trên 50 mm và trên 100 mm trong 24 giờ; nhiệt độ
+  trung bình ngày dưới 13 °C), chỉ cho hôm nay và 2 ngày tới, mỗi mức mỗi ngày một lần.
+- **Giá phân bón**: giá ban quản lý nhập trên web phủ lên giá khảo sát ở mọi chỗ tính tiền (máy
+  tính lượng phân, túi tiền, giá trị tồn kho) và hiện ngay dưới khoảng giá khảo sát có nguồn.
+  Giá nhập trước cho một ngày sau chỉ áp dụng từ ngày đó. Mỗi lần nhập giá sinh một thông báo,
+  nhiều giá nhập liền nhau gộp thành một.
+
+| Trang chủ: chuông + thời tiết | Xin quyền thông báo | Thông báo hệ thống |
+|---|---|---|
+| ![Trang chủ có thẻ thời tiết Vạn Thành](docs/screenshots/107-home-weather-card.png) | ![Hỏi quyền thông báo](docs/screenshots/108-notification-permission.png) | ![Thông báo giá Urê Cà Mau](docs/screenshots/109-system-notification-price.png) |
+
+| Hộp thư | Giá ban quản lý trên bảng giá | Dự báo 7 ngày |
+|---|---|---|
+| ![Hộp thư thông báo](docs/screenshots/110-notification-inbox.png) | ![Giá ban quản lý cập nhật dưới giá khảo sát](docs/screenshots/111-live-price-from-admin.png) | ![Màn hình thời tiết](docs/screenshots/112-weather-screen.png) |
+
+### 9. Trang web quản trị
+
+Một khung chung (thanh bên theo nhóm việc; thanh trên có ngày, thời tiết làng hoa và chuông) cho
+13 trang; dùng được trên máy tính, máy tính bảng và điện thoại (dưới 1024 px thanh bên thành
+ngăn kéo). Biểu đồ vẽ tay bằng SVG, bảng màu đã chạy bộ kiểm tra mù màu, luôn có nút "Xem bảng
+số liệu".
+
+| Trang | Việc làm được |
+|---|---|
+| **Tổng quan** | 4 chỉ số (nông hộ, đất canh tác, lãi tháng, tồn kho), thu – chi 6 tháng, cơ cấu cây trồng, thời tiết, thông báo gần đây kèm tỉ lệ đã xem, bảng nông hộ |
+| **Sổ sách nông hộ** | Thu – chi theo tháng/quý, việc đang chờ theo lô, tồn kho, phiếu nhập – xuất, kế hoạch vụ mùa; **Sửa / Xoá** từng dòng; xuất PDF |
+| **Lô đất** | Tạo và giao lô cho nông hộ (m², sào Lâm Đồng, ha), cây và giống, ngày trồng; lọc, tìm |
+| **Tài khoản** | Tạo tài khoản, khoá / mở khoá, xem lần đồng bộ gần nhất của từng hộ |
+| **Duyệt giống cây** | Duyệt / từ chối giống nông hộ thêm; xem danh mục gốc 268 giống |
+| **Hướng dẫn chăm sóc** | Soạn bài có video YouTube, ảnh, các bước, nguồn; **xem trước như trên điện thoại** |
+| **Giá phân bón** | Giá đang dùng cạnh khoảng giá khảo sát và nguồn; nhập giá mới (kể cả giá cho ngày sau); lịch sử giá |
+| **Thông báo** | Soạn và gửi tới mọi hộ hoặc một hộ, mức độ, hết hạn, chạm vào thì mở màn nào; sửa, thu hồi; đếm đã xem |
+| **Thời tiết** | Dự báo 7 ngày, cảnh báo đang có, "Làm mới ngay" (gửi cảnh báo mới nếu có) |
+| **Nhật ký lỗi** | Lỗi từ điện thoại nông hộ, lọc theo hộ và thời gian, xem stack |
+| **Cài đặt · Hệ thiết kế** | Đổi mật khẩu, tình trạng máy chủ; bảng màu, chữ và các khối giao diện dùng chung |
+
+Nông hộ đăng nhập web chỉ thấy sổ sách của mình (chỉ xem) và trang Cài đặt. Quyết định thiết kế:
+[ADR 0011](docs/adr/0011-web-quan-tri.md).
+
+| Đăng nhập | Tổng quan |
+|---|---|
+| ![Trang đăng nhập web](docs/screenshots/115-web-login.png) | ![Tổng quan quản trị](docs/screenshots/116-web-overview.png) |
+
+| Sổ sách nông hộ | Thông báo |
+|---|---|
+| ![Sổ sách của một nông hộ](docs/screenshots/117-web-farm-books.png) | ![Soạn và theo dõi thông báo](docs/screenshots/119-web-notifications.png) |
+
+| Giá phân bón | Soạn hướng dẫn, xem trước như điện thoại |
+|---|---|
+| ![Bảng giá đang dùng so với khảo sát](docs/screenshots/121-web-fertilizer-prices.png) | ![Trình soạn hướng dẫn chăm sóc](docs/screenshots/123-web-care-guide-editor-preview.png) |
 
 ## Phạm vi
 
@@ -115,12 +210,12 @@ Bốn mảng nghiệp vụ của dự án:
 | # | Mảng | Trạng thái |
 |---|---|---|
 | 1 | Tư vấn & phân loại phân bón (F1–F4) | ✅ F1 tính lượng theo diện tích & phương án (lưu kế hoạch) · F3 ba tab ngân sách · F4 kiểm tra kho đủ/thiếu · Danh mục 6 nhóm |
-| 2 | Quy trình chăm sóc theo giai đoạn (F5–F6) | ✅ 7 quy trình có nguồn (cà chua, cà phê vối, cà phê chè, dưa leo ×2, ớt cay, ớt ngọt); cà phê mít, Excelsa, ớt kiểng hiện "Chưa có dữ liệu" kèm nguồn tham khảo. Accordion 4 giai đoạn, ô "Đã làm", đặt nhắc |
+| 2 | Quy trình chăm sóc theo giai đoạn (F5–F6) | ✅ 37 quy trình có nguồn: 35 theo QĐ 1972/QĐ-UBND tỉnh Lâm Đồng (8 loài hoa; cà chua, ớt ngọt, ớt cay, dưa leo, bắp cải, cải thảo, súp lơ, xà lách, cà rốt, khoai tây, dâu tây, bó xôi, đậu Hà Lan, củ dền, tỏi tây, cần tây, su su ×2; lúa, ngô; atisô; chè cành ×2; bơ ×2, hồng ăn trái ×2) cùng cà phê vối (Cục Trồng trọt 2010) và cà phê chè (WASI 2026); 6 mục "Chưa có dữ liệu" kèm lý do (chè Đài Loan, rau muống, lan hồ điệp ×3, lan vũ nữ — hai loài lan bón theo nồng độ pha, không tính theo kg/ha). Accordion 4 giai đoạn, ô "Đã làm", đặt nhắc (thông báo 7 giờ sáng) |
 | 3 | Nhập – Xuất kho | ✅ Nhập (tự ghi khoản chi), xuất giá FIFO, bảng tồn, biểu đồ tồn theo thời gian, lọc tháng/quý, xuất CSV |
 | 4 | Thu – Chi | ✅ Ghi thu/chi, đánh dấu đã kiểm tra, báo cáo tháng/quý (lãi/lỗ, thu-chi theo ngày, chi theo loại), xuất CSV |
 
-Nền cho cả bốn mảng: **danh mục giống cây 3 cấp** (loại cây → loại con → giống) với 9 loại
-cây · 23 loại con · 46 giống có nguồn (đếm từ `shared/data/crop_varieties.json`) — xem
+Nền cho cả bốn mảng: **danh mục giống cây 3 cấp** (loại cây → loại con → giống) với 34 loại
+cây · 60 loại con · 268 giống có nguồn (đếm từ `shared/data/crop_varieties.json`) — xem
 [ADR 0004](docs/adr/0004-he-thiet-ke-phang-va-danh-muc-giong-3-cap.md). Nông hộ thêm được
 cây/giống riêng; quản trị viên duyệt.
 
@@ -128,8 +223,9 @@ Lớp vận hành (Giai đoạn 4): dashboard, error boundary + `POST /logs`, ba
 trạng thái đồng bộ theo bảng, PDF báo cáo tháng/quý, đồng bộ nhiều tài khoản với hộp thoại
 xung đột, web-admin `/login` → `/dashboard` — xem [ADR 0006](docs/adr/0006-giai-doan-4-dashboard-offline-pdf-da-nguoi-dung.md).
 
-Hệ quả đáng chú ý: app chỉ xin **đúng một quyền** — `INTERNET`. Không còn quyền máy ảnh
-hay quyền đọc thư viện ảnh.
+Quyền app xin: `INTERNET`, `RECORD_AUDIO` (chỉ hỏi khi bấm nút micro; âm thanh nhận dạng ngay
+trên máy) và `POST_NOTIFICATIONS` (Android 13+ hỏi một lần). Không có quyền máy ảnh hay quyền đọc
+thư viện ảnh — chọn ảnh/video đi qua bộ chọn của hệ thống.
 
 ## Mục lục
 
@@ -143,6 +239,7 @@ hay quyền đọc thư viện ảnh.
 - [Design token và font](#design-token-và-font)
 - [Dữ liệu tĩnh offline](#dữ-liệu-tĩnh-offline)
 - [Đồng bộ dữ liệu](#đồng-bộ-dữ-liệu)
+- [Tài liệu tham khảo](#tài-liệu-tham-khảo)
 - [Giới hạn hiện tại](#giới-hạn-hiện-tại)
 
 ## Kiến trúc thư mục
@@ -187,11 +284,14 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | `admin` | `admin123` | Quản trị viên |
 | `thaitaka` | `matkhau123` | Nông dân |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` — **163 test, phủ 95 %** (smoke, sync hai chiều,
+Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` — **338 test, phủ 95 %** (đo 03/10/2026, chạy xanh cả trên PostgreSQL 16; smoke, sync hai chiều,
 parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 ca e2e API của
 Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e —
 20 test admin sửa/xoá kế hoạch, kho, thu-chi, và 23 test Giai đoạn 5: quyền trên lô đất,
-cô lập dữ liệu giữa các nông hộ, tính toàn vẹn của lô đẩy đồng bộ, chặn dò mật khẩu).
+cô lập dữ liệu giữa các nông hộ, tính toàn vẹn của lô đẩy đồng bộ, chặn dò mật khẩu; và các test
+V2.1: vụ trồng, ghi chú kèm ảnh/video, tiền công, hướng dẫn chăm sóc, migration sync; và V2.2:
+thông báo (phạm vi gửi, dấu đã xem, gộp giá), thời tiết (ngưỡng QĐ 18/2021 đúng từng mm và độ,
+không gọi mạng trong test), tổng quan quản trị, giá nhập trước cho ngày sau, giá kèm khảo sát).
 
 Cùng bộ test đó chạy được trên PostgreSQL — trỏ `TEST_DATABASE_URL` vào một cơ sở dữ liệu
 dùng một lần (nó sẽ bị **xoá sạch** khi bắt đầu):
@@ -204,16 +304,21 @@ TEST_DATABASE_URL="postgresql+psycopg://agrilog:agrilog@127.0.0.1:5443/agrilog" 
 ```
 
 Đưa lên máy chủ thật: [docs/BACKEND_DEPLOYMENT.md](docs/BACKEND_DEPLOYMENT.md) (PostgreSQL,
-Docker, chuyển dữ liệu, kiểm tải, sao lưu, theo dõi). Danh sách đầy đủ 56 endpoint:
+Docker, chuyển dữ liệu, kiểm tải, sao lưu, theo dõi). Danh sách đầy đủ 88 endpoint, kèm quyền
+truy cập suy ra tự động từ mã (`python -m scripts.export_openapi`):
 [docs/API_ENDPOINTS.md](docs/API_ENDPOINTS.md).
 
-Ba nông hộ demo (cùng mật khẩu `matkhau123`), mỗi hộ có lô, kho và thu-chi riêng tháng 9/2026:
+Ba nông hộ demo ở **làng hoa Vạn Thành, Đà Lạt (Lâm Đồng)**, cùng mật khẩu `matkhau123`, mỗi hộ có lô, kho và thu-chi riêng tháng 9/2026 (mã lô đuôi `-VT`):
 
 | Tài khoản | Lô đất | Cây |
 |---|---|---|
-| `lethanhthai` | PUC-001-HB, 300 m² · PUC-004-HB, 250 m² | cà chua MV1 · dưa leo Hunter 1.0 |
-| `nguyenvananh` | PUC-002-HB, 500 m² | dưa leo Hunter 1.0 |
-| `nguyenvanhai` | PUC-003-HB, 360 m² | ớt VIFON686 |
+| `lethanhthai` | PUC-001-VT, 300 m² · PUC-004-VT, 250 m² | hoa cúc Makoto (nhà màng) · hoa hồng đỏ Ý |
+| `nguyenvananh` | PUC-002-VT, 500 m² | cẩm chướng Tundra |
+| `nguyenvanhai` | PUC-003-VT, 360 m² | ớt ngọt Bachata RZ F1 |
+
+Lô PUC-001-VT có bốn vụ đã thu (bắp cải, cà chua NT1 ×2, cà rốt) để màn lịch sử trồng trọt và
+gợi ý cây có số liệu; hai hướng dẫn chăm sóc demo có video lấy các bước từ quy trình cà chua
+của tỉnh.
 
 Endpoint Giai đoạn 4: `GET /dashboard/summary`, `GET /reports/financials.pdf?year&month|quarter`,
 `POST /logs` (máy đẩy nhật ký lỗi), `GET /logs` và `GET /users` (admin), `GET /users/version`.
@@ -239,14 +344,15 @@ cp .env.example .env.local
 npm run dev        # http://localhost:3000
 ```
 
-Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npm run lint` · build: `npx next build`
+Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npm run lint` · build: `npm run build`
 
-Trang: `/login` (tài khoản của app; admin xem được mọi nông hộ) → `/dashboard` (3 thẻ, bảng
-tồn, báo cáo thu – chi theo tháng/quý, nút **Xuất PDF** tải từ server). Với tài khoản admin,
-dashboard có thêm bảng phiếu nhập – xuất kho và kế hoạch vụ mùa, cùng nút **Sửa** (mở form
-trong hộp thoại) và **Xoá** (kèm xác nhận) trên cả ba bảng thu-chi/kho/kế hoạch. Trang kiểm
-tra design token cũ ở `/tokens`. Khi mở bằng trình duyệt, dùng `http://localhost:3000` —
-Next 16 chặn script dev từ origin `127.0.0.1`.
+Trang: `/login` → quản trị viên vào `/dashboard` (Tổng quan), nông hộ vào `/farms` (sổ sách của
+mình, chỉ xem). Các trang quản trị: `/farms?owner=<id>`, `/plots`, `/accounts`, `/varieties`,
+`/care-guides`, `/fertilizer-prices`, `/notifications`, `/weather`, `/logs`, `/settings`,
+`/tokens` (hệ thiết kế) — mô tả ở mục [9. Trang web quản trị](#9-trang-web-quản-trị). Mọi trang
+nằm trong nhóm route `src/app/(admin)/` dùng chung `AdminShell` (kiểm tra phiên một lần, đưa
+nông hộ ra khỏi trang chỉ dành cho quản trị). Khi mở bằng trình duyệt, dùng
+`http://localhost:3000` — Next 16 chặn script dev từ origin `127.0.0.1`.
 
 ## Chạy mobile
 
@@ -271,7 +377,7 @@ adb reverse tcp:8000 tcp:8000
 Kiểm tra kiểu: `npx tsc --noEmit` · lint: `npx eslint .` · test: `npx jest --coverage`.
 
 Trạng thái đo ngày 23/09/2026: **198 test / 20 bộ, phủ 91,0 % câu lệnh và 92,3 % dòng**;
-`tsc` sạch, `eslint` 0 lỗi (4 cảnh báo). Ngưỡng phủ đặt trong `jest.config.js`. Trong đó có
+`tsc` sạch, `eslint` sạch (từ 02/10/2026 bỏ qua thư mục `coverage/` do jest sinh ra — đó là nguồn của 4 cảnh báo cũ). Ngưỡng phủ đặt trong `jest.config.js`. Trong đó có
 28 ca hệ thiết kế v6, 12 ca chiều sâu v6.1, 27 ca Phase 1 v6.2 và bộ `uiFixes` +
 `chartGeometry` kiểm chứng tám điểm sửa giao diện.
 
@@ -282,7 +388,13 @@ Trạng thái đo ngày 23/09/2026: **198 test / 20 bộ, phủ 91,0 % câu lệ
 > V2.1 thêm ba module native nữa (`react-native-webview`, `react-native-image-picker`,
 > `@dr.pogodin/react-native-fs`, ghim đúng phiên bản) — cũng phải build lại app.
 > `npm install` tự áp bản vá `patches/react-native-image-picker+8.2.1.patch` (postinstall
-> `patch-package`). Đo ngày 24/09/2026: **236 test / 24 bộ, phủ 94 % dòng**.
+> `patch-package`). Đo ngày 02/10/2026: **259 test / 26 bộ, phủ 93,1 % câu lệnh và 94,2 % dòng**.
+
+> V2.2 thêm `react-native-vosk`, `@notifee/react-native`, `react-native-background-fetch` (kèm bản
+> vá `patches/react-native-background-fetch+4.4.2.patch`) — build lại app. `npm install` tự tải
+> mô hình giọng nói (~32 MB) vào `mobile/assets/model-vn` (`scripts/fetch-vosk-model.js`; không có
+> mạng thì app vẫn chạy, nút micro báo thiếu mô hình). Đo ngày 03/10/2026: **456 test / 34 bộ,
+> phủ 93,6 % câu lệnh và 95,5 % dòng**; `tsc` và `eslint` sạch.
 
 Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **cả tên đăng nhập lẫn email**
 (`thaitaka` hoặc `thaitaka@agrilog.local`).
@@ -343,14 +455,14 @@ Font Open Sans được **nhúng kèm** cả hai nền tảng, không tải từ
 | File | Nội dung | Nguồn |
 |---|---|---|
 | `fertilizer_recommendations.json` | 6 nhóm phân, 17 sản phẩm có **giá thật**; nhóm vi sinh khai báo rõ "chưa có giá" | `fertilizers_seed.json` (sfarm.vn, giacaphe.com — 06–07/09/2026) |
-| `care_protocols.json` | **File sinh tự động** (`python shared/data/build_care_protocols.py`) gộp 4 seed: 7 quy trình 4 giai đoạn + 3 mục "chưa có dữ liệu" | `care_protocol_{tomato,coffee,cucumber,pepper}_seed.json` — giongcaytrong.org; Cục Trồng trọt (QĐ 254/QĐ-TT-CCN 2010) qua VICOFA; WASI qua Báo NN&MT 29/07/2026; Sở NN&MT Lai Châu 16/04/2025; VUSTA/Kinh tế nông thôn 2005; TTKN Lâm Đồng (Wayback 01/2025); Chi cục TT&BVTV Ninh Bình |
-| `crop_varieties.json` | Danh mục 3 cấp: cà chua 8 · cà phê 17 · dưa leo 9 · ớt 6 giống, **mỗi giống có `source`** | Viện Eakmat/WASI, vista.gov.vn, Rạng Đông, East-West Seed, Phú Điền, Chánh Phong, Rijk Zwaan, sfarm.vn, nguonsinhthai.com, Wikipedia |
+| `care_protocols.json` | **File sinh tự động** (`python shared/data/build_care_protocols.py`) gộp 34 seed: 37 quy trình 4 giai đoạn + 6 mục "chưa có dữ liệu" (chè Đài Loan, rau muống, lan hồ điệp ×3, lan vũ nữ) | `care_protocol_*_seed.json` — QĐ 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng (120 quy trình, đăng tại Trung tâm Khuyến nông tỉnh); cà phê: Cục Trồng trọt (QĐ 254/QĐ-TT-CCN 2010) qua VICOFA và WASI qua Báo NN&MT 29/07/2026 |
+| `crop_varieties.json` | Danh mục 3 cấp, 34 loại cây · 60 loại con · 268 giống, **mỗi giống có `source`**; mỗi loại cây có `image` (ảnh nhúng ở `mobile/src/assets/crops`, ghi tác giả – giấy phép – trang gốc) | QĐ 1972/QĐ-UBND; Địa chí Đà Lạt; QĐ 704 và 729/QĐ-SNN (sản phẩm nông nghiệp công nghệ cao của tỉnh); Trung tâm Nghiên cứu Khoai tây, Rau và Hoa (PVFC, Đà Lạt); Viện Eakmat/WASI; Báo Lâm Đồng; ảnh: Wikimedia Commons |
 
 Quy tắc bất di bất dịch của `crop_varieties.json` và các file quy trình: không bịa dữ liệu.
 Số liệu chép đúng nguồn; thiếu thì ghi "Chưa có dữ liệu". `backend/tests/test_static_data.py`
 từ chối giống không có nguồn, quy trình không có URL nguồn, và bắt mỗi (cây, loại con) phải
 hoặc có quy trình hoặc được khai báo trong `unavailable`. Quy trình có `basis: nutrient`
-(cà phê chè, ớt ngọt) cho N–P₂O₅–K₂O nguyên chất; app quy đổi ra urê / super lân / KCl lúc
+(cà phê chè) cho N–P₂O₅–K₂O nguyên chất; app quy đổi ra urê / super lân / KCl lúc
 chạy theo hệ số ghi trong `$meta.conversion` và nói rõ đó là quy đổi.
 
 **Giá phân bón trong file chỉ là dữ liệu khởi tạo.** Giá biến động theo ngày và vùng miền,
@@ -365,15 +477,26 @@ quay lại foreground, và mỗi 60 giây.
 - `GET /sync?last_pulled_at=` — lấy thay đổi từ server
 - `POST /sync?last_pulled_at=` — đẩy thay đổi từ máy lên
 
-Mười bảng đồng bộ: `plots`, `crop_varieties`, `crop_cycles`, `change_logs` và sáu bảng
-Giai đoạn 3 `plans`, `warehouse_in`, `warehouse_out`, `income`, `expense`, `tasks_history`.
-Bảng `error_logs` (schema mobile v6) chỉ ở máy và đi lên bằng `POST /logs` riêng.
+Mười bốn bảng đồng bộ: `plots`, `crop_varieties`, `crop_cycles`, `change_logs`; sáu bảng
+Giai đoạn 3 `plans`, `warehouse_in`, `warehouse_out`, `income`, `expense`, `tasks_history`; hai
+bảng V2.1 `task_notes`, `care_guides`; và hai bảng V2.2 `notifications` (tin gửi mọi hộ có
+`owner_id` rỗng; chỉ quản trị viên và máy chủ ghi) cùng `notification_reads` (dấu đã xem — không
+tính là "thay đổi chưa gửi" và không chặn đổi tài khoản). Bảng `error_logs` chỉ ở máy và đi lên
+bằng `POST /logs` riêng. Ngoài 60 giây một lần khi app mở, Android còn đồng bộ nền khoảng 15 phút
+một lần.
 
 Xung đột giải quyết bằng **last-write-wins theo `updated_at`**; xoá luôn thắng update. Lý do
 và các test bắt buộc ghi ở [ADR 0002](docs/adr/0002-giai-doan-1.md). Từ Giai đoạn 4, dòng
 bị server từ chối vì bản trên server mới hơn được trả về trong `conflicts[]`; app hiện hộp
 thoại "Thiết bị khác vừa sửa" với hai lựa chọn *Lấy bản mới* / *Giữ bản của tôi*
 ([ADR 0006](docs/adr/0006-giai-doan-4-dashboard-offline-pdf-da-nguoi-dung.md) §5).
+
+**Một máy, một nông hộ tại một thời điểm.** SQLite trên máy chứa dữ liệu của đúng một tài khoản
+và WatermelonDB giữ một mốc `last_pulled_at` chung cho cả file. Khi đăng nhập tài khoản khác
+(`mobile/src/auth/deviceOwner.ts`): máy đã gửi hết thay đổi thì dữ liệu cục bộ được xoá để lần
+đồng bộ đầu kéo đủ dữ liệu của tài khoản mới; còn thay đổi chưa gửi thì **từ chối đăng nhập** và
+nhắc đăng nhập lại tài khoản cũ để gửi trước — nếu không, bản ghi của hộ này sẽ bị đẩy lên dưới
+token của hộ kia. Hộp thoại đăng xuất báo trước số thay đổi còn chờ.
 
 Mọi thao tác của nông dân ghi vào SQLite trước rồi mới đồng bộ — tắt mạng vẫn dùng được
 toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay đổi sẽ lưu khi online" /
@@ -419,18 +542,174 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | **Giai đoạn 5** — kho (form nhập, bảng tồn, biểu đồ) và thu-chi (form, báo cáo) | `75-p5-warehouse-form-textarea-chips.png`, `76-p5-stock-summary.png`, `77-p5-stock-chart-bezier.png`, `78-p5-income-form-chip-vs-button.png`, `79-p5-finance-report-charts.png` |
 | **Giai đoạn 5** — chip đơn vị cuộn ngang, danh mục cây (có cây nông hộ tự thêm + ghi nguồn), quy trình chăm sóc với link nguồn | `80-p5-calculator-unit-chips-scroll.png`, `81-p5-crop-picker.png`, `82-p5-crop-picker-user-added-and-sources.png`, `83-p5-care-protocol-source-link.png` |
 | **Giai đoạn 5** — ứng dụng chạy đủ chức năng khi **máy chủ đã tắt** (offline-first) | `84-p5-works-with-backend-down.png` |
+| **Dữ liệu Lâm Đồng (02/10/2026)** — chọn loại cây có ảnh, ảnh lớn kèm ghi công Wikimedia Commons, ảnh nhỏ ở bước chọn giống, máy tính phân với đơn vị sào, tab Chăm sóc của nhà màng hoa cúc, video chỉ hiện ảnh bìa đến khi bấm phát rồi phát ngay sau một lần chạm | `96-lamdong-crop-picker-photos.png`, `98-lamdong-crop-hero-credit.png`, `99-lamdong-variety-step3-thumb.png`, `97-lamdong-calculator-sao.png`, `100-lamdong-care-tab-chrysanthemum.png`, `101-youtube-poster-before-play.png`, `102-youtube-playing-after-one-tap.png` |
+| **V2.2 (03/10/2026)** — nói để ghi: menu ghi nhanh, đang nghe, bản nháp từ câu nói, đã ghi có Hoàn tác | `103-voice-quick-add.png`, `104-voice-listening.png`, `105-voice-draft-income.png`, `106-voice-saved-undo.png` |
+| **V2.2** — trang chủ có thẻ thời tiết, xin quyền thông báo, thông báo hệ thống, hộp thư, giá ban quản lý trên bảng giá, dự báo 7 ngày | `107-home-weather-card.png`, `108-notification-permission.png`, `109-system-notification-price.png`, `110-notification-inbox.png`, `111-live-price-from-admin.png`, `112-weather-screen.png` |
+| **V2.2** — 11 cây Đà Lạt thêm vào danh mục | `113-new-crops-flowers.png`, `114-new-crops-perennial.png` |
+| **V2.2** — web quản trị: đăng nhập, tổng quan, sổ sách nông hộ, lô đất, thông báo, thời tiết, giá phân bón, hướng dẫn + trình soạn có xem trước, tài khoản, tổng quan trên điện thoại | `115-web-login.png` … `125-web-overview-phone.png` |
 | **V2.1 (24/09/2026)** — vụ trồng + biểu đồ năng suất, gợi ý theo mùa, gợi ý trong form vụ mới, tab Chăm sóc có video, YouTube phát trong app, lịch sử công việc, ghi chú chờ tải ảnh, tiền công, Thu – Chi có cách tính tiền công, phát video trong máy, web-admin soạn hướng dẫn | `85-v21-cultivation-history-chart.png` … `95-v21-web-admin-care-guide-editor.png` |
+
+## Tài liệu tham khảo
+
+Mọi con số nông học, giá và ngưỡng cảnh báo trong ứng dụng đều chép từ các nguồn dưới đây; nguồn
+của **từng** giống, quy trình và sản phẩm còn được ghi ngay trong dữ liệu (`shared/data/*.json`,
+trường `source`) và hiện trên màn hình. Ngày truy cập ghi theo lần đối chiếu gần nhất.
+
+### Quy trình canh tác và danh mục giống (Lâm Đồng)
+
+1. UBND tỉnh Lâm Đồng — **Quyết định 1972/QĐ-UBND ngày 04/11/2025** ban hành 120 quy trình kỹ thuật
+   trồng, chăm sóc cây trồng trên địa bàn tỉnh (Sở Nông nghiệp và Môi trường soạn thảo). Đăng tại
+   Trung tâm Khuyến nông tỉnh Lâm Đồng:
+   <https://khuyennong.lamdong.gov.vn/News/tai-lieu-ky-thuat/ky-thuat-trong-trot/2025/11/1913.aspx>
+   · toàn văn: <https://drive.google.com/file/d/1_FypkADF49g9XL6pgtMDVBZAHEnElLxB/view>
+   (truy cập 02–03/10/2026). Nguồn chính của 35/37 quy trình và phần lớn danh mục giống.
+2. UBND TP Đà Lạt — *Địa chí Đà Lạt*, Phần III, Chương I, mục 4.1 Giống cây trồng:
+   <https://lamdong.gov.vn/sites/book/diachidalat/Phan3/c1-4.htm>
+3. Sở NN&PTNT Lâm Đồng — QĐ 704/QĐ-SNN ngày 21/12/2020 và QĐ 729/QĐ-SNN ngày 28/12/2021 (sản phẩm
+   nông nghiệp công nghệ cao của tỉnh):
+   <https://nongsandalatlamdong.vn/pages/QualityManagement/Images/704qd.pdf>,
+   <https://nongsandalatlamdong.vn/pages/QualityManagement/Images/729QD.pdf>
+4. Trung tâm Nghiên cứu Khoai tây, Rau và Hoa (PVFC, Viện KHKT Nông nghiệp miền Nam), Đà Lạt —
+   trang giống của từng sản phẩm (cà chua NT, khoai tây, dâu tây, hoa cúc, cà rốt CR21.36):
+   <https://pvfcdalat.vn/>
+5. Báo Lâm Đồng — định hướng ngành hoa đến 2030 (13/01/2025):
+   <https://baolamdong.vn/giai-phap-phat-trien-nganh-hoa-mang-tam-quoc-te-bai-2-273078.html>;
+   mô hình rau nhà lưới có rau muống tại An Nhơn, Đạ Tẻh (07/03/2023):
+   <https://baolamdong.vn/kinh-te/202303/trong-rau-trong-nha-luoi-tai-an-nhon-6ef2012/>
+6. Rau muống (QĐ 1972 không có quy trình — chỉ dùng làm nguồn tham khảo, app ghi "Chưa có dữ
+   liệu"): Chi cục Trồng trọt và BVTV TP.HCM
+   <https://chicucttbvtvhcm.gov.vn/chuyen-de-ky-thuat/qui-trinh-trong-rau-muong-nuoc-an-toan-408.html>;
+   Cục BVTV <https://www.ppd.gov.vn/FileUpload/Documents/P.%20Ke%20hoach/TBKT/2.1.%20TBKT%20QT%20RAU%20AN%20TOAN.pdf>;
+   giống rau muống Mê Kông (Phú Điền) <https://phudienseed.com.vn/san-pham/hat-giong-rau-muong-me-kong/>
+
+### Cà phê
+
+7. Cục Trồng trọt — QĐ 254/QĐ-TT-CCN ngày 20/7/2010, quy trình tái canh cà phê vối, đăng lại tại
+   VICOFA: <https://vicofa.org.vn/quy-trinh-tai-canh-ca-phe-voi-bid45.html>; tài liệu đối chiếu của
+   WASI (quyết định ban hành quy trình tái canh cà phê vối, 2020):
+   <http://wasi.org.vn/wp-content/uploads/2021/11/QUYET-DINH-BAN-HANH-QUY-TRINH-TAI-CANH-CA-PHE-VOI-2020.pdf>
+8. Viện KHKT Nông Lâm nghiệp Tây Nguyên (WASI) — quy trình thâm canh bền vững giống cà phê chè
+   THA1, đăng trên Báo Nông nghiệp và Môi trường (29/07/2026):
+   <https://nongnghiepmoitruong.vn/tri-thuc-nong-dan/quy-trinh-tham-canh-ben-vung-giong-ca-phe-che-tha1-d823494.html>
+9. Giống cà phê của WASI: Vista
+   <https://www.vista.gov.vn/vi/news/khoa-hoc-nong-nghiep/20-giong-ca-phe-cua-vien-khoa-hoc-ky-thuat-nong-lam-nghiep-tay-nguyen-da-duoc-chuyen-giao-san-xuat-9705.html>;
+   Trung tâm giống Eakmat
+   <https://giongcaytrongeakmat.myharavan.com/blogs/news/dac-diem-mot-so-giong-ca-phe-de-ba-con-de-nhan-biet-tr4-xanh-lun-t>
+10. Trung tâm Khảo kiểm nghiệm Phân bón Quốc gia — công thức quy đổi lượng nguyên chất sang phân
+    thương phẩm (18/03/2021):
+    <https://phanbonquocgia.gov.vn/quy-trinh-bon-phan-cho-cay-ca-phe-giai-doan-kinh-doanh/>
+
+### Giá phân bón (giá khảo sát khởi tạo)
+
+11. sfarm.vn — bảng giá phân bón hôm nay (06/09/2026, đối chiếu 02/10/2026):
+    <https://sfarm.vn/bang-gia-phan-bon-hom-nay-phan-vo-co-huu-co-sll1/>
+12. VietnamBiz — giá phân bón, dẫn nguồn giacaphe.com (07/09/2026, đối chiếu 02/10/2026):
+    <https://vietnambiz.vn/gia-phan-bon.html>
+
+Đây là giá tham khảo tại thời điểm thu thập; giá chạy thật do ban quản lý nhập trên web
+([ADR 0010](docs/adr/0010-giong-noi-thong-bao-thoi-tiet.md) §6).
+
+### Thời tiết và cảnh báo thiên tai
+
+13. Thủ tướng Chính phủ — **Quyết định 18/2021/QĐ-TTg ngày 22/04/2021** quy định về dự báo, cảnh báo,
+    truyền tin thiên tai và cấp độ rủi ro thiên tai, Điều 5 khoản 17 (mưa lớn) và khoản 18 (rét hại):
+    <https://thuvienphapluat.vn/van-ban/Tai-nguyen-Moi-truong/Quyet-dinh-18-2021-QD-TTg-du-bao-canh-bao-truyen-tin-thien-tai-va-cap-do-rui-ro-thien-tai-471715.aspx>;
+    tóm tắt điểm mới của Bộ Nông nghiệp và Môi trường:
+    <https://vupc.mae.gov.vn/---khi-tuong-thuy-van/2355/nhung-diem-moi-trong-quyet-dinh-so-18-2021-qd-ttg-ngay-22-4-2021-cua-thu-tuong-chinh-phu-quy-dinh-ve>
+14. Open-Meteo — Weather Forecast API, dữ liệu theo giấy phép CC BY 4.0: <https://open-meteo.com/>
+15. Trung tâm Dự báo Khí tượng Thủy văn Quốc gia — bản tin chính thức: <https://www.nchmf.gov.vn/kttv/>
+
+### Nhận dạng giọng nói
+
+16. Alpha Cephei — Vosk, mô hình `vosk-model-small-vn-0.4` (Apache-2.0; WER 15,70 trên tập VIVOS
+    theo trang mô hình): <https://alphacephei.com/vosk/models>
+17. `react-native-vosk` 2.1.7 (MIT): <https://github.com/riderodd/react-native-vosk>
+
+### Video hướng dẫn mẫu
+
+18. Báo Nông nghiệp và Môi trường — "Kỹ thuật trồng cà chua công nghệ cao trong nhà màng":
+    <https://www.youtube.com/watch?v=M1fqC6tuXLI>
+19. Kênh VTC16 — "Kỹ thuật ủ phân hữu cơ bón cho cây trồng": <https://www.youtube.com/watch?v=nGqGU7yYO-c>
+
+### Công nghệ chính
+
+| Thành phần | Phiên bản | Giấy phép | Trang |
+|---|---|---|---|
+| React Native | 0.81 | MIT | <https://reactnative.dev/> |
+| WatermelonDB | 0.28 | MIT | <https://github.com/Nozbe/WatermelonDB> |
+| Notifee (`@notifee/react-native`) | 9.1.8 | Apache-2.0 | <https://github.com/invertase/notifee> |
+| react-native-background-fetch | 4.4.2 | MIT | <https://github.com/transistorsoft/react-native-background-fetch> |
+| react-native-webview | 14.0.1 | MIT | <https://github.com/react-native-webview/react-native-webview> |
+| FastAPI | 0.121 | MIT | <https://fastapi.tiangolo.com/> |
+| SQLAlchemy | 2.0 | MIT | <https://www.sqlalchemy.org/> |
+| fpdf2 (PDF báo cáo) | 2.8 | LGPL-3.0 | <https://github.com/py-pdf/fpdf2> |
+| Next.js | 16.3 | MIT | <https://nextjs.org/> |
+| Open Sans (font nhúng kèm) | — | OFL-1.1 | <https://fonts.google.com/specimen/Open+Sans> |
+
+### Ảnh cây trồng (Wikimedia Commons)
+
+Ảnh nhúng sẵn trong app (`mobile/src/assets/crops`) để xem khi không có mạng; tác giả và giấy phép
+hiện ngay dưới ảnh. Bảng dưới sinh từ trường `image` của `shared/data/crop_varieties.json`.
+
+<details>
+<summary>34 ảnh — tác giả và giấy phép</summary>
+
+| Cây | Tác giả (trang gốc) | Giấy phép |
+|---|---|---|
+| Hoa cúc | [Satin66Flower](https://commons.wikimedia.org/wiki/File:Dendragrand1_%282%29ra.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Hoa hồng | [Dao Hoang Duong](https://commons.wikimedia.org/wiki/File:Roses_In_Dalat_%28257067009%29.jpeg) | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) |
+| Hoa cẩm chướng | [Phương Huy](https://commons.wikimedia.org/wiki/File:%C4%90%C3%A0_L%E1%BA%A1t_n%C4%83m_2018,_tr%E1%BB%93ng_hoa_trong_v%C6%B0%E1%BB%9Dn_k%C3%ADnh_%28hoa_c%E1%BA%A9m_ch%C6%B0%E1%BB%9Bng%29_%281%29.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Hoa đồng tiền | [Fan Wen](https://commons.wikimedia.org/wiki/File:Gerbera_Jamesonii_-_flower_view_01.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Hoa lily | [阿橋 HQ](https://commons.wikimedia.org/wiki/File:%E6%9D%B1%E6%96%B9%E7%99%BE%E5%90%88_Lilium_Sorbonne_-%E5%BB%A3%E5%B7%9E%E5%86%A0%E5%8B%9D%E8%BE%B2%E6%A5%AD%E5%85%AC%E5%9C%92_Guangzhou,_China-_%2845333003971%29.jpg) | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) |
+| Hoa lay ơn | [Rudolphous](https://commons.wikimedia.org/wiki/File:20210620_Hortus_botanicus_Leiden_-_Gladiolus_%C3%97_hortulanus.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Hoa cát tường | [阿橋 HQ](https://commons.wikimedia.org/wiki/File:%E6%B4%8B%E6%A1%94%E6%A2%97-%E9%87%8D%E7%93%A3_Eustoma_grandiflorum_-%E9%A6%99%E6%B8%AF%E5%85%AC%E5%9C%92_Hong_Kong_Park-_%289229894606%29.jpg) | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) |
+| Hoa salem | [Neelix](https://commons.wikimedia.org/wiki/File:LimoniumSinuatum.jpg) | [Public domain]() |
+| Lan hồ điệp | [Phương Huy](https://commons.wikimedia.org/wiki/File:%C4%90%C3%A0_L%E1%BA%A1t_th6n2022,_Ks_Golf_Valley_%28ch%E1%BA%ADu_lan_tr%E1%BA%AFng%29.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Lan vũ nữ | [Pradeepkannamkulath](https://commons.wikimedia.org/wiki/File:Oncidium_cultivars_flowers_in_sunshine.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Cà chua | [NPS](https://commons.wikimedia.org/wiki/File:Several_green_unripe_and_red_ripe_tomatoes_growing_on_the_vine._%28086c449c-117b-44f6-a7c4-e2acbf284092%29.JPG) | [Public domain]() |
+| Ớt | [Forest and Kim Starr](https://commons.wikimedia.org/wiki/File:Starr-150326-0872-Capsicum_annuum-green_Bell_fruit_in_Hydroponics_greenhouse-Town_Sand_Island-Midway_Atoll_%2824971458160%29.jpg) | [CC BY 3.0 us](https://creativecommons.org/licenses/by/3.0/us/deed.en) |
+| Dưa leo | [Tl0443505](https://commons.wikimedia.org/wiki/File:Hinh-anh-qua-dua-chuot-viet-nam.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Bắp cải | [anthrovik](https://commons.wikimedia.org/wiki/File:Thu_hoach_rau_o_Da_Lat_2.jpg) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) |
+| Cải thảo | [Comedora](https://commons.wikimedia.org/wiki/File:Brassica_rapa_3.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Súp lơ | [Coyau](https://commons.wikimedia.org/wiki/File:Chou-fleur_02.jpg) | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) |
+| Xà lách | [Sanja565658](https://commons.wikimedia.org/wiki/File:Lactuca_sativa_01.JPG) | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) |
+| Rau muống | [Bùi Thụy Đào Nguyên](https://commons.wikimedia.org/wiki/File:Hoa_rau_mu%E1%BB%91ng_tr%E1%BA%AFng.jpg) | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) |
+| Cà rốt | [woodleywonderworks](https://commons.wikimedia.org/wiki/File:Carrot_harvest.jpg) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) |
+| Khoai tây | [Forest & Kim Starr](https://commons.wikimedia.org/wiki/File:Starr_080914-9946_Solanum_tuberosum.jpg) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0) |
+| Dâu tây | [Phương Huy](https://commons.wikimedia.org/wiki/File:%C4%90%C3%A0_L%E1%BA%A1t_n%C4%83m_2018,_tr%E1%BB%93ng_rau_trong_v%C6%B0%E1%BB%9Dn_k%C3%ADnh_%28c%C3%A0_chua_bi%29_%282%29.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Bó xôi | [Алексей Тараканов](https://commons.wikimedia.org/wiki/File:Spinacia_oleracea_%2851364931334%29.jpg) | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) |
+| Đậu Hà Lan | [Forest & Kim Starr](https://commons.wikimedia.org/wiki/File:Starr_081009-0044_Pisum_sativum_var._macrocarpum.jpg) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0) |
+| Củ dền | [Frank Schulenburg](https://commons.wikimedia.org/wiki/File:Beta_vulgaris,_San_Francisco_farmers_market.jpg) | [CC0](http://creativecommons.org/publicdomain/zero/1.0/deed.en) |
+| Tỏi tây | [Rasbak](https://commons.wikimedia.org/wiki/File:Allium_ampeloprasum_var._porrum_%27Farinto%27_%281%29.jpg) | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) |
+| Cần tây | [Simon Mannweiler](https://commons.wikimedia.org/wiki/File:Apium_graveolens_var._dulce_%28Staudensellerie%29_2024-07-28_%2801%29.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Su su | [Daniela Magallón](https://commons.wikimedia.org/wiki/File:Sechium_edule_Chayotes_on_the_vine.jpg) | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0) |
+| Lúa | [Windrain](https://commons.wikimedia.org/wiki/File:Thung_l%C5%A9ng_tr%E1%BB%93ng_l%C3%BAa_%E1%BB%9F_Di_Linh,_L%C3%A2m_%C4%90%E1%BB%93ng.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Ngô | [DXLINH](https://commons.wikimedia.org/wiki/File:Pngo2.jpg) | [Public domain]() |
+| Atisô | [Jackeven](https://commons.wikimedia.org/wiki/File:Artichoke_in_Dalat,_Vietnam.jpg) | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) |
+| Cà phê | [RG72](https://commons.wikimedia.org/wiki/File:Kafarboj_sur_kampoj_apud_Da_Lat,_Vjetnamio_03.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+| Chè | [ℍmoong](https://commons.wikimedia.org/wiki/File:%C4%90%E1%BB%93i_ch%C3%A8_C%E1%BA%A7u_%C4%90%E1%BA%A5t,_th%C3%A1ng_11_n%C4%83m_2011_-_1.jpg) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0) |
+| Bơ | [B.navez](https://commons.wikimedia.org/wiki/File:Persea_americana_fruits.JPG) | [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/) |
+| Hồng ăn trái | [Silverije](https://commons.wikimedia.org/wiki/File:Kaki_-_zreli_plodovi_na_stablu.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0) |
+
+</details>
 
 ## Giới hạn hiện tại
 
-- Quy trình chăm sóc: cà phê mít (Liberica), cà phê Excelsa và ớt kiểng chưa có nguồn chính
-  thức → app hiện "Chưa có dữ liệu quy trình" kèm nguồn tham khảo; không tự suy diễn.
-- Giá trong F1 chỉ tính cho item có sản phẩm tương ứng trong danh mục; phân chuồng, vôi, SA,
-  calcium nitrat, NPK 5-10-3, NPK 12-12-17 hiện "Chưa có giá" và tổng ghi rõ "Chưa gồm".
-- "Đặt nhắc" lưu ngày nhắc và hiện ở trang chủ; chưa có push notification.
+- Quy trình chăm sóc: chè Đài Loan (bón theo lứa hái, app chưa mô tả được) và rau muống (QĐ
+  1972 không có quy trình) → app hiện "Chưa có dữ liệu quy trình" kèm lý do và nguồn tham
+  khảo; không tự suy diễn. Phương án NPK thay thế mà quy trình không ghi cách chia lần (lúa,
+  dưa leo) chưa đưa vào máy tính — ghi ở `extra_rules`.
+- Giá trong F1 chỉ tính cho item có sản phẩm tương ứng trong danh mục; phân chuồng, hữu cơ vi
+  sinh, vôi, borat, canxi – bo, Trichoderma, MgSO₄, SA… hiện "Chưa có giá" và tổng ghi rõ
+  "Chưa gồm". Lượng tính bằng m³ (phân chuồng ở nhiều quy trình Lâm Đồng) không bao giờ bị
+  nhân với giá theo kg.
+- Giai đoạn ước tính từ ngày trồng dùng chung một thang ~90–100 ngày cho mọi cây hằng năm;
+  với cây ngắn ngày (dưa leo thu từ 45–48 ngày sau gieo) giai đoạn ước tính sẽ trễ hơn thực
+  tế — nông hộ chọn lại giai đoạn hoặc mở vụ để ghi đúng.
+- Thông báo tới điện thoại đi qua đồng bộ nền (~15 phút một lần; Android có thể giãn ra khi máy
+  tiết kiệm pin), không tức thì. Đẩy tức thì cần Firebase Cloud Messaging — phải có dự án
+  Firebase của chủ sản phẩm (`google-services.json` và khoá tài khoản dịch vụ), chưa làm.
 - Xuất CSV đưa nội dung qua bảng chia sẻ của máy (Share sheet), không ghi file.
-- Web-admin mới có đăng nhập và dashboard (xem kho, thu-chi, xuất PDF của từng nông hộ);
-  sửa giá phân bón và duyệt giống trên web vẫn chưa có màn hình (API đã sẵn).
 - "Báo lỗi" gửi thông điệp, stack, màn hình, phiên bản và thời điểm — chưa đính kèm ảnh chụp
   màn hình.
 - PDF trên web do server tạo (fpdf2) thay vì pdfkit trong trình duyệt; nội dung khớp bản mobile.
@@ -438,8 +717,9 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
   khi sửa tay; lô không có vụ đang mở thì tab "Chăm sóc" **ước tính từ ngày trồng**
   (ADR 0002 §7).
 - Gợi ý trồng xen / khoảng cách giữa các cây chưa làm: chưa có nguồn chính thống (ADR 0008).
-- Schema mobile ở **v7** (v6→v7: `task_notes`, `care_guides`, thêm cột cho `crop_cycles` và
-  `expense`), có migration sync — **triển khai máy chủ trước app**. Server tự thêm
+- Schema mobile ở **v8** (v6→v7: `task_notes`, `care_guides`, thêm cột cho `crop_cycles` và
+  `expense`; v7→v8: `notifications`, `notification_reads`), có migration sync — **triển khai máy
+  chủ trước app**. Server tự thêm
   cột/bảng/chỉ mục thiếu lúc khởi động (`app/core/schema_upgrade.py`) thay cho Alembic —
   chỉ làm được thay đổi kiểu "thêm vào"; đổi kiểu cột hay xoá cột vẫn phải làm tay.
 - Kiểm tải mới chạy trên máy phát triển Windows: 100 nông hộ đồng thời không lỗi và không
@@ -448,5 +728,9 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
   ([docs/BACKEND_DEPLOYMENT.md](docs/BACKEND_DEPLOYMENT.md) §5).
 - Test render toàn bộ `App` trong jest đã bỏ (cần mock native module; treo với WatermelonDB);
   thay bằng test render từng component và test logic thuần.
-- Nhận dạng giọng nói chưa có — sẽ dùng `DummyAsrEngine` trước, chọn Vosk hay whisper.cpp
-  bằng benchmark ở Giai đoạn 5.
+- Giọng nói: mô hình nhỏ chỉ nghe tốt từ vựng sổ ruộng; số đo trên giọng tổng hợp là mức trần,
+  chưa đo với giọng người trong nhà màng. Câu nói khác mẫu thì bản nháp có thể thiếu trường —
+  nông dân luôn xem và sửa trước khi lưu.
+- Thời tiết là **dự báo mô hình** cho một điểm ở làng hoa (Open-Meteo, gói miễn phí phi thương
+  mại), không phải số đo tại vườn và không thay bản tin chính thức của Trung tâm Dự báo KTTV
+  Quốc gia.

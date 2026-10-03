@@ -3,7 +3,7 @@
 Sinh tự động từ `backend/scripts/export_openapi.py` — phiên bản 0.1.0.
 Đừng sửa tay file này; sửa docstring của endpoint rồi chạy lại script.
 
-Tổng cộng **81 endpoint**. Đặc tả đầy đủ: `docs/api/openapi.json`,
+Tổng cộng **88 endpoint**. Đặc tả đầy đủ: `docs/api/openapi.json`,
 hoặc mở `/docs` khi máy chủ đang chạy.
 
 | Phương thức | Đường dẫn | Nhóm | Quyền | Mô tả |
@@ -26,20 +26,21 @@ hoặc mở `/docs` khi máy chủ đang chạy.
 | `GET` | `/crops/{crop_type}/care-guides` | care-guides | đã đăng nhập (bản nháp: chỉ quản trị viên) | Guides For Crop |
 | `PATCH` | `/cultivation-history/{cycle_id}` | cultivation | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Update Cultivation |
 | `DELETE` | `/cultivation-history/{cycle_id}` | cultivation | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Delete Cultivation |
+| `GET` | `/dashboard/overview` | dashboard | **chỉ quản trị viên** | Dashboard Overview |
 | `GET` | `/dashboard/summary` | dashboard | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Dashboard Summary |
 | `GET` | `/expense` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | List Expense |
 | `POST` | `/expense` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Create Expense |
-| `PATCH` | `/expense/{row_id}` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Update Expense |
-| `DELETE` | `/expense/{row_id}` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Delete Expense |
+| `PATCH` | `/expense/{row_id}` | finance | **chỉ quản trị viên** | Update Expense |
+| `DELETE` | `/expense/{row_id}` | finance | **chỉ quản trị viên** | Delete Expense |
 | `PATCH` | `/expense/{row_id}/checked` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Set Expense Checked |
-| `POST` | `/fertilizer-prices` | fertilizer-prices | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Create Price |
+| `POST` | `/fertilizer-prices` | fertilizer-prices | **chỉ quản trị viên** | Create Price |
 | `GET` | `/fertilizer-prices/history/{fertilizer_id}` | fertilizer-prices | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Get Price History |
 | `GET` | `/fertilizer-prices/latest` | fertilizer-prices | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Get Latest Prices |
 | `GET` | `/health` | health | công khai | Health |
 | `GET` | `/income` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | List Income |
 | `POST` | `/income` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Create Income |
-| `PATCH` | `/income/{row_id}` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Update Income |
-| `DELETE` | `/income/{row_id}` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Delete Income |
+| `PATCH` | `/income/{row_id}` | finance | **chỉ quản trị viên** | Update Income |
+| `DELETE` | `/income/{row_id}` | finance | **chỉ quản trị viên** | Delete Income |
 | `PATCH` | `/income/{row_id}/checked` | finance | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Set Income Checked |
 | `PATCH` | `/labor-costs/{cost_id}` | care-protocols | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Update Labor Cost |
 | `DELETE` | `/labor-costs/{cost_id}` | care-protocols | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Delete Labor Cost |
@@ -49,10 +50,14 @@ hoặc mở `/docs` khi máy chủ đang chạy.
 | `POST` | `/media/token` | media | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Media Token |
 | `GET` | `/media/{media_id}` | media | ảnh công khai: ai cũng xem; ảnh riêng: chủ hoặc quản trị viên (header hoặc `?t=`) | Get Media |
 | `DELETE` | `/media/{media_id}` | media | chủ tệp hoặc quản trị viên | Delete Media |
+| `GET` | `/notifications` | notifications | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | List Notifications |
+| `POST` | `/notifications` | notifications | **chỉ quản trị viên** | Send Notification |
+| `PATCH` | `/notifications/{notification_id}` | notifications | **chỉ quản trị viên** | Update Notification |
+| `DELETE` | `/notifications/{notification_id}` | notifications | **chỉ quản trị viên** | Delete Notification |
 | `GET` | `/plans` | plans | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | List Plans |
 | `POST` | `/plans` | plans | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Create Plan |
-| `PATCH` | `/plans/{plan_id}` | plans | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Update Plan |
-| `DELETE` | `/plans/{plan_id}` | plans | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Delete Plan |
+| `PATCH` | `/plans/{plan_id}` | plans | **chỉ quản trị viên** | Update Plan |
+| `DELETE` | `/plans/{plan_id}` | plans | **chỉ quản trị viên** | Delete Plan |
 | `GET` | `/plots` | plots | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | List Plots |
 | `POST` | `/plots` | plots | **chỉ quản trị viên** | Create Plot |
 | `GET` | `/plots/{plot_id}` | plots | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Get Plot |
@@ -81,14 +86,16 @@ hoặc mở `/docs` khi máy chủ đang chạy.
 | `GET` | `/warehouse/check` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Warehouse Check |
 | `GET` | `/warehouse/in` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | List Warehouse In |
 | `POST` | `/warehouse/in` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Create Warehouse In |
-| `PATCH` | `/warehouse/in/{row_id}` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Update Warehouse In |
-| `DELETE` | `/warehouse/in/{row_id}` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Delete Warehouse In |
+| `PATCH` | `/warehouse/in/{row_id}` | warehouse | **chỉ quản trị viên** | Update Warehouse In |
+| `DELETE` | `/warehouse/in/{row_id}` | warehouse | **chỉ quản trị viên** | Delete Warehouse In |
 | `GET` | `/warehouse/out` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | List Warehouse Out |
 | `POST` | `/warehouse/out` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Create Warehouse Out |
-| `PATCH` | `/warehouse/out/{row_id}` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Update Warehouse Out |
-| `DELETE` | `/warehouse/out/{row_id}` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Delete Warehouse Out |
+| `PATCH` | `/warehouse/out/{row_id}` | warehouse | **chỉ quản trị viên** | Update Warehouse Out |
+| `DELETE` | `/warehouse/out/{row_id}` | warehouse | **chỉ quản trị viên** | Delete Warehouse Out |
 | `GET` | `/warehouse/summary` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Warehouse Summary |
 | `GET` | `/warehouse/summary.csv` | warehouse | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Warehouse Summary Csv |
+| `GET` | `/weather` | weather | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Get Weather |
+| `POST` | `/weather/refresh` | weather | **chỉ quản trị viên** | Refresh Weather |
 
 ## Ghi chú
 

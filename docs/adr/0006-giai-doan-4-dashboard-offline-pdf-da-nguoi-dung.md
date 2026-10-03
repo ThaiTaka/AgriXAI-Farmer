@@ -81,8 +81,8 @@ vừa lưu dùng cùng nguồn.
 
 ### 5. Nhiều tài khoản: cô lập theo `owner_id`, xung đột hỏi người dùng
 
-Ba nông hộ demo (`nguyenvancuong` PUC-001-HB cà chua, `nguyenvananh` PUC-002-HB dưa leo,
-`nguyenvanhai` PUC-003-HB ớt) được seed với kho/thu-chi riêng; mọi truy vấn sync và REST
+Ba nông hộ demo (`nguyenvancuong` PUC-001-VT cà chua, `nguyenvananh` PUC-002-VT dưa leo,
+`nguyenvanhai` PUC-003-VT ớt) được seed với kho/thu-chi riêng; mọi truy vấn sync và REST
 lọc theo `owner_id` của token, test `mu_*` chứng minh user A không kéo được dòng của B.
 
 Đồng bộ vẫn là **last-write-wins theo `updated_at`** (ADR 0002), nhưng Giai đoạn 4 thêm

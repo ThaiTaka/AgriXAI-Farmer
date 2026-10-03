@@ -2491,6 +2491,33 @@
         }
       }
     },
+    "/dashboard/overview": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Dashboard Overview",
+        "description": "Admin home of web-admin: every farm at once — land, money for the last\nsix months, crops by area, and what is waiting for the admin.",
+        "operationId": "dashboard_overview_dashboard_overview_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewOut"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/reports/financials.pdf": {
       "get": {
         "tags": [
@@ -2800,7 +2827,7 @@
           "fertilizer-prices"
         ],
         "summary": "Get Latest Prices",
-        "description": "Trả về giá hiện hành (mới nhất theo effective_from) của mỗi loại phân bón.\n\nDanh sách đủ để web-admin hiển thị bảng giá theo nhóm.\nCác fertilizer_id chưa có giá trong DB thì dùng giá từ JSON catalogue.",
+        "description": "Trả về giá hiện hành (mới nhất theo effective_from) của mỗi loại phân bón.\n\nDanh sách đủ để web-admin hiển thị bảng giá theo nhóm, và để điện thoại\nphủ giá quản trị viên nhập lên giá khảo sát.\nCác fertilizer_id chưa có giá trong DB thì dùng giá từ JSON catalogue.\nGiá nhập trước cho một ngày sau chưa phải giá hiện hành: nó chỉ có trong\n/history cho tới ngày đó.",
         "operationId": "get_latest_prices_fertilizer_prices_latest_get",
         "responses": {
           "200": {
@@ -4168,6 +4195,271 @@
           }
         }
       }
+    },
+    "/notifications": {
+      "get": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "List Notifications",
+        "operationId": "list_notifications_notifications_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationOut"
+                  },
+                  "title": "Response List Notifications Notifications Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Send Notification",
+        "operationId": "send_notification_notifications_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications/{notification_id}": {
+      "patch": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Update Notification",
+        "operationId": "update_notification_notifications__notification_id__patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "notification_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Notification Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "Delete Notification",
+        "operationId": "delete_notification_notifications__notification_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "notification_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Notification Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/weather": {
+      "get": {
+        "tags": [
+          "weather"
+        ],
+        "summary": "Get Weather",
+        "operationId": "get_weather_weather_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Weather Weather Get"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/weather/refresh": {
+      "post": {
+        "tags": [
+          "weather"
+        ],
+        "summary": "Refresh Weather",
+        "operationId": "refresh_weather_weather_refresh_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Refresh Weather Weather Refresh Post"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -4313,7 +4605,7 @@
             "anyOf": [
               {
                 "type": "string",
-                "maxLength": 160
+                "maxLength": 500
               },
               {
                 "type": "null"
@@ -4603,7 +4895,7 @@
             "anyOf": [
               {
                 "type": "string",
-                "maxLength": 160
+                "maxLength": 500
               },
               {
                 "type": "null"
@@ -4661,6 +4953,34 @@
           "checked"
         ],
         "title": "CheckedUpdate"
+      },
+      "CropAreaOut": {
+        "properties": {
+          "crop_type": {
+            "type": "string",
+            "title": "Crop Type"
+          },
+          "crop_name": {
+            "type": "string",
+            "title": "Crop Name"
+          },
+          "plots": {
+            "type": "integer",
+            "title": "Plots"
+          },
+          "area_m2": {
+            "type": "number",
+            "title": "Area M2"
+          }
+        },
+        "type": "object",
+        "required": [
+          "crop_type",
+          "crop_name",
+          "plots",
+          "area_m2"
+        ],
+        "title": "CropAreaOut"
       },
       "CropSuggestionOut": {
         "properties": {
@@ -6046,6 +6366,88 @@
         "type": "object",
         "title": "ExpenseUpdate"
       },
+      "FarmRowOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "full_name": {
+            "type": "string",
+            "title": "Full Name"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          },
+          "plots": {
+            "type": "integer",
+            "title": "Plots"
+          },
+          "area_m2": {
+            "type": "number",
+            "title": "Area M2"
+          },
+          "month_income": {
+            "type": "number",
+            "title": "Month Income"
+          },
+          "month_expense": {
+            "type": "number",
+            "title": "Month Expense"
+          },
+          "stock_value": {
+            "type": "number",
+            "title": "Stock Value"
+          },
+          "pending_tasks": {
+            "type": "integer",
+            "title": "Pending Tasks"
+          },
+          "last_activity": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Activity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "full_name",
+          "region",
+          "is_active",
+          "plots",
+          "area_m2",
+          "month_income",
+          "month_expense",
+          "stock_value",
+          "pending_tasks",
+          "last_activity"
+        ],
+        "title": "FarmRowOut"
+      },
       "FertilizerPriceIn": {
         "properties": {
           "fertilizer_id": {
@@ -6123,6 +6525,94 @@
           "created_at": {
             "type": "integer",
             "title": "Created At"
+          },
+          "group_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group Name"
+          },
+          "npk_ratio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Npk Ratio"
+          },
+          "pack": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pack"
+          },
+          "survey_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Survey Min"
+          },
+          "survey_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Survey Max"
+          },
+          "survey_avg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Survey Avg"
+          },
+          "survey_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Survey Source"
+          },
+          "survey_date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Survey Date"
           }
         },
         "type": "object",
@@ -7031,6 +7521,471 @@
         ],
         "title": "MediaTokenOut"
       },
+      "MonthTotalsOut": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "month": {
+            "type": "integer",
+            "title": "Month"
+          },
+          "income": {
+            "type": "number",
+            "title": "Income"
+          },
+          "expense": {
+            "type": "number",
+            "title": "Expense"
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "month",
+          "income",
+          "expense"
+        ],
+        "title": "MonthTotalsOut"
+      },
+      "NotificationCreate": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Body",
+            "default": ""
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "info",
+              "warning",
+              "danger"
+            ],
+            "title": "Level",
+            "default": "info"
+          },
+          "owner_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Id"
+          },
+          "link": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Link"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "title": "NotificationCreate"
+      },
+      "NotificationOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "owner_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Id"
+          },
+          "audience_label": {
+            "type": "string",
+            "title": "Audience Label"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "level": {
+            "type": "string",
+            "title": "Level"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          },
+          "link": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Link"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "integer",
+            "title": "Updated At"
+          },
+          "read": {
+            "type": "boolean",
+            "title": "Read"
+          },
+          "read_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Read Count"
+          },
+          "audience_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audience Size"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "owner_id",
+          "audience_label",
+          "kind",
+          "level",
+          "title",
+          "body",
+          "link",
+          "source_name",
+          "source_url",
+          "expires_at",
+          "created_by",
+          "updated_by",
+          "created_at",
+          "updated_at",
+          "read"
+        ],
+        "title": "NotificationOut"
+      },
+      "NotificationUpdate": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "body": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body"
+          },
+          "level": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "info",
+                  "warning",
+                  "danger"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Level"
+          },
+          "link": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Link"
+          },
+          "source_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Name"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          }
+        },
+        "type": "object",
+        "title": "NotificationUpdate"
+      },
+      "OverviewOut": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "month": {
+            "type": "integer",
+            "title": "Month"
+          },
+          "farms_total": {
+            "type": "integer",
+            "title": "Farms Total"
+          },
+          "farms_active": {
+            "type": "integer",
+            "title": "Farms Active"
+          },
+          "plots": {
+            "type": "integer",
+            "title": "Plots"
+          },
+          "area_m2": {
+            "type": "number",
+            "title": "Area M2"
+          },
+          "month_income": {
+            "type": "number",
+            "title": "Month Income"
+          },
+          "month_expense": {
+            "type": "number",
+            "title": "Month Expense"
+          },
+          "stock_value": {
+            "type": "number",
+            "title": "Stock Value"
+          },
+          "pending_tasks": {
+            "type": "integer",
+            "title": "Pending Tasks"
+          },
+          "varieties_pending": {
+            "type": "integer",
+            "title": "Varieties Pending"
+          },
+          "errors_7d": {
+            "type": "integer",
+            "title": "Errors 7D"
+          },
+          "months": {
+            "items": {
+              "$ref": "#/components/schemas/MonthTotalsOut"
+            },
+            "type": "array",
+            "title": "Months"
+          },
+          "crops": {
+            "items": {
+              "$ref": "#/components/schemas/CropAreaOut"
+            },
+            "type": "array",
+            "title": "Crops"
+          },
+          "farms": {
+            "items": {
+              "$ref": "#/components/schemas/FarmRowOut"
+            },
+            "type": "array",
+            "title": "Farms"
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "month",
+          "farms_total",
+          "farms_active",
+          "plots",
+          "area_m2",
+          "month_income",
+          "month_expense",
+          "stock_value",
+          "pending_tasks",
+          "varieties_pending",
+          "errors_7d",
+          "months",
+          "crops",
+          "farms"
+        ],
+        "title": "OverviewOut"
+      },
       "PasswordChange": {
         "properties": {
           "current_password": {
@@ -7810,7 +8765,7 @@
           },
           "area_unit": {
             "type": "string",
-            "maxLength": 8,
+            "maxLength": 16,
             "title": "Area Unit",
             "default": "m2"
           },
@@ -7948,7 +8903,7 @@
           },
           "area_unit": {
             "type": "string",
-            "maxLength": 8,
+            "maxLength": 16,
             "title": "Area Unit",
             "default": "m2"
           },
@@ -8124,7 +9079,7 @@
             "anyOf": [
               {
                 "type": "string",
-                "maxLength": 8
+                "maxLength": 16
               },
               {
                 "type": "null"
@@ -9512,6 +10467,14 @@
     {
       "name": "dashboard",
       "description": "Số liệu tổng hợp cho màn hình chính."
+    },
+    {
+      "name": "notifications",
+      "description": "Thông báo gửi xuống điện thoại — quản trị viên soạn; máy chủ tự gửi cảnh báo thời tiết và giá phân."
+    },
+    {
+      "name": "weather",
+      "description": "Thời tiết làng hoa Vạn Thành (Open-Meteo, CC BY 4.0) và cảnh báo theo QĐ 18/2021/QĐ-TTg."
     },
     {
       "name": "ops",

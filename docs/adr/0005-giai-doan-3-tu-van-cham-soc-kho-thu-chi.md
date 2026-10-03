@@ -129,7 +129,7 @@ và trả thêm `categoryId` để chọn đúng quy trình (cà phê vối ≠ 
   97 % dòng cho `src/domain/**` (logic thuần).
 - Test render toàn bộ `App` bị bỏ: nó đã hỏng từ trước (react-navigation ESM + native
   module) và mock WatermelonDB trong jest treo; thay bằng test render từng component.
-- `python -m app.seed` tạo thêm nông hộ mẫu `nguyenvancuong` / `matkhau123` (lô PUC-001-HB,
+- `python -m app.seed` tạo thêm nông hộ mẫu `nguyenvancuong` / `matkhau123` (lô PUC-001-VT,
   hai phiếu nhập, ba khoản chi, một khoản thu) để demo và chụp màn hình.
 - Web-admin chưa có trang cho các bảng mới (Giai đoạn 4); API đã sẵn: `/plans`,
   `/warehouse/*`, `/income`, `/expense`, `/reports/financials[.csv]`, `/care-protocols`,
