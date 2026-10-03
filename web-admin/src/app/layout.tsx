@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./admin.css";
 
 export const metadata: Metadata = {
-  title: "AgriLog v2 — Quản trị",
+  title: {default: "AgriLog — Quản trị", template: "%s · AgriLog Quản trị"},
   description:
     "Trang quản trị AgriLog v2: lô đất, danh mục giống cây, giá phân bón, kho vật tư và thu chi của các nông hộ.",
 };

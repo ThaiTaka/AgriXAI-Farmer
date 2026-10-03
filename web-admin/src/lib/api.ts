@@ -55,7 +55,9 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
       ...(init.headers ?? {}),
     },
   });
-  if (res.status === 401) {
+  // A 401 on a signed-in call means the session is gone; on the login itself
+  // it is a wrong password, and the server's own message says so below.
+  if (res.status === 401 && path !== "/auth/login") {
     setToken(null);
     throw new ApiError("Phiên đăng nhập đã hết hạn", 401);
   }
