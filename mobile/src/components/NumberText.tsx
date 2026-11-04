@@ -23,6 +23,10 @@ export function NumberText({children, size = 'md', color = colors.primary.defaul
     <Text
       testID={testID}
       numberOfLines={numberOfLines}
+      // Một con số bị cắt thành "2.100.00…" còn tệ hơn một con số nhỏ hơn: thẻ một dòng
+      // thì thu chữ lại cho vừa (tối thiểu 60%) thay vì để dấu ba chấm nuốt mất chữ số.
+      adjustsFontSizeToFit={numberOfLines === 1}
+      minimumFontScale={0.6}
       style={[styles.base, styles[size], {color}, style]}>
       {children}
     </Text>

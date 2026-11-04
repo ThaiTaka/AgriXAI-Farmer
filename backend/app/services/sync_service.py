@@ -71,7 +71,7 @@ CONFLICT_STRATEGY = "last-write-wins-logged"
 #
 # change_logs is scoped by `changed_by` rather than `owner_id` — it has no owner
 # column, the author *is* the owner. Treating it as shared, as this map did
-# until Giai đoạn 5, sent every farm's audit trail ("Nguyễn Văn Anh sửa diện
+# until Giai đoạn 5, sent every farm's audit trail ("Trần Quốc Hưng sửa diện
 # tích 800 -> 1200") to every other farmer's phone, and made each sync payload
 # grow with the whole system's history instead of one farm's.
 SYNC_MODELS: dict[str, tuple[type, str | None]] = {
@@ -113,7 +113,7 @@ _ADMIN_ONLY_CREATE = {"plots"}
 _ADMIN_ONLY_WRITE = {"care_guides"}
 
 _REJECT_MESSAGES = {
-    "admin_only_create": "Lo dat do quan tri vien tao va giao, ung dung khong tu them duoc.",
+    "admin_only_create": "Lô đất do quản trị viên tạo và giao, ứng dụng không tự thêm được.",
     "admin_only_write": "Chỉ quản trị viên được sửa nội dung này.",
     "not_owner": "Bản ghi này không thuộc tài khoản của bạn.",
 }

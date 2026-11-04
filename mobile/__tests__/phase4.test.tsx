@@ -18,7 +18,7 @@ import {inferGrowthStage} from '../src/utils/growthStage';
 
 const day = (iso: string, hour = 8) => new Date(`${iso}T${String(hour).padStart(2, '0')}:00:00+07:00`).getTime();
 
-// The demo farm: Lê Thành Thái, PUC-001-HB.
+// The demo farm: Lê Thành Thái, PUC-2608-XT01.
 const INS = [
   {fertilizerId: 'ure_ca_mau', fertilizerName: 'Urê Cà Mau', category: 'dam', quantityKg: 50, unitPrice: 13_600, occurredAt: day('2026-09-10')},
   {fertilizerId: 'dap_han_quoc', fertilizerName: 'DAP Hàn Quốc (nhập khẩu)', category: 'lan', quantityKg: 50, unitPrice: 22_000, occurredAt: day('2026-09-10')},
@@ -27,7 +27,7 @@ const OUTS = [
   {fertilizerId: 'ure_ca_mau', fertilizerName: 'Urê Cà Mau', category: 'dam', quantityKg: 20, unitPrice: 13_600, totalCost: 272_000, occurredAt: day('2026-09-14')},
 ];
 const INCOMES: LedgerEntry[] = [
-  {kind: 'product', description: 'Bán cà chua MV1 50kg', amount: 1_500_000, occurredAt: day('2026-09-01'), note: 'Bán cho cửa hàng Kim Hạnh', checked: true},
+  {kind: 'product', description: 'Bán cà chua MV1 50kg', amount: 1_500_000, occurredAt: day('2026-09-01'), note: 'Bán cho vựa rau ở chợ Đà Lạt', checked: true},
 ];
 const EXPENSES: LedgerEntry[] = [
   {kind: 'labor', description: 'Công bón phân (3 công)', amount: 300_000, occurredAt: day('2026-09-05')},
@@ -180,7 +180,7 @@ describe('pdf report', () => {
   test('HTML carries summary, both detail tables, notes, footer and Unicode', () => {
     const html = reportHtml({
       farmerName: 'Lê Thành Thái',
-      address: 'Xã Hòa Bình, Huyện Thanh Trì, Hà Nội',
+      address: 'Trại Mát, phường Xuân Trường - Đà Lạt, Lâm Đồng',
       report,
       notes,
       generatedAt: day('2026-09-14'),
