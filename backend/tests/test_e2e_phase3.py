@@ -1,7 +1,7 @@
 """End-to-end API cases for Giai đoạn 3, run through the real FastAPI app.
 
-Scenario: nông hộ Lê Thành Thái (xã Hòa Bình, Thanh Trì, Hà Nội), lô
-PUC-001-HB, 300 m² cà chua MV1 — the mock-up farm from the brief. Each test
+Scenario: nông hộ Lê Thành Thái (Trại Mát, phường Xuân Trường - Đà Lạt, Lâm Đồng), lô
+PUC-2608-XT01, 300 m² cà chua MV1 — the mock-up farm from the brief. Each test
 is one user story from the acceptance list; together they walk the full loop
 plan → purchase → stock check → issue → report → CSV.
 """
@@ -53,9 +53,9 @@ def plot(admin, farmer) -> dict:
         headers=admin,
         json={
             "owner_id": owner_id,
-            "code": "PUC-001-HB",
+            "code": "PUC-2608-XT01",
             "name": "Ruộng cà chua nhà ông Lê Thành Thái",
-            "region": "Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
+            "region": "Trại Mát, phường Xuân Trường - Đà Lạt, Lâm Đồng",
             "area": 300,
             "area_unit": "m2",
             "crop_type": "tomato",
@@ -124,7 +124,7 @@ def test_e2e_02_plan_requires_at_least_one_item(farmer):
 
 
 def test_e2e_03_purchase_books_stock_and_a_linked_expense(farmer, plot):
-    """Kho nhập — Urê Cà Mau 50 kg, 680.000₫, 10/09/2026, 'Mua ở sfarm Hà Nội'."""
+    """Kho nhập — Urê Cà Mau 50 kg, 680.000₫, 10/09/2026, 'Đại lý vật tư nông nghiệp Trại Mát'."""
     res = client.post(
         "/warehouse/in",
         headers=farmer,
@@ -136,7 +136,7 @@ def test_e2e_03_purchase_books_stock_and_a_linked_expense(farmer, plot):
             "unit": "kg",
             "price": 680_000,
             "occurred_at": ms("2026-09-10"),
-            "note": "Mua ở sfarm Hà Nội",
+            "note": "Đại lý vật tư nông nghiệp Trại Mát",
             "plot_id": plot["id"],
         },
     )
@@ -166,7 +166,7 @@ def test_e2e_04_purchase_in_tonnes_is_normalised_to_kg(farmer):
             "unit": "tan",
             "price": 1_100_000,
             "occurred_at": ms("2026-09-10"),
-            "note": "East-West hạt giống",
+            "note": "Đại lý vật tư nông nghiệp Trại Mát",
             "record_expense": False,
         },
     )
@@ -202,7 +202,7 @@ def test_e2e_06_issue_uses_fifo_price_and_reduces_stock(farmer, plot):
             "category": "dam",
             "quantity_kg": 20,
             "occurred_at": ms("2026-09-12"),
-            "note": "Bón thúc đợt 1 lô PUC-001-HB",
+            "note": "Bón thúc đợt 1 lô PUC-2608-XT01",
             "plot_id": plot["id"],
         },
     )
@@ -257,7 +257,7 @@ def test_e2e_09_record_income_and_expenses(farmer, plot):
             "description": "Bán cà chua MV1 50kg",
             "amount": 1_500_000,
             "occurred_at": ms("2026-09-01"),
-            "note": "Bán cho cửa hàng Kim Hạnh",
+            "note": "Bán cho vựa rau ở chợ Đà Lạt",
             "plot_id": plot["id"],
         },
     )

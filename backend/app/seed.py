@@ -2,6 +2,7 @@
 
 Run with:  python -m app.seed
 Idempotent — re-running updates the existing rows instead of duplicating them.
+The command line seeds the extended roster as well (see `run(extended=...)`).
 """
 
 import uuid
@@ -14,7 +15,7 @@ from app.core.schema_upgrade import upgrade
 from app.core.security import hash_password
 from app.models.farm import CropVariety
 from app.models.user import User, UserRole
-from app.seed_demo import seed_demo_farm
+from app.seed_demo import seed_demo_farm, seed_extended
 from app.services import static_data
 
 SEED_USERS = [
@@ -24,30 +25,40 @@ SEED_USERS = [
         "password": settings.seed_admin_password,
         "full_name": "Quản trị viên hệ thống",
         "role": UserRole.ADMIN,
-        "region": None,
+        "region": "Ban quản trị AgriLog, Đà Lạt, Lâm Đồng",
         "phone": None,
     },
     {
         "username": settings.seed_farmer_username,
-        "email": "thaitaka@agrilog.local",
+        "email": f"{settings.seed_farmer_username}@agrilog.local",
         "password": settings.seed_farmer_password,
-        "full_name": "Thái Taka",
+        # Tài khoản mới tạo, chưa được giao lô: bộ test dùng nó làm "nông hộ
+        # trống", và trang Lô đất của web-admin dùng nó để thử việc giao lô.
+        "full_name": "Mai Xuân Bình",
         "role": UserRole.FARMER,
-        "region": "Cam Ly, Đà Lạt",
-        "phone": "0900000001",
+        "region": "Đạ Sar, xã Lạc Dương, Lâm Đồng",
+        "phone": "0944905316",
     },
 ]
+
+# Tên đăng nhập cũ của tài khoản nông hộ mẫu. Trên một máy đã seed, đổi tên tại
+# chỗ thay vì lập tài khoản thứ hai (lô đất, kho và thu - chi gắn theo id).
+LEGACY_FARMER_USERNAMES = ("thaitaka",)
 
 
 def seed_users(db) -> None:
     for spec in SEED_USERS:
         user = db.scalar(select(User).where(User.username == spec["username"]))
+        action = "updated"
+        if user is None and spec["role"] is UserRole.FARMER:
+            user = db.scalar(select(User).where(User.username.in_(LEGACY_FARMER_USERNAMES)))
+            if user is not None:
+                user.username = spec["username"]
+                action = "renamed"
         if user is None:
             user = User(id=str(uuid.uuid4()), username=spec["username"])
             db.add(user)
             action = "created"
-        else:
-            action = "updated"
         user.email = spec["email"]
         user.password_hash = hash_password(spec["password"])
         user.full_name = spec["full_name"]
@@ -100,7 +111,15 @@ def seed_varieties(db) -> None:
     print(f"  crop varieties: {added} added, {total - added} already present")
 
 
-def run() -> None:
+def run(*, extended: bool = False) -> None:
+    """Seeds users, the catalogue and the demo farms.
+
+    `extended=True` (what `python -m app.seed` passes) adds the rest of the
+    roster — a dozen households around Đà Lạt, a locked account, the fertiliser
+    price history and a few error logs — so web-admin has something to page and
+    filter. The test suite calls `run()` without it and keeps its small, exactly
+    countable data set.
+    """
     added = upgrade(engine)
     if added:
         print(f"  schema: added columns {', '.join(added)}")
@@ -108,9 +127,11 @@ def run() -> None:
         seed_users(db)
         seed_varieties(db)
         seed_demo_farm(db)
+        if extended:
+            seed_extended(db)
         db.commit()
     print("Seed done.")
 
 
 if __name__ == "__main__":
-    run()
+    run(extended=True)

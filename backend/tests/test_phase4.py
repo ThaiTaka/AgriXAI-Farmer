@@ -1,7 +1,7 @@
 """Giai đoạn 4 — multi-user sync, error logs, dashboard, PDF.
 
-Three demo households (lethanhthai PUC-001-HB + PUC-004-HB, nguyenvananh PUC-002-HB,
-nguyenvanhai PUC-003-HB) plus admin. Each test is one case from the brief's
+Three demo households (lethanhthai PUC-2608-XT01 + PUC-2609-XT02, tranquochung PUC-2609-LV01,
+vuducthinh PUC-2608-LD01) plus admin. Each test is one case from the brief's
 list; the e2e tests at the bottom chain them the way a farmer would.
 """
 
@@ -39,12 +39,12 @@ def thai():
 
 @pytest.fixture(scope="module")
 def anh():
-    return login("nguyenvananh")
+    return login("tranquochung")
 
 
 @pytest.fixture(scope="module")
 def hai():
-    return login("nguyenvanhai")
+    return login("vuducthinh")
 
 
 @pytest.fixture(scope="module")
@@ -156,9 +156,9 @@ def test_mu_04_farmers_never_see_each_others_farms(thai, anh, hai):
     thai_plots = {p["code"] for p in client.get("/plots", headers=thai).json()}
     anh_plots = {p["code"] for p in client.get("/plots", headers=anh).json()}
     hai_plots = {p["code"] for p in client.get("/plots", headers=hai).json()}
-    assert "PUC-001-HB" in thai_plots and "PUC-001-HB" not in anh_plots and "PUC-001-HB" not in hai_plots
-    assert "PUC-002-HB" in anh_plots and "PUC-002-HB" not in thai_plots
-    assert "PUC-003-HB" in hai_plots and "PUC-003-HB" not in anh_plots
+    assert "PUC-2608-XT01" in thai_plots and "PUC-2608-XT01" not in anh_plots and "PUC-2608-XT01" not in hai_plots
+    assert "PUC-2609-LV01" in anh_plots and "PUC-2609-LV01" not in thai_plots
+    assert "PUC-2608-LD01" in hai_plots and "PUC-2608-LD01" not in anh_plots
 
     anh_id = me(anh)["id"]
     for path in ("/plans", "/warehouse/summary", "/income", "/expense", "/dashboard/summary"):
@@ -167,7 +167,7 @@ def test_mu_04_farmers_never_see_each_others_farms(thai, anh, hai):
 
     # A pulled sync carries only the caller's rows.
     pulled = client.get("/sync", headers=hai).json()["changes"]
-    assert {r["code"] for r in pulled["plots"]["created"]} == {"PUC-003-HB"}
+    assert {r["code"] for r in pulled["plots"]["created"]} == {"PUC-2608-LD01"}
     assert all(r["owner_id"] == me(hai)["id"] for r in pulled["warehouse_in"]["created"])
 
 
@@ -326,7 +326,13 @@ def test_logs_are_admin_only_to_read(thai):
 # -------------------------------- dashboard ------------------------------
 
 
-def test_dashboard_summary_for_the_demo_farm(thai):
+def test_dashboard_summary_for_the_demo_farm(thai, monkeypatch):
+    # Số việc chờ phụ thuộc vào "hôm nay" so với ngày gieo (cà chua trồng 20/08
+    # đổi giai đoạn theo thời gian). Cố định đồng hồ vào ngày hộ demo được lập
+    # để kết quả không đổi theo ngày chạy test.
+    import types
+
+    monkeypatch.setattr(dashboard_service, "time", types.SimpleNamespace(time=lambda: ms("2026-09-24") / 1000))
     res = client.get("/dashboard/summary", headers=thai, params={"year": 2026, "month": 9})
     assert res.status_code == 200
     body = res.json()
@@ -339,8 +345,8 @@ def test_dashboard_summary_for_the_demo_farm(thai):
     assert body["month_income"] == 1_500_000
     assert body["month_expense"] == 300_000 + 120_000 + 680_000 + 1_100_000
     assert body["month_profit"] == -700_000
-    # Hộ này có hai lô: PUC-001-HB cà chua trồng 20/08 đang ở "Ra hoa đợt đầu"
-    # (4 việc) và PUC-004-HB dưa leo trồng 15/09 ở giai đoạn đầu (3 việc).
+    # Hộ này có hai lô: PUC-2608-XT01 cà chua trồng 20/08 đang ở "Ra hoa đợt đầu"
+    # (4 việc) và PUC-2609-XT02 dưa leo trồng 15/09 ở giai đoạn đầu (3 việc).
     assert body["pending_tasks"] == 4 + 3
     assert body["pending_groups"][0]["stage_name"] == "Ra hoa đợt đầu"
     assert body["pending_groups"][0]["crop_name"] == "Cà chua"
@@ -361,10 +367,10 @@ def test_dashboard_pending_tasks_drop_when_ticked_and_calendar_crops_use_the_mon
 def test_dashboard_admin_can_view_a_farm_and_list_users(admin, anh):
     anh_id = me(anh)["id"]
     body = client.get("/dashboard/summary", headers=admin, params={"owner_id": anh_id, "year": 2026, "month": 9}).json()
-    assert body["owner_id"] == anh_id and body["full_name"] == "Nguyễn Văn Anh"
+    assert body["owner_id"] == anh_id and body["full_name"] == "Trần Quốc Hưng"
     assert body["stock_kinds"] == 1
     users = client.get("/users", headers=admin).json()
-    assert {u["username"] for u in users} >= {"lethanhthai", "nguyenvananh", "nguyenvanhai"}
+    assert {u["username"] for u in users} >= {"lethanhthai", "tranquochung", "vuducthinh"}
     assert client.get("/users", headers=anh).status_code == 403
 
 
@@ -433,7 +439,7 @@ def test_pdf_unicode_text_survives_the_round_trip():
     notes = report_pdf.report_notes(report, [], [], ledger.Period(2026, month=9))
     content = report_pdf.build_pdf(
         farmer_name="Lê Thành Thái",
-        address="Xã Hòa Bình, Huyện Thanh Trì, Hà Nội",
+        address="Trại Mát, phường Xuân Trường - Đà Lạt, Lâm Đồng",
         report=report,
         notes=notes,
         generated_at=datetime(2026, 9, 14, tzinfo=ledger.VN_TZ),

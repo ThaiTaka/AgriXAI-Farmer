@@ -185,9 +185,9 @@ Tài khoản demo (đặt trong `.env`, đổi được):
 | Tài khoản | Mật khẩu | Vai trò |
 |---|---|---|
 | `admin` | `admin123` | Quản trị viên |
-| `thaitaka` | `matkhau123` | Nông dân |
+| `maixuanbinh` | `matkhau123` | Nông dân mới tạo, chưa được giao lô (bộ test dùng làm "nông hộ trống") |
 
-Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` — **163 test, phủ 95 %** (smoke, sync hai chiều,
+Chạy test: `./.venv/Scripts/python.exe -m pytest --cov=app` — **242 test, phủ 94 %** (đo ngày 03/11/2026) (smoke, sync hai chiều,
 parity schema mobile ↔ server, toàn vẹn dữ liệu tĩnh, kho/thu-chi, 15 ca e2e API của
 Giai đoạn 3, 23 test Giai đoạn 4 — đa người dùng, log lỗi, dashboard, PDF, 5 ca e2e —
 20 test admin sửa/xoá kế hoạch, kho, thu-chi, và 23 test Giai đoạn 5: quyền trên lô đất,
@@ -204,16 +204,38 @@ TEST_DATABASE_URL="postgresql+psycopg://agrilog:agrilog@127.0.0.1:5443/agrilog" 
 ```
 
 Đưa lên máy chủ thật: [docs/BACKEND_DEPLOYMENT.md](docs/BACKEND_DEPLOYMENT.md) (PostgreSQL,
-Docker, chuyển dữ liệu, kiểm tải, sao lưu, theo dõi). Danh sách đầy đủ 56 endpoint:
+Docker, chuyển dữ liệu, kiểm tải, sao lưu, theo dõi). Danh sách đầy đủ 82 endpoint:
 [docs/API_ENDPOINTS.md](docs/API_ENDPOINTS.md).
 
-Ba nông hộ demo (cùng mật khẩu `matkhau123`), mỗi hộ có lô, kho và thu-chi riêng tháng 9/2026:
+Nông hộ demo (cùng mật khẩu `matkhau123`) ở Đà Lạt và vùng phụ cận của tỉnh Lâm Đồng. Địa danh theo
+đơn vị hành chính cấp xã có hiệu lực từ 01/07/2025 (Nghị quyết 1671/NQ-UBTVQH15); họ tên, số điện
+thoại và số liệu thu – chi là **dữ liệu minh họa**, không phải người thật. Lệnh `python -m app.seed`
+tạo đủ 13 nông hộ; bộ test chỉ dùng ba hộ đầu (`app.seed.run()` không có `extended=True`) để số liệu đếm được chính xác.
 
-| Tài khoản | Lô đất | Cây |
-|---|---|---|
-| `lethanhthai` | PUC-001-HB, 300 m² · PUC-004-HB, 250 m² | cà chua MV1 · dưa leo Hunter 1.0 |
-| `nguyenvananh` | PUC-002-HB, 500 m² | dưa leo Hunter 1.0 |
-| `nguyenvanhai` | PUC-003-HB, 360 m² | ớt VIFON686 |
+| Tài khoản | Địa chỉ | Lô đất | Cây |
+|---|---|---|---|
+| `lethanhthai` | Trại Mát, phường Xuân Trường - Đà Lạt | PUC-2608-XT01, 300 m² · PUC-2609-XT02, 250 m² | cà chua MV1 · dưa leo Hunter 1.0 |
+| `tranquochung` | Đa Thiện, phường Lâm Viên - Đà Lạt | PUC-2609-LV01, 500 m² | dưa leo Hunter 1.0 |
+| `vuducthinh` | Đạ Sar, xã Lạc Dương | PUC-2608-LD01, 360 m² | ớt VIFON686 |
+| `nguyenthimai` | Thái Phiên, phường Lâm Viên - Đà Lạt | PUC-2608-LV02, 800 m² | bắp cải NASACA |
+| `hoangvantam` | Xuân Thọ, phường Xuân Trường - Đà Lạt | PUC-2601-XT03, 5.000 m² | cà phê Catimor |
+| `dangthihuong` | Tà Nung, phường Cam Ly - Đà Lạt | PUC-2607-CL01, 600 m² | cà rốt PHUDI 1.0 |
+| `ngothithuha` | Phú Hội, xã Đức Trọng | PUC-2607-DT01, 400 m² | cà chua bi đỏ |
+| `buivanloc` | Đạ Ròn, xã Đơn Dương | PUC-2608-DD01, 1.000 m² | ngô nếp HN88 |
+| `trinhvanduc` | Nam Ban, xã Nam Ban Lâm Hà | PUC-2603-NB01, 8.000 m² | cà phê vối TR4 |
+| `lamthiyen` | Tân Hội, xã Tân Hội | PUC-2608-TH01, 700 m² | ớt sừng Hoàng Long |
+| `phamthilan` | Lát, phường Lang Biang - Đà Lạt | PUC-2609-LB01, 450 m² | dưa leo Nhật lai F1 |
+| `vominhquan` | Đạ Nhim, xã Lạc Dương | PUC-2606-LD02, 900 m² | bắp cải Valentine — **tài khoản đã khoá** |
+| `maixuanbinh` | Đạ Sar, xã Lạc Dương | chưa có lô | — |
+
+Mã lô có dạng `PUC-YYMM-XXXX` (năm, tháng lập lô và bốn ký tự). Bộ dữ liệu mở rộng còn có lịch sử giá
+phân bón do admin nhập, nhật ký lỗi, ba giống cây chờ duyệt và một hướng dẫn chăm sóc ở dạng nháp để
+trang quản trị có đủ trạng thái để thử.
+
+Trang quản trị (`web-admin`) có khung điều hướng bên trái: **Tổng quan** (số liệu toàn hệ thống từ
+`GET /admin/overview`), **Nông hộ**, **Lô đất** (nơi duy nhất tạo và giao lô — nông hộ không tự tạo
+được), **Duyệt giống cây**, **Hướng dẫn chăm sóc**, **Giá phân bón**, **Tài khoản**, **Nhật ký lỗi**,
+**Cài đặt**.
 
 Endpoint Giai đoạn 4: `GET /dashboard/summary`, `GET /reports/financials.pdf?year&month|quarter`,
 `POST /logs` (máy đẩy nhật ký lỗi), `GET /logs` và `GET /users` (admin), `GET /users/version`.
@@ -285,7 +307,7 @@ Trạng thái đo ngày 23/09/2026: **198 test / 20 bộ, phủ 91,0 % câu lệ
 > `patch-package`). Đo ngày 24/09/2026: **236 test / 24 bộ, phủ 94 % dòng**.
 
 Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **cả tên đăng nhập lẫn email**
-(`thaitaka` hoặc `thaitaka@agrilog.local`).
+(`lethanhthai` hoặc `thai@agrilog.local`).
 
 ## Design token và font
 

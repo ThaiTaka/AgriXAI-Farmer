@@ -72,7 +72,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--base-url", default="http://127.0.0.1:8000")
     parser.add_argument("--users", type=int, default=100, help="số người dùng đồng thời")
     parser.add_argument("--rows", type=int, default=10, help="số bản ghi mỗi lần đẩy")
-    parser.add_argument("--username", default="thaitaka")
+    parser.add_argument("--username", default="maixuanbinh")
     parser.add_argument("--password", default="matkhau123")
     parser.add_argument("--timeout", type=float, default=30.0)
     parser.add_argument(
