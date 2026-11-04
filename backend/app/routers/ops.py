@@ -217,16 +217,29 @@ class UserSummary(BaseModel):
     id: str
     username: str
     full_name: str
+    email: str | None = None
+    phone: str | None = None
     region: str | None
     role: str
     is_active: bool
+    created_at: int
 
 
 @users_router.get("", response_model=list[UserSummary])
 def list_users(_: User = Depends(current_admin), db: Session = Depends(get_db)) -> list[UserSummary]:
     rows = db.scalars(select(User).where(User.is_deleted.is_(False)).order_by(User.full_name))
     return [
-        UserSummary(id=u.id, username=u.username, full_name=u.full_name, region=u.region, role=u.role.value, is_active=u.is_active)
+        UserSummary(
+            id=u.id,
+            username=u.username,
+            full_name=u.full_name,
+            email=u.email,
+            phone=u.phone,
+            region=u.region,
+            role=u.role.value,
+            is_active=u.is_active,
+            created_at=u.created_at,
+        )
         for u in rows
     ]
 

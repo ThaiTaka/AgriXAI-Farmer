@@ -3,11 +3,12 @@
 Sinh tự động từ `backend/scripts/export_openapi.py` — phiên bản 0.1.0.
 Đừng sửa tay file này; sửa docstring của endpoint rồi chạy lại script.
 
-Tổng cộng **81 endpoint**. Đặc tả đầy đủ: `docs/api/openapi.json`,
+Tổng cộng **82 endpoint**. Đặc tả đầy đủ: `docs/api/openapi.json`,
 hoặc mở `/docs` khi máy chủ đang chạy.
 
 | Phương thức | Đường dẫn | Nhóm | Quyền | Mô tả |
 | --- | --- | --- | --- | --- |
+| `GET` | `/admin/overview` | admin | **chỉ quản trị viên** | Overview |
 | `POST` | `/auth/change-password` | auth | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Change Password |
 | `POST` | `/auth/login` | auth | công khai (giới hạn 5 lần sai/phút) | Login |
 | `GET` | `/auth/me` | auth | đã đăng nhập (chỉ thấy dữ liệu của chính mình) | Read Me |

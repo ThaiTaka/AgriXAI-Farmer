@@ -12,11 +12,13 @@
  * tài liệu hướng dẫn chung, không phải ảnh ruộng của một nông hộ.
  */
 
-import Link from "next/link";
-import {useRouter} from "next/navigation";
-import {useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 
-import {api, ApiError, apiUpload, getToken, mediaUrl, type SessionUser} from "@/lib/api";
+import {Icon} from "@/components/admin/Icon";
+import {useAdmin} from "@/components/admin/Shell";
+import {EmptyState, FilterSelect, Notice, PageHeader, Pager, Panel, Pill, SearchBox, TableSkeleton, useConfirm, usePaged} from "@/components/admin/ui";
+import {api, ApiError, apiUpload, mediaUrl} from "@/lib/api";
+import {fold} from "@/lib/format";
 
 interface Step {
   title: string;
@@ -104,9 +106,12 @@ async function uploadPublicImage(file: File): Promise<string> {
 }
 
 export default function CareGuidesPage() {
-  const router = useRouter();
-  const [me, setMe] = useState<SessionUser | null>(null);
-  const [guides, setGuides] = useState<Guide[]>([]);
+  const {isAdmin} = useAdmin();
+  const [guides, setGuides] = useState<Guide[] | null>(null);
+  const [query, setQuery] = useState("");
+  const [cropFilter, setCropFilter] = useState("all");
+  const [stateFilter, setStateFilter] = useState("all");
+  const {confirm, dialog} = useConfirm();
   const [crops, setCrops] = useState<{id: string; name: string}[]>([]);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -114,30 +119,18 @@ export default function CareGuidesPage() {
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
 
-  const load = () => api<Guide[]>("/care-guides").then(setGuides);
+  const load = useCallback(() => api<Guide[]>("/care-guides").then(setGuides), []);
 
   useEffect(() => {
-    if (!getToken()) {
-      router.replace("/login");
-      return;
-    }
-    api<SessionUser>("/auth/me")
-      .then(async user => {
-        if (user.role !== "admin") {
-          router.replace("/dashboard");
-          return;
-        }
-        setMe(user);
-        const [, varieties] = await Promise.all([load(), api<Variety[]>("/crop-varieties")]);
+    if (!isAdmin) return;
+    Promise.all([load(), api<Variety[]>("/crop-varieties")])
+      .then(([, varieties]) => {
         const byId = new Map<string, string>();
         for (const v of varieties) if (!byId.has(v.crop_type)) byId.set(v.crop_type, v.crop_name);
         setCrops([...byId].map(([id, name]) => ({id, name})).sort((a, b) => a.name.localeCompare(b.name, "vi")));
       })
-      .catch(e => {
-        if (e instanceof ApiError && e.status === 401) router.replace("/login");
-        else setError(e instanceof Error ? e.message : String(e));
-      });
-  }, [router]);
+      .catch(e => setError(e instanceof Error ? e.message : String(e)));
+  }, [isAdmin, load]);
 
   const cropName = useMemo(() => {
     const byId = new Map(crops.map(c => [c.id, c.name]));
@@ -214,7 +207,13 @@ export default function CareGuidesPage() {
   };
 
   const remove = async (g: Guide) => {
-    if (!window.confirm(`Xoá hướng dẫn "${g.title}"? Điện thoại sẽ mất hướng dẫn này ở lần đồng bộ tới.`)) return;
+    const ok = await confirm({
+      title: "Xoá hướng dẫn",
+      message: `Xoá hướng dẫn “${g.title}”? Điện thoại sẽ mất hướng dẫn này ở lần đồng bộ tới.`,
+      confirmLabel: "Xoá",
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await api<void>(`/care-guides/${g.id}`, {method: "DELETE"});
       setNote(`Đã xoá "${g.title}"`);
@@ -257,42 +256,37 @@ export default function CareGuidesPage() {
       return {...d, steps: next};
     });
 
-  if (!me) {
-    return (
-      <main className="page">
-        <p className="muted">{error ?? "Đang tải…"}</p>
-      </main>
-    );
-  }
+  const filtered = useMemo(() => {
+    const q = fold(query.trim());
+    return (guides ?? [])
+      .filter(g => (cropFilter === "all" ? true : g.crop_type === cropFilter))
+      .filter(g => (stateFilter === "all" ? true : stateFilter === "published" ? g.published : !g.published))
+      .filter(g => !q || fold(`${g.title} ${cropName(g.crop_type)} ${g.summary ?? ""}`).includes(q))
+      .sort((a, b) => a.crop_type.localeCompare(b.crop_type) || a.sort_order - b.sort_order);
+  }, [guides, cropFilter, stateFilter, query, cropName]);
+  const paged = usePaged(filtered, 8);
+
+  if (!isAdmin) return <Notice>Trang này chỉ dành cho quản trị viên.</Notice>;
 
   const previewId = draft ? youtubeIdOf(draft.youtube) : null;
 
   return (
-    <main className="page">
-      <header className="topbar">
-        <div>
-          <p className="eyebrow">AgriLog v2 · Quản trị</p>
-          <h1 className="title">Hướng dẫn chăm sóc</h1>
-          <p className="muted">Video YouTube nhúng và ảnh từng bước — nông hộ xem ngay trong ứng dụng.</p>
-        </div>
-        <div className="topbar-actions">
-          {!draft ? (
+    <>
+      <PageHeader
+        title="Hướng dẫn chăm sóc"
+        subtitle="Video YouTube nhúng và ảnh từng bước — nông hộ xem ngay trong ứng dụng, kể cả khi mất mạng (video cần mạng lần đầu)."
+        actions={
+          !draft ? (
             <button className="btn btn-primary" type="button" onClick={() => setDraft({...EMPTY, crop_type: crops[0]?.id ?? "tomato"})}>
-              + Viết hướng dẫn
+              <Icon name="plus" size={16} />
+              Viết hướng dẫn
             </button>
-          ) : null}
-          <Link className="btn btn-secondary" href="/dashboard">
-            Quay lại dashboard
-          </Link>
-        </div>
-      </header>
+          ) : undefined
+        }
+      />
 
-      {error ? (
-        <p className="error" role="alert">
-          {error}
-        </p>
-      ) : null}
-      {note ? <p className="muted small">{note}</p> : null}
+      {error ? <Notice>{error}</Notice> : null}
+      {note ? <Notice tone="green">{note}</Notice> : null}
 
       {draft ? (
         <div className="card">
@@ -431,57 +425,82 @@ export default function CareGuidesPage() {
         </div>
       ) : null}
 
-      <div className="card">
-        {guides.length === 0 ? (
-          <p className="muted">Chưa có hướng dẫn nào. Bấm “+ Viết hướng dẫn” để soạn cái đầu tiên.</p>
+      <Panel flush>
+        <div className="toolbar">
+          <SearchBox value={query} onChange={setQuery} placeholder="Tìm theo tiêu đề, cây trồng…" label="Tìm hướng dẫn" />
+          <FilterSelect label="Cây trồng" value={cropFilter} onChange={setCropFilter} options={[{value: "all", label: "Tất cả"}, ...crops.map(c => ({value: c.id, label: c.name}))]} />
+          <FilterSelect
+            label="Trạng thái"
+            value={stateFilter}
+            onChange={setStateFilter}
+            options={[
+              {value: "all", label: "Tất cả"},
+              {value: "published", label: "Đã đăng"},
+              {value: "draft", label: "Bản nháp"},
+            ]}
+          />
+        </div>
+        {guides === null && !error ? (
+          <TableSkeleton rows={4} cols={5} />
+        ) : filtered.length === 0 ? (
+          <EmptyState icon="guides" title={guides && guides.length === 0 ? "Chưa có hướng dẫn nào" : "Không có hướng dẫn nào khớp"} hint="Bấm “Viết hướng dẫn” để soạn bài đầu tiên." />
         ) : (
-          <div className="table-wrap">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Tiêu đề</th>
-                  <th scope="col">Cây / Giai đoạn</th>
-                  <th scope="col">Nội dung</th>
-                  <th scope="col">Trạng thái</th>
-                  <th scope="col">Hành động</th>
-                </tr>
-              </thead>
-              <tbody>
-                {guides.map(g => (
-                  <tr key={g.id}>
-                    <td className="strong">{g.title}</td>
-                    <td>
-                      {cropName(g.crop_type)}
-                      {g.stage_code ? ` · ${stageLabel(g.stage_code)}` : ""}
-                    </td>
-                    <td>
-                      {[g.youtube_id ? "Video" : null, g.steps.length ? `${g.steps.length} bước` : null, g.image_ids.length ? `${g.image_ids.length} ảnh` : null]
-                        .filter(Boolean)
-                        .join(" · ") || "—"}
-                    </td>
-                    <td>
-                      <span className={g.published ? "badge badge-green" : "badge badge-gray"}>{g.published ? "Đã đăng" : "Nháp"}</span>
-                    </td>
-                    <td>
-                      <div style={{display: "flex", gap: "8px", flexWrap: "wrap"}}>
-                        <button className="btn btn-secondary" type="button" onClick={() => edit(g)}>
-                          Sửa
-                        </button>
-                        <button className="btn btn-secondary" type="button" onClick={() => togglePublished(g)}>
-                          {g.published ? "Gỡ xuống" : "Đăng"}
-                        </button>
-                        <button className="btn btn-danger" type="button" onClick={() => remove(g)}>
-                          Xoá
-                        </button>
-                      </div>
-                    </td>
+          <>
+            <div className="data-wrap">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Tiêu đề</th>
+                    <th>Cây / giai đoạn</th>
+                    <th>Nội dung</th>
+                    <th>Trạng thái</th>
+                    <th aria-label="Thao tác" />
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {paged.slice.map(g => (
+                    <tr key={g.id}>
+                      <td style={{maxWidth: 380}}>
+                        <span className="cell-main">{g.title}</span>
+                        {g.source_name ? <span className="cell-sub">{g.source_name}</span> : null}
+                      </td>
+                      <td>
+                        <span className="cell-main" style={{fontWeight: 600}}>
+                          {cropName(g.crop_type)}
+                        </span>
+                        <span className="cell-sub">{g.stage_code ? stageLabel(g.stage_code) : "Mọi giai đoạn"}</span>
+                      </td>
+                      <td>
+                        {[g.youtube_id ? "Video" : null, g.steps.length ? `${g.steps.length} bước` : null, g.image_ids.length ? `${g.image_ids.length} ảnh` : null]
+                          .filter(Boolean)
+                          .join(" · ") || "—"}
+                      </td>
+                      <td>
+                        <Pill tone={g.published ? "green" : "gray"}>{g.published ? "Đã đăng" : "Bản nháp"}</Pill>
+                      </td>
+                      <td>
+                        <div className="cell-actions">
+                          <button className="btn btn-secondary btn-sm" type="button" onClick={() => edit(g)}>
+                            Sửa
+                          </button>
+                          <button className="btn btn-secondary btn-sm" type="button" onClick={() => togglePublished(g)}>
+                            {g.published ? "Gỡ xuống" : "Đăng"}
+                          </button>
+                          <button className="icon-btn icon-btn-danger" type="button" onClick={() => remove(g)} aria-label={`Xoá ${g.title}`} title="Xoá">
+                            <Icon name="trash" size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pager {...paged} onPage={paged.setPage} noun="hướng dẫn" />
+          </>
         )}
-      </div>
-    </main>
+      </Panel>
+      {dialog}
+    </>
   );
 }

@@ -11,6 +11,7 @@ from app.core.config import settings
 from app.core.database import engine
 from app.core.schema_upgrade import upgrade
 from app.routers import (
+    admin,
     auth,
     care_guides,
     cultivation,
@@ -46,6 +47,7 @@ TAGS_METADATA = [
     {"name": "media", "description": "Ảnh và video: tải lên, xem, xoá."},
     {"name": "dashboard", "description": "Số liệu tổng hợp cho màn hình chính."},
     {"name": "ops", "description": "Nhật ký lỗi từ điện thoại và quản lý tài khoản."},
+    {"name": "admin", "description": "Số liệu tổng quan toàn hệ thống cho trang quản trị (chỉ quản trị viên)."},
     {"name": "health", "description": "Kiểm tra tình trạng dịch vụ và kết nối cơ sở dữ liệu."},
 ]
 
@@ -165,6 +167,7 @@ app.include_router(cultivation.router)
 app.include_router(task_records.router)
 app.include_router(care_guides.router)
 app.include_router(media.router)
+app.include_router(admin.admin_router)
 
 
 @app.get("/", include_in_schema=False)

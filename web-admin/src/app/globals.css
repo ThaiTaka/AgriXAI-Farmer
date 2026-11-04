@@ -8,6 +8,9 @@
    Never loaded from Google Fonts (design rule 3.3). */
 @import "./fonts.css";
 
+/* Khung và thành phần của trang quản trị. */
+@import "./admin.css";
+
 /* Expose the design tokens to Tailwind utilities (bg-primary, text-muted, border-default, ...) */
 @theme inline {
   --font-sans: var(--font-sans);

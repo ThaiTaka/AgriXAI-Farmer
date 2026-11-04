@@ -40,6 +40,7 @@ ACCESS = {
     ("GET", "/users"): "**chỉ quản trị viên**",
     ("POST", "/users"): "**chỉ quản trị viên**",
     ("PATCH", "/users/{user_id}/status"): "**chỉ quản trị viên**",
+    ("GET", "/admin/overview"): "**chỉ quản trị viên**",
     # V2.1
     ("POST", "/care-guides"): "**chỉ quản trị viên**",
     ("PATCH", "/care-guides/{guide_id}"): "**chỉ quản trị viên**",

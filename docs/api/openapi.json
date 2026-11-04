@@ -4168,6 +4168,91 @@
           }
         }
       }
+    },
+    "/admin/overview": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Overview",
+        "description": "Số liệu toàn hệ thống: nông hộ, lô đất, thu - chi theo tháng, tồn kho, việc chờ xử lý.",
+        "operationId": "overview_admin_overview_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Year"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Month"
+            }
+          },
+          {
+            "name": "months",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 12,
+              "minimum": 1,
+              "description": "Số tháng của dãy thu - chi (tháng cuối là tháng được chọn)",
+              "default": 6,
+              "title": "Months"
+            },
+            "description": "Số tháng của dãy thu - chi (tháng cuối là tháng được chọn)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4661,6 +4746,34 @@
           "checked"
         ],
         "title": "CheckedUpdate"
+      },
+      "CropShare": {
+        "properties": {
+          "crop_type": {
+            "type": "string",
+            "title": "Crop Type"
+          },
+          "crop_name": {
+            "type": "string",
+            "title": "Crop Name"
+          },
+          "plots": {
+            "type": "integer",
+            "title": "Plots"
+          },
+          "area_m2": {
+            "type": "number",
+            "title": "Area M2"
+          }
+        },
+        "type": "object",
+        "required": [
+          "crop_type",
+          "crop_name",
+          "plots",
+          "area_m2"
+        ],
+        "title": "CropShare"
       },
       "CropSuggestionOut": {
         "properties": {
@@ -6046,6 +6159,57 @@
         "type": "object",
         "title": "ExpenseUpdate"
       },
+      "FarmMonth": {
+        "properties": {
+          "owner_id": {
+            "type": "string",
+            "title": "Owner Id"
+          },
+          "income": {
+            "type": "number",
+            "title": "Income"
+          },
+          "expense": {
+            "type": "number",
+            "title": "Expense"
+          }
+        },
+        "type": "object",
+        "required": [
+          "owner_id",
+          "income",
+          "expense"
+        ],
+        "title": "FarmMonth"
+      },
+      "FarmerCounts": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "active": {
+            "type": "integer",
+            "title": "Active"
+          },
+          "locked": {
+            "type": "integer",
+            "title": "Locked"
+          },
+          "without_plot": {
+            "type": "integer",
+            "title": "Without Plot"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "active",
+          "locked",
+          "without_plot"
+        ],
+        "title": "FarmerCounts"
+      },
       "FertilizerPriceIn": {
         "properties": {
           "fertilizer_id": {
@@ -7030,6 +7194,101 @@
           "expires_at"
         ],
         "title": "MediaTokenOut"
+      },
+      "MonthTotal": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "month": {
+            "type": "integer",
+            "title": "Month"
+          },
+          "income": {
+            "type": "number",
+            "title": "Income"
+          },
+          "expense": {
+            "type": "number",
+            "title": "Expense"
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "month",
+          "income",
+          "expense"
+        ],
+        "title": "MonthTotal"
+      },
+      "OverviewOut": {
+        "properties": {
+          "generated_at": {
+            "type": "integer",
+            "title": "Generated At"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "month": {
+            "type": "integer",
+            "title": "Month"
+          },
+          "farmers": {
+            "$ref": "#/components/schemas/FarmerCounts"
+          },
+          "plots": {
+            "$ref": "#/components/schemas/PlotStats"
+          },
+          "months": {
+            "items": {
+              "$ref": "#/components/schemas/MonthTotal"
+            },
+            "type": "array",
+            "title": "Months"
+          },
+          "farms": {
+            "items": {
+              "$ref": "#/components/schemas/FarmMonth"
+            },
+            "type": "array",
+            "title": "Farms"
+          },
+          "stock_value": {
+            "type": "number",
+            "title": "Stock Value"
+          },
+          "stock_kg": {
+            "type": "number",
+            "title": "Stock Kg"
+          },
+          "pending_varieties": {
+            "type": "integer",
+            "title": "Pending Varieties"
+          },
+          "errors_30d": {
+            "type": "integer",
+            "title": "Errors 30D"
+          }
+        },
+        "type": "object",
+        "required": [
+          "generated_at",
+          "year",
+          "month",
+          "farmers",
+          "plots",
+          "months",
+          "farms",
+          "stock_value",
+          "stock_kg",
+          "pending_varieties",
+          "errors_30d"
+        ],
+        "title": "OverviewOut"
       },
       "PasswordChange": {
         "properties": {
@@ -8060,6 +8319,40 @@
         ],
         "title": "PlotOut"
       },
+      "PlotStats": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "area_m2": {
+            "type": "number",
+            "title": "Area M2"
+          },
+          "by_status": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Status"
+          },
+          "by_crop": {
+            "items": {
+              "$ref": "#/components/schemas/CropShare"
+            },
+            "type": "array",
+            "title": "By Crop"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "area_m2",
+          "by_status",
+          "by_crop"
+        ],
+        "title": "PlotStats"
+      },
       "PlotStatus": {
         "type": "string",
         "enum": [
@@ -8693,6 +8986,28 @@
             "type": "string",
             "title": "Full Name"
           },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
           "region": {
             "anyOf": [
               {
@@ -8711,6 +9026,10 @@
           "is_active": {
             "type": "boolean",
             "title": "Is Active"
+          },
+          "created_at": {
+            "type": "integer",
+            "title": "Created At"
           }
         },
         "type": "object",
@@ -8720,7 +9039,8 @@
           "full_name",
           "region",
           "role",
-          "is_active"
+          "is_active",
+          "created_at"
         ],
         "title": "UserSummary"
       },
@@ -9516,6 +9836,10 @@
     {
       "name": "ops",
       "description": "Nhật ký lỗi từ điện thoại và quản lý tài khoản."
+    },
+    {
+      "name": "admin",
+      "description": "Số liệu tổng quan toàn hệ thống cho trang quản trị (chỉ quản trị viên)."
     },
     {
       "name": "health",
