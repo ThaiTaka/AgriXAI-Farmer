@@ -32,6 +32,7 @@ import type {PickedVariety, RootStackParamList} from '../../navigation/types';
 import {colors, space, text} from '../../theme';
 import {cropNameOf} from '../../utils/staticData';
 import {GuideLinks} from '../guide/GuideLinks';
+import {CropVideoRow} from '../video/CropVideoRow';
 import {CareStageAccordion} from './CareStageAccordion';
 import {ProtocolUnavailable} from './ProtocolUnavailable';
 import {useCategoryOf} from './useCategoryOf';
@@ -149,7 +150,15 @@ export function CareProtocolScreen() {
             body="Quy trình gồm 4 giai đoạn với công việc, liều lượng và thời điểm bón, lấy từ nguồn chính thức và ghi rõ nguồn."
           />
         ) : !protocol ? (
-          <ProtocolUnavailable cropName={selection.cropName} entry={availability?.unavailable ?? null} />
+          <>
+            <CropVideoRow
+              cropTypeId={selection.cropType}
+              categoryId={categoryId}
+              cropName={selection.cropName}
+              style={styles.videoRow}
+            />
+            <ProtocolUnavailable cropName={selection.cropName} entry={availability?.unavailable ?? null} />
+          </>
         ) : (
           <>
             {protocols.length > 1 ? (
@@ -192,6 +201,12 @@ export function CareProtocolScreen() {
               <SourceLink testID="care-source-link" url={protocol.source.url} style={styles.sourceLink} />
             </Card>
 
+            <CropVideoRow
+              cropTypeId={selection.cropType}
+              categoryId={categoryId}
+              cropName={selection.cropName}
+              style={styles.videoRow}
+            />
             <GuideLinks cropType={selection.cropType} />
 
             <Text style={[text('eyebrow', colors.text.muted), styles.sectionLabel]}>
@@ -282,6 +297,9 @@ const styles = StyleSheet.create({
   },
   sourceLink: {
     marginTop: space.sm,
+  },
+  videoRow: {
+    marginBottom: space.md,
   },
   sectionLabel: {
     marginBottom: space.sm,

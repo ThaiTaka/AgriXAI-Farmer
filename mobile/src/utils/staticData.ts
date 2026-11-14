@@ -10,6 +10,8 @@ import cropVarietiesJson from '@shared/data/crop_varieties.json';
 import fertilizerJson from '@shared/data/fertilizer_recommendations.json';
 
 import type {VarietyBadge} from '../db/models/CropVariety';
+import type {CropVideo} from '../domain/cropVideo';
+import {videoFor} from '../domain/cropVideo';
 import {livePrice} from '../live/priceIndex';
 import {humanizeCropSlug, slugifyCropName} from './cropSlug';
 
@@ -60,6 +62,8 @@ export interface CropCategory {
   category_id: string;
   category_name: string;
   description: string;
+  /** Only where this category is grown differently from the rest of the crop. */
+  video?: CropVideo;
   varieties: SeedVariety[];
 }
 
@@ -83,6 +87,8 @@ export interface CropType {
   scientific_name: string;
   description: string;
   image?: CropImage;
+  /** "Video cách trồng" on YouTube — see domain/cropVideo.ts. */
+  video?: CropVideo;
   categories: CropCategory[];
 }
 
@@ -94,6 +100,15 @@ export function allCropTypes(): CropType[] {
 
 export function cropTypeById(id: string): CropType | undefined {
   return cropTypes.find(c => c.id === id);
+}
+
+/**
+ * The how-to-grow video for a crop (or its category's own, where it has one);
+ * undefined for a crop the farmer added. Takes the stored crop name too, so a
+ * farmer-typed "Ớt" still finds the catalogue's chili video.
+ */
+export function cropVideo(cropTypeId: string, categoryId?: string | null, cropName?: string | null): CropVideo | undefined {
+  return videoFor(cropTypeById(canonicalCropType(cropTypeId, cropName)), categoryId);
 }
 
 /**
@@ -187,6 +202,31 @@ export interface FertilizerCategory {
   description: string;
 }
 
+/**
+ * The product's own photo — its bag, or the product itself where the maker
+ * shows no picture of that pack — from the official site of the company named
+ * in the product. The company holds the rights; the app shows its name and
+ * links the page.
+ */
+export interface FertilizerImage {
+  /** Bundled file, named after the product: no two products share one. */
+  file: string;
+  /** What the photo shows, e.g. "Bao Đạm Cà Mau (urê hạt đục) 50 kg". */
+  subject: string;
+  /** The company whose site it comes from, e.g. "Công ty CP Phân bón Bình Điền". */
+  owner: string;
+  /** The product page — the credit link. */
+  source_url: string;
+  /** The picture on that page the bundled file was made from. */
+  image_url: string;
+  /** When page and picture were last confirmed (check_fertilizer_images.py). */
+  checked_at: string;
+  /** What was changed from the original, when anything was (e.g. cropped). */
+  changes?: string;
+  /** Why the photo is not exactly the pack sold, when it is not. */
+  note?: string;
+}
+
 export interface FertilizerProduct {
   id: string;
   name: string;
@@ -197,6 +237,8 @@ export interface FertilizerProduct {
   price_max: number;
   region: string;
   source: string;
+  /** Absent for a product with no photo of its own ($meta.image_gaps). */
+  image?: FertilizerImage;
   updated_at: string;
   pack_size_kg: number | null;
   price_per_kg_min: number | null;

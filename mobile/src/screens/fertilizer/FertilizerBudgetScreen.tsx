@@ -5,6 +5,10 @@
  * The tier of a product is its price per kg against the two thresholds in
  * the data file (≤ 12.300₫ bình dân, ≤ 14.500₫ trung bình, above that cao
  * cấp). "Chọn" hands the product to F4 to check it against the shed.
+ *
+ * Each card leads with the product's own photo — its bag, from the maker's
+ * official site — since a farmer knows Đạm Cà Mau from Đạm Phú Mỹ by the bag
+ * faster than by reading "46-0-0". Tapping it shows it large with its source.
  */
 
 import {useNavigation} from '@react-navigation/native';
@@ -24,10 +28,10 @@ import {Tabs} from '../../components/Tabs';
 import type {BudgetTierCode} from '../../domain/budgetTier';
 import {tierBandLabel, tierFor} from '../../domain/budgetTier';
 import type {RootStackParamList} from '../../navigation/types';
-import {colors, radius, space, text} from '../../theme';
+import {colors, space, text} from '../../theme';
 import {formatVnd, formatVndRange} from '../../utils/format';
 import {budgetTiers, fertilizerCategory, fertilizerCollectedAt, fertilizerProducts} from '../../utils/staticData';
-import {FertilizerGroupIcon} from './FertilizerGroupIcon';
+import {FertilizerThumb} from './FertilizerPhoto';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
@@ -86,9 +90,7 @@ export function FertilizerBudgetScreen() {
             return (
               <Card key={product.id} style={styles.item} testID={`budget-${product.id}`}>
                 <View style={styles.row}>
-                  <View style={styles.icon}>
-                    <FertilizerGroupIcon code={product.category} size={22} />
-                  </View>
+                  <FertilizerThumb product={product} />
                   <View style={styles.body}>
                     <Text style={text('bodySm', colors.text.secondary)} numberOfLines={1}>
                       {group?.name ?? product.category} · {product.npk_ratio}
@@ -96,23 +98,27 @@ export function FertilizerBudgetScreen() {
                     <Text style={[text('cardTitle'), styles.title]} numberOfLines={2}>
                       {product.name}
                     </Text>
-                    <Text style={[text('bodySm', colors.text.secondary), styles.meta]} numberOfLines={2}>
-                      {product.region} · {product.source}
-                    </Text>
                   </View>
                 </View>
 
-                <View style={styles.priceRow}>
-                  <View style={styles.priceBody}>
-                    <NumberText size="lg" numberOfLines={1}>
-                      {formatVndRange(product.price_min, product.price_max)}
-                    </NumberText>
-                    {/* Giá mỗi ký là con số bà con so sánh nhiều nhất: 14px, xám
-                        đậm (8.8:1 trên nền trắng) thay cho 12px xám nhạt. */}
-                    <Text style={[text('bodySm', colors.text.secondary), styles.perKg]}>
-                      ≈ {formatVnd(product.price_per_kg_avg ?? 0)}/kg trung bình
-                    </Text>
-                  </View>
+                {/* Nguồn giá trải hết bề ngang và không giới hạn dòng: trong cột
+                    cạnh ảnh, "…giacaphe.com qua vietnambiz.vn" bị cắt mất tên nguồn. */}
+                <Text style={[text('bodySm', colors.text.secondary), styles.meta]}>
+                  {product.region} · {product.source}
+                </Text>
+
+                {/* Giá bao đứng riêng một dòng và được xuống dòng thay vì bị cắt:
+                    đặt cạnh nhãn "Bao 50 kg" thì "610.000 – 660.000₫" chỉ còn
+                    "610.000 – 660.0…" — mất đúng con số trần để so với túi tiền. */}
+                <NumberText size="lg" style={styles.price}>
+                  {formatVndRange(product.price_min, product.price_max)}
+                </NumberText>
+                <View style={styles.perKgRow}>
+                  {/* Giá mỗi ký là con số bà con so sánh nhiều nhất: 14px, xám
+                      đậm (8.8:1 trên nền trắng) thay cho 12px xám nhạt. */}
+                  <Text style={[text('bodySm', colors.text.secondary), styles.perKg]}>
+                    ≈ {formatVnd(product.price_per_kg_avg ?? 0)}/kg trung bình
+                  </Text>
                   <Badge label={packLabel(product.unit)} tone="gray" variant="quiet" />
                 </View>
 
@@ -127,6 +133,13 @@ export function FertilizerBudgetScreen() {
             );
           })
         )}
+
+        <Text style={[text('bodySm', colors.text.muted), styles.footnote]}>
+          Mỗi sản phẩm một ảnh riêng, lấy từ trang chính thức của hãng có tên trong sản phẩm (Đạm Cà Mau, Đạm Phú Mỹ,
+          Đạm Hà Bắc, Lâm Thao, Văn Điển, Bình Điền, SFARM, Điền Trang). Bấm vào ảnh để xem lớn và mở trang sản phẩm.
+          DAP Hàn Quốc và DAP Nga chưa có ảnh vì bảng giá không ghi hãng sản xuất; Sông Gianh HC-15 bao 10 kg chưa có ảnh
+          vì trang của hãng chỉ có bao 50 kg — các thẻ đó giữ biểu tượng.
+        </Text>
       </ScrollView>
     </Screen>
   );
@@ -167,14 +180,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.md,
   },
-  icon: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primary.soft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   body: {
     flex: 1,
     minWidth: 0,
@@ -183,21 +188,24 @@ const styles = StyleSheet.create({
     marginTop: space.xs,
   },
   meta: {
-    marginTop: space.xs,
+    marginTop: space.md,
   },
-  priceRow: {
+  price: {
+    marginTop: space.sm,
+  },
+  perKgRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: space.sm,
-    marginTop: space.md,
+    marginTop: space.xs,
   },
-  priceBody: {
+  perKg: {
     flex: 1,
     minWidth: 0,
   },
-  perKg: {
-    marginTop: space.xs,
+  footnote: {
+    marginTop: space.lg,
   },
   // Nút chiếm cả bề ngang thẻ: chỉ có một hành động ở đây, và một khối xanh
   // đặc thì không thể nhầm với nhãn "Bao 50 kg" bên trên.

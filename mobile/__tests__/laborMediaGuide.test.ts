@@ -9,7 +9,6 @@ import {
   parseImageIds,
   parseSteps,
   videoPlayerHtml,
-  youtubeEmbedHtml,
   youtubeThumbnailUrl,
   youtubeWatchUrl,
 } from '../src/domain/careGuide';
@@ -140,16 +139,10 @@ describe('care guides', () => {
     expect(guidesForStage(guides, 'harvest', undefined).map(g => g.id)).toEqual(['by-round-code', 'general']);
   });
 
-  test('YouTube embed', () => {
+  test('YouTube helpers guides use (the player page itself: cropVideos.test.tsx)', () => {
     expect(isYoutubeId('dQw4w9WgXcQ')).toBe(true);
     expect(isYoutubeId('short')).toBe(false);
     expect(isYoutubeId(null)).toBe(false);
-    const html = youtubeEmbedHtml('dQw4w9WgXcQ');
-    expect(html).toContain('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?playsinline=1');
-    expect(html).toContain('referrerpolicy="strict-origin-when-cross-origin"');
-    expect(html).not.toContain('autoplay=1');
-    expect(youtubeEmbedHtml('dQw4w9WgXcQ', {autoplay: true})).toContain('autoplay=1');
-    expect(() => youtubeEmbedHtml('"><script>')).toThrow();
     expect(youtubeThumbnailUrl('dQw4w9WgXcQ')).toBe('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg');
     expect(() => youtubeThumbnailUrl('../x')).toThrow();
     expect(youtubeWatchUrl('dQw4w9WgXcQ')).toBe('https://www.youtube.com/watch?v=dQw4w9WgXcQ');

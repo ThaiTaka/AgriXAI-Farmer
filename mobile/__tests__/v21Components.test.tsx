@@ -146,8 +146,8 @@ describe('YouTubePlayer', () => {
     });
     const web = tree.root.findByProps({testID: 'youtube-player'});
     expect(web.props.source.baseUrl).toBe('https://www.youtube-nocookie.com');
-    expect(web.props.source.html).toContain('/embed/dQw4w9WgXcQ');
-    expect(web.props.source.html).toContain('autoplay=1');
+    expect(web.props.source.html).toContain('videoId:"dQw4w9WgXcQ"');
+    expect(web.props.source.html).toContain('"autoplay":1');
     expect(web.props.mediaPlaybackRequiresUserAction).toBe(false);
     expect(web.props.androidLayerType).toBe('hardware');
   });

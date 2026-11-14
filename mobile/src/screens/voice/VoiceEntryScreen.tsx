@@ -1,9 +1,10 @@
 /**
  * Nói để ghi — speak one sentence, get the entry filled in, tap Lưu.
  *
- * Recognition runs on the phone (src/voice/speech.ts, Vosk, no network). The
- * sentence becomes a draft (src/domain/voiceEntry.ts) shown as an ordinary
- * form the farmer can correct: kind, amount, fertiliser, quantity, plot, day.
+ * Recognition runs on the phone (src/voice/speech.ts, a Vietnamese Zipformer
+ * model, no network). The sentence becomes a draft (src/domain/voiceEntry.ts)
+ * shown as an ordinary form the farmer can correct: kind, amount, fertiliser,
+ * quantity, plot, day.
  * Nothing is written until "Lưu", and a saved entry can be taken back on the
  * spot ("Hoàn tác") — a misheard number must never sit in the books unseen.
  *
@@ -53,7 +54,7 @@ import {colors, radius, size, space, text} from '../../theme';
 import {formatNumber, formatVnd} from '../../utils/format';
 import {fertilizerProduct, fertilizerProducts} from '../../utils/staticData';
 import type {Listening} from '../../voice/speech';
-import {listen, SpeechError} from '../../voice/speech';
+import {listen, preloadModel, SpeechError} from '../../voice/speech';
 
 type Phase = 'idle' | 'loading' | 'listening';
 
@@ -164,9 +165,11 @@ export function VoiceEntryScreen() {
 
   const stop = useCallback(() => listening.current?.finish(), []);
 
-  // Leaving the screen ends the microphone session.
-  useEffect(() => navigation.addListener('blur', () => listening.current?.finish()), [navigation]);
-  useEffect(() => () => listening.current?.finish(), []);
+  // The model takes a second or two to load: start while the farmer reads the screen.
+  useEffect(() => preloadModel(), []);
+  // Leaving the screen ends the microphone session and drops the half-said sentence.
+  useEffect(() => navigation.addListener('blur', () => listening.current?.cancel()), [navigation]);
+  useEffect(() => () => listening.current?.cancel(), []);
 
   const product = form?.productId ? fertilizerProduct(form.productId) ?? null : null;
   const amount = form && digits(form.amount) ? Number(digits(form.amount)) : null;
@@ -365,7 +368,11 @@ export function VoiceEntryScreen() {
                 onChangeText={v => set('amount', digits(v))}
                 keyboardType="numeric"
                 money
-                hint={draft.unitPrice ? `${formatVnd(draft.unitPrice)} × ${formatNumber(draft.quantity?.value ?? 0)} ${draft.quantity?.unit ?? ''}` : undefined}
+                hint={
+                  draft.unitPrice !== null && draft.unitCount !== null
+                    ? `${formatVnd(draft.unitPrice)}/${draft.unitPriceUnit} × ${formatNumber(draft.unitCount)} ${draft.unitPriceUnit}`
+                    : undefined
+                }
                 style={styles.field}
                 testID="voice-amount"
               />

@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "postinstall": "patch-package && node scripts/fetch-vosk-model.js"
+    "postinstall": "patch-package && node scripts/fetch-speech-model.js"
   },
   "dependencies": {
     "@dr.pogodin/react-native-fs": "2.35.1",
@@ -27,7 +27,6 @@
     "react-native-screens": "^4.16.0",
     "react-native-share": "^12.3.1",
     "react-native-svg": "^15.15.5",
-    "react-native-vosk": "2.1.7",
     "react-native-webview": "14.0.1"
   },
   "devDependencies": {

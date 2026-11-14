@@ -72,12 +72,27 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
+/**
+ * Offline speech recognition for "Nói để ghi" (sherpa-onnx, Apache-2.0). The
+ * .aar is fetched with the model by scripts/fetch-speech-model.js on
+ * `npm install`, checked against a pinned SHA-256, and not committed.
+ */
+def sherpaOnnxAar = file("libs/sherpa-onnx-static-link-onnxruntime-1.13.8.aar")
+if (!sherpaOnnxAar.exists()) {
+    throw new GradleException("Missing android/app/libs/${sherpaOnnxAar.name} — run `node scripts/fetch-speech-model.js` in mobile/ (it also fetches the speech model).")
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.thaitaka.agrilogapp"
+    androidResources {
+        // The speech model (assets/asr-vi) is read straight from the APK;
+        // stored uncompressed it loads without inflating 75 MB first.
+        noCompress 'onnx'
+    }
     defaultConfig {
         applicationId "com.thaitaka.agrilogapp"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -110,6 +125,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation files(sherpaOnnxAar)
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

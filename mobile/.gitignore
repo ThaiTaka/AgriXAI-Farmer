@@ -74,9 +74,11 @@ yarn-error.log
 !.yarn/sdks
 !.yarn/versions
 
-# Offline speech model, fetched by scripts/fetch-vosk-model.js on npm install
-/assets/model-*/
-/assets/model-*.partial/
+# Offline speech model and sherpa-onnx, fetched by scripts/fetch-speech-model.js on npm install
+/android/app/src/main/assets/asr-vi/
+/android/app/libs/*.aar
+*.partial
 
 # Synthesised speech samples cached by scripts/asr_check.py
 /scripts/.asr-samples/
+/scripts/.asr-compare/

@@ -1,0 +1,869 @@
+{
+ "$comment": "Câu sổ ruộng do giọng tổng hợp đọc (edge-tts, Piper vais1000), và đúng chữ mô hình Zipformer tiếng Việt (sherpa-onnx-zipformer-vi-int8-2025-04-20, giải mã greedy) nghe ra — audio sạch, và audio trộn tiếng chợ 10 dB + vang. Sinh bằng scripts/asr_compare.py ngày 2026-10-07 (ADR 0014). Dùng để kiểm bộ đọc câu với chữ thật của mô hình, không phải câu gõ tay.",
+ "pairs": [
+  {
+   "said": "Bán năm mươi bó hoa cúc được một triệu rưỡi",
+   "heard": "BÁN NĂM MƯƠI BÓ HOA CÚC ĐƯỢC MỘT TRIỆU RƯỠI",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua hai bao urê Cà Mau một triệu ba trăm sáu mươi nghìn",
+   "heard": "MUA HAI BAO U CÀ MAU MỘT TRIỆU BA TRĂM SÁU MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón hai mươi ký kali cho lô hoa hồng",
+   "heard": "BÓN HAI MƯƠI KÝ KALI CHO LÔ HOA HỒNG",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả tiền công ba người sáu trăm nghìn",
+   "heard": "TRẢ TIỀN CÔNG BA NGƯỜI SÁU TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm qua đóng tiền điện hai trăm tư nghìn",
+   "heard": "HÔM QUA ĐÓNG TIỀN ĐIỆN HAI TRĂM TƯ NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán hai trăm cành hồng mỗi cành ba nghìn",
+   "heard": "BÁN HAI TRĂM CÀNH HỒNG MỖI CÀNH BA NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón mười lăm ký supe lân lô số một",
+   "heard": "BÓN MƯỜI LĂM KÝ XỐP LÂN SỐ MỘT",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua cây giống hoa cúc hai triệu",
+   "heard": "MUA CÂY GIỐNG HOA CÚC HAI TRIỆU",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Thuê ba người làm cỏ sáu trăm nghìn",
+   "heard": "THUÊ BA NGƯỜI LÀM CỎ SÁU TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm nay bán ba tạ cà chua giá mười hai nghìn một ký",
+   "heard": "HÔM NAY BÁN BA TẠ CÀ CHUA GIÁ MƯỜI HAI NGHÌN MỘT KÝ",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua một chai thuốc trừ sâu một trăm hai mươi lăm nghìn",
+   "heard": "MUA MỘT CHAI THUỐC TRỪ SÂU MỘT TRĂM HAI MƯƠI LĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Xuất kho mười ký phân đạm cho lô số hai",
+   "heard": "XUẤT KHO MƯỜI KÝ PHÂN ĐẠM CHO LÔ SỐ HAI",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Đổ xăng máy bơm năm mươi nghìn",
+   "heard": "ĐỔ XĂNG MÁY BƠM NĂM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán tám mươi bó cẩm chướng được hai triệu tư",
+   "heard": "BÁN TÁM MƯƠI BÓ CẨM TRƯỚNG ĐƯỢC HAI TRIỆU TƯ",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua hai mươi bao phân gà mỗi bao bốn mươi lăm nghìn",
+   "heard": "MUA HAI MƯƠI BAO GÀ MỖI BAO BỐN MƯƠI LĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả tiền nước tưới tháng này một trăm tám mươi nghìn",
+   "heard": "TRẢ TIỀN NƯỚC TƯỚI THÁNG NÀY MỘT TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm kia mua ba cuộn màng phủ một triệu hai",
+   "heard": "HÔM KIA MUA BA CUỘN MÀNG PHỦ MỘT TRIỆU HAI",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Thu được bốn triệu năm trăm nghìn tiền bán hoa hồng",
+   "heard": "THU ĐƯỢC BỐN TRIỆU NĂM TRĂM NGHÌN TIỀN BÁN HOA HỒNG",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón ba bao phân trùn quế cho vườn dâu tây",
+   "heard": "BÓN BA BAO TRÙM QUẾ CHO VƯỜN DÂU TÂY",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Chi hai trăm nghìn tiền chở hoa ra chợ Đà Lạt",
+   "heard": "CHI HAI TRĂM NGHÌN TIỀN CHỞ HOA RA CHỢ ĐÀ LẠT",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Rải năm mươi ký vôi cho ruộng bắp cải",
+   "heard": "RẢI NĂM MƯƠI KÝ VÔI CHO RUỘNG BẮP CẢI",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán một tấn khoai tây được mười tám triệu",
+   "heard": "BÁN MỘT TẤN KHOAI TÂY ĐƯỢC MƯỜI TÁM TRIỆU",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua bốn bao kali Phú Mỹ hai triệu không trăm tám mươi nghìn",
+   "heard": "MUA BỐN BAO KALI PHÚ MỸ HAI TRIỆU KHÔNG TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả công cắt hoa hai người bốn trăm nghìn",
+   "heard": "TRẢ CÔNG CẮT HOA HAI NGƯỜI BỐN TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán năm mươi bó hoa cúc được một triệu rưỡi",
+   "heard": "BÁN NĂM MƯƠI BÓ HOA CÚC ĐƯỢC MỘT TRIỆU RƯỠI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua hai bao urê Cà Mau một triệu ba trăm sáu mươi nghìn",
+   "heard": "MUA HAI BAO U RÊ CÀ MAU MỘT TRIỆU BA TRĂM SÁU MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón hai mươi ký kali cho lô hoa hồng",
+   "heard": "BÓN HAI MƯƠI KÝ KALI CHO LÔ HOA HỒNG",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả tiền công ba người sáu trăm nghìn",
+   "heard": "TRẢ TIỀN CÔNG BA NGƯỜI SÁU TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm qua đóng tiền điện hai trăm tư nghìn",
+   "heard": "HÔM QUA ĐÓNG TIỀN ĐIỆN HAI TRĂM TƯ NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán hai trăm cành hồng mỗi cành ba nghìn",
+   "heard": "BÁN HAI TRĂM CÀNH HỒNG MỖI CÀNH BA NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón mười lăm ký supe lân lô số một",
+   "heard": "BÓN MƯỜI LĂM KÝ LÂN LÔ SỐ MỘT",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua cây giống hoa cúc hai triệu",
+   "heard": "MUA CÂY GIỐNG HOA CÚC HAI TRIỆU",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Thuê ba người làm cỏ sáu trăm nghìn",
+   "heard": "THUÊ BA NGƯỜI LÀM CỎ SÁU TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm nay bán ba tạ cà chua giá mười hai nghìn một ký",
+   "heard": "HÔM NAY BÁN BA TẠ CÀ CHUA GIÁ MƯỜI HAI NGHÌN MỘT KÝ",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua một chai thuốc trừ sâu một trăm hai mươi lăm nghìn",
+   "heard": "MUA MỘT CHAI THUỐC TRỪ SÂU MỘT TRĂM HAI MƯƠI LĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Xuất kho mười ký phân đạm cho lô số hai",
+   "heard": "XUẤT KHO MƯỜI KÝ PHÂN ĐẠM CHO LÔ SỐ HAI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Đổ xăng máy bơm năm mươi nghìn",
+   "heard": "ĐỔ XĂNG MÁY BƠM NĂM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán tám mươi bó cẩm chướng được hai triệu tư",
+   "heard": "BÁN TÁM MƯƠI BÓ CẨM TRƯỚNG ĐƯỢC HAI TRIỆU TƯ",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua hai mươi bao phân gà mỗi bao bốn mươi lăm nghìn",
+   "heard": "MUA HAI MƯƠI BAO GÀ MỖI BAO BỐN MƯƠI LĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả tiền nước tưới tháng này một trăm tám mươi nghìn",
+   "heard": "TRẢ TIỀN NƯỚC TƯỚI THÁNG NÀY MỘT TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm kia mua ba cuộn màng phủ một triệu hai",
+   "heard": "HÔM KIA MUA BA CUỘN MÀNG PHỦ MỘT TRIỆU HAI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Thu được bốn triệu năm trăm nghìn tiền bán hoa hồng",
+   "heard": "THU ĐƯỢC BỐN TRIỆU NĂM TRĂM NGHÌN TIỀN BÁN HOA HỒNG",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón ba bao phân trùn quế cho vườn dâu tây",
+   "heard": "BÓN BÀ BAO PHÂN TRÙNG QUẾ CHO VƯỜN DÂU TÂY",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Chi hai trăm nghìn tiền chở hoa ra chợ Đà Lạt",
+   "heard": "CHI HAI TRĂM NGHÌN TIỀN CHỞ HOA RA CHỢ ĐÀ LẠT",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Rải năm mươi ký vôi cho ruộng bắp cải",
+   "heard": "RẢI NĂM MƯƠI KÝ VÔI CHO RUỘNG BẮP CẢI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán một tấn khoai tây được mười tám triệu",
+   "heard": "BÁN MỘT TẤN KHOAI TÂY ĐƯỢC MƯỜI TÁM TRIỆU",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua bốn bao kali Phú Mỹ hai triệu không trăm tám mươi nghìn",
+   "heard": "MUA BỐN BAO KALI PHÚ MỸ HAI TRIỆU KHÔNG TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả công cắt hoa hai người bốn trăm nghìn",
+   "heard": "TRẢ CÔNG CẮT HOA HAI NGƯỜI BỐN TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán năm mươi bó hoa cúc được một triệu rưỡi",
+   "heard": "BÁN NĂM MƯƠI BÓ HOA CÚC ĐƯỢC MỘT TRIỆU RƯỠI",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua hai bao urê Cà Mau một triệu ba trăm sáu mươi nghìn",
+   "heard": "MUA HAI BAO UE CÀ MAU MỘT TRIỆU BA TRĂM SÁU MƯƠI NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón hai mươi ký kali cho lô hoa hồng",
+   "heard": "BÓN HAI MƯƠI KÝ CAY CHO LÔ HOA HỒNG",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả tiền công ba người sáu trăm nghìn",
+   "heard": "TRẢ TIỀN CÔNG BA NGƯỜI SÁU TRĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm qua đóng tiền điện hai trăm tư nghìn",
+   "heard": "HÔM QUA ĐÓNG TIỀN ĐIỆN HAI TRĂM TƯ NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán hai trăm cành hồng mỗi cành ba nghìn",
+   "heard": "BÁN HAI TRĂM CÀNH HỒNG MỖI CÀNH BA NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón mười lăm ký supe lân lô số một",
+   "heard": "BÓN MƯỜI LĂM KÝ XÚP LÂN SỐ MỘT",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua cây giống hoa cúc hai triệu",
+   "heard": "MUA CÂY GIỐNG HOA CÚC HAI TRIỆU",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Thuê ba người làm cỏ sáu trăm nghìn",
+   "heard": "THUÊ BA NGƯỜI LÀM CỎ SÁU TRĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm nay bán ba tạ cà chua giá mười hai nghìn một ký",
+   "heard": "HÔM NAY BÁN BA TẠ CÀ CHUA GIÁ MƯỜI HAI NGHÌN MỘT KÝ",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua một chai thuốc trừ sâu một trăm hai mươi lăm nghìn",
+   "heard": "MUA MỘT CHAI THUỐC TRỪ SÂU MỘT TRĂM HAI MƯỜI LĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Xuất kho mười ký phân đạm cho lô số hai",
+   "heard": "XUẤT KHO MƯỜI KÝ PHÂN ĐẠM CHO LÔ SỐ HAI",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Đổ xăng máy bơm năm mươi nghìn",
+   "heard": "ĐỒ XĂNG MÁY BƠM NĂM MƯƠI NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán tám mươi bó cẩm chướng được hai triệu tư",
+   "heard": "BÁN TÁM MƯƠI BÓ CẨM TRỨNG ĐƯỢC HAI TRIỆU TƯ",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua hai mươi bao phân gà mỗi bao bốn mươi lăm nghìn",
+   "heard": "MUA HAI MƯƠI BAO KHA MỖI BAO BỐN MƯƠI LĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả tiền nước tưới tháng này một trăm tám mươi nghìn",
+   "heard": "TRẢ TIỀN NƯỚC TƯỚI THÁNG NÀY MỘT TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Hôm kia mua ba cuộn màng phủ một triệu hai",
+   "heard": "HÔM KIA MUA BA CUỘN MÀNG PHỦ MỘT TRIỆU HAY",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Thu được bốn triệu năm trăm nghìn tiền bán hoa hồng",
+   "heard": "THU ĐƯỢC BỐN TRIỆU NĂM TRĂM NGHÌN TIỀN BÁN HOA HỒNG",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Bón ba bao phân trùn quế cho vườn dâu tây",
+   "heard": "BÓN BA BAO TRÙM QUẾ CHO VƯỜN DÂU TỊNH",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Chi hai trăm nghìn tiền chở hoa ra chợ Đà Lạt",
+   "heard": "CHI HAI TRĂM NGHÌN TIỀN CHỞ HOA RA CHỢ ĐÀ LẠT",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Rải năm mươi ký vôi cho ruộng bắp cải",
+   "heard": "DÀI NĂM MƯƠI KÝ PHÔI CHO RUỘNG BẮP CẢI",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán một tấn khoai tây được mười tám triệu",
+   "heard": "BÁN MỘT TẤN KHOAI TÂY ĐƯỢC MƯỜI TÁM TRIỆU",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Mua bốn bao kali Phú Mỹ hai triệu không trăm tám mươi nghìn",
+   "heard": "MUA BÚN BÀO CA PHÚ MỸ HAI TRIỆU KHÔNG TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Trả công cắt hoa hai người bốn trăm nghìn",
+   "heard": "TRẢ CÔNG CẮT HOA HAI NGƯỜI BỐN TRĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "clean"
+  },
+  {
+   "said": "Bán năm mươi bó hoa cúc được một triệu rưỡi",
+   "heard": "BÁN NĂM MƯƠI BÓ HOA CÚC ĐƯỢC MỘT TRIỆU RƯỠI",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua hai bao urê Cà Mau một triệu ba trăm sáu mươi nghìn",
+   "heard": "MUA HAI BAO U RÊ CÀ MAU MỘT TRIỆU BA TRĂM SÁU MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón hai mươi ký kali cho lô hoa hồng",
+   "heard": "BÓN HAI MƯƠI KÝ KALI CHO LÔ HOA HỒNG",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả tiền công ba người sáu trăm nghìn",
+   "heard": "TRẢ TIỀN CÔNG BA NGƯỜI SÁU TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm qua đóng tiền điện hai trăm tư nghìn",
+   "heard": "HÔM QUA ĐÓNG TIỀN ĐIỆN HAI TRĂM TƯ NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán hai trăm cành hồng mỗi cành ba nghìn",
+   "heard": "BÁN HAI TRĂM CÀNH HỒNG MỖI CÀNH BA NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón mười lăm ký supe lân lô số một",
+   "heard": "BÓN MƯỜI LĂM KÝ LÂN LÔ SỐ MỘT",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua cây giống hoa cúc hai triệu",
+   "heard": "MUA CÂY GIỐNG HOA CÚC HAI TRIỆU",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Thuê ba người làm cỏ sáu trăm nghìn",
+   "heard": "THUÊ BA NGƯỜI LÀM CỎ SÁU TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm nay bán ba tạ cà chua giá mười hai nghìn một ký",
+   "heard": "HÔM NAY BÁN BA TẠ CÀ CHUA GIÁ MƯỜI HAI NGHÌN MỘT KÝ",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua một chai thuốc trừ sâu một trăm hai mươi lăm nghìn",
+   "heard": "MUA MỘT CHAI THUỐC TRỪ SÂU MỘT TRĂM HAI MƯƠI LĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Xuất kho mười ký phân đạm cho lô số hai",
+   "heard": "KHO MƯỜ PHÂN ĐẠM CHO LÔ SỐ HAI",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Đổ xăng máy bơm năm mươi nghìn",
+   "heard": "ĐỔ XĂNG MÁY BƠM NĂM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán tám mươi bó cẩm chướng được hai triệu tư",
+   "heard": "BÁN TÁM MƯƠI BÓ TRỨNG ĐƯỢC HAI TRIỆU TƯ",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua hai mươi bao phân gà mỗi bao bốn mươi lăm nghìn",
+   "heard": "MUA HAI MƯƠI BAO GÀ MỖI BAO BỐN MƯƠI LĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả tiền nước tưới tháng này một trăm tám mươi nghìn",
+   "heard": "TRẢ TIỀN NƯỚC TƯỚI THÁNG NÀY MỘT TRĂM TÁM MƯƠI NGHÌN TẬP TRUNG",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm kia mua ba cuộn màng phủ một triệu hai",
+   "heard": "HÔM KIA MUA BA CUỘN MÀNG PHỦ MỘT TRIỆU HAI",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Thu được bốn triệu năm trăm nghìn tiền bán hoa hồng",
+   "heard": "THU ĐƯỢC BỐN TRIỆU NĂM TRĂM NGHÌN TIỀN BÁN HOA HỒNG NHƯ TRƯỚC KIA",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón ba bao phân trùn quế cho vườn dâu tây",
+   "heard": "BA BAO TRÙM QUẾ CHO VƯỜN DÂU TÂY",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Chi hai trăm nghìn tiền chở hoa ra chợ Đà Lạt",
+   "heard": "CHI HAI TRĂM NGHÌN TIỀN CHỞ HOA RA CHỢ ĐÀ LẠT",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Rải năm mươi ký vôi cho ruộng bắp cải",
+   "heard": "RẢI NĂM MƯƠI KÝ VÔI CHO RUỘNG BẮP CẢI",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán một tấn khoai tây được mười tám triệu",
+   "heard": "BÁN MỘT TẤN KHOAI TÂY ĐƯỢC MƯỜI TÁM TRIỆU",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua bốn bao kali Phú Mỹ hai triệu không trăm tám mươi nghìn",
+   "heard": "MUA BỐN BAO KALI PHÚ MỸ HAI TRIỆU KHÔNG TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả công cắt hoa hai người bốn trăm nghìn",
+   "heard": "TRẢ CÔNG CẮT HOA HAI NGƯỜI BỐN TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-HoaiMyNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán năm mươi bó hoa cúc được một triệu rưỡi",
+   "heard": "BÁN NĂM MƯƠI BÓ HOA CÚC ĐƯỢC MỘT TRIỆU RƯỠI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua hai bao urê Cà Mau một triệu ba trăm sáu mươi nghìn",
+   "heard": "MUA HAI BAO U RÊ CÀ MAU MỘT TRIỆU BA TRĂM SÁU MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón hai mươi ký kali cho lô hoa hồng",
+   "heard": "HAI MƯƠI KÝ KALI CHO LÔ HOA HỒNG",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả tiền công ba người sáu trăm nghìn",
+   "heard": "TRẢ TIỀN CÔNG BA NGƯỜI SÁU TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm qua đóng tiền điện hai trăm tư nghìn",
+   "heard": "HÔM QUA ĐÓNG TIỀN ĐIỆN HAI TRĂM TƯ NGHÌN TRÊN XĂNG MÃ CẦU",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán hai trăm cành hồng mỗi cành ba nghìn",
+   "heard": "BÁN HAI TRĂM CÀNH HỒNG MỖI CÀNH BA NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón mười lăm ký supe lân lô số một",
+   "heard": "BỎ MƯỜI LĂM KÝ LÂN LÔ SỐ MỘT",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua cây giống hoa cúc hai triệu",
+   "heard": "MUA CÂY GIỐNG HOA CÚC HAI TRIỆU WIFI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Thuê ba người làm cỏ sáu trăm nghìn",
+   "heard": "THUÊ BA NGƯỜI LÀM CỎ SÁU TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm nay bán ba tạ cà chua giá mười hai nghìn một ký",
+   "heard": "HÔM NAY BÁN BA TẠ CÀ CHUA GIÁ MƯỜI HAI NGHÌN MỘT KÝ",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua một chai thuốc trừ sâu một trăm hai mươi lăm nghìn",
+   "heard": "MUA MỘT CHAI THUỐC TRỪ SÂU MỘT TRĂM HAI MƯƠI LĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Xuất kho mười ký phân đạm cho lô số hai",
+   "heard": "XUẤT KHO MƯỜI KÝ PHÂN ĐẠM CHO LÔ SỐ HAI GIÚP CHÚNG",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Đổ xăng máy bơm năm mươi nghìn",
+   "heard": "ĐỔ XĂNG MÁY BƠM NĂM MƯƠI NGHÌN SỬ DỤNG",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán tám mươi bó cẩm chướng được hai triệu tư",
+   "heard": "BÁN TÁM MƯƠI BÓ TRỨNG ĐƯỢC HAI TRIỆU TƯ",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua hai mươi bao phân gà mỗi bao bốn mươi lăm nghìn",
+   "heard": "MUA HAI MƯƠI BAO MỖI BAO BỐN MƯƠI LĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả tiền nước tưới tháng này một trăm tám mươi nghìn",
+   "heard": "TRẢ TIỀN NƯỚC TƯỚI THÁNG NÀY MỘT TRĂM TÁM MƯƠI NGHÌN THÁNG MƯỜI HAI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm kia mua ba cuộn màng phủ một triệu hai",
+   "heard": "HÔM KIA MUA BA CUỘN MÀNG PHỦ MỘT TRIỆU HAI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Thu được bốn triệu năm trăm nghìn tiền bán hoa hồng",
+   "heard": "THU ĐƯỢC BỐN TRIỆU NĂM TRĂM NGHÌN TIỀN BÁN HOA HỒNG",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón ba bao phân trùn quế cho vườn dâu tây",
+   "heard": "BÓN BÀ BAO TRỒNG QUẾ CHO VƯỜN DÂU TÂY",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Chi hai trăm nghìn tiền chở hoa ra chợ Đà Lạt",
+   "heard": "CHI HAI TRĂM NGHÌN TIỀN CHỞ HOA RA CHỢ ĐÀ LẠT",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Rải năm mươi ký vôi cho ruộng bắp cải",
+   "heard": "RẢI NĂM MƯƠI KÝ VÔI CHO RUỘNG BẮP CẢI",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán một tấn khoai tây được mười tám triệu",
+   "heard": "BÁN MỘT TẤN KHOAI TÂY ĐƯỢC MƯỜI TÁM TRIỆU SẼ ĐƯỢC TĂNG",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua bốn bao kali Phú Mỹ hai triệu không trăm tám mươi nghìn",
+   "heard": "MUA BỐN BAO KALI PHÚ MỸ HAI TRIỆU KHÔNG TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả công cắt hoa hai người bốn trăm nghìn",
+   "heard": "TRẢ CÔNG CẮT HOA HAI NGƯỜI BỐN TRĂM NGHÌN",
+   "voice": "edge-tts vi-VN-NamMinhNeural",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán năm mươi bó hoa cúc được một triệu rưỡi",
+   "heard": "BÁN NĂM MƯƠI BÓ HOA CÚC ĐƯỢC MỘT TRIỆU RƯỠI",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua hai bao urê Cà Mau một triệu ba trăm sáu mươi nghìn",
+   "heard": "MỖI BAO YÊU ƠI CÀ MAU MỘT TRIỆU BA TRĂM SÁU MƯƠI NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón hai mươi ký kali cho lô hoa hồng",
+   "heard": "BÓN HAI MƯƠI KÝ CAY CHO LÔ HOA HỒNG",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả tiền công ba người sáu trăm nghìn",
+   "heard": "TRẢ TIỀN CÔNG BẰNG NGƯỜI SÁU TRĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm qua đóng tiền điện hai trăm tư nghìn",
+   "heard": "HÔM QUA ĐÓNG TIỀN ĐIỆN HAI TRĂM TƯ NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán hai trăm cành hồng mỗi cành ba nghìn",
+   "heard": "BÁN HAI TRĂM CÀNH HỒNG MỖI CANH BA NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón mười lăm ký supe lân lô số một",
+   "heard": "BÓN MƯỜI LĂM KÝ XÚP LÊN LÔ SỐ MỘT",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua cây giống hoa cúc hai triệu",
+   "heard": "MUA CÂY GIỐNG HOA CÓ HAI TRIỆU",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Thuê ba người làm cỏ sáu trăm nghìn",
+   "heard": "THUÊ BA NGƯỜI LÀM CỎ SÁU TRĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm nay bán ba tạ cà chua giá mười hai nghìn một ký",
+   "heard": "HÔM NAY BÁN BA TẠNG CÀ CHUA GIÁ MƯỜI HAI NGHÌN MỘT KÝ",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua một chai thuốc trừ sâu một trăm hai mươi lăm nghìn",
+   "heard": "MUA MỘT CHAI THUỐC TRỪ SÂU MỘT TRĂM HAI MƯƠI LĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Xuất kho mười ký phân đạm cho lô số hai",
+   "heard": "XUẤT KHO MƯỜI KÝ PHÂN ĐẠM CHO LÔ SỐ HAI",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Đổ xăng máy bơm năm mươi nghìn",
+   "heard": "ĐỒ XĂNG MÁY HƠN NĂM MƯƠI NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán tám mươi bó cẩm chướng được hai triệu tư",
+   "heard": "BÁN TÁM MƯƠI BÓ TRỨNG ĐƯỢC HAI TRIỆU TƯ",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua hai mươi bao phân gà mỗi bao bốn mươi lăm nghìn",
+   "heard": "MUA HAI MƯƠI BAO CÀ MỖI BAO BỐN MƯƠI LĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả tiền nước tưới tháng này một trăm tám mươi nghìn",
+   "heard": "TRẢ TIỀN NƯỚC TƯỚI THÁNG NÀY MỘT TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Hôm kia mua ba cuộn màng phủ một triệu hai",
+   "heard": "HÔM KIA MUA BA CUỘN MẢNG PHỦ MỘT TRIỆU HAI",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Thu được bốn triệu năm trăm nghìn tiền bán hoa hồng",
+   "heard": "THU ĐƯỢC BỐN TRIỆU NĂM TRĂM NGHÌN TIỀN BÁN HOA HỒNG",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bón ba bao phân trùn quế cho vườn dâu tây",
+   "heard": "MÓN QUÀ BAO TRÙM QUẾ CHO VƯỜN RAU TẨY",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Chi hai trăm nghìn tiền chở hoa ra chợ Đà Lạt",
+   "heard": "CHI HAI TRĂM NGHÌN TIỀN CHỞ HOA RA CHỢ ĐÀ LẠT",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Rải năm mươi ký vôi cho ruộng bắp cải",
+   "heard": "DÀI NĂM MƯƠI KÍ VÔ CHO RUỘNG BẮP CẢI",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Bán một tấn khoai tây được mười tám triệu",
+   "heard": "BÁN MỘT TẤN KHOAI TÂY ĐƯỢC MƯỜI TÁM TRIỆU",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Mua bốn bao kali Phú Mỹ hai triệu không trăm tám mươi nghìn",
+   "heard": "MÚA BÚN LÀO CAI PHÚ MỸ HAI TRIỆU KHÔNG TRĂM TÁM MƯƠI NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  },
+  {
+   "said": "Trả công cắt hoa hai người bốn trăm nghìn",
+   "heard": "TRẢ CÔNG CẮT HAI NGƯỜI BỐN TRĂM NGHÌN",
+   "voice": "piper vi_VN-vais1000-medium",
+   "audio": "noisy"
+  }
+ ]
+}

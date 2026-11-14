@@ -32,6 +32,8 @@ import {ToolsScreen} from '../screens/ToolsScreen';
 import {VarietyCategoryScreen} from '../screens/variety/VarietyCategoryScreen';
 import {VarietyCropTypeScreen} from '../screens/variety/VarietyCropTypeScreen';
 import {VarietyPickScreen} from '../screens/variety/VarietyPickScreen';
+import {CropVideoLibraryScreen} from '../screens/video/CropVideoLibraryScreen';
+import {CropVideoScreen} from '../screens/video/CropVideoScreen';
 import {WarehouseScreen} from '../screens/warehouse/WarehouseScreen';
 import {WeatherScreen} from '../screens/weather/WeatherScreen';
 import {colors} from '../theme';
@@ -121,6 +123,8 @@ export function RootNavigator() {
             <Stack.Screen name="TaskDetail" component={TaskDetailScreen} />
             <Stack.Screen name="CareGuides" component={CareGuideListScreen} />
             <Stack.Screen name="CareGuide" component={CareGuideScreen} />
+            <Stack.Screen name="CropVideos" component={CropVideoLibraryScreen} />
+            <Stack.Screen name="CropVideo" component={CropVideoScreen} />
             <Stack.Screen name="VoiceEntry" component={VoiceEntryScreen} options={{animation: 'slide_from_bottom'}} />
             <Stack.Screen name="Notifications" component={NotificationsScreen} />
             <Stack.Screen name="Weather" component={WeatherScreen} />

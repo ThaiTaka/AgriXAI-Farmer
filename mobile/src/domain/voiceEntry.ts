@@ -1,7 +1,7 @@
 /**
  * Ghi bằng giọng nói — what a farmer said, turned into a ledger entry.
  *
- * The speech itself is recognised on the phone (Vosk, see src/voice/speech.ts);
+ * The speech itself is recognised on the phone (see src/voice/speech.ts);
  * this module only reads the Vietnamese transcript:
  *
  *   "bán năm mươi bó hoa cúc được một triệu rưỡi"
@@ -48,6 +48,10 @@ export interface VoiceDraft {
   amount: number | null;
   /** Price per unit when said that way ("mười hai nghìn một ký"). */
   unitPrice: number | null;
+  /** The unit that price is for ("ký", "bao", "cành"). */
+  unitPriceUnit: string | null;
+  /** How many of those units the amount is for: 3 tạ at a price per ký → 300. */
+  unitCount: number | null;
   quantity: Quantity | null;
   description: string;
   incomeKind: IncomeKind | null;
@@ -285,6 +289,11 @@ export function findNumbers(tokens: string[]): NumberSpan[] {
       i = j;
       continue;
     }
+    // "mười hai nghìn một ký" is 12.000 a kilo: after a big unit and before a
+    // unit word, "một" belongs to the unit, not to the number (12.100).
+    if (run.length > 1 && run[run.length - 1] === 'một' && run[run.length - 2] in BIG_UNITS && isUnitWord(tokens[j])) {
+      run = run.slice(0, -1);
+    }
     // A run ending in "trăm"/"mươi" followed by nothing numeric is fine; one
     // that fails to parse is split at the first word that breaks it.
     let value = parseVietnameseNumber(run);
@@ -309,12 +318,21 @@ export function findNumbers(tokens: string[]): NumberSpan[] {
 const isDigitWord = (t: string | undefined) => t !== undefined && t in DIGITS && t !== 'không';
 const VERBS = new Set(['bón', 'bán', 'mua', 'nhập', 'xuất', 'rải', 'trả', 'chi', 'đóng', 'thuê', 'lấy', 'dùng', 'thu']);
 
+/** Units a count is said before — where "bà" can only be "ba". */
+const UNIT_SLIPS = new Set(['bao', 'ký', 'kí', 'tạ', 'tấn', 'bó', 'cành', 'thùng', 'chai']);
+
+/** What follows a big unit when "hay" there is the recogniser's "hai" ("một triệu hay"). */
+const AFTER_HAI = new Set([...Object.keys(DIGITS), 'mươi', 'mười', 'trăm', 'nghìn', 'ngàn', 'triệu', 'lẻ', 'linh']);
+
 /**
- * Undoes the slips the offline model makes on these sentences (measured on
- * spoken samples, ADR 0010): "mươi" heard as "mười" or "mỹ", "lăm" as "lâm",
- * "lô" as "lúa", "bón" as "bốn". Each fix applies only where the word as heard
- * cannot be right — "hai mỹ" is not Phú Mỹ, "mười lâm" is not Lâm Thao,
- * "lúa số một" is a plot number, a sentence about fertiliser has a verb.
+ * Undoes the slips the offline recognisers make on these sentences, measured
+ * on spoken samples (ADR 0010, ADR 0014): "mươi" heard as "mười" or "mỹ",
+ * "lăm" as "lâm", "lô" as "lúa", "bón" as "bốn", "hai" as "hay" after a price,
+ * and words of the trade the general model does not know — "supe lân" heard
+ * as "xốp lân", "cẩm chướng" as "cẩm trướng", "trùn quế" as "trùm quế", "urê"
+ * as "ue". Each fix applies only where the words as heard cannot be right —
+ * "hai mỹ" is not Phú Mỹ, "mười lâm" is not Lâm Thao, "lúa số một" is a plot
+ * number, nobody sells "cẩm trứng", a sentence about fertiliser has a verb.
  */
 export function repairHeard(tokens: readonly string[]): string[] {
   const out = [...tokens];
@@ -327,6 +345,18 @@ export function repairHeard(tokens: readonly string[]): string[] {
     else if (out[i] === 'mười' && isDigitWord(prev) && (DIGITS[prev!] ?? 0) >= 2) out[i] = 'mươi';
     else if (out[i] === 'lâm' && next !== 'thao' && (prev === 'mười' || prev === 'mươi' || isDigitWord(prev))) out[i] = 'lăm';
     else if (out[i] === 'lúa' && (next === 'số' || isDigitWord(next))) out[i] = 'lô';
+    else if (out[i] === 'hay' && (prev === 'triệu' || prev === 'nghìn' || prev === 'ngàn' || prev === 'trăm') && !AFTER_HAI.has(next ?? ''))
+      out[i] = 'hai';
+    else if ((out[i] === 'xốp' || out[i] === 'xúp' || out[i] === 'súp') && (next === 'lân' || next === 'lần')) {
+      out[i] = 'supe';
+      out[i + 1] = 'lân';
+    } else if (out[i] === 'cẩm' && (next === 'trướng' || next === 'trứng')) out[i + 1] = 'chướng';
+    else if ((out[i] === 'trùm' || out[i] === 'trùng') && next === 'quế') out[i] = 'trùn';
+    else if (out[i] === 'ue') out[i] = 'urê';
+    // A count before its unit: "bà bao" is "ba bao", "ba tạng" is "ba tạ", "mỗi canh" is "mỗi cành".
+    else if (out[i] === 'bà' && UNIT_SLIPS.has(next ?? '') && out[i + 2] !== 'nhiêu') out[i] = 'ba';
+    else if (out[i] === 'tạng' && isDigitWord(prev)) out[i] = 'tạ';
+    else if (out[i] === 'canh' && (prev === 'mỗi' || isDigitWord(prev) || prev === 'trăm' || prev === 'mươi')) out[i] = 'cành';
   }
   return out;
 }
@@ -335,6 +365,10 @@ export function repairHeard(tokens: readonly string[]): string[] {
 
 const WEIGHT_UNITS: Record<string, number> = {ký: 1, kí: 1, kg: 1, ki: 1, cân: 1, kilô: 1, kilôgam: 1, tạ: 100, tấn: 1000, yến: 10};
 const COUNT_UNITS = new Set(['bó', 'cành', 'thùng', 'két', 'giỏ', 'sọt', 'cây', 'chậu', 'trái', 'quả', 'bịch', 'túi', 'gói', 'xe', 'bao']);
+
+function isUnitWord(token: string | undefined): boolean {
+  return token !== undefined && (token in WEIGHT_UNITS || COUNT_UNITS.has(token));
+}
 
 function quantityAfter(tokens: string[], span: NumberSpan): Quantity | null {
   const next = tokens[span.end];
@@ -497,16 +531,28 @@ export function parseVoiceEntry(transcript: string): VoiceDraft {
   // "mười hai nghìn một ký", "mỗi bao sáu trăm tám mươi nghìn": a price per unit.
   let amount: number | null = moneySpan?.value ?? null;
   let unitPrice: number | null = null;
-  if (moneySpan) {
+  let unitPriceUnit: string | null = null;
+  let unitCount: number | null = null;
+  // "một ký" / "mỗi bao" around the price: said once, so left out of the description.
+  const perUnitWords: number[] = [];
+  if (moneySpan && quantity) {
     const before = tokens[moneySpan.start - 1];
-    const after = tokens.slice(moneySpan.end, moneySpan.end + 2).join(' ');
-    const perUnit =
-      before === 'mỗi' ||
-      tokens[moneySpan.start - 2] === 'mỗi' ||
-      /^(một|mỗi) (ký|kí|kg|bao|bó|cành|tạ|thùng)$/.test(after);
-    if (perUnit && quantity) {
+    const [first, second] = tokens.slice(moneySpan.end, moneySpan.end + 2);
+    let unit: string | null = null;
+    if ((first === 'một' || first === 'mỗi') && isUnitWord(second)) {
+      unit = second;
+      perUnitWords.push(moneySpan.end, moneySpan.end + 1);
+    } else if (tokens[moneySpan.start - 2] === 'mỗi' && isUnitWord(before)) {
+      unit = before;
+      perUnitWords.push(moneySpan.start - 2, moneySpan.start - 1);
+    }
+    if (unit !== null || before === 'mỗi') {
       unitPrice = moneySpan.value;
-      amount = quantity.value * moneySpan.value;
+      unitPriceUnit = unit ?? quantity.unit;
+      // A price per ký for a quantity in tạ counts kilos: 3 tạ × 12.000/ký = 300 × 12.000.
+      const perKg = unit !== null && unit in WEIGHT_UNITS ? WEIGHT_UNITS[unit] : null;
+      unitCount = perKg !== null && quantity.kg !== null ? quantity.kg / perKg : quantity.value;
+      amount = Math.round(unitCount * unitPrice);
     }
   }
 
@@ -557,7 +603,7 @@ export function parseVoiceEntry(transcript: string): VoiceDraft {
 
   // Description: what was said, minus the money and the filler, with the
   // remaining numbers as digits ("Bán 50 bó hoa cúc").
-  const skip = new Set<number>();
+  const skip = new Set<number>(perUnitWords);
   if (moneySpan) for (let k = moneySpan.start; k < moneySpan.end; k++) skip.add(k);
   const words: string[] = [];
   for (let k = 0; k < tokens.length; k++) {
@@ -585,6 +631,8 @@ export function parseVoiceEntry(transcript: string): VoiceDraft {
     transcript: heard,
     amount,
     unitPrice,
+    unitPriceUnit,
+    unitCount,
     quantity,
     description,
     incomeKind: kind === 'income' ? 'product' : null,

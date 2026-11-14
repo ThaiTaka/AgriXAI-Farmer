@@ -1,9 +1,11 @@
 /**
  * Chọn giống — bước 3/3: giống chi tiết.
  *
- * One card per variety: name + optional soft badge, a 2–3 line description, a
- * radio mark on the right. Tapping selects and pops back to the plot form.
- * Below the list: "+ Thêm giống mới" and "Không rõ giống" (record the crop only).
+ * The how-to-grow video of this group first (the group's own where it is grown
+ * differently — ớt cay, cà phê chè — else the crop's), then one card per
+ * variety: name + optional soft badge, a 2–3 line description, a radio mark on
+ * the right. Tapping selects and pops back to the plot form. Below the list:
+ * "+ Thêm giống mới" and "Không rõ giống" (record the crop only).
  */
 
 import type {RouteProp} from '@react-navigation/native';
@@ -31,6 +33,7 @@ import {popToPicker} from '../../navigation/pickerReturn';
 import type {RootStackParamList} from '../../navigation/types';
 import {colors, radius, space, text} from '../../theme';
 import {cropCategory, cropTypeById, VARIETY_BADGE_LABELS} from '../../utils/staticData';
+import {CropVideoRow} from '../video/CropVideoRow';
 import {AddVarietySheet} from './AddVarietySheet';
 import {CropPhotoImage} from './CropPhoto';
 import {useVarietyCatalogue} from './useVarietyCatalogue';
@@ -98,6 +101,7 @@ export function VarietyPickScreen() {
             {cropName} › {categoryName}
           </Text>
         </View>
+        <CropVideoRow cropTypeId={params.cropTypeId} categoryId={params.categoryId} style={styles.video} />
         {varieties.length === 0 ? (
           <EmptyState
             title="Chưa có dữ liệu"
@@ -198,6 +202,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: space.md,
+    marginBottom: space.md,
+  },
+  video: {
     marginBottom: space.md,
   },
   thumb: {

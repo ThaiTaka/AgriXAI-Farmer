@@ -84,9 +84,10 @@ export function FertilizerGroupsScreen() {
         </View>
 
         <Text style={[text('bodySm', colors.text.secondary), styles.footnote]}>
-          Giá tham khảo thu thập ngày {fertilizerCollectedAt()} từ sfarm.vn và giacaphe.com (qua
-          vietnambiz.vn); thay đổi theo vùng và thời điểm. Nguồn sự thật khi vận hành là bảng giá do
-          quản trị viên cập nhật.
+          Giá tham khảo thu thập ngày {fertilizerCollectedAt()}: phân vô cơ và hữu cơ từ sfarm.vn và
+          giacaphe.com (qua vietnambiz.vn), nhóm vi sinh từ cửa hàng của hãng và cửa hàng bán lẻ — nguồn
+          ghi ở từng sản phẩm. Giá thay đổi theo vùng và thời điểm; nguồn sự thật khi vận hành là bảng giá
+          do quản trị viên cập nhật.
         </Text>
       </ScrollView>
     </Screen>

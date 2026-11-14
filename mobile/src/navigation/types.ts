@@ -79,6 +79,10 @@ export type RootStackParamList = {
   /** V2.1 — care guides with video, for one crop or all. */
   CareGuides: {cropType?: string} | undefined;
   CareGuide: {guideId: string};
+  /** Every catalogue crop with its how-to-grow video. */
+  CropVideos: undefined;
+  /** One crop's how-to-grow video, playing; `categoryId` picks a category's own video. */
+  CropVideo: {cropTypeId: string; categoryId?: string | null};
   /** V2.2 — messages from the admin and the server; `focusId` scrolls to and opens one. */
   Notifications: {focusId?: string} | undefined;
   /** V2.2 — the village forecast for 7 days and the official warnings. */

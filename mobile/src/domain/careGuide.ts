@@ -56,43 +56,9 @@ export function guidesForStage<G extends {stageCode: string | null}>(
     .sort((a, b) => Number(forThisRound(b)) - Number(forThisRound(a)));
 }
 
-const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
-
-export function isYoutubeId(id: string | null | undefined): id is string {
-  return !!id && YOUTUBE_ID.test(id);
-}
-
-/**
- * The page the WebView loads: YouTube's own embed, full width at 16:9.
- * youtube-nocookie keeps the player from setting tracking cookies on a
- * farmer's phone; `playsinline` keeps it inside the app instead of jumping to
- * fullscreen on iOS. `autoplay` is for a player mounted by the farmer's own
- * tap on the poster, so that one tap starts the video.
- */
-export function youtubeEmbedHtml(id: string, {autoplay = false}: {autoplay?: boolean} = {}): string {
-  if (!isYoutubeId(id)) throw new Error('invalid YouTube id');
-  const params = `playsinline=1&rel=0&modestbranding=1&iv_load_policy=3${autoplay ? '&autoplay=1' : ''}`;
-  const src = `https://www.youtube-nocookie.com/embed/${id}?${params}`;
-  return (
-    '<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1">' +
-    '<style>html,body{margin:0;background:#000;height:100%}iframe{border:0;width:100%;height:100%}</style>' +
-    `</head><body><iframe src="${src}" referrerpolicy="strict-origin-when-cross-origin" ` +
-    'allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></body></html>'
-  );
-}
-
-/**
- * The video's poster from YouTube's image server — a ~30 KB JPEG shown until
- * the farmer taps play, instead of a whole player loaded up front.
- */
-export function youtubeThumbnailUrl(id: string): string {
-  if (!isYoutubeId(id)) throw new Error('invalid YouTube id');
-  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-}
-
-export function youtubeWatchUrl(id: string): string {
-  return `https://www.youtube.com/watch?v=${id}`;
-}
+// The YouTube helpers moved to domain/youtube.ts with the crop videos; guides
+// keep importing them from here.
+export {isYoutubeId, youtubeThumbnailUrl, youtubeWatchUrl} from './youtube';
 
 /**
  * The page a WebView loads to play one of the farmer's own videos — the file

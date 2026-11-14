@@ -3,6 +3,8 @@
  * words with their accents and numbers as words, the way a farmer says them.
  */
 
+import zipformer from './fixtures/zipformer_ledger.json';
+
 import {
   bagSizeKg,
   fertilizerHint,
@@ -81,7 +83,36 @@ describe('khoản thu', () => {
     const d = parseVoiceEntry('bán hai trăm cành hồng mỗi cành ba nghìn');
     expect(d.kind).toBe('income');
     expect(d.unitPrice).toBe(3_000);
+    expect(d.unitPriceUnit).toBe('cành');
+    expect(d.unitCount).toBe(200);
     expect(d.amount).toBe(600_000);
+    expect(d.description).toBe('Bán 200 cành hồng');
+  });
+
+  test('"mười hai nghìn một ký" là 12.000 mỗi ký, và 3 tạ là 300 ký', () => {
+    // Read as 12.100 before 07/10/2026: the "một" of "một ký" went into the number.
+    const d = parseVoiceEntry('Hôm nay bán ba tạ cà chua giá mười hai nghìn một ký');
+    expect(d.kind).toBe('income');
+    expect(d.unitPrice).toBe(12_000);
+    expect(d.unitPriceUnit).toBe('ký');
+    expect(d.unitCount).toBe(300);
+    expect(d.amount).toBe(3_600_000);
+    expect(d.description).toBe('Bán 3 tạ cà chua');
+  });
+
+  test('"một" after a ten is part of the number: hai mươi một bao is 21', () => {
+    const d = parseVoiceEntry('mua hai mươi một bao phân gà mỗi bao bốn mươi lăm nghìn');
+    expect(d.quantity?.bags).toBe(21);
+    expect(d.unitPriceUnit).toBe('bao');
+    expect(d.amount).toBe(945_000);
+    expect(d.description).toBe('Mua 21 bao phân gà');
+  });
+
+  test('a price per tạ for a quantity in ký', () => {
+    const d = parseVoiceEntry('bán năm mươi ký su su giá hai trăm nghìn một tạ');
+    expect(d.unitPriceUnit).toBe('tạ');
+    expect(d.unitCount).toBe(0.5);
+    expect(d.amount).toBe(100_000);
   });
 
   test('"thu hoạch" là thu hoạch, không phải thu tiền', () => {
@@ -286,6 +317,59 @@ describe('câu máy nghe thật (Vosk, mô hình nhỏ tiếng Việt, có giớ
     expect(repairHeard('lân lâm thao mười bao'.split(' '))).toEqual(['lân', 'lâm', 'thao', 'mười', 'bao']);
     expect(repairHeard('bốn bao urê'.split(' '))[0]).toBe('bón');
     expect(repairHeard('bán bốn bao urê'.split(' '))[1]).toBe('bốn');
+  });
+});
+
+describe('câu máy nghe thật (Zipformer tiếng Việt, ADR 0014)', () => {
+  // Words of the trade the general model does not know, heard by
+  // sherpa-onnx-zipformer-vi-int8-2025-04-20 from the samples in the fixture.
+  test('"xốp lân" is supe lân', () => {
+    const d = parseVoiceEntry('BÓN MƯỜI LĂM KÝ XỐP LÂN SỐ MỘT');
+    expect(d.kind).toBe('stock_out');
+    expect(d.fertilizer?.productId).toBe('sieu_lan_lam_thao');
+    expect(d.quantity?.kg).toBe(15);
+  });
+
+  test('"cẩm trướng" is cẩm chướng, "trùm quế" is trùn quế, "ue" is urê', () => {
+    expect(parseVoiceEntry('BÁN TÁM MƯƠI BÓ CẨM TRƯỚNG ĐƯỢC HAI TRIỆU TƯ').description).toBe('Bán 80 bó cẩm chướng');
+    expect(parseVoiceEntry('BÓN BA BAO TRÙM QUẾ CHO VƯỜN DÂU TÂY').fertilizer?.category).toBe('huu_co');
+    const urea = parseVoiceEntry('MUA HAI BAO UE CÀ MAU MỘT TRIỆU BA TRĂM SÁU MƯƠI NGHÌN');
+    expect(urea.kind).toBe('stock_in');
+    expect(urea.fertilizer?.productId).toBe('ure_ca_mau');
+  });
+
+  test('"một triệu hay" at the end is một triệu hai; "hay" between two prices stays', () => {
+    expect(parseVoiceEntry('HÔM KIA MUA BA CUỘN MÀNG PHỦ MỘT TRIỆU HAY').amount).toBe(1_200_000);
+    expect(repairHeard('một triệu hay hai triệu'.split(' '))[2]).toBe('hay');
+  });
+
+  test('a count before its unit: "bà bao", "ba tạng", "mỗi canh"', () => {
+    expect(parseVoiceEntry('BÓN BÀ BAO PHÂN TRÙNG QUẾ CHO VƯỜN DÂU TÂY').quantity?.bags).toBe(3);
+    expect(parseVoiceEntry('HÔM NAY BÁN BA TẠNG CÀ CHUA GIÁ MƯỜI HAI NGHÌN MỘT KÝ').amount).toBe(3_600_000);
+    expect(parseVoiceEntry('BÁN HAI TRĂM CÀNH HỒNG MỖI CANH BA NGHÌN').amount).toBe(600_000);
+    expect(repairHeard('bà bao nhiêu tuổi'.split(' '))[0]).toBe('bà');
+  });
+
+  test('what the model heard reads into the same entry as what was said', () => {
+    // 72 sentences × clean / market noise. Measured 07/10/2026; the old Vosk
+    // set-up, through this same reader, got the amount right 50/72 and 24/72.
+    type Pair = {said: string; heard: string; audio: 'clean' | 'noisy'};
+    const score = {clean: {amount: 0, entry: 0}, noisy: {amount: 0, entry: 0}};
+    for (const {said, heard, audio} of (zipformer as {pairs: Pair[]}).pairs) {
+      const want = parseVoiceEntry(said);
+      const got = parseVoiceEntry(heard);
+      const amount = got.amount === want.amount;
+      score[audio].amount += Number(amount);
+      score[audio].entry += Number(
+        amount &&
+          got.kind === want.kind &&
+          JSON.stringify(got.quantity) === JSON.stringify(want.quantity) &&
+          got.fertilizer?.category === want.fertilizer?.category,
+      );
+    }
+    expect(score.clean).toEqual({amount: 72, entry: 66});
+    expect(score.noisy.amount).toBe(72);
+    expect(score.noisy.entry).toBeGreaterThanOrEqual(59);
   });
 });
 

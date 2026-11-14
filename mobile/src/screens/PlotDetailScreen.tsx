@@ -40,6 +40,7 @@ import {TaskHistorySection} from './care/TaskHistorySection';
 import {ProtocolUnavailable} from './care/ProtocolUnavailable';
 import {useCategoryOf} from './care/useCategoryOf';
 import {GuideLinks} from './guide/GuideLinks';
+import {CropVideoRow} from './video/CropVideoRow';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'PlotDetail'>;
@@ -198,8 +199,19 @@ function CareTab({plot}: {plot: Plot}) {
     [protocol, active?.stage, plot.plantedAt],
   );
 
+  // The crop's how-to video sits at the top of the tab whether or not the
+  // province has a protocol for it — for rau muống it is all there is.
+  const video = (
+    <CropVideoRow cropTypeId={plot.cropType} categoryId={categoryId} cropName={plot.cropName} style={styles.videoRow} />
+  );
+
   if (!protocol) {
-    return <ProtocolUnavailable cropName={cropName} entry={unavailable} />;
+    return (
+      <>
+        {video}
+        <ProtocolUnavailable cropName={cropName} entry={unavailable} />
+      </>
+    );
   }
 
   return (
@@ -241,6 +253,7 @@ function CareTab({plot}: {plot: Plot}) {
         </View>
       </Card>
 
+      {video}
       <GuideLinks cropType={plot.cropType} />
 
       {current ? (
@@ -362,6 +375,9 @@ const styles = StyleSheet.create({
     marginTop: space.xs,
   },
   stageHeader: {
+    marginBottom: space.md,
+  },
+  videoRow: {
     marginBottom: space.md,
   },
   stageTitle: {

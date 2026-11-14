@@ -11,6 +11,9 @@
  * V2.2: when the admin has entered a newer price on the server, it shows under
  * the survey's range with its date, and it is the price every cost estimate
  * uses (live/prices.ts).
+ *
+ * Each card carries the product's own photo, as on the budget list
+ * (FertilizerPhoto); tapping it shows it large with its source.
  */
 
 import type {RouteProp} from '@react-navigation/native';
@@ -39,6 +42,7 @@ import {
   missingPriceMessage,
 } from '../../utils/staticData';
 import {FertilizerGroupIcon} from './FertilizerGroupIcon';
+import {FertilizerThumb} from './FertilizerPhoto';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'FertilizerProducts'>;
@@ -118,18 +122,23 @@ export function FertilizerProductsScreen() {
             ) : (
               products.map(product => (
                 <Card key={product.id} testID={`fert-${product.id}`} style={styles.item}>
-                  <View style={styles.titleRow}>
-                    <Text style={[text('cardTitle'), styles.title]} numberOfLines={2}>
-                      {product.name}
-                    </Text>
-                    {product.budget_tier ? (
-                      <Badge label={tierName(product.budget_tier)} tone={TIER_TONE[product.budget_tier]} />
-                    ) : null}
-                  </View>
+                  <View style={styles.head}>
+                    <FertilizerThumb product={product} size={64} />
+                    <View style={styles.headBody}>
+                      <View style={styles.titleRow}>
+                        <Text style={[text('cardTitle'), styles.title]} numberOfLines={2}>
+                          {product.name}
+                        </Text>
+                        {product.budget_tier ? (
+                          <Badge label={tierName(product.budget_tier)} tone={TIER_TONE[product.budget_tier]} />
+                        ) : null}
+                      </View>
 
-                  <View style={styles.metaRow}>
-                    <Badge label={product.npk_ratio} tone="gray" />
-                    <Text style={text('caption', colors.text.muted)}>{product.unit}</Text>
+                      <View style={styles.metaRow}>
+                        <Badge label={product.npk_ratio} tone="gray" />
+                        <Text style={text('caption', colors.text.muted)}>{product.unit}</Text>
+                      </View>
+                    </View>
                   </View>
 
                   <NumberText size="lg" numberOfLines={1} style={styles.price}>
@@ -153,7 +162,9 @@ export function FertilizerProductsScreen() {
                     </View>
                   ) : null}
 
-                  <Text style={[text('caption', colors.text.muted), styles.source]} numberOfLines={2}>
+                  {/* Không giới hạn dòng: nguồn và ngày là thứ cho bà con biết giá
+                      này có thật, cắt mất "cập nhật 2026-10-07" là mất điều đó. */}
+                  <Text style={[text('caption', colors.text.muted), styles.source]}>
                     {product.region} · {product.source} · cập nhật {product.updated_at}
                   </Text>
                 </Card>
@@ -170,6 +181,10 @@ export function FertilizerProductsScreen() {
                 )
                 .join(' · ')}
               .
+            </Text>
+            <Text style={[text('bodySm', colors.text.muted), styles.photoNote]}>
+              Mỗi sản phẩm một ảnh riêng, lấy từ trang chính thức của hãng có tên trong sản phẩm. Bấm vào ảnh để xem
+              lớn và mở trang sản phẩm.
             </Text>
           </>
         )}
@@ -207,6 +222,15 @@ const styles = StyleSheet.create({
   item: {
     marginBottom: space.md,
   },
+  head: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: space.md,
+  },
+  headBody: {
+    flex: 1,
+    minWidth: 0,
+  },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -216,8 +240,11 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
   },
+  // Wraps: a long composition ("hữu cơ 15% + vi sinh") pushes the pack size
+  // to the next line instead of off the card.
   metaRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
     gap: space.sm,
     marginTop: space.sm,
@@ -230,5 +257,8 @@ const styles = StyleSheet.create({
   },
   footnote: {
     marginTop: space.xl,
+  },
+  photoNote: {
+    marginTop: space.sm,
   },
 });
