@@ -8,6 +8,7 @@
     "extensibility": "Bảng crop_varieties là dữ liệu MỞ RỘNG ĐƯỢC qua UI/API: người dùng thêm giống mới (kể cả cây trồng chưa có trong danh mục) bằng nút '+ Thêm giống mới', lưu SQLite cục bộ rồi đồng bộ lên server. File này chỉ là seed ban đầu.",
     "id_policy": "Bản ghi seed trong CSDL có id = 'seed_' + variety.id. Giống bị gỡ khỏi file này được máy chủ đánh dấu xoá mềm khi seed lại, nên điện thoại nhận được trong danh sách 'deleted' lúc đồng bộ; lô đất đã gắn giống cũ vẫn giữ tên giống đã lưu.",
     "image_policy": "Mỗi loại cây có một ảnh minh hoạ lấy từ Wikimedia Commons với giấy phép tự do (CC0, CC BY, CC BY-SA hoặc public domain); `image` ghi tác giả, giấy phép và trang gốc để ứng dụng hiển thị ghi công. Ảnh được nhúng trong ứng dụng (mobile/src/assets/crops) nên xem được khi không có mạng.",
+    "video_policy": "Mỗi loại cây có một video tham khảo cách trồng trên YouTube (`video`); loại con nào có cách trồng khác hẳn thì có video riêng của loại con đó (ớt cay chỉ địa, ớt cay chỉ thiên, cà phê chè). Thứ tự chọn: kênh chính thức ở Lâm Đồng (Trung tâm Khuyến nông tỉnh, Báo và Phát thanh, Truyền hình Lâm Đồng, Báo Lâm Đồng) → kênh của cơ quan nhà nước khác (báo, đài truyền hình, trung tâm/trạm khuyến nông) → chỉ khi không có video chính thức nào nói về cách trồng loài đó mới dùng kênh của nhà vườn, cửa hàng (ghi `source_kind: community`). Mỗi video đã được kiểm tra ngày `checked_at`: còn trên YouTube, cho phép phát nhúng trong ứng dụng, và nội dung (đọc qua phụ đề tự động) nói đúng về cách trồng, chăm sóc loài đó. Tiêu đề, tên kênh, thời lượng, ngày đăng chép từ YouTube. Video chỉ để tham khảo cách làm: liều lượng phân, thuốc và lịch bón vẫn theo quy trình của tỉnh trong ứng dụng. Kiểm tra lại video còn xem được: `python shared/data/check_crop_videos.py`.",
     "badge_values": {
       "popular": "Phổ biến — nguồn ghi rõ giống đang được trồng phổ biến / chủ lực",
       "new": "Mới — giống mới chọn tạo / được công nhận gần đây theo nguồn",
@@ -46,6 +47,16 @@
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Dendragrand1_(2)ra.jpg"
+      },
+      "video": {
+        "youtube_id": "nwGvgJdZjmY",
+        "title": "Hướng dẫn kỹ thuật trồng và chăm sóc cây hoa cúc",
+        "channel": "khuyến nông",
+        "channel_url": "https://www.youtube.com/@khuyennongNB",
+        "source_kind": "official",
+        "duration_s": 803,
+        "published_at": "2025-04-24",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -209,6 +220,16 @@
         "license": "CC0",
         "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
         "source_url": "https://commons.wikimedia.org/wiki/File:Roses_In_Dalat_(257067009).jpeg"
+      },
+      "video": {
+        "youtube_id": "q79ifi6rBVk",
+        "title": "Trồng hoa hồng theo quy trình hữu cơ I Lâm Đồng TV",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 201,
+        "published_at": "2025-02-13",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -400,6 +421,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:%C4%90%C3%A0_L%E1%BA%A1t_n%C4%83m_2018,_tr%E1%BB%93ng_hoa_trong_v%C6%B0%E1%BB%9Dn_k%C3%ADnh_(hoa_c%E1%BA%A9m_ch%C6%B0%E1%BB%9Bng)_(1).jpg"
       },
+      "video": {
+        "youtube_id": "oa1h34Zp2lk",
+        "title": "\"Hái\" tiền tỷ nhờ trồng hoa cẩm chướng 4.0 xuất ngoại | VTC16",
+        "channel": "KÊNH VTC16",
+        "channel_url": "https://www.youtube.com/@K%C3%8ANHVTC16",
+        "source_kind": "official",
+        "duration_s": 247,
+        "published_at": "2019-02-07",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "carnation_spray",
@@ -538,6 +569,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Gerbera_Jamesonii_-_flower_view_01.jpg"
       },
+      "video": {
+        "youtube_id": "y0PPxOxfPYM",
+        "title": "Trồng hoa đồng tiền ở Tân Văn",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 120,
+        "published_at": "2023-04-21",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "gerbera_dutch",
@@ -612,6 +653,16 @@
         "license": "CC BY-SA 2.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:%E6%9D%B1%E6%96%B9%E7%99%BE%E5%90%88_Lilium_Sorbonne_-%E5%BB%A3%E5%B7%9E%E5%86%A0%E5%8B%9D%E8%BE%B2%E6%A5%AD%E5%85%AC%E5%9C%92_Guangzhou,_China-_(45333003971).jpg"
+      },
+      "video": {
+        "youtube_id": "v6HuU5Rs-3I",
+        "title": "Trồng hoa ly không nhà kính | Lâm Đồng TV",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 204,
+        "published_at": "2024-04-10",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -696,6 +747,16 @@
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:20210620_Hortus_botanicus_Leiden_-_Gladiolus_%C3%97_hortulanus.jpg"
+      },
+      "video": {
+        "youtube_id": "co07iTu1Tck",
+        "title": "Chia Sẻ Kinh Nghiệm Trồng Hoa Lay Ơn HTX Hoa Mây Sanh I Trạm Khuyến Nông An Dương",
+        "channel": "Sổ Tay Nông Nghiệp - Hải Phòng",
+        "channel_url": "https://www.youtube.com/@Sotaynongnghiepknhaiphong",
+        "source_kind": "official",
+        "duration_s": 396,
+        "published_at": "2024-11-28",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -798,6 +859,16 @@
         "license": "CC BY-SA 2.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:%E6%B4%8B%E6%A1%94%E6%A2%97-%E9%87%8D%E7%93%A3_Eustoma_grandiflorum_-%E9%A6%99%E6%B8%AF%E5%85%AC%E5%9C%92_Hong_Kong_Park-_(9229894606).jpg"
+      },
+      "video": {
+        "youtube_id": "fyUOc3N2IPw",
+        "title": "Thêm lựa chọn mới cho người trồng hoa cát tường",
+        "channel": "Báo Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@baolamong7685",
+        "source_kind": "lam_dong",
+        "duration_s": 251,
+        "published_at": "2022-06-14",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -937,6 +1008,16 @@
         "license_url": "",
         "source_url": "https://commons.wikimedia.org/wiki/File:LimoniumSinuatum.jpg"
       },
+      "video": {
+        "youtube_id": "Nl0yx4cwb1E",
+        "title": "Chia Sẻ Kĩ Thuật Trồng Và Chăm Sóc Hoa Salem | Cách gieo trồng và chăm sóc salem",
+        "channel": "Siêu Thị Hạt Giống",
+        "channel_url": "https://www.youtube.com/@sieuthihatgiong2026",
+        "source_kind": "community",
+        "duration_s": 431,
+        "published_at": "2019-09-03",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "limonium_imported",
@@ -1011,6 +1092,16 @@
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:%C4%90%C3%A0_L%E1%BA%A1t_th6n2022,_Ks_Golf_Valley_(ch%E1%BA%ADu_lan_tr%E1%BA%AFng).jpg"
+      },
+      "video": {
+        "youtube_id": "nBLxGdpd6ZI",
+        "title": "Kỹ thuật trồng và chăm sóc lan hồ điệp",
+        "channel": "Quảng Ninh TV",
+        "channel_url": "https://www.youtube.com/@quangninhtv",
+        "source_kind": "official",
+        "duration_s": 902,
+        "published_at": "2022-01-21",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -1175,6 +1266,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Oncidium_cultivars_flowers_in_sunshine.jpg"
       },
+      "video": {
+        "youtube_id": "h-hfhOsz_Z8",
+        "title": "Kỹ thuật trồng và chăm sóc hoa lan vũ nữ | QTV",
+        "channel": "Quảng Ninh TV",
+        "channel_url": "https://www.youtube.com/@quangninhtv",
+        "source_kind": "official",
+        "duration_s": 920,
+        "published_at": "2020-12-08",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "oncidium_cut",
@@ -1242,6 +1343,16 @@
         "license": "Public domain",
         "license_url": "",
         "source_url": "https://commons.wikimedia.org/wiki/File:Several_green_unripe_and_red_ripe_tomatoes_growing_on_the_vine._(086c449c-117b-44f6-a7c4-e2acbf284092).JPG"
+      },
+      "video": {
+        "youtube_id": "9npHCv9WvGI",
+        "title": "Nâng cao thu nhập từ cà chua giống mới Boxer",
+        "channel": "KHUYẾN NÔNG LÂM ĐỒNG",
+        "channel_url": "https://www.youtube.com/@khuyennonglamdong",
+        "source_kind": "lam_dong",
+        "duration_s": 1204,
+        "published_at": "2026-03-23",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -1388,6 +1499,16 @@
         "license_url": "https://creativecommons.org/licenses/by/3.0/us/deed.en",
         "source_url": "https://commons.wikimedia.org/wiki/File:Starr-150326-0872-Capsicum_annuum-green_Bell_fruit_in_Hydroponics_greenhouse-Town_Sand_Island-Midway_Atoll_(24971458160).jpg"
       },
+      "video": {
+        "youtube_id": "B7n_rTvt1CI",
+        "title": "Trồng ớt ngọt công nghệ cao I Lâm Đồng TV",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 256,
+        "published_at": "2024-09-26",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "chili_bell",
@@ -1427,6 +1548,16 @@
           "category_id": "chili_chi_dia",
           "category_name": "Ớt cay chỉ địa",
           "description": "Nhóm giống ớt chỉ địa đang trồng hiện nay (QĐ 1972/QĐ-UBND, quy trình ớt cay).",
+          "video": {
+            "youtube_id": "uv_uWBCwQIA",
+            "title": "A5. Kỹ thuật trồng ớt, quy trình chuẩn Khuyến Nông",
+            "channel": "NPP VTNN Cứu Hộ Nông Nghiệp (Đà Lạt)",
+            "channel_url": "https://www.youtube.com/@CuuHoNongNghiep115",
+            "source_kind": "community",
+            "duration_s": 946,
+            "published_at": "2020-10-19",
+            "checked_at": "2026-10-04"
+          },
           "varieties": [
             {
               "id": "chili_red_chilli",
@@ -1479,6 +1610,16 @@
           "category_id": "chili_chi_thien",
           "category_name": "Ớt cay chỉ thiên",
           "description": "Nhóm giống ớt chỉ thiên đang trồng hiện nay (QĐ 1972/QĐ-UBND, quy trình ớt cay).",
+          "video": {
+            "youtube_id": "uv_uWBCwQIA",
+            "title": "A5. Kỹ thuật trồng ớt, quy trình chuẩn Khuyến Nông",
+            "channel": "NPP VTNN Cứu Hộ Nông Nghiệp (Đà Lạt)",
+            "channel_url": "https://www.youtube.com/@CuuHoNongNghiep115",
+            "source_kind": "community",
+            "duration_s": 946,
+            "published_at": "2020-10-19",
+            "checked_at": "2026-10-04"
+          },
           "varieties": [
             {
               "id": "chili_hmt_95",
@@ -1560,6 +1701,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Hinh-anh-qua-dua-chuot-viet-nam.jpg"
       },
+      "video": {
+        "youtube_id": "KusSxEN3omc",
+        "title": "Kỹ thuật trồng dưa leo công nghệ cao trong nhà màng",
+        "channel": "Báo Nông nghiệp và Môi trường",
+        "channel_url": "https://www.youtube.com/@baonnmt",
+        "source_kind": "official",
+        "duration_s": 900,
+        "published_at": "2025-02-25",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "cucumber_local",
@@ -1600,6 +1751,16 @@
         "license": "CC BY 2.0",
         "license_url": "https://creativecommons.org/licenses/by/2.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Thu_hoach_rau_o_Da_Lat_2.jpg"
+      },
+      "video": {
+        "youtube_id": "K1_bv17C1A8",
+        "title": "Kỹ thuật trồng và chăm sóc cây bắp cải vụ thu đông",
+        "channel": "Truyền hình Hải Phòng (THP3)",
+        "channel_url": "https://www.youtube.com/@truyenhinhhaiphongthp3",
+        "source_kind": "official",
+        "duration_s": 343,
+        "published_at": "2024-08-31",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -1685,6 +1846,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Brassica_rapa_3.jpg"
       },
+      "video": {
+        "youtube_id": "eMP-r6E5_Hs",
+        "title": "Làm vườn trồng và chăm sóc cây cải thảo, thời vụ trồng cây cải thảo, trồng rau cải thảo bằng cây con",
+        "channel": "Giải Trí Nhà Nông Channel",
+        "channel_url": "https://www.youtube.com/@Hoanvlog99999",
+        "source_kind": "community",
+        "duration_s": 316,
+        "published_at": "2022-11-24",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "napa_cabbage_main",
@@ -1734,6 +1905,16 @@
         "license": "CC BY-SA 3.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Chou-fleur_02.jpg"
+      },
+      "video": {
+        "youtube_id": "kMrwsXhwqj0",
+        "title": "Trồng cây súp lơ xanh đúng cách",
+        "channel": "Báo Nông nghiệp và Môi trường",
+        "channel_url": "https://www.youtube.com/@baonnmt",
+        "source_kind": "official",
+        "duration_s": 223,
+        "published_at": "2025-10-23",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -1819,6 +2000,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Lactuca_sativa_01.JPG"
       },
+      "video": {
+        "youtube_id": "hBNnVlss-WA",
+        "title": "Nâng cao hiệu quả canh tác xà lách thủy canh",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 300,
+        "published_at": "2023-06-01",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "lettuce_main",
@@ -1896,6 +2087,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Hoa_rau_mu%E1%BB%91ng_tr%E1%BA%AFng.jpg"
       },
+      "video": {
+        "youtube_id": "qH06FoOzuP8",
+        "title": "Trồng rau muống VietGAP lãi 20 triệu đồng mỗi tháng | VTC16",
+        "channel": "KÊNH VTC16",
+        "channel_url": "https://www.youtube.com/@K%C3%8ANHVTC16",
+        "source_kind": "official",
+        "duration_s": 900,
+        "published_at": "2018-11-12",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "water_spinach_la_tre",
@@ -1927,6 +2128,16 @@
         "license": "CC BY 2.0",
         "license_url": "https://creativecommons.org/licenses/by/2.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Carrot_harvest.jpg"
+      },
+      "video": {
+        "youtube_id": "cB87v0ZVvP4",
+        "title": "Trồng cà rốt giống mới | Lâm Đồng TV",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 193,
+        "published_at": "2025-05-28",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -2002,6 +2213,16 @@
         "license": "CC BY 3.0",
         "license_url": "https://creativecommons.org/licenses/by/3.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Starr_080914-9946_Solanum_tuberosum.jpg"
+      },
+      "video": {
+        "youtube_id": "fjrefDNOvvw",
+        "title": "Chăm sóc cây khoai tây vấn đề cần lưu ý",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 178,
+        "published_at": "2022-11-01",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -2095,6 +2316,16 @@
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:%C4%90%C3%A0_L%E1%BA%A1t_n%C4%83m_2018,_tr%E1%BB%93ng_rau_trong_v%C6%B0%E1%BB%9Dn_k%C3%ADnh_(c%C3%A0_chua_bi)_(2).jpg"
+      },
+      "video": {
+        "youtube_id": "3-Ucjhtgh5c",
+        "title": "Chăm sóc cây dâu tây - Những vấn đề cần lưu ý",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 223,
+        "published_at": "2023-04-04",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -2250,6 +2481,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Spinacia_oleracea_(51364931334).jpg"
       },
+      "video": {
+        "youtube_id": "Q7ooFWVNY4s",
+        "title": "Trồng cải bó xôi 1 tháng cho thu hoạch",
+        "channel": "Báo Nông nghiệp và Môi trường",
+        "channel_url": "https://www.youtube.com/@baonnmt",
+        "source_kind": "official",
+        "duration_s": 149,
+        "published_at": "2025-12-08",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "spinach_common",
@@ -2300,6 +2541,16 @@
         "license_url": "https://creativecommons.org/licenses/by/3.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Starr_081009-0044_Pisum_sativum_var._macrocarpum.jpg"
       },
+      "video": {
+        "youtube_id": "3Q6I6IztabQ",
+        "title": "khuyến nông - kỹ thuật trồng và chăm sóc đậu Hà Lan",
+        "channel": "DŨN",
+        "channel_url": "https://www.youtube.com/@DominicDangDung",
+        "source_kind": "community",
+        "duration_s": 362,
+        "published_at": "2021-12-11",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "garden_pea_local",
@@ -2331,6 +2582,16 @@
         "license": "CC0",
         "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
         "source_url": "https://commons.wikimedia.org/wiki/File:Beta_vulgaris,_San_Francisco_farmers_market.jpg"
+      },
+      "video": {
+        "youtube_id": "BBNAaFZ7Q18",
+        "title": "Trồng củ dền, thương lái đến tận ruộng thu mua | VTC16",
+        "channel": "KÊNH VTC16",
+        "channel_url": "https://www.youtube.com/@K%C3%8ANHVTC16",
+        "source_kind": "official",
+        "duration_s": 290,
+        "published_at": "2019-09-02",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -2504,6 +2765,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Allium_ampeloprasum_var._porrum_%27Farinto%27_(1).jpg"
       },
+      "video": {
+        "youtube_id": "b91rQktHINg",
+        "title": "Trồng tỏi tây trái vụ, nông dân lãi chục triệu mỗi sào | VTC16",
+        "channel": "KÊNH VTC16",
+        "channel_url": "https://www.youtube.com/@K%C3%8ANHVTC16",
+        "source_kind": "official",
+        "duration_s": 168,
+        "published_at": "2020-09-27",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "leek_common",
@@ -2553,6 +2824,16 @@
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Apium_graveolens_var._dulce_(Staudensellerie)_2024-07-28_(01).jpg"
+      },
+      "video": {
+        "youtube_id": "na_qytHvC5Q",
+        "title": "Kỹ Thuật Trồng Cần Tây Và Những Điểm Cần Lưu Ý Khi Trồng Cần Tây | Su Hào TV",
+        "channel": "Su Hào TV",
+        "channel_url": "https://www.youtube.com/@SuHaoTV2568",
+        "source_kind": "community",
+        "duration_s": 665,
+        "published_at": "2023-07-15",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -2748,6 +3029,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Sechium_edule_Chayotes_on_the_vine.jpg"
       },
+      "video": {
+        "youtube_id": "lR2tObIXV8Y",
+        "title": "Trồng SuSu baby cho hiệu quả cao | Nông Nghiệp Lâm Đồng TV",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 253,
+        "published_at": "2018-10-30",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "chayote_common",
@@ -2789,6 +3080,16 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Thung_l%C5%A9ng_tr%E1%BB%93ng_l%C3%BAa_%E1%BB%9F_Di_Linh,_L%C3%A2m_%C4%90%E1%BB%93ng.jpg",
         "changes": "Đã cắt khung quanh cánh đồng lúa"
+      },
+      "video": {
+        "youtube_id": "v04iyw18Gmo",
+        "title": "Kỹ sư Hồ Quang Cua hướng dẫn trồng lúa an toàn đúng kỹ thuật",
+        "channel": "Báo Nông nghiệp và Môi trường",
+        "channel_url": "https://www.youtube.com/@baonnmt",
+        "source_kind": "official",
+        "duration_s": 278,
+        "published_at": "2025-08-23",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -2921,6 +3222,16 @@
         "license_url": "",
         "source_url": "https://commons.wikimedia.org/wiki/File:Pngo2.jpg"
       },
+      "video": {
+        "youtube_id": "sUOM1M6xxvg",
+        "title": "KỸ THUẬT TRỒNG VÀ CHẾ BIẾN NGÔ SINH KHỐI",
+        "channel": "KHUYẾN NÔNG LÂM ĐỒNG",
+        "channel_url": "https://www.youtube.com/@khuyennonglamdong",
+        "source_kind": "lam_dong",
+        "duration_s": 488,
+        "published_at": "2024-01-08",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "corn_hybrid",
@@ -2997,6 +3308,16 @@
         "license": "CC BY-SA 3.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Artichoke_in_Dalat,_Vietnam.jpg"
+      },
+      "video": {
+        "youtube_id": "b7fPw5d14Qw",
+        "title": "Hướng dẫn kỹ thuật trồng và chăm sóc cây dược liệu Atiso",
+        "channel": "Nông nghiệp Lào Cai",
+        "channel_url": "https://www.youtube.com/@KhuyenNongLaoCaiLCI",
+        "source_kind": "community",
+        "duration_s": 567,
+        "published_at": "2024-05-13",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {
@@ -3075,11 +3396,31 @@
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Kafarboj_sur_kampoj_apud_Da_Lat,_Vjetnamio_03.jpg"
       },
+      "video": {
+        "youtube_id": "WrsiwFjqb3U",
+        "title": "QUY TRÌNH SẢN XUẤT CÀ PHÊ VỖI HỮU CƠ",
+        "channel": "KHUYẾN NÔNG LÂM ĐỒNG",
+        "channel_url": "https://www.youtube.com/@khuyennonglamdong",
+        "source_kind": "lam_dong",
+        "duration_s": 739,
+        "published_at": "2024-01-08",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "coffee_arabica",
           "category_name": "Cà phê chè (Arabica)",
           "description": "Coffea arabica — các chủng trồng chủ yếu tại Đà Lạt (Địa chí Đà Lạt) và giống THA1, TN1 của Viện KHKT Nông Lâm nghiệp Tây Nguyên (WASI).",
+          "video": {
+            "youtube_id": "jYALu3TXveI",
+            "title": "VIDEO 3: KỸ THUẬT TRỒNG MỚI VÀ TÁI CANH CÀ PHÊ ARABICA",
+            "channel": "Trung tâm Khuyến nông và Chuyển đổi số tỉnh Sơn La",
+            "channel_url": "https://www.youtube.com/@TTkhuyennongvachuyendoisoSL",
+            "source_kind": "official",
+            "duration_s": 516,
+            "published_at": "2026-04-06",
+            "checked_at": "2026-10-04"
+          },
           "varieties": [
             {
               "id": "coffee_arabica_catimor",
@@ -3204,6 +3545,16 @@
         "license_url": "https://creativecommons.org/licenses/by/2.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:%C4%90%E1%BB%93i_ch%C3%A8_C%E1%BA%A7u_%C4%90%E1%BA%A5t,_th%C3%A1ng_11_n%C4%83m_2011_-_1.jpg"
       },
+      "video": {
+        "youtube_id": "RMndqmYHLZc",
+        "title": "Hướng dẫn cách đốn chè đúng kỹ thuật | VTC16",
+        "channel": "KÊNH VTC16",
+        "channel_url": "https://www.youtube.com/@K%C3%8ANHVTC16",
+        "source_kind": "official",
+        "duration_s": 922,
+        "published_at": "2021-03-08",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "tea_cutting",
@@ -3306,6 +3657,16 @@
         "license_url": "http://creativecommons.org/licenses/by-sa/3.0/",
         "source_url": "https://commons.wikimedia.org/wiki/File:Persea_americana_fruits.JPG"
       },
+      "video": {
+        "youtube_id": "FDXqElm2Woc",
+        "title": "Chăm sóc cây bơ như thế nào để đạt năng suất cao ?",
+        "channel": "Lâm Đồng 365",
+        "channel_url": "https://www.youtube.com/@baoptthlamdong",
+        "source_kind": "lam_dong",
+        "duration_s": 327,
+        "published_at": "2025-02-05",
+        "checked_at": "2026-10-04"
+      },
       "categories": [
         {
           "category_id": "avocado_lam_dong",
@@ -3355,6 +3716,16 @@
         "license": "CC BY-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Kaki_-_zreli_plodovi_na_stablu.jpg"
+      },
+      "video": {
+        "youtube_id": "aSJSKQwcxiA",
+        "title": "Trồng hồng ăn trái nghịch vụ | Lâm Đồng TV",
+        "channel": "Báo và Phát thanh, Truyền hình Lâm Đồng",
+        "channel_url": "https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1",
+        "source_kind": "lam_dong",
+        "duration_s": 230,
+        "published_at": "2024-11-14",
+        "checked_at": "2026-10-04"
       },
       "categories": [
         {

@@ -7,9 +7,11 @@ complete, and a crop category is either covered by a sourced protocol or
 explicitly declared as having no data — never silently missing.
 """
 
+import hashlib
 import importlib.util
 import re
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import pytest
 
@@ -18,11 +20,18 @@ from app.services import static_data
 ID_RE = re.compile(r"^[a-z0-9_]+$")
 SHARED_DATA = Path(__file__).resolve().parents[2] / "shared" / "data"
 CROP_IMAGES = Path(__file__).resolve().parents[2] / "mobile" / "src" / "assets" / "crops"
+FERTILIZER_IMAGES = Path(__file__).resolve().parents[2] / "mobile" / "src" / "assets" / "fertilizers"
 # Units a protocol may quote an amount in. m³ is how Lâm Đồng's procedures
 # measure manure (QĐ 1972/QĐ-UBND); converting it to tonnes would need a bulk
 # density the source does not give, so the app keeps the source's unit.
 ITEM_UNITS = ("kg", "tấn", "m³")
 FREE_LICENCE = re.compile(r"^(CC0|CC BY(-SA)? [0-9.]+( us)?|Public domain)$", re.I)
+YOUTUBE_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
+DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# Who made a crop's video: an official channel in Lâm Đồng, another state body
+# (press, TV, extension centre), or — only where no official video covers the
+# crop — a grower's or shop's channel.
+VIDEO_SOURCE_KINDS = {"lam_dong", "official", "community"}
 
 FERTILIZER_CATEGORIES = {"dam", "lan", "kali", "npk", "huu_co", "vi_sinh", "khac"}
 TASK_TYPES = {"fertilize", "water", "cultivate", "scout", "spray", "harvest"}
@@ -112,6 +121,55 @@ def test_every_crop_has_a_credited_freely_licensed_photo():
         assert image["author"] and image["source_url"].startswith("https://commons.wikimedia.org/"), crop["id"]
         assert FREE_LICENCE.match(image["license"]), f"{crop['id']}: giấy phép {image['license']}"
         assert (CROP_IMAGES / image["file"]).is_file(), f"thiếu tệp ảnh {image['file']}"
+
+
+def _check_video(where: str, video: dict) -> None:
+    assert YOUTUBE_ID.match(video["youtube_id"]), f"{where}: mã YouTube {video['youtube_id']!r}"
+    assert video["title"].strip() and video["channel"].strip(), f"{where}: thiếu tiêu đề hoặc tên kênh"
+    assert video["title"] == " ".join(video["title"].split()), f"{where}: tiêu đề thừa khoảng trắng"
+    assert video["channel_url"].startswith("https://www.youtube.com/"), f"{where}: {video['channel_url']}"
+    assert video["source_kind"] in VIDEO_SOURCE_KINDS, f"{where}: source_kind {video['source_kind']!r}"
+    assert video["duration_s"] > 0, where
+    assert DATE.match(video["published_at"]) and DATE.match(video["checked_at"]), where
+    assert video["published_at"] <= video["checked_at"], f"{where}: đăng sau ngày kiểm tra"
+
+
+def test_every_crop_has_a_how_to_grow_video_with_its_credit():
+    """Mỗi loại cây có video tham khảo cách trồng của riêng nó. Tiêu đề, tên kênh
+    và ngày kiểm tra đi kèm để ứng dụng ghi rõ video của ai, và để
+    check_crop_videos.py kiểm tra lại video còn xem được."""
+    crops = static_data.load("crop_varieties")["crop_types"]
+    for crop in crops:
+        assert crop.get("video"), f"{crop['id']} chưa có video cách trồng"
+        _check_video(crop["id"], crop["video"])
+        for category in crop["categories"]:
+            if category.get("video"):
+                _check_video(category["category_id"], category["video"])
+    # Một video cho đúng một loại cây: video của cây này không được dùng lại cho
+    # cây khác (loại con chỉ được dùng video của chính loại cây mình).
+    owner: dict[str, str] = {}
+    for crop in crops:
+        ids = {crop["video"]["youtube_id"]} | {c["video"]["youtube_id"] for c in crop["categories"] if c.get("video")}
+        for youtube_id in ids:
+            assert owner.setdefault(youtube_id, crop["id"]) == crop["id"], (
+                f"video {youtube_id} dùng cho cả {owner[youtube_id]} và {crop['id']}"
+            )
+
+
+def test_a_category_video_is_only_where_the_way_of_growing_differs():
+    """Ớt cay trồng ngoài đồng khác hẳn ớt ngọt trong nhà màng; cà phê chè khác
+    cà phê vối. Những loại con đó có video riêng, phần còn lại dùng video của
+    loại cây — và tám loài bắt buộc đều có video."""
+    crops = {c["id"]: c for c in static_data.load("crop_varieties")["crop_types"]}
+    overridden = {
+        (crop_id, category["category_id"])
+        for crop_id, crop in crops.items()
+        for category in crop["categories"]
+        if category.get("video")
+    }
+    assert overridden == {("chili", "chili_chi_dia"), ("chili", "chili_chi_thien"), ("coffee", "coffee_arabica")}
+    for crop_id in ("tomato", "chili", "cucumber", "carrot", "water_spinach", "cabbage", "rice", "corn"):
+        assert crops[crop_id]["video"]["youtube_id"]
 
 
 # ------------------------------ care protocols ------------------------------
@@ -302,6 +360,72 @@ def test_fertilizer_groups_without_prices_are_declared_not_faked():
         assert (code in priced) != (code in declared_missing), (
             f"nhóm {code} phải hoặc có giá, hoặc được khai báo là chưa có giá"
         )
+
+
+def test_fertilizer_photos_are_each_products_own_from_its_makers_site():
+    """Mỗi sản phẩm phân bón có ảnh RIÊNG của chính nó, lấy từ trang chính thức
+    của đúng hãng có tên trong sản phẩm, nhúng trong app, ghi doanh nghiệp sở hữu
+    ảnh, trang sản phẩm và tệp ảnh gốc. Không hai sản phẩm nào dùng chung một ảnh
+    — kể cả cùng một ảnh lưu dưới hai tên. Sản phẩm chưa có ảnh đúng sản phẩm phải
+    được khai báo trong image_gaps kèm lý do."""
+    data = static_data.load("fertilizer_recommendations")
+    gaps = {g["product_id"]: g["reason"] for g in data["$meta"]["image_gaps"]}
+    # Official site -> the company as it appears in product names. SFARM makes
+    # Pb01 and the Trichoderma, and sells the chicken manure; it is also the
+    # price source of Pb01 and the manure.
+    makers = {
+        "pvcfc.com.vn": "Cà Mau",
+        "dpm.vn": "Phú Mỹ",
+        "damhabac.com.vn": "Hà Bắc",
+        "supelamthao.vn": "Lâm Thao",
+        "vandienfmp.vn": "Văn Điển",
+        "binhdien.com": "Đầu Trâu|Bình Điền",
+        "sfarm.vn": "Pb01|Phân gà|SFARM",
+        "phanbondientrang.vn": "Điền Trang",
+    }
+    ids = {p["id"] for p in data["products"]}
+    assert set(gaps) <= ids, f"image_gaps nhắc sản phẩm không có: {set(gaps) - ids}"
+    digests = {}
+    for product in data["products"]:
+        image = product.get("image")
+        if image is None:
+            assert gaps.get(product["id"]), f"{product['id']} không có ảnh mà cũng không khai báo trong image_gaps"
+            continue
+        assert product["id"] not in gaps, f"{product['id']} vừa có ảnh vừa khai báo thiếu ảnh"
+        assert image["subject"] and image["owner"], product["id"]
+        assert image["file"] == f"{product['id']}.jpg", f"{product['id']}: ảnh phải đặt tên theo mã sản phẩm"
+        path = FERTILIZER_IMAGES / image["file"]
+        assert path.is_file(), f"thiếu tệp ảnh {image['file']}"
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        assert digest not in digests, f"{product['id']} dùng chung ảnh với {digests.get(digest)}"
+        digests[digest] = product["id"]
+        host = urlsplit(image["source_url"]).hostname.removeprefix("www.")
+        assert host in makers, f"{product['id']}: {host} không phải trang chính thức của hãng nào trong danh mục"
+        sfarm_ok = host != "sfarm.vn" or "sfarm.vn" in product["source"] or "SFARM" in product["name"]
+        assert re.search(makers[host], product["name"]) and sfarm_ok, (
+            f"{product['id']}: ảnh lấy từ {host}, không phải hãng của sản phẩm"
+        )
+        assert urlsplit(image["image_url"]).hostname.removeprefix("www.") == host, product["id"]
+        assert DATE.match(image["checked_at"]), product["id"]
+
+
+def test_microbial_group_is_priced_from_named_products_with_their_sources():
+    """Nhóm vi sinh (07/10/2026): mỗi giá là giá niêm yết của một sản phẩm có tên,
+    ghi nguồn và ngày — không phải khoảng giá chung chung "phân vi sinh"."""
+    data = static_data.load("fertilizer_recommendations")
+    microbial = {p["id"]: p for p in data["products"] if p["category"] == "vi_sinh"}
+    assert set(microbial) == {"tricho_dien_trang_1kg", "tricho_humic_sfarm_1kg", "huu_co_vi_sinh_song_gianh_hc15_10kg"}
+    assert "vi_sinh" not in {c["code"] for c in data["categories_without_price_data"]}
+    for product in microbial.values():
+        assert product["updated_at"] == "2026-10-07", product["id"]
+        assert 0 < product["price_min"] <= product["price_max"], product["id"]
+        assert product["source"] and product["region"], product["id"]
+    # Điền Trang's own shop is the low end, the Nông Nghiệp Phố shelves the high end.
+    tricho = microbial["tricho_dien_trang_1kg"]
+    assert (tricho["price_min"], tricho["price_max"]) == (86_400, 92_000)
+    assert "dientrangmart.vn" in tricho["source"] and "nongnghieppho.vn" in tricho["source"]
+    song_gianh = microbial["huu_co_vi_sinh_song_gianh_hc15_10kg"]
+    assert (song_gianh["pack_size_kg"], song_gianh["price_per_kg_avg"]) == (10.0, 5_700)
 
 
 def test_budget_tiers_match_the_price_per_kg_bands():
