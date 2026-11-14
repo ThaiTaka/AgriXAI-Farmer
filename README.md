@@ -14,8 +14,8 @@ giá phân bón mới tới mọi điện thoại; máy chủ tự cảnh báo m
 | **Người dùng** | Nông hộ (ghi trên điện thoại) và cán bộ quản lý (xem trên web) |
 | **Nền tảng** | React Native 0.81 (Android/iOS) · FastAPI + PostgreSQL · Next.js 16 |
 | **Trạng thái** | V2.2 — ghi bằng giọng nói offline, thông báo, thời tiết, giá phân cập nhật, web quản trị đầy đủ; mobile schema v8 |
-| **Kiểm thử** | 456 test mobile (93,6 % câu lệnh) · 338 test backend (95 %; cả bộ chạy xanh trên SQLite lẫn PostgreSQL 16) · web-admin `tsc` + `lint` + `build` sạch — đo 03/10/2026 |
-| **Báo cáo** | Giai đoạn 1–5: [AGRILOG_V2_FINAL_REPORT.md](AGRILOG_V2_FINAL_REPORT.md) (số liệu ngày 23/09/2026) · V2.1–V2.2: [ADR 0008](docs/adr/0008-v2-1-canh-tac-media-nhan-cong.md)–[0011](docs/adr/0011-web-quan-tri.md) |
+| **Kiểm thử** | 494 test mobile (93,8 % câu lệnh) · 341 test backend (95 %) — đo 06/10/2026 trên SQLite; cả bộ backend cũng xanh trên PostgreSQL 16 (đo 03/10/2026) · web-admin `tsc` + `lint` + `build` sạch (03/10/2026) |
+| **Báo cáo** | Giai đoạn 1–5: [AGRILOG_V2_FINAL_REPORT.md](AGRILOG_V2_FINAL_REPORT.md) (số liệu ngày 23/09/2026) · V2.1–V2.2: [ADR 0008](docs/adr/0008-v2-1-canh-tac-media-nhan-cong.md)–[0014](docs/adr/0014-giong-noi-zipformer-va-gia-vi-sinh.md) |
 
 ![Trang chủ AgriLog trên điện thoại: ba thẻ tồn kho, lãi lỗ tháng và công việc](docs/screenshots/71-p5-home-dashboard.png)
 
@@ -122,13 +122,19 @@ YouTube phát ngay trong ứng dụng — khung video chỉ hiện ảnh bìa ch
 ### 7. Nói vào micro, ứng dụng tự ghi sổ — không cần mạng
 
 Bấm nút **+** → **Nói để ghi**, nói một câu như "bán năm mươi bó hoa cúc được một triệu rưỡi".
-Nhận dạng chạy **ngay trên máy** bằng Vosk (mô hình tiếng Việt `vosk-model-small-vn-0.4`,
-Apache-2.0, đóng vào APK) với từ vựng giới hạn theo sổ ruộng — âm thanh không rời khỏi điện
-thoại. Câu nghe được thành một **bản nháp** (thu / chi / nhập kho / xuất kho, số tiền, số lượng,
-loại phân, lô, ngày); nông dân xem, sửa rồi mới lưu, và có nút **Hoàn tác**. Đo trên 16 câu mẫu
-đọc bằng hai giọng tổng hợp: đúng loại phiếu 16/16, số tiền 15/16, số lượng 15/16, loại phân
-16/16 (đúng nguyên câu 7/16) — giọng tổng hợp sạch hơn giọng người trong nhà màng nên đây là mức
-trần ([ADR 0010](docs/adr/0010-giong-noi-thong-bao-thoi-tiet.md) §1).
+Nhận dạng chạy **ngay trên máy** bằng mô hình Zipformer tiếng Việt (sherpa-onnx, huấn luyện trên
+khoảng 70.000 giờ tiếng Việt, Apache-2.0, đóng vào APK) — âm thanh không rời khỏi điện thoại. App nghe
+tới khi bà con im khoảng một giây, nên ngắt hơi giữa câu ("thuê ba người làm cỏ … sáu trăm nghìn")
+không làm mất số tiền. Câu nghe được thành một **bản nháp** (thu / chi / nhập kho / xuất kho, số tiền,
+số lượng, loại phân, lô, ngày); nông dân xem, sửa rồi mới lưu, và có nút **Hoàn tác**.
+
+Thay Vosk ngày 07/10/2026 sau khi đo ([ADR 0014](docs/adr/0014-giong-noi-zipformer-va-gia-vi-sinh.md)):
+với 129 câu giọng người thật, Vosk sai 66,9 % số từ, Zipformer sai 5,9 %. Với 72 câu sổ ruộng có
+tiếng chợ, số phiếu ghi đúng hoàn toàn tăng từ 11/72 lên 59/72, số tiền đúng 72/72.
+
+| Đang nghe — chữ hiện ngay | Ngắt hơi, có tiếng chợ: vẫn đủ câu | Giá theo ký nhân đúng số ký |
+|---|---|---|
+| ![Đang nghe, chữ có dấu hiện tới đâu tới đó](docs/screenshots/142-voice-listening-partial.png) | ![thuê ba người làm cỏ sáu trăm nghìn thành khoản chi](docs/screenshots/138-voice-pause-market-noise.png) | ![3 tạ cà chua × 12.000đ/ký = 3.600.000đ](docs/screenshots/139-voice-price-per-kilo.png) |
 
 | Nút ghi nhanh | Đang nghe | Bản nháp từ câu nói | Đã ghi, có Hoàn tác |
 |---|---|---|---|
@@ -199,6 +205,66 @@ Nông hộ đăng nhập web chỉ thấy sổ sách của mình (chỉ xem) và
 |---|---|
 | ![Bảng giá đang dùng so với khảo sát](docs/screenshots/121-web-fertilizer-prices.png) | ![Trình soạn hướng dẫn chăm sóc](docs/screenshots/123-web-care-guide-editor-preview.png) |
 
+### 10. Video cách trồng — mỗi loại cây một video
+
+Cả 34 loại cây trong danh mục đều có **video tham khảo cách trồng của riêng nó**, phát ngay trong
+ứng dụng; loại con nào trồng khác hẳn thì có video riêng (ớt cay chỉ địa, chỉ thiên — ngoài đồng —
+khác ớt ngọt nhà màng; cà phê chè khác cà phê vối). Ưu tiên kênh chính thức ở Lâm Đồng (15 loại
+cây), rồi kênh của cơ quan nhà nước khác như VTC16, Báo Nông nghiệp và Môi trường, trung tâm khuyến
+nông (14 loại cây); 5 loại cây không tìm được video chính thức về cách trồng thì dùng kênh nhà vườn
+và ghi rõ "Kênh không chính thức". Từng video đã kiểm tra ngày 04/10/2026: còn xem được, cho phát
+trong ứng dụng, và phụ đề nói đúng cách trồng loài đó; `python shared/data/check_crop_videos.py`
+kiểm tra lại bất cứ lúc nào. Không có video riêng cho từng giống (268) — không nguồn nào quay riêng
+từng giống, nên các giống dùng video của loại cây.
+
+Video có ở **Công cụ → Video cách trồng**, ở bộ chọn giống (bước 2 và 3), ở tab **Chăm sóc** của lô
+và màn **Quy trình chăm sóc**. Các màn đó chỉ có ảnh bìa nhỏ; trình phát nằm trên màn riêng và chỉ
+được tạo sau khi màn trượt vào xong, ảnh bìa và vòng xoay giữ trên khung tới khi video thật sự chạy
+(không còn khung đen), lỗi nói bằng tiếng Việt kèm "Thử lại" / "Mở bằng YouTube", một video một
+lúc, ứng dụng xuống nền thì video dừng tại chỗ, xem toàn màn hình xoay ngang được. Quyết định, cách
+chọn và danh sách 37 video: [ADR 0012](docs/adr/0012-video-cach-trong.md).
+
+| Danh sách video | Bấm: ảnh bìa + vòng xoay | Đang phát |
+|---|---|---|
+| ![Danh sách video cách trồng của 34 loại cây](docs/screenshots/126-video-library.png) | ![Ảnh bìa giữ trên khung trong lúc trình phát khởi động](docs/screenshots/127-video-poster-spinner.png) | ![Video hoa cúc đang phát trong ứng dụng](docs/screenshots/128-video-playing.png) |
+
+| Ớt: hai video theo loại | Tab Chăm sóc của lô | Bộ chọn giống bước 2 |
+|---|---|---|
+| ![Ớt ngọt và ớt cay có video riêng](docs/screenshots/129-video-chili-two-videos.png) | ![Hàng video cách trồng trong tab Chăm sóc](docs/screenshots/131-video-plot-care-row.png) | ![Ảnh, mô tả và video của hoa cúc khi chọn giống](docs/screenshots/132-video-picker-step2.png) |
+
+![Video hoa hồng của Đài Lâm Đồng xem toàn màn hình, xoay ngang](docs/screenshots/133-video-fullscreen-landscape.png)
+
+### 11. Ảnh phân bón — chọn phân theo túi tiền
+
+Thẻ sản phẩm ở **Chọn phân theo túi tiền** và **Bảng giá phân bón** có **ảnh riêng của từng sản
+phẩm** — bao Đạm Cà Mau khác bao Đạm Phú Mỹ, khác bao Urê Hà Bắc — để bà con nhận ra bằng mắt thay vì
+đọc "46-0-0". Mỗi ảnh lấy từ **trang chính thức của đúng hãng có tên trong sản phẩm** (pvcfc.com.vn,
+dpm.vn, damhabac.com.vn, supelamthao.vn, vandienfmp.vn, binhdien.com, sfarm.vn), nhúng sẵn trong app
+nên xem được khi không có mạng; không hai sản phẩm nào dùng chung ảnh. Bấm vào ảnh là thấy ảnh lớn,
+ảnh cho thấy gì, "Ảnh: <doanh nghiệp> · <trang web>" và nút mở trang sản phẩm. Pb01 và phân gà dùng
+ảnh chụp thực tế của SFARM vì trang chưa có ảnh đúng gói, và ghi rõ điều đó. DAP Hàn Quốc, DAP Nga
+giữ biểu tượng nhóm: bảng giá chỉ ghi nước xuất xứ, không ghi hãng, nên không đoán bao. Thẻ ở màn túi
+tiền cũng được sắp lại để giá bao và nguồn giá hiện đủ (trước đó giá bao bị cắt còn "610.000 –
+660.0…"). Quyết định, cách chọn từng ảnh và bản quyền: [ADR 0013](docs/adr/0013-anh-phan-bon.md);
+`python shared/data/check_fertilizer_images.py` kiểm tra lại các trang nguồn.
+
+Nhóm **phân vi sinh** có giá từ 07/10/2026: Tricho Điền Trang gói 1 kg 86.400–92.000₫ (cửa hàng của
+chính hãng và chuỗi Nông Nghiệp Phố), Trichoderma Plus Humic SFARM 1 kg 95.000₫, phân hữu cơ vi sinh
+Sông Gianh HC-15 bao 10 kg 54.000–60.000₫ — giá niêm yết xem được, ghi nguồn và ngày trên từng thẻ;
+phân vi lượng vẫn ghi rõ là chưa có giá ([ADR 0014](docs/adr/0014-giong-noi-zipformer-va-gia-vi-sinh.md) §5).
+
+| Sáu nhóm, nhóm vi sinh đã có giá | Bảng giá vi sinh |
+|---|---|
+| ![Nhóm Phân vi sinh / vi lượng có 3 sản phẩm](docs/screenshots/141-fertilizer-groups-vi-sinh-priced.png) | ![Sông Gianh HC-15, Tricho Điền Trang, Trichoderma SFARM kèm nguồn và ngày](docs/screenshots/140-fertilizer-vi-sinh-price.png) |
+
+| Chọn phân theo túi tiền | Bấm ảnh: ảnh lớn + nguồn |
+|---|---|
+| ![Bao Urê Phú Mỹ và Urê Cà Mau trên thẻ, giá bao và nguồn giá hiện đủ](docs/screenshots/134-fertilizer-budget-photos.png) | ![Bao Đạm Cà Mau xem lớn, ghi doanh nghiệp và trang sản phẩm](docs/screenshots/135-fertilizer-photo-large.png) |
+
+| DAP chưa rõ hãng: giữ biểu tượng | Bảng giá phân bón |
+|---|---|
+| ![DAP Hàn Quốc và DAP Nga giữ biểu tượng nhóm, dòng chú thích ảnh cuối danh sách](docs/screenshots/136-fertilizer-budget-icon-fallback.png) | ![Bảng giá nhóm NPK, mỗi sản phẩm một bao riêng](docs/screenshots/137-fertilizer-price-table-photos.png) |
+
 ## Phạm vi
 
 Ứng dụng **không** chẩn đoán bệnh cây. Tính năng đó từng có ở Giai đoạn 2 và đã bị gỡ bỏ
@@ -209,7 +275,7 @@ Bốn mảng nghiệp vụ của dự án:
 
 | # | Mảng | Trạng thái |
 |---|---|---|
-| 1 | Tư vấn & phân loại phân bón (F1–F4) | ✅ F1 tính lượng theo diện tích & phương án (lưu kế hoạch) · F3 ba tab ngân sách · F4 kiểm tra kho đủ/thiếu · Danh mục 6 nhóm |
+| 1 | Tư vấn & phân loại phân bón (F1–F4) | ✅ F1 tính lượng theo diện tích & phương án (lưu kế hoạch) · F3 ba tab ngân sách, thẻ có ảnh riêng từng sản phẩm · F4 kiểm tra kho đủ/thiếu · Danh mục 6 nhóm |
 | 2 | Quy trình chăm sóc theo giai đoạn (F5–F6) | ✅ 37 quy trình có nguồn: 35 theo QĐ 1972/QĐ-UBND tỉnh Lâm Đồng (8 loài hoa; cà chua, ớt ngọt, ớt cay, dưa leo, bắp cải, cải thảo, súp lơ, xà lách, cà rốt, khoai tây, dâu tây, bó xôi, đậu Hà Lan, củ dền, tỏi tây, cần tây, su su ×2; lúa, ngô; atisô; chè cành ×2; bơ ×2, hồng ăn trái ×2) cùng cà phê vối (Cục Trồng trọt 2010) và cà phê chè (WASI 2026); 6 mục "Chưa có dữ liệu" kèm lý do (chè Đài Loan, rau muống, lan hồ điệp ×3, lan vũ nữ — hai loài lan bón theo nồng độ pha, không tính theo kg/ha). Accordion 4 giai đoạn, ô "Đã làm", đặt nhắc (thông báo 7 giờ sáng) |
 | 3 | Nhập – Xuất kho | ✅ Nhập (tự ghi khoản chi), xuất giá FIFO, bảng tồn, biểu đồ tồn theo thời gian, lọc tháng/quý, xuất CSV |
 | 4 | Thu – Chi | ✅ Ghi thu/chi, đánh dấu đã kiểm tra, báo cáo tháng/quý (lãi/lỗ, thu-chi theo ngày, chi theo loại), xuất CSV |
@@ -390,11 +456,16 @@ Trạng thái đo ngày 23/09/2026: **198 test / 20 bộ, phủ 91,0 % câu lệ
 > `npm install` tự áp bản vá `patches/react-native-image-picker+8.2.1.patch` (postinstall
 > `patch-package`). Đo ngày 02/10/2026: **259 test / 26 bộ, phủ 93,1 % câu lệnh và 94,2 % dòng**.
 
-> V2.2 thêm `react-native-vosk`, `@notifee/react-native`, `react-native-background-fetch` (kèm bản
-> vá `patches/react-native-background-fetch+4.4.2.patch`) — build lại app. `npm install` tự tải
-> mô hình giọng nói (~32 MB) vào `mobile/assets/model-vn` (`scripts/fetch-vosk-model.js`; không có
-> mạng thì app vẫn chạy, nút micro báo thiếu mô hình). Đo ngày 03/10/2026: **456 test / 34 bộ,
-> phủ 93,6 % câu lệnh và 95,5 % dòng**; `tsc` và `eslint` sạch.
+> V2.2 thêm `@notifee/react-native`, `react-native-background-fetch` (kèm bản vá
+> `patches/react-native-background-fetch+4.4.2.patch`) — build lại app. Đo ngày 03/10/2026:
+> **456 test / 34 bộ, phủ 93,6 % câu lệnh và 95,5 % dòng**; `tsc` và `eslint` sạch.
+>
+> Từ 07/10/2026 giọng nói dùng sherpa-onnx thay `react-native-vosk`
+> ([ADR 0014](docs/adr/0014-giong-noi-zipformer-va-gia-vi-sinh.md)) — build lại app. `npm install` tự
+> chạy `scripts/fetch-speech-model.js`: tải mô hình (~75 MB) vào `android/app/src/main/assets/asr-vi`
+> và thư viện `sherpa-onnx-*.aar` (~39 MB) vào `android/app/libs`, kiểm SHA-256 từng tệp. Thiếu mô
+> hình thì app vẫn chạy, nút micro báo thiếu; thiếu `.aar` thì Gradle dừng và nhắc chạy script. Đo
+> ngày 07/10/2026: **508 test / 36 bộ**; `tsc` và `eslint` sạch.
 
 Tài khoản demo giống phần backend ở trên. Ô "Tài khoản" nhận **cả tên đăng nhập lẫn email**
 (`thaitaka` hoặc `thaitaka@agrilog.local`).
@@ -454,9 +525,9 @@ Font Open Sans được **nhúng kèm** cả hai nền tảng, không tải từ
 
 | File | Nội dung | Nguồn |
 |---|---|---|
-| `fertilizer_recommendations.json` | 6 nhóm phân, 17 sản phẩm có **giá thật**; nhóm vi sinh khai báo rõ "chưa có giá" | `fertilizers_seed.json` (sfarm.vn, giacaphe.com — 06–07/09/2026) |
+| `fertilizer_recommendations.json` | 6 nhóm phân, 20 sản phẩm có **giá thật** (3 sản phẩm vi sinh từ 07/10/2026; phân vi lượng chưa có giá); 17 sản phẩm có `image` riêng (ảnh nhúng ở `mobile/src/assets/fertilizers`, ghi ảnh cho thấy gì – doanh nghiệp – trang sản phẩm – tệp ảnh gốc – ngày kiểm tra), 2 loại DAP chưa rõ hãng và bao Sông Gianh 10 kg khai báo trong `$meta.image_gaps` kèm lý do | `fertilizers_seed.json` (sfarm.vn — bảng giá ghi ngày 02/04/2026, giacaphe.com — đối chiếu 02/10/2026; nhóm vi sinh: dientrangmart.vn, nongnghieppho.vn, trongraudothi.com, vatlieulamvuon.com — 07/10/2026); ảnh: trang chính thức của từng hãng (`check_fertilizer_images.py` kiểm tra lại) |
 | `care_protocols.json` | **File sinh tự động** (`python shared/data/build_care_protocols.py`) gộp 34 seed: 37 quy trình 4 giai đoạn + 6 mục "chưa có dữ liệu" (chè Đài Loan, rau muống, lan hồ điệp ×3, lan vũ nữ) | `care_protocol_*_seed.json` — QĐ 1972/QĐ-UBND ngày 04/11/2025 của UBND tỉnh Lâm Đồng (120 quy trình, đăng tại Trung tâm Khuyến nông tỉnh); cà phê: Cục Trồng trọt (QĐ 254/QĐ-TT-CCN 2010) qua VICOFA và WASI qua Báo NN&MT 29/07/2026 |
-| `crop_varieties.json` | Danh mục 3 cấp, 34 loại cây · 60 loại con · 268 giống, **mỗi giống có `source`**; mỗi loại cây có `image` (ảnh nhúng ở `mobile/src/assets/crops`, ghi tác giả – giấy phép – trang gốc) | QĐ 1972/QĐ-UBND; Địa chí Đà Lạt; QĐ 704 và 729/QĐ-SNN (sản phẩm nông nghiệp công nghệ cao của tỉnh); Trung tâm Nghiên cứu Khoai tây, Rau và Hoa (PVFC, Đà Lạt); Viện Eakmat/WASI; Báo Lâm Đồng; ảnh: Wikimedia Commons |
+| `crop_varieties.json` | Danh mục 3 cấp, 34 loại cây · 60 loại con · 268 giống, **mỗi giống có `source`**; mỗi loại cây có `image` (ảnh nhúng ở `mobile/src/assets/crops`, ghi tác giả – giấy phép – trang gốc) và `video` (video cách trồng trên YouTube: tiêu đề, kênh, ngày kiểm tra; ba loại con có `video` riêng) | QĐ 1972/QĐ-UBND; Địa chí Đà Lạt; QĐ 704 và 729/QĐ-SNN (sản phẩm nông nghiệp công nghệ cao của tỉnh); Trung tâm Nghiên cứu Khoai tây, Rau và Hoa (PVFC, Đà Lạt); Viện Eakmat/WASI; Báo Lâm Đồng; ảnh: Wikimedia Commons; video: YouTube, kênh ghi trong dữ liệu (`check_crop_videos.py` kiểm tra lại) |
 
 Quy tắc bất di bất dịch của `crop_varieties.json` và các file quy trình: không bịa dữ liệu.
 Số liệu chép đúng nguồn; thiếu thì ghi "Chưa có dữ liệu". `backend/tests/test_static_data.py`
@@ -547,6 +618,8 @@ toàn bộ ứng dụng. Banner trên cùng báo "Chế độ offline — thay �
 | **V2.2** — trang chủ có thẻ thời tiết, xin quyền thông báo, thông báo hệ thống, hộp thư, giá ban quản lý trên bảng giá, dự báo 7 ngày | `107-home-weather-card.png`, `108-notification-permission.png`, `109-system-notification-price.png`, `110-notification-inbox.png`, `111-live-price-from-admin.png`, `112-weather-screen.png` |
 | **V2.2** — 11 cây Đà Lạt thêm vào danh mục | `113-new-crops-flowers.png`, `114-new-crops-perennial.png` |
 | **V2.2** — web quản trị: đăng nhập, tổng quan, sổ sách nông hộ, lô đất, thông báo, thời tiết, giá phân bón, hướng dẫn + trình soạn có xem trước, tài khoản, tổng quan trên điện thoại | `115-web-login.png` … `125-web-overview-phone.png` |
+| **V2.2 (04/10/2026)** — video cách trồng: danh sách 34 loại cây, ảnh bìa + vòng xoay khi trình phát khởi động, đang phát, ớt có hai video, đổi video vẫn giữ ảnh bìa, hàng video ở tab Chăm sóc và bộ chọn giống bước 2, toàn màn hình xoay ngang | `126-video-library.png` … `133-video-fullscreen-landscape.png` |
+| **V2.2 (06/10/2026)** — ảnh phân bón: thẻ chọn phân theo túi tiền có ảnh riêng từng sản phẩm (giá bao, nguồn giá hiện đủ), ảnh lớn kèm doanh nghiệp và trang sản phẩm, DAP chưa rõ hãng giữ biểu tượng, bảng giá có ảnh | `134-fertilizer-budget-photos.png` … `137-fertilizer-price-table-photos.png` |
 | **V2.1 (24/09/2026)** — vụ trồng + biểu đồ năng suất, gợi ý theo mùa, gợi ý trong form vụ mới, tab Chăm sóc có video, YouTube phát trong app, lịch sử công việc, ghi chú chờ tải ảnh, tiền công, Thu – Chi có cách tính tiền công, phát video trong máy, web-admin soạn hướng dẫn | `85-v21-cultivation-history-chart.png` … `95-v21-web-admin-care-guide-editor.png` |
 
 ## Tài liệu tham khảo
@@ -621,15 +694,72 @@ trường `source`) và hiện trên màn hình. Ngày truy cập ghi theo lần
 
 ### Nhận dạng giọng nói
 
-16. Alpha Cephei — Vosk, mô hình `vosk-model-small-vn-0.4` (Apache-2.0; WER 15,70 trên tập VIVOS
-    theo trang mô hình): <https://alphacephei.com/vosk/models>
-17. `react-native-vosk` 2.1.7 (MIT): <https://github.com/riderodd/react-native-vosk>
+16. k2-fsa — sherpa-onnx 1.13.8 (Apache-2.0), bản Android `.aar`: <https://github.com/k2-fsa/sherpa-onnx>;
+    mô hình `sherpa-onnx-zipformer-vi-int8-2025-04-20`, chuyển từ
+    <https://huggingface.co/zzasdf/viet_iter3_pseudo_label> (Apache-2.0, khoảng 70.000 giờ):
+    <https://k2-fsa.github.io/sherpa/onnx/pretrained_models/offline-transducer/zipformer-transducer-models.html>
+17. Silero VAD (MIT): <https://github.com/snakers4/silero-vad>
+18. Mô hình đã thay (dùng tới 06/10/2026, giữ để so sánh): Alpha Cephei — Vosk `vosk-model-small-vn-0.4`
+    (Apache-2.0): <https://alphacephei.com/vosk/models>
+19. Dữ liệu đo: Google FLEURS `vi_vn` (CC BY 4.0) <https://huggingface.co/datasets/google/fleurs>;
+    giọng Piper `vi_VN` <https://huggingface.co/rhasspy/piper-voices>
 
 ### Video hướng dẫn mẫu
 
 18. Báo Nông nghiệp và Môi trường — "Kỹ thuật trồng cà chua công nghệ cao trong nhà màng":
     <https://www.youtube.com/watch?v=M1fqC6tuXLI>
 19. Kênh VTC16 — "Kỹ thuật ủ phân hữu cơ bón cho cây trồng": <https://www.youtube.com/watch?v=nGqGU7yYO-c>
+
+### Video cách trồng (YouTube)
+
+Mỗi loại cây một video, phát nhúng trong app; tiêu đề và tên kênh chép nguyên từ YouTube, kiểm tra
+còn xem được ngày 04/10/2026. Bảng dưới sinh từ trường `video` của `shared/data/crop_varieties.json`;
+cách chọn ở [ADR 0012](docs/adr/0012-video-cach-trong.md).
+
+<details>
+<summary>37 video — kênh và nguồn</summary>
+
+| Cây | Video | Kênh | Nguồn |
+|---|---|---|---|
+| Hoa cúc | [Hướng dẫn kỹ thuật trồng và chăm sóc cây hoa cúc](https://www.youtube.com/watch?v=nwGvgJdZjmY) | [khuyến nông](https://www.youtube.com/@khuyennongNB) | Cơ quan nhà nước |
+| Hoa hồng | [Trồng hoa hồng theo quy trình hữu cơ I Lâm Đồng TV](https://www.youtube.com/watch?v=q79ifi6rBVk) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Hoa cẩm chướng | ["Hái" tiền tỷ nhờ trồng hoa cẩm chướng 4.0 xuất ngoại / VTC16](https://www.youtube.com/watch?v=oa1h34Zp2lk) | [KÊNH VTC16](https://www.youtube.com/@K%C3%8ANHVTC16) | Cơ quan nhà nước |
+| Hoa đồng tiền | [Trồng hoa đồng tiền ở Tân Văn](https://www.youtube.com/watch?v=y0PPxOxfPYM) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Hoa lily | [Trồng hoa ly không nhà kính / Lâm Đồng TV](https://www.youtube.com/watch?v=v6HuU5Rs-3I) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Hoa lay ơn | [Chia Sẻ Kinh Nghiệm Trồng Hoa Lay Ơn HTX Hoa Mây Sanh I Trạm Khuyến Nông An Dương](https://www.youtube.com/watch?v=co07iTu1Tck) | [Sổ Tay Nông Nghiệp - Hải Phòng](https://www.youtube.com/@Sotaynongnghiepknhaiphong) | Cơ quan nhà nước |
+| Hoa cát tường | [Thêm lựa chọn mới cho người trồng hoa cát tường](https://www.youtube.com/watch?v=fyUOc3N2IPw) | [Báo Lâm Đồng](https://www.youtube.com/@baolamong7685) | Lâm Đồng |
+| Hoa salem | [Chia Sẻ Kĩ Thuật Trồng Và Chăm Sóc Hoa Salem / Cách gieo trồng và chăm sóc salem](https://www.youtube.com/watch?v=Nl0yx4cwb1E) | [Siêu Thị Hạt Giống](https://www.youtube.com/@sieuthihatgiong2026) | Không chính thức |
+| Lan hồ điệp | [Kỹ thuật trồng và chăm sóc lan hồ điệp](https://www.youtube.com/watch?v=nBLxGdpd6ZI) | [Quảng Ninh TV](https://www.youtube.com/@quangninhtv) | Cơ quan nhà nước |
+| Lan vũ nữ | [Kỹ thuật trồng và chăm sóc hoa lan vũ nữ / QTV](https://www.youtube.com/watch?v=h-hfhOsz_Z8) | [Quảng Ninh TV](https://www.youtube.com/@quangninhtv) | Cơ quan nhà nước |
+| Cà chua | [Nâng cao thu nhập từ cà chua giống mới Boxer](https://www.youtube.com/watch?v=9npHCv9WvGI) | [KHUYẾN NÔNG LÂM ĐỒNG](https://www.youtube.com/@khuyennonglamdong) | Lâm Đồng |
+| Ớt | [Trồng ớt ngọt công nghệ cao I Lâm Đồng TV](https://www.youtube.com/watch?v=B7n_rTvt1CI) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Ớt › Ớt cay chỉ địa | [A5. Kỹ thuật trồng ớt, quy trình chuẩn Khuyến Nông](https://www.youtube.com/watch?v=uv_uWBCwQIA) | [NPP VTNN Cứu Hộ Nông Nghiệp (Đà Lạt)](https://www.youtube.com/@CuuHoNongNghiep115) | Không chính thức |
+| Ớt › Ớt cay chỉ thiên | [A5. Kỹ thuật trồng ớt, quy trình chuẩn Khuyến Nông](https://www.youtube.com/watch?v=uv_uWBCwQIA) | [NPP VTNN Cứu Hộ Nông Nghiệp (Đà Lạt)](https://www.youtube.com/@CuuHoNongNghiep115) | Không chính thức |
+| Dưa leo | [Kỹ thuật trồng dưa leo công nghệ cao trong nhà màng](https://www.youtube.com/watch?v=KusSxEN3omc) | [Báo Nông nghiệp và Môi trường](https://www.youtube.com/@baonnmt) | Cơ quan nhà nước |
+| Bắp cải | [Kỹ thuật trồng và chăm sóc cây bắp cải vụ thu đông](https://www.youtube.com/watch?v=K1_bv17C1A8) | [Truyền hình Hải Phòng (THP3)](https://www.youtube.com/@truyenhinhhaiphongthp3) | Cơ quan nhà nước |
+| Cải thảo | [Làm vườn trồng và chăm sóc cây cải thảo, thời vụ trồng cây cải thảo, trồng rau cải thảo bằng cây con](https://www.youtube.com/watch?v=eMP-r6E5_Hs) | [Giải Trí Nhà Nông Channel](https://www.youtube.com/@Hoanvlog99999) | Không chính thức |
+| Súp lơ | [Trồng cây súp lơ xanh đúng cách](https://www.youtube.com/watch?v=kMrwsXhwqj0) | [Báo Nông nghiệp và Môi trường](https://www.youtube.com/@baonnmt) | Cơ quan nhà nước |
+| Xà lách | [Nâng cao hiệu quả canh tác xà lách thủy canh](https://www.youtube.com/watch?v=hBNnVlss-WA) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Rau muống | [Trồng rau muống VietGAP lãi 20 triệu đồng mỗi tháng / VTC16](https://www.youtube.com/watch?v=qH06FoOzuP8) | [KÊNH VTC16](https://www.youtube.com/@K%C3%8ANHVTC16) | Cơ quan nhà nước |
+| Cà rốt | [Trồng cà rốt giống mới / Lâm Đồng TV](https://www.youtube.com/watch?v=cB87v0ZVvP4) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Khoai tây | [Chăm sóc cây khoai tây vấn đề cần lưu ý](https://www.youtube.com/watch?v=fjrefDNOvvw) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Dâu tây | [Chăm sóc cây dâu tây - Những vấn đề cần lưu ý](https://www.youtube.com/watch?v=3-Ucjhtgh5c) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Bó xôi | [Trồng cải bó xôi 1 tháng cho thu hoạch](https://www.youtube.com/watch?v=Q7ooFWVNY4s) | [Báo Nông nghiệp và Môi trường](https://www.youtube.com/@baonnmt) | Cơ quan nhà nước |
+| Đậu Hà Lan | [khuyến nông - kỹ thuật trồng và chăm sóc đậu Hà Lan](https://www.youtube.com/watch?v=3Q6I6IztabQ) | [DŨN](https://www.youtube.com/@DominicDangDung) | Không chính thức |
+| Củ dền | [Trồng củ dền, thương lái đến tận ruộng thu mua / VTC16](https://www.youtube.com/watch?v=BBNAaFZ7Q18) | [KÊNH VTC16](https://www.youtube.com/@K%C3%8ANHVTC16) | Cơ quan nhà nước |
+| Tỏi tây | [Trồng tỏi tây trái vụ, nông dân lãi chục triệu mỗi sào / VTC16](https://www.youtube.com/watch?v=b91rQktHINg) | [KÊNH VTC16](https://www.youtube.com/@K%C3%8ANHVTC16) | Cơ quan nhà nước |
+| Cần tây | [Kỹ Thuật Trồng Cần Tây Và Những Điểm Cần Lưu Ý Khi Trồng Cần Tây / Su Hào TV](https://www.youtube.com/watch?v=na_qytHvC5Q) | [Su Hào TV](https://www.youtube.com/@SuHaoTV2568) | Không chính thức |
+| Su su | [Trồng SuSu baby cho hiệu quả cao / Nông Nghiệp Lâm Đồng TV](https://www.youtube.com/watch?v=lR2tObIXV8Y) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+| Lúa | [Kỹ sư Hồ Quang Cua hướng dẫn trồng lúa an toàn đúng kỹ thuật](https://www.youtube.com/watch?v=v04iyw18Gmo) | [Báo Nông nghiệp và Môi trường](https://www.youtube.com/@baonnmt) | Cơ quan nhà nước |
+| Ngô | [KỸ THUẬT TRỒNG VÀ CHẾ BIẾN NGÔ SINH KHỐI](https://www.youtube.com/watch?v=sUOM1M6xxvg) | [KHUYẾN NÔNG LÂM ĐỒNG](https://www.youtube.com/@khuyennonglamdong) | Lâm Đồng |
+| Atisô | [Hướng dẫn kỹ thuật trồng và chăm sóc cây dược liệu Atiso](https://www.youtube.com/watch?v=b7fPw5d14Qw) | [Nông nghiệp Lào Cai](https://www.youtube.com/@KhuyenNongLaoCaiLCI) | Không chính thức |
+| Cà phê | [QUY TRÌNH SẢN XUẤT CÀ PHÊ VỖI HỮU CƠ](https://www.youtube.com/watch?v=WrsiwFjqb3U) | [KHUYẾN NÔNG LÂM ĐỒNG](https://www.youtube.com/@khuyennonglamdong) | Lâm Đồng |
+| Cà phê › Cà phê chè (Arabica) | [VIDEO 3: KỸ THUẬT TRỒNG MỚI VÀ TÁI CANH CÀ PHÊ ARABICA](https://www.youtube.com/watch?v=jYALu3TXveI) | [Trung tâm Khuyến nông và Chuyển đổi số tỉnh Sơn La](https://www.youtube.com/@TTkhuyennongvachuyendoisoSL) | Cơ quan nhà nước |
+| Chè | [Hướng dẫn cách đốn chè đúng kỹ thuật / VTC16](https://www.youtube.com/watch?v=RMndqmYHLZc) | [KÊNH VTC16](https://www.youtube.com/@K%C3%8ANHVTC16) | Cơ quan nhà nước |
+| Bơ | [Chăm sóc cây bơ như thế nào để đạt năng suất cao ?](https://www.youtube.com/watch?v=FDXqElm2Woc) | [Lâm Đồng 365](https://www.youtube.com/@baoptthlamdong) | Lâm Đồng |
+| Hồng ăn trái | [Trồng hồng ăn trái nghịch vụ / Lâm Đồng TV](https://www.youtube.com/watch?v=aSJSKQwcxiA) | [Báo và Phát thanh, Truyền hình Lâm Đồng](https://www.youtube.com/@B%C3%A1ov%C3%A0PTTHL%C3%A2m%C4%90%E1%BB%93ng1) | Lâm Đồng |
+
+</details>
 
 ### Công nghệ chính
 
@@ -693,8 +823,43 @@ hiện ngay dưới ảnh. Bảng dưới sinh từ trường `image` của `sha
 
 </details>
 
+### Ảnh sản phẩm phân bón (trang chính thức của từng hãng)
+
+Mỗi sản phẩm một ảnh, lấy từ trang sản phẩm của doanh nghiệp có tên trong sản phẩm, kiểm tra ngày
+06/10/2026; nhúng sẵn trong app (`mobile/src/assets/fertilizers`). Ảnh thuộc bản quyền của các doanh
+nghiệp này, được hiện kèm tên doanh nghiệp và liên kết để nhận diện sản phẩm. Bảng dưới lấy từ trường
+`image` của `shared/data/fertilizer_recommendations.json`.
+
+| Sản phẩm | Ảnh | Doanh nghiệp (trang sản phẩm) |
+|---|---|---|
+| Urê Cà Mau | Bao Đạm Cà Mau (urê hạt đục) 50 kg | Công ty CP Phân bón Dầu khí Cà Mau (PVCFC) ([pvcfc.com.vn](https://www.pvcfc.com.vn/ure-hat-duc)) |
+| Urê Phú Mỹ | Bao Đạm Phú Mỹ (urê) 50 kg | Tổng công ty Phân bón và Hóa chất Dầu khí (PVFCCo – Đạm Phú Mỹ) ([dpm.vn](https://www.dpm.vn/san-pham/dam-phu-my-28)) |
+| Urê Hà Bắc | Bao Urê Hà Bắc 50 kg | Công ty CP Phân đạm và Hóa chất Hà Bắc ([damhabac.com.vn](https://damhabac.com.vn/san-pham/ure-ha-bac/)) |
+| DAP Hàn Quốc (nhập khẩu) | — chưa có ảnh (bảng giá không ghi hãng) | — |
+| DAP Nga (nhập khẩu) | — chưa có ảnh (bảng giá không ghi hãng) | — |
+| Siêu lân Lâm Thao | Bao Supe lân *M1 Lâm Thao (phân supephosphat đơn) | Công ty CP Supe Phốt phát và Hóa chất Lâm Thao ([supelamthao.vn](https://supelamthao.vn/san-pham/phan-bon-supe-lanm1-lam-thao/)) |
+| Lân nung chảy Văn Điển | Bao Phân lân nung chảy Văn Điển dạng viên 15%, 50 kg | Công ty CP Phân lân nung chảy Văn Điển ([vandienfmp.vn](https://vandienfmp.vn/product/phan-lan-nung-chay-dang-hat-vo-bao-moi-15/)) |
+| Kali bột (MOP) Cà Mau | Bao Kali Cà Mau 61 MOP (bột đỏ) 50 kg | Công ty CP Phân bón Dầu khí Cà Mau (PVCFC) ([pvcfc.com.vn](https://www.pvcfc.com.vn/kali-ca-mau-61-br-bot-do-)) |
+| Kali bột (MOP) Phú Mỹ | Bao Kali Phú Mỹ MOP loại bột | Tổng công ty Phân bón và Hóa chất Dầu khí (PVFCCo – Đạm Phú Mỹ) ([dpm.vn](https://www.dpm.vn/san-pham/kali-phu-my-79)) |
+| NPK 16-16-8 Cà Mau | Bao NPK Cà Mau 16-16-8+TE | Công ty CP Phân bón Dầu khí Cà Mau (PVCFC) ([pvcfc.com.vn](https://www.pvcfc.com.vn/npk-16-16-8-te)) |
+| NPK 16-16-8 Phú Mỹ | Bao NPK Phú Mỹ 16-16-8+13S+TE 50 kg | Tổng công ty Phân bón và Hóa chất Dầu khí (PVFCCo – Đạm Phú Mỹ) ([dpm.vn](https://www.dpm.vn/san-pham/npk-phu-my-16-16-813ste-43)) |
+| NPK 16-16-8 Đầu Trâu (Bình Điền) | Bao Phân bón Đầu Trâu NPK 16-16-8, 50 kg | Công ty CP Phân bón Bình Điền ([binhdien.com](https://binhdien.com/sanpham/npk-dau-trau/npk-dau-trau-16-16-8.html)) |
+| NPK 18-8-18 Cà Mau | Bao NPK Cà Mau Gold 18-8-18 | Công ty CP Phân bón Dầu khí Cà Mau (PVCFC) ([pvcfc.com.vn](https://www.pvcfc.com.vn/npk-ca-mau-gold-18-8-18-1)) |
+| NPK 20-20-15 TE Bình Điền | Bao Phân bón Đầu Trâu NPK 20-20-15+TE, 50 kg | Công ty CP Phân bón Bình Điền ([binhdien.com](https://binhdien.com/sanpham/npk-dau-trau/npk-dau-trau-20-20-15-te.html)) |
+| Phân trùn quế Pb01 (gói 2 kg) | Phân trùn quế SFARM Pb01 — ảnh chụp thực tế | SFARM (Công ty TNHH SX-TM-DV Đặng Gia Trang) ([sfarm.vn](https://sfarm.vn/phan-trun-que-cao-cap-sfarm-pb01/)) |
+| Phân trùn quế Pb01 (gói 5 kg) | Phân trùn quế SFARM Pb01 — ảnh chụp thực tế (ảnh khác) | SFARM (Công ty TNHH SX-TM-DV Đặng Gia Trang) ([sfarm.vn](https://sfarm.vn/phan-trun-que-cao-cap-sfarm-pb01/)) |
+| Phân gà hữu cơ đã qua xử lý | Viên phân gà hữu cơ AKIFARM (Nhật Bản) — ảnh chụp thực tế | SFARM (nhà phân phối phân gà AKIFARM) ([sfarm.vn](https://sfarm.vn/phan-ga-huu-co-nhat-ban-sfarm/)) |
+
 ## Giới hạn hiện tại
 
+- Video cách trồng ở mức loại cây (và ba loại con trồng khác hẳn), không có video riêng cho từng
+  giống. Video cần mạng; 5 loại cây (salem, cải thảo, đậu Hà Lan, cần tây, atisô) dùng kênh không
+  chính thức vì không có video chính thức về cách trồng; đổi video phải sửa `crop_varieties.json`
+  (chưa sửa được trên web quản trị) — chạy `check_crop_videos.py` để biết video nào đã hỏng.
+- Ảnh phân bón là ảnh của các doanh nghiệp (bản quyền của họ), dùng để nhận diện sản phẩm trong đồ
+  án; trước khi phát hành thương mại phải xin phép hoặc tự chụp bao ở đại lý. DAP Hàn Quốc, DAP Nga
+  chưa có ảnh vì bảng giá không ghi hãng; Pb01 (2 kg, 5 kg) và phân gà 1 kg dùng ảnh chụp thực tế của
+  sản phẩm vì SFARM chưa đăng ảnh đúng gói.
 - Quy trình chăm sóc: chè Đài Loan (bón theo lứa hái, app chưa mô tả được) và rau muống (QĐ
   1972 không có quy trình) → app hiện "Chưa có dữ liệu quy trình" kèm lý do và nguồn tham
   khảo; không tự suy diễn. Phương án NPK thay thế mà quy trình không ghi cách chia lần (lúa,
@@ -728,9 +893,10 @@ hiện ngay dưới ảnh. Bảng dưới sinh từ trường `image` của `sha
   ([docs/BACKEND_DEPLOYMENT.md](docs/BACKEND_DEPLOYMENT.md) §5).
 - Test render toàn bộ `App` trong jest đã bỏ (cần mock native module; treo với WatermelonDB);
   thay bằng test render từng component và test logic thuần.
-- Giọng nói: mô hình nhỏ chỉ nghe tốt từ vựng sổ ruộng; số đo trên giọng tổng hợp là mức trần,
-  chưa đo với giọng người trong nhà màng. Câu nói khác mẫu thì bản nháp có thể thiếu trường —
-  nông dân luôn xem và sửa trước khi lưu.
+- Giọng nói: đo bằng giọng tổng hợp và 129 câu giọng người thật (FLEURS), chưa đo với giọng
+  nông dân trong nhà màng. Tên riêng của nghề đôi khi nghe nhầm ("kali" thành "cay"); nơi đông người
+  nói xung quanh có thể giữ micro mở — bấm nút dừng. Nông dân luôn xem và sửa bản nháp trước khi lưu.
+  Mô-đun nhận dạng hiện chỉ có cho Android.
 - Thời tiết là **dự báo mô hình** cho một điểm ở làng hoa (Open-Meteo, gói miễn phí phi thương
   mại), không phải số đo tại vườn và không thay bản tin chính thức của Trung tâm Dự báo KTTV
   Quốc gia.

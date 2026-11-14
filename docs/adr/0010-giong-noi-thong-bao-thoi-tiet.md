@@ -1,7 +1,10 @@
 # ADR 0010 — Ghi bằng giọng nói (offline), thông báo, thời tiết và cập nhật giá
 
 - **Ngày:** 2026-10-03
-- **Trạng thái:** Đã áp dụng (nhánh `fix/doi-tai-khoan-cung-may`)
+- **Trạng thái:** Đã áp dụng (nhánh `fix/doi-tai-khoan-cung-may`). **§1 (giọng nói) được thay bằng
+  [ADR 0014](0014-giong-noi-zipformer-va-gia-vi-sinh.md) ngày 07/10/2026:** Vosk nghe giọng người thật sai
+  2/3 số từ và app dừng nghe ở lần ngắt hơi đầu tiên; nay dùng Zipformer tiếng Việt (sherpa-onnx) chạy
+  trên máy.
 - **Liên quan:** [ADR 0002](0002-giai-doan-1.md) (đồng bộ hai chiều), [ADR 0006](0006-giai-doan-4-dashboard-offline-pdf-da-nguoi-dung.md) (dải trạng thái đồng bộ), [ADR 0009](0009-du-lieu-lam-dong.md) (dữ liệu Lâm Đồng, giá phân)
 
 ## Bối cảnh
