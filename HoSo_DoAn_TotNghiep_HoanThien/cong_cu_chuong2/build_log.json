@@ -63,11 +63,6 @@
  ],
  "removed": [
   [
-   300,
-   "176",
-   "Chương này trình bày các cơ sở lý thuyết làm nền tảng cho thiết kế và đánh giá hệ thống (các mục 2.1–2.6), khảo sát các công trình liên quan để xác định vị trí của đề tài (mục 2.7) và giới thiệu các công nghệ được lựa chọn cùng căn cứ lựa chọn (mục 2.8)."
-  ],
-  [
    302,
    "4",
    "Khái niệm và chức năng"
@@ -278,11 +273,6 @@
    "4) Phần mềm ưu tiên cục bộ và đồng bộ dữ liệu. Kleppmann và cộng sự [7] nêu các nguyên tắc của phần mềm local-first, trong đó dữ liệu thuộc về thiết bị của người dùng; Terry và cộng sự [13] trình bày cách quản lý xung đột cập nhật trong hệ lưu trữ nhân bản kết nối yếu; Shapiro và cộng sự [15] đề xuất các kiểu dữ liệu nhân bản không xung đột. Các công trình này là nền tảng chung, không gắn với nghiệp vụ nông nghiệp."
   ],
   [
-   351,
-   "176",
-   "Bên cạnh các công trình học thuật, trong thực tế nông hộ thường dùng một trong ba cách ghi chép: sổ giấy, bảng tính và ứng dụng trực tuyến. Bảng 2.1 đối chiếu các cách này theo đặc tính kỹ thuật; nhóm không gán tên hoặc tính năng cụ thể cho phần mềm thương mại khi chưa có kết quả khảo sát tương ứng."
-  ],
-  [
    355,
    "176",
    "Bảng 2.2 đối chiếu đề tài với các nhóm công trình đã khảo sát. Đây là so sánh theo phạm vi và đặc tính của công trình, không phải kết quả thử nghiệm so sánh hiệu năng; báo cáo không kết luận AgriLog V2 vượt trội một sản phẩm thương mại cụ thể."
@@ -291,11 +281,6 @@
    358,
    "177",
    "Từ đối chiếu trên, điểm mới của đề tài thể hiện ở hai mặt. Về nghiệp vụ, đề tài gộp lô đất, vụ trồng, công việc chăm sóc, vật tư và thu – chi của nông hộ vào một luồng dữ liệu thống nhất, gắn với dữ liệu nông học có nguồn. Về kỹ thuật, đề tài hiện thực một hệ thống ưu tiên ngoại tuyến cho bài toán này, trong đó đồng bộ, xử lý xung đột và phân quyền được thiết kế như các thành phần cốt lõi và được kiểm chứng bằng kiểm thử tự động."
-  ],
-  [
-   360,
-   "176",
-   "Mục này chỉ trình bày những công nghệ thực sự được sử dụng trong mã nguồn của hệ thống, kèm vai trò và lý do lựa chọn; phiên bản được đối chiếu với tệp khai báo phụ thuộc của từng phân hệ."
   ],
   [
    361,
