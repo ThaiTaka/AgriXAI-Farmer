@@ -1,0 +1,366 @@
+{
+ "retitled": [
+  [
+   "h2",
+   301,
+   "Hệ thống thông tin quản lý nông trại",
+   "Hệ thống thông tin quản lý nông trại và đặc thù nông hộ quy mô nhỏ"
+  ],
+  [
+   "h2",
+   306,
+   "Kiến trúc ưu tiên ngoại tuyến",
+   "Kiến trúc ưu tiên ngoại tuyến và đồng bộ dữ liệu"
+  ],
+  [
+   "h2",
+   314,
+   "Dịch vụ REST, xác thực và phân quyền",
+   "Dịch vụ REST, xác thực và kiểm soát truy cập"
+  ],
+  [
+   "h2",
+   323,
+   "Cơ sở dữ liệu và giao dịch",
+   "Cơ sở dữ liệu, giao dịch và tính toán số tiền"
+  ],
+  [
+   "h2",
+   330,
+   "Công nghệ phần mềm và kiểm thử",
+   "Quy trình phát triển phần mềm, đặc tả yêu cầu và kiểm thử"
+  ],
+  [
+   "h2",
+   339,
+   "Khả năng tiếp cận và minh bạch dữ liệu nông học",
+   "Khả năng tiếp cận giao diện và minh bạch nguồn dữ liệu nông học"
+  ],
+  [
+   "h2",
+   344,
+   "Khảo sát các công trình liên quan",
+   "Các công trình liên quan và định hướng của đề tài"
+  ],
+  [
+   "h3",
+   345,
+   "Tổng quan các hướng nghiên cứu và giải pháp",
+   "Các hướng nghiên cứu và giải pháp liên quan"
+  ],
+  [
+   "h3",
+   354,
+   "So sánh đối chiếu và điểm mới của đề tài",
+   "Đối chiếu và phạm vi đóng góp của đề tài"
+  ],
+  [
+   "h2",
+   359,
+   "Công nghệ và công cụ lựa chọn",
+   "Công nghệ và công cụ được lựa chọn"
+  ]
+ ],
+ "removed": [
+  [
+   300,
+   "176",
+   "Chương này trình bày các cơ sở lý thuyết làm nền tảng cho thiết kế và đánh giá hệ thống (các mục 2.1–2.6), khảo sát các công trình liên quan để xác định vị trí của đề tài (mục 2.7) và giới thiệu các công nghệ được lựa chọn cùng căn cứ lựa chọn (mục 2.8)."
+  ],
+  [
+   302,
+   "4",
+   "Khái niệm và chức năng"
+  ],
+  [
+   303,
+   "176",
+   "Hệ thống thông tin quản lý nông trại (FMIS) là hệ thống thu thập, xử lý, lưu trữ và phân phối dữ liệu cần thiết cho việc điều hành các hoạt động của nông trại [3]. Các chức năng thường gặp gồm lập kế hoạch sản xuất, ghi nhật ký thực hiện công việc, quản lý vật tư và quản lý tài chính. Tổng quan tài liệu cho thấy phạm vi chức năng của các FMIS rất khác nhau, đồng thời xác định các đặc tính cần có như khả năng ghi chép thuận tiện, báo cáo và tích hợp dữ liệu [4]. Về mặt kiến trúc, một FMIS hiện đại thường được xem là một thành phần trong hệ sinh thái phần mềm nông nghiệp, trao đổi dữ liệu với nhiều bên liên quan [9]."
+  ],
+  [
+   304,
+   "4",
+   "Đặc thù đối với nông hộ quy mô nhỏ"
+  ],
+  [
+   305,
+   "176",
+   "Đối với nông hộ nhỏ, các rào cản phổ biến là chi phí, độ phức tạp và khả năng sử dụng [4]. Mô hình khái niệm FMIS cho nông hộ nhỏ được đề xuất trong nghiên cứu về nông hộ trồng ớt tại Indonesia nhấn mạnh sự cần thiết của một hệ thống đơn giản, tập trung vào những chức năng cốt lõi [5]. Bên cạnh đó, ở khu vực nông thôn, hạ tầng kết nối còn hạn chế là một ràng buộc thiết kế quan trọng [1]. Những đặc thù này dẫn tới ba định hướng của AgriLog V2: giao diện đơn giản trên thiết bị di động, vận hành được khi mất kết nối, và dữ liệu có cấu trúc để tổng hợp chi phí theo lô."
+  ],
+  [
+   307,
+   "4",
+   "Ứng dụng di động trong điều kiện kết nối gián đoạn"
+  ],
+  [
+   308,
+   "176",
+   "Điện toán di động đối mặt với những thách thức cố hữu như chất lượng mạng biến động khó đoán, kết nối gián đoạn và tài nguyên thiết bị hạn chế; khả năng tiếp tục hoạt động khi mất kết nối (disconnected operation) là yêu cầu cơ bản của loại ứng dụng này [6]. Theo hướng tiếp cận ưu tiên cục bộ (local-first), bản sao dữ liệu chính nằm trên thiết bị của người dùng; máy chủ đóng vai trò đồng bộ và sao lưu thay vì là điều kiện để ứng dụng hoạt động [7]. Hệ quả là thao tác ghi có hai thời điểm khác nhau: thời điểm dữ liệu được lưu trên thiết bị và thời điểm thay đổi đó được máy chủ xác nhận. Trạng thái cục bộ chưa đồng bộ vì vậy phải được hiểu là dữ liệu đang chờ trao đổi, không phải dữ liệu đã được máy chủ lưu thành công."
+  ],
+  [
+   309,
+   "4",
+   "Mô hình nhất quán và định lý CAP"
+  ],
+  [
+   310,
+   "176",
+   "Khi mạng bị chia cắt, một hệ thống dữ liệu phân tán không thể đồng thời bảo đảm tính nhất quán và tính sẵn sàng; đây là nội dung của định lý CAP, được chứng minh hình thức bởi Gilbert và Lynch [10] và được Brewer phân tích lại với góc nhìn thực dụng hơn [11]. Ứng dụng ưu tiên ngoại tuyến chọn tính sẵn sàng: cho phép ghi cục bộ ngay cả khi không liên lạc được với máy chủ, và chấp nhận rằng các bản sao chỉ hội tụ sau một khoảng thời gian. Mô hình nhất quán cuối cùng (eventual consistency) mô tả đúng hành vi này: nếu không có thay đổi mới, mọi bản sao cuối cùng sẽ có cùng giá trị [12]."
+  ],
+  [
+   311,
+   "4",
+   "Xung đột và các chiến lược giải quyết"
+  ],
+  [
+   312,
+   "176",
+   "Khi nhiều bản sao cùng được sửa độc lập, xung đột là điều khó tránh. Hệ thống Bayou đề xuất việc phát hiện và giải quyết xung đột theo ngữ nghĩa của ứng dụng trong môi trường lưu trữ nhân bản kết nối yếu [13]. Một chiến lược đơn giản là last-write-wins (bản ghi sau cùng thắng), dựa trên việc sắp xếp các sự kiện theo dấu thời gian; tuy nhiên, thứ tự theo đồng hồ vật lý chỉ là thứ tự gần đúng vì đồng hồ của các thiết bị không hoàn toàn đồng bộ [14]. Một hướng khác là các kiểu dữ liệu nhân bản không xung đột (CRDT), được thiết kế để các bản sao hội tụ mà không cần phân xử tập trung [15], nhưng đòi hỏi mô hình dữ liệu và thuật toán phức tạp hơn."
+  ],
+  [
+   313,
+   "176",
+   "Với AgriLog V2, dữ liệu của mỗi nông hộ chủ yếu do một người dùng trên một thiết bị chỉnh sửa, nên khả năng hai bản sao cùng sửa một bản ghi là thấp. Nhóm chọn last-write-wins kết hợp quy tắc xóa thắng sửa vì dễ giải thích với người dùng và dễ kiểm thử, đồng thời bổ sung cơ chế trả bản ghi bị từ chối kèm lý do để việc loại bỏ thay đổi không diễn ra âm thầm."
+  ],
+  [
+   315,
+   "4",
+   "Kiến trúc REST"
+  ],
+  [
+   316,
+   "176",
+   "REST (Representational State Transfer) là một phong cách kiến trúc cho hệ thống siêu phương tiện phân tán, được định nghĩa bằng một tập ràng buộc: tách biệt client–server, không lưu trạng thái phiên trên máy chủ (stateless), cho phép bộ nhớ đệm, giao diện thống nhất và hệ thống phân tầng [16]. Tính không trạng thái khiến mỗi yêu cầu phải mang đủ thông tin để máy chủ xử lý, qua đó dễ mở rộng ngang và dễ kiểm thử. Giao thức đồng bộ và các điểm cuối nghiệp vụ của AgriLog V2 được thiết kế theo phong cách này."
+  ],
+  [
+   317,
+   "4",
+   "Xác thực bằng JSON Web Token"
+  ],
+  [
+   318,
+   "176",
+   "JSON Web Token (JWT) là mã đăng nhập có chữ ký, mang thông tin định danh của người dùng và thời hạn hiệu lực; máy chủ xác minh chữ ký mà không cần lưu phiên, phù hợp với dịch vụ RESTful không trạng thái [17]. Các nghiên cứu về lược đồ xác thực dựa trên JWT cũng chỉ ra những lưu ý khi sử dụng như bảo vệ khóa ký và đặt thời hạn mã hợp lý [18]. Trong AgriLog V2, JWT là cơ chế xác thực duy nhất cho các điểm cuối cần bảo vệ."
+  ],
+  [
+   319,
+   "4",
+   "Kiểm soát truy cập theo vai trò"
+  ],
+  [
+   320,
+   "176",
+   "Kiểm soát truy cập theo vai trò (Role-Based Access Control – RBAC) gán quyền cho vai trò thay vì gán trực tiếp cho từng người dùng; người dùng được cấp quyền thông qua vai trò của mình [19]. Cách tiếp cận này đơn giản hóa quản trị phân quyền khi hệ thống có nhiều người dùng cùng nhóm. AgriLog V2 sử dụng hai vai trò là quản trị viên và nông hộ, kết hợp với kiểm tra quyền sở hữu trên từng bản ghi."
+  ],
+  [
+   321,
+   "4",
+   "Cô lập dữ liệu nhiều người dùng và kiểm tra ở phía máy chủ"
+  ],
+  [
+   322,
+   "176",
+   "Trong cơ sở dữ liệu dùng chung cho nhiều người dùng (multi-tenant), dữ liệu của mỗi người dùng phải được cô lập và kiểm soát truy cập ở mọi đường truy cập đến dữ liệu [20]. Một nguyên tắc quan trọng là không xem giao diện người dùng là ranh giới bảo mật: nghiên cứu về các giao diện lập trình của ứng dụng di động cho thấy việc kiểm tra không nhất quán giữa các đường truy cập có thể dẫn đến lỗ hổng [21]. Vì vậy, quyền sở hữu phải được kiểm tra tại máy chủ đối với cả điểm cuối REST lẫn đường đồng bộ, và thông tin định danh phải lấy từ ngữ cảnh xác thực thay vì từ dữ liệu do máy khách gửi lên."
+  ],
+  [
+   324,
+   "4",
+   "Mô hình quan hệ và mô hình thực thể – liên kết"
+  ],
+  [
+   325,
+   "176",
+   "Mô hình quan hệ biểu diễn dữ liệu dưới dạng các quan hệ (bảng) và cho phép truy vấn độc lập với cách lưu trữ vật lý [22]. Mô hình thực thể – liên kết (ER) mô tả thế giới thực bằng các thực thể, thuộc tính và mối liên kết, thường được dùng để thiết kế cơ sở dữ liệu quan hệ trước khi cài đặt [23]. Lược đồ cơ sở dữ liệu của AgriLog V2 được thiết kế theo mô hình ER và cài đặt thành 16 bảng quan hệ (mục 3.4)."
+  ],
+  [
+   326,
+   "4",
+   "Giao dịch và tính nguyên tử"
+  ],
+  [
+   327,
+   "176",
+   "Giao dịch là đơn vị công việc phải thỏa các tính chất nguyên tử (atomicity), nhất quán (consistency), cô lập (isolation) và bền vững (durability), thường được viết tắt là ACID [24]. Tính nguyên tử bảo đảm một lô thao tác hoặc được thực hiện trọn vẹn, hoặc không thực hiện phần nào. Đặc tính này đặc biệt hữu ích cho đồng bộ: một lô thay đổi gửi từ thiết bị được xử lý như một giao dịch, nên việc gửi lại sau lỗi không để lại dữ liệu ghi dở."
+  ],
+  [
+   328,
+   "4",
+   "Biểu diễn số tiền và quy tắc làm tròn"
+  ],
+  [
+   329,
+   "176",
+   "Số thực dấu phẩy động nhị phân không biểu diễn chính xác mọi giá trị thập phân và có thể sinh sai số làm tròn [25]. Chuẩn IEEE 754 quy định chế độ làm tròn mặc định là làm tròn đến giá trị gần nhất, hòa thì về số chẵn (roundTiesToEven) [26]; hàm round của Python hành xử theo cách này, trong khi hàm Math.round của JavaScript làm tròn nửa lên. Khi cùng một phép tính tiền được thực hiện ở hai ngôn ngữ, sự khác biệt này có thể gây lệch một đồng. Do đó, hệ thống cần một quy tắc làm tròn thống nhất và được kiểm thử ở cả hai phía (mục 4.2.2)."
+  ],
+  [
+   331,
+   "4",
+   "Quy trình phát triển phần mềm"
+  ],
+  [
+   332,
+   "176",
+   "Mô hình thác nước (waterfall) chia phát triển thành các giai đoạn tuần tự từ yêu cầu, thiết kế, cài đặt đến kiểm thử [27], phù hợp khi yêu cầu ổn định. Mô hình xoắn ốc kết hợp tính lặp của mô hình nguyên mẫu với tính hệ thống của mô hình thác nước và lấy phân tích rủi ro làm trục điều khiển [8]. Do yêu cầu của AgriLog V2 được làm rõ dần qua từng giai đoạn, đề tài áp dụng cách tiếp cận lặp: mỗi giai đoạn gồm phân tích, thiết kế, cài đặt và kiểm thử cho một nhóm chức năng."
+  ],
+  [
+   333,
+   "4",
+   "Đặc tả yêu cầu và mô hình hóa"
+  ],
+  [
+   334,
+   "176",
+   "Tiêu chuẩn ISO/IEC/IEEE 29148 hướng dẫn quá trình kỹ nghệ yêu cầu, trong đó yêu cầu cần được phát biểu rõ ràng, có thể kiểm chứng và truy vết được [28]; yêu cầu thường được phân thành yêu cầu chức năng và yêu cầu phi chức năng. Tiêu chuẩn IEEE 1016 quy định nội dung của tài liệu mô tả thiết kế phần mềm, gồm các góc nhìn về ngữ cảnh, thành phần, dữ liệu, giao diện và hành vi [29]. Ngôn ngữ mô hình hóa thống nhất (UML) cung cấp các biểu đồ tương ứng: biểu đồ use case biểu diễn tương tác giữa tác nhân và hệ thống, biểu đồ tuần tự biểu diễn thứ tự thông điệp giữa các thành phần theo thời gian. Chương 3 áp dụng các khái niệm trên."
+  ],
+  [
+   335,
+   "4",
+   "Kiểm thử tự động và độ phủ"
+  ],
+  [
+   336,
+   "176",
+   "Kiểm thử phần mềm là quá trình thực thi hệ thống nhằm kiểm tra sự phù hợp với yêu cầu và phát hiện lỗi; tiêu chuẩn ISO/IEC/IEEE 29119-1 định nghĩa các khái niệm nền tảng như mức kiểm thử, kỹ thuật kiểm thử và chiến lược kiểm thử [30]. Độ phủ (coverage) đo tỷ lệ mã được thực thi bởi bộ kiểm thử. Nghiên cứu thực nghiệm cho thấy độ phủ chỉ có tương quan thấp đến vừa với khả năng phát hiện lỗi của bộ kiểm thử khi đã loại trừ ảnh hưởng của kích thước bộ kiểm thử [31]. Vì vậy, báo cáo trình bày độ phủ cùng với số lượng, phạm vi nghiệp vụ và các lỗi thực tế đã phát hiện, không dùng độ phủ như bằng chứng duy nhất về chất lượng."
+  ],
+  [
+   337,
+   "4",
+   "Đo hiệu năng và phân vị độ trễ"
+  ],
+  [
+   338,
+   "176",
+   "Độ trễ trung bình có thể che giấu những yêu cầu chậm bất thường; để mô tả trải nghiệm thực tế, cần xem các phân vị cao của phân bố độ trễ, chẳng hạn p95 hoặc p99 [32]. Phân vị p95 là giá trị mà 95% số yêu cầu có thời gian xử lý không vượt quá, còn 5% còn lại có thể chậm hơn. Kết quả kiểm tải chỉ có ý nghĩa khi đi kèm cấu hình môi trường thử nghiệm và loại thao tác được đo (mục 4.5.4)."
+  ],
+  [
+   340,
+   "4",
+   "Khả năng tiếp cận giao diện"
+  ],
+  [
+   341,
+   "176",
+   "Hướng dẫn WCAG 2.1 đặt ra các tiêu chí giúp nội dung dễ tiếp cận hơn; về độ tương phản màu, văn bản thông thường cần tỷ lệ tối thiểu 4,5:1 ở mức AA và 7:1 ở mức AAA [33]. Đề tài dùng tiêu chí này để kiểm tra độ tương phản của màu chữ trên giao diện di động. Kết quả đó là tự kiểm tra của nhóm, không phải chứng nhận độc lập cho toàn bộ ứng dụng."
+  ],
+  [
+   342,
+   "4",
+   "Minh bạch nguồn gốc dữ liệu nông học"
+  ],
+  [
+   343,
+   "176",
+   "Dữ liệu nông học như thời gian sinh trưởng, định mức phân bón hay quy trình chăm sóc phụ thuộc giống, giai đoạn sinh trưởng và điều kiện canh tác; nếu không có nguồn, người dùng khó xác định phạm vi áp dụng. Khó khăn trong chia sẻ và thống nhất dữ liệu giữa các thành phần phần mềm cũng được nêu là một trở ngại của hệ sinh thái phần mềm nông nghiệp [9]. AgriLog V2 vì vậy gắn nguồn cho từng giống và quy trình, dựa trên các văn bản chính thống như Quyết định 1972/QĐ-UBND của UBND tỉnh Lâm Đồng [34] và Quyết định 254/QĐ-TT-CCN của Cục Trồng trọt [35], và hiển thị “Chưa có dữ liệu” khi thiếu căn cứ thay vì tự điền giá trị. Liên kết nguồn không đồng nghĩa nội dung đã được thẩm định độc lập."
+  ],
+  [
+   346,
+   "176",
+   "Qua khảo sát tài liệu, các công trình liên quan đến đề tài có thể được phân thành bốn hướng:"
+  ],
+  [
+   347,
+   "176",
+   "1) Tổng quan về hệ thống thông tin quản lý nông trại. Fountas và cộng sự [3] tổng kết hiện trạng và triển vọng của FMIS, cho thấy các hệ thống ngày càng mở rộng từ ghi chép đơn thuần sang hỗ trợ ra quyết định. Tummers và cộng sự [4] thực hiện tổng quan tài liệu có hệ thống về các trở ngại và đặc tính của FMIS. Hai công trình này cung cấp khung chức năng tham chiếu nhưng không hướng tới một sản phẩm cụ thể cho nông hộ nhỏ."
+  ],
+  [
+   348,
+   "176",
+   "2) FMIS cho nông hộ quy mô nhỏ. Henriyadi và cộng sự [5] đề xuất mô hình khái niệm để phát triển FMIS cho nông hộ nhỏ, với trường hợp nông hộ trồng ớt tại Indonesia. Công trình tập trung ở mức mô hình khái niệm; các vấn đề cài đặt như vận hành ngoại tuyến và đồng bộ dữ liệu không phải trọng tâm."
+  ],
+  [
+   349,
+   "176",
+   "3) Kiến trúc và hạ tầng cho phần mềm nông nghiệp. Kruize và cộng sự [9] đề xuất kiến trúc tham chiếu cho hệ sinh thái phần mềm nông trại, nhấn mạnh khả năng trao đổi dữ liệu giữa các thành phần. Ahmed và cộng sự [1] nghiên cứu giải pháp Internet vạn vật cho nông nghiệp ở vùng nông thôn, nơi hạ tầng kết nối là ràng buộc chính."
+  ],
+  [
+   350,
+   "176",
+   "4) Phần mềm ưu tiên cục bộ và đồng bộ dữ liệu. Kleppmann và cộng sự [7] nêu các nguyên tắc của phần mềm local-first, trong đó dữ liệu thuộc về thiết bị của người dùng; Terry và cộng sự [13] trình bày cách quản lý xung đột cập nhật trong hệ lưu trữ nhân bản kết nối yếu; Shapiro và cộng sự [15] đề xuất các kiểu dữ liệu nhân bản không xung đột. Các công trình này là nền tảng chung, không gắn với nghiệp vụ nông nghiệp."
+  ],
+  [
+   351,
+   "176",
+   "Bên cạnh các công trình học thuật, trong thực tế nông hộ thường dùng một trong ba cách ghi chép: sổ giấy, bảng tính và ứng dụng trực tuyến. Bảng 2.1 đối chiếu các cách này theo đặc tính kỹ thuật; nhóm không gán tên hoặc tính năng cụ thể cho phần mềm thương mại khi chưa có kết quả khảo sát tương ứng."
+  ],
+  [
+   355,
+   "176",
+   "Bảng 2.2 đối chiếu đề tài với các nhóm công trình đã khảo sát. Đây là so sánh theo phạm vi và đặc tính của công trình, không phải kết quả thử nghiệm so sánh hiệu năng; báo cáo không kết luận AgriLog V2 vượt trội một sản phẩm thương mại cụ thể."
+  ],
+  [
+   358,
+   "177",
+   "Từ đối chiếu trên, điểm mới của đề tài thể hiện ở hai mặt. Về nghiệp vụ, đề tài gộp lô đất, vụ trồng, công việc chăm sóc, vật tư và thu – chi của nông hộ vào một luồng dữ liệu thống nhất, gắn với dữ liệu nông học có nguồn. Về kỹ thuật, đề tài hiện thực một hệ thống ưu tiên ngoại tuyến cho bài toán này, trong đó đồng bộ, xử lý xung đột và phân quyền được thiết kế như các thành phần cốt lõi và được kiểm chứng bằng kiểm thử tự động."
+  ],
+  [
+   360,
+   "176",
+   "Mục này chỉ trình bày những công nghệ thực sự được sử dụng trong mã nguồn của hệ thống, kèm vai trò và lý do lựa chọn; phiên bản được đối chiếu với tệp khai báo phụ thuộc của từng phân hệ."
+  ],
+  [
+   361,
+   "4",
+   "Nền tảng ứng dụng di động: React Native, WatermelonDB và SQLite"
+  ],
+  [
+   362,
+   "24",
+   "React Native 0.81 (React 19.1, TypeScript 5.8): cho phép xây dựng ứng dụng di động bằng một mã nguồn theo mô hình thành phần, thuộc nhóm tiếp cận đa nền tảng đã được khảo sát trong [36]. Điều hướng dùng React Navigation 7."
+  ],
+  [
+   363,
+   "24",
+   "WatermelonDB 0.28 trên SQLite: là lớp cơ sở dữ liệu cục bộ của ứng dụng (lược đồ phiên bản 7 gồm 13 bảng). Màn hình quan sát trực tiếp dữ liệu cục bộ nên tự cập nhật khi bản ghi thay đổi; thư viện có sẵn khung đồng bộ pull/push phù hợp với kiến trúc ưu tiên ngoại tuyến ở mục 2.2."
+  ],
+  [
+   364,
+   "24",
+   "Thư viện hỗ trợ: react-native-keychain giữ mã đăng nhập trong kho khóa của hệ điều hành; react-native-image-picker và @dr.pogodin/react-native-fs phục vụ chọn, lưu tạm ảnh/video; react-native-webview phát video nhúng; react-native-html-to-pdf và react-native-share xuất và chia sẻ báo cáo; react-native-svg vẽ biểu đồ."
+  ],
+  [
+   365,
+   "4",
+   "Máy chủ và cơ sở dữ liệu: FastAPI, SQLAlchemy và PostgreSQL"
+  ],
+  [
+   366,
+   "24",
+   "FastAPI (trên Starlette, chạy bằng Uvicorn) và Pydantic 2: xây dựng dịch vụ REST [16]; Pydantic kiểm tra kiểu và ràng buộc dữ liệu đầu vào, đồng thời FastAPI tự sinh tài liệu OpenAPI cho toàn bộ 82 điểm cuối."
+  ],
+  [
+   367,
+   "24",
+   "SQLAlchemy 2.0: lớp ánh xạ đối tượng – quan hệ, cho phép cùng một mô hình dữ liệu chạy trên SQLite khi phát triển, kiểm thử và trên PostgreSQL khi triển khai."
+  ],
+  [
+   368,
+   "24",
+   "PostgreSQL 16: hệ quản trị cơ sở dữ liệu quan hệ [22] của môi trường triển khai, hỗ trợ giao dịch ACID [24] cần cho việc xử lý nguyên tử từng lô đồng bộ."
+  ],
+  [
+   369,
+   "24",
+   "PyJWT và bcrypt: phát hành, xác minh mã JWT [17] và băm mật khẩu; fpdf2: sinh báo cáo PDF hỗ trợ tiếng Việt."
+  ],
+  [
+   370,
+   "4",
+   "Trang quản trị web: Next.js, React và Tailwind CSS"
+  ],
+  [
+   371,
+   "176",
+   "Trang quản trị được xây dựng bằng Next.js 16 (App Router) với React 19, TypeScript và Tailwind CSS 4. Next.js cung cấp định tuyến theo thư mục và bản dựng (build) tối ưu cho trình duyệt; Tailwind CSS cho phép dùng chung bộ token thiết kế (màu, khoảng cách, phông chữ) với ứng dụng di động. Trang quản trị không có tầng dữ liệu riêng mà gọi cùng API với ứng dụng di động, nên quy tắc phân quyền chỉ cần hiện thực một lần ở máy chủ."
+  ],
+  [
+   372,
+   "4",
+   "Tổng hợp và căn cứ lựa chọn công nghệ"
+  ],
+  [
+   373,
+   "176",
+   "Bảng 2.3 tổng hợp các công nghệ theo thành phần. Bảng 2.4 đối chiếu từng lựa chọn với phương án thay thế phổ biến theo các ràng buộc của đề tài; đây là các tiêu chí định tính về kiến trúc và vận hành, không phải kết quả đo đạc thực nghiệm."
+  ]
+ ]
+}
