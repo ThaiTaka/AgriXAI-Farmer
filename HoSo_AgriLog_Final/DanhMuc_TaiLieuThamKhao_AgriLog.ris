@@ -1,0 +1,549 @@
+﻿TY  - JOUR
+ID  - ref01
+AU  - Ahmed, Nurzaman
+AU  - De, Debashis
+AU  - Hussain, Iftekhar
+TI  - Internet of Things (IoT) for Smart Precision Agriculture and Farming in Rural Areas
+JO  - IEEE Internet of Things Journal
+PY  - 2018
+VL  - 5
+IS  - 6
+SP  - 4890
+EP  - 4899
+DO  - 10.1109/jiot.2018.2879579
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref02
+AU  - Wolfert, Sjaak
+AU  - Ge, Lan
+AU  - Verdouw, Cor
+AU  - Bogaardt, Marc-Jeroen
+TI  - Big Data in Smart Farming – A review
+JO  - Agricultural Systems
+PY  - 2017
+VL  - 153
+SP  - 69
+EP  - 80
+DO  - 10.1016/j.agsy.2017.01.023
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref03
+AU  - Fountas, S.
+AU  - Carli, G.
+AU  - Sørensen, C.G.
+AU  - Tsiropoulos, Z.
+AU  - Cavalaris, C.
+AU  - Vatsanidou, A.
+AU  - Liakos, B.
+AU  - Canavari, M.
+AU  - Wiebensohn, J.
+AU  - Tisserye, B.
+TI  - Farm management information systems: Current situation and future perspectives
+JO  - Computers and Electronics in Agriculture
+PY  - 2015
+VL  - 115
+SP  - 40
+EP  - 50
+DO  - 10.1016/j.compag.2015.05.011
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref04
+AU  - Tummers, J.
+AU  - Kassahun, A.
+AU  - Tekinerdogan, B.
+TI  - Obstacles and features of Farm Management Information Systems: A systematic literature review
+JO  - Computers and Electronics in Agriculture
+PY  - 2019
+VL  - 157
+SP  - 189
+EP  - 204
+DO  - 10.1016/j.compag.2018.12.044
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref05
+AU  - Henriyadi, Henriyadi
+AU  - Esichaikul, Vatcharaporn
+AU  - Anutariya, Chutiporn
+TI  - A Conceptual Model for Development of Small Farm Management Information System: A Case of Indonesian Smallholder Chili Farmers
+JO  - Agriculture
+PY  - 2022
+VL  - 12
+IS  - 6
+SP  - 866
+DO  - 10.3390/agriculture12060866
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CONF
+ID  - ref06
+AU  - Satyanarayanan, M.
+TI  - Fundamental challenges in mobile computing
+T2  - Proceedings of the fifteenth annual ACM symposium on Principles of distributed computing  - PODC '96
+PY  - 1996
+SP  - 1
+EP  - 7
+DO  - 10.1145/248052.248053
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CONF
+ID  - ref07
+AU  - Kleppmann, Martin
+AU  - Wiggins, Adam
+AU  - van Hardenberg, Peter
+AU  - McGranaghan, Mark
+TI  - Local-first software: you own your data, in spite of the cloud
+T2  - Proceedings of the 2019 ACM SIGPLAN International Symposium on New Ideas, New Paradigms, and Reflections on Programming and Software
+PY  - 2019
+SP  - 154
+EP  - 178
+DO  - 10.1145/3359591.3359737
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref08
+AU  - Boehm, B. W.
+TI  - A spiral model of software development and enhancement
+JO  - Computer
+PY  - 1988
+VL  - 21
+IS  - 5
+SP  - 61
+EP  - 72
+DO  - 10.1109/2.59
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref09
+AU  - Kruize, J.W.
+AU  - Wolfert, J.
+AU  - Scholten, H.
+AU  - Verdouw, C.N.
+AU  - Kassahun, A.
+AU  - Beulens, A.J.M.
+TI  - A reference architecture for Farm Software Ecosystems
+JO  - Computers and Electronics in Agriculture
+PY  - 2016
+VL  - 125
+SP  - 12
+EP  - 28
+DO  - 10.1016/j.compag.2016.04.011
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref10
+AU  - Gilbert, Seth
+AU  - Lynch, Nancy
+TI  - Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services
+JO  - ACM SIGACT News
+PY  - 2002
+VL  - 33
+IS  - 2
+SP  - 51
+EP  - 59
+DO  - 10.1145/564585.564601
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref11
+AU  - Brewer, Eric
+TI  - CAP twelve years later: How the "rules" have changed
+JO  - Computer
+PY  - 2012
+VL  - 45
+IS  - 2
+SP  - 23
+EP  - 29
+DO  - 10.1109/mc.2012.37
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref12
+AU  - Vogels, Werner
+TI  - Eventually consistent
+JO  - Communications of the ACM
+PY  - 2009
+VL  - 52
+IS  - 1
+SP  - 40
+EP  - 44
+DO  - 10.1145/1435417.1435432
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CONF
+ID  - ref13
+AU  - Terry, D. B.
+AU  - Theimer, M. M.
+AU  - Petersen, Karin
+AU  - Demers, A. J.
+AU  - Spreitzer, M. J.
+AU  - Hauser, C. H.
+TI  - Managing update conflicts in Bayou, a weakly connected replicated storage system
+T2  - Proceedings of the fifteenth ACM symposium on Operating systems principles  - SOSP '95
+PY  - 1995
+SP  - 172
+EP  - 182
+DO  - 10.1145/224056.224070
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref14
+AU  - Lamport, Leslie
+TI  - Time, clocks, and the ordering of events in a distributed system
+JO  - Communications of the ACM
+PY  - 1978
+VL  - 21
+IS  - 7
+SP  - 558
+EP  - 565
+DO  - 10.1145/359545.359563
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CHAP
+ID  - ref15
+AU  - Shapiro, Marc
+AU  - Preguiça, Nuno
+AU  - Baquero, Carlos
+AU  - Zawirski, Marek
+TI  - Conflict-Free Replicated Data Types
+T2  - Lecture Notes in Computer Science
+PY  - 2011
+SP  - 386
+EP  - 400
+DO  - 10.1007/978-3-642-24550-3_29
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - ELEC
+ID  - ref16
+TI  - Synchronization
+T2  - WatermelonDB Documentation
+ET  - v0.27.1
+UR  - https://watermelondb.dev/docs/Sync/Intro
+Y2  - 2026/11/16
+N1  - Page opened 2026-11-16
+ER  - 
+
+TY  - ELEC
+ID  - ref17
+TI  - Implementing your Sync backend
+T2  - WatermelonDB Documentation
+ET  - v0.27.1
+UR  - https://watermelondb.dev/docs/Sync/Backend
+Y2  - 2026/11/16
+N1  - Page opened 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref18
+AU  - Fielding, Roy T.
+AU  - Taylor, Richard N.
+TI  - Principled design of the modern Web architecture
+JO  - ACM Transactions on Internet Technology
+PY  - 2002
+VL  - 2
+IS  - 2
+SP  - 115
+EP  - 150
+DO  - 10.1145/514183.514185
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CONF
+ID  - ref19
+AU  - Haekal, Muhamad
+AU  - Eliyani
+TI  - Token-based authentication using JSON Web Token on SIKASIR RESTful Web Service
+T2  - 2016 International Conference on Informatics and Computing (ICIC)
+PY  - 2016
+SP  - 175
+EP  - 179
+DO  - 10.1109/iac.2016.7905711
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CONF
+ID  - ref20
+AU  - Ahmed, Salman
+AU  - Mahmood, Qamar
+TI  - An authentication based scheme for applications using JSON web token
+T2  - 2019 22nd International Multitopic Conference (INMIC)
+PY  - 2019
+SP  - 1
+EP  - 6
+DO  - 10.1109/inmic48123.2019.9022766
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref21
+AU  - Sandhu, R.S.
+AU  - Coyne, E.J.
+AU  - Feinstein, H.L.
+AU  - Youman, C.E.
+TI  - Role-based access control models
+JO  - Computer
+PY  - 1996
+VL  - 29
+IS  - 2
+SP  - 38
+EP  - 47
+DO  - 10.1109/2.485845
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CONF
+ID  - ref22
+AU  - Yaish, Haitham
+AU  - Goyal, Madhu
+TI  - Multi-tenant Database Access Control
+T2  - 2013 IEEE 16th International Conference on Computational Science and Engineering
+PY  - 2013
+SP  - 870
+EP  - 877
+DO  - 10.1109/cse.2013.131
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CONF
+ID  - ref23
+AU  - Mendoza, Abner
+AU  - Gu, Guofei
+TI  - Mobile Application Web API Reconnaissance: Web-to-Mobile Inconsistencies & Vulnerabilities
+T2  - 2018 IEEE Symposium on Security and Privacy (SP)
+PY  - 2018
+SP  - 756
+EP  - 769
+DO  - 10.1109/sp.2018.00039
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref24
+AU  - Codd, E. F.
+TI  - A relational model of data for large shared data banks
+JO  - Communications of the ACM
+PY  - 1970
+VL  - 13
+IS  - 6
+SP  - 377
+EP  - 387
+DO  - 10.1145/362384.362685
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref25
+AU  - Chen, Peter Pin-Shan
+TI  - The entity-relationship model—toward a unified view of data
+JO  - ACM Transactions on Database Systems
+PY  - 1976
+VL  - 1
+IS  - 1
+SP  - 9
+EP  - 36
+DO  - 10.1145/320434.320440
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref26
+AU  - Haerder, Theo
+AU  - Reuter, Andreas
+TI  - Principles of transaction-oriented database recovery
+JO  - ACM Computing Surveys
+PY  - 1983
+VL  - 15
+IS  - 4
+SP  - 287
+EP  - 317
+DO  - 10.1145/289.291
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref27
+AU  - Goldberg, David
+TI  - What every computer scientist should know about floating-point arithmetic
+JO  - ACM Computing Surveys
+PY  - 1991
+VL  - 23
+IS  - 1
+SP  - 5
+EP  - 48
+DO  - 10.1145/103162.103163
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - STAND
+ID  - ref28
+TI  - IEEE Standard for Floating-Point Arithmetic
+M1  - IEEE Std 754-2019
+PY  - 2019
+DO  - 10.1109/IEEESTD.2019.8766229
+N1  - DOI confirmed on Crossref 2026-11-16 (record has no author field); title/number as in report
+ER  - 
+
+TY  - ELEC
+ID  - ref29
+AU  - IFRS Foundation
+TI  - IAS 2 Inventories
+T2  - IFRS Standards
+UR  - https://www.ifrs.org/issued-standards/list-of-standards/ias-2-inventories/
+Y2  - 2026/11/16
+N1  - Page opened 2026-11-16; FIFO and weighted-average formulas read on the page. Year not recorded
+ER  - 
+
+TY  - CONF
+ID  - ref30
+AU  - Royce, W. W.
+TI  - Managing the development of large software systems
+T2  - Proc. IEEE WESCON
+PY  - 1970
+CY  - Los Angeles, CA, USA
+SP  - 1
+EP  - 9
+N1  - NOT VERIFIED: no DOI; fields copied from the report text, original not checked
+ER  - 
+
+TY  - STAND
+ID  - ref31
+TI  - Systems and Software Engineering — Life Cycle Processes — Requirements Engineering
+M1  - ISO/IEC/IEEE Std 29148:2018
+PY  - 2018
+DO  - 10.1109/IEEESTD.2018.8559686
+N1  - DOI confirmed on Crossref 2026-11-16 (record has no author field); title/number as in report
+ER  - 
+
+TY  - STAND
+ID  - ref32
+TI  - IEEE Standard for Information Technology—Systems Design—Software Design Descriptions
+M1  - IEEE Std 1016-2009
+PY  - 2009
+DO  - 10.1109/IEEESTD.2009.5167255
+N1  - DOI confirmed on Crossref 2026-11-16 (record has no author field); title/number as in report
+ER  - 
+
+TY  - STAND
+ID  - ref33
+TI  - Software and Systems Engineering — Software Testing — Part 1: Concepts and Definitions
+M1  - ISO/IEC/IEEE Std 29119-1:2013
+PY  - 2013
+DO  - 10.1109/IEEESTD.2013.6588537
+N1  - DOI confirmed on Crossref 2026-11-16 (record has no author field); title/number as in report
+ER  - 
+
+TY  - CONF
+ID  - ref34
+AU  - Inozemtseva, Laura
+AU  - Holmes, Reid
+TI  - Coverage is not strongly correlated with test suite effectiveness
+T2  - Proceedings of the 36th International Conference on Software Engineering
+PY  - 2014
+SP  - 435
+EP  - 445
+DO  - 10.1145/2568225.2568271
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref35
+AU  - Dean, Jeffrey
+AU  - Barroso, Luiz André
+TI  - The tail at scale
+JO  - Communications of the ACM
+PY  - 2013
+VL  - 56
+IS  - 2
+SP  - 74
+EP  - 80
+DO  - 10.1145/2408776.2408794
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - ELEC
+ID  - ref36
+AU  - Kirkpatrick, A.
+AU  - O'Connor, J.
+AU  - Campbell, A.
+AU  - Cooper, M.
+TI  - Web Content Accessibility Guidelines (WCAG) 2.1
+T2  - W3C Recommendation
+PY  - 2018
+UR  - https://www.w3.org/TR/WCAG21/
+Y2  - 2026/11/14
+N1  - URL opened (HTTP 200) 2026-11-14; author list copied from report text, not checked
+ER  - 
+
+TY  - GEN
+ID  - ref37
+AU  - Cục Trồng trọt, Bộ Nông nghiệp và Phát triển nông thôn
+TI  - Quyết định số 254/QĐ-TT-CCN ngày 20/07/2010 ban hành quy trình tái canh cà phê vối
+PY  - 2010
+CY  - Hà Nội, Việt Nam
+N1  - NOT VERIFIED against the original document; cited in shared/data/care_protocol_coffee_seed.json
+ER  - 
+
+TY  - JOUR
+ID  - ref38
+AU  - Biørn-Hansen, Andreas
+AU  - Grønli, Tor-Morten
+AU  - Ghinea, Gheorghita
+TI  - A Survey and Taxonomy of Core Concepts and Research Challenges in Cross-Platform Mobile Development
+JO  - ACM Computing Surveys
+PY  - 2019
+VL  - 51
+IS  - 5
+SP  - 1
+EP  - 34
+DO  - 10.1145/3241739
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - CONF
+ID  - ref39
+AU  - Vu, Ngoc Thang
+AU  - Schultz, Tanja
+TI  - Vietnamese large vocabulary continuous speech recognition
+T2  - 2009 IEEE Workshop on Automatic Speech Recognition & Understanding
+PY  - 2009
+SP  - 333
+EP  - 338
+DO  - 10.1109/asru.2009.5373424
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
+TY  - JOUR
+ID  - ref40
+AU  - Qasim, Muhammad
+AU  - Zia, Haris Bin
+AU  - Athar, Awais
+AU  - Habib, Tania
+AU  - Raza, Agha Ali
+TI  - Personalized weather information for low-literate farmers using multimodal dialog systems
+JO  - International Journal of Speech Technology
+PY  - 2021
+VL  - 24
+IS  - 2
+SP  - 455
+EP  - 471
+DO  - 10.1007/s10772-021-09806-2
+N1  - Metadata doi-checked on Crossref 2026-11-16
+ER  - 
+
